@@ -1,0 +1,55 @@
+### AWS Services Every DevOps Engineer Must Know  
+
+1. **EC2 (Elastic Compute Cloud)**  
+   EC2 is like a virtual computer in the cloud. You can use it to run your applications without needing physical hardware. You can choose the size, operating system, and resources like CPU and RAM.  
+
+2. **VPC (Virtual Private Cloud)**  
+   VPC is your own private space in AWS where you can securely place your resources, like servers and databases. It's like having your own isolated network on the cloud.  
+
+3. **EBS (Elastic Block Store)**  
+   EBS provides hard drive-like storage for your EC2 instances. The data remains even if the EC2 instance is turned off, making it great for applications that need persistent storage.  
+
+4. **S3 (Simple Storage Service)**  
+   S3 is used to store files like photos, videos, backups, or documents. It’s secure, durable, and can handle unlimited data.  
+
+5. **IAM (Identity and Access Management)**  
+   IAM is a tool to manage who can access your AWS resources. You can create users, assign roles, and set permissions to keep everything secure.  
+
+6. **CloudWatch**  
+   CloudWatch monitors your AWS resources, like servers or applications. It tracks performance, logs errors, and can alert you if something goes wrong.  
+
+7. **Lambda**  
+   Lambda lets you run code without worrying about servers. For example, it can automatically resize uploaded images or process events like new user registrations.  
+
+8. **Cloud Build Services**  
+   - **AWS CodePipeline**: Automates the process of building, testing, and deploying your applications so you don’t have to do it manually.  
+   - **AWS CodeBuild**: Compiles your code and creates the final software package.  
+   - **AWS CodeDeploy**: Helps you deploy updates to your application, whether it’s on servers, Lambda, or other environments.  
+
+9. **Configuration (AWS Config)**  
+   AWS Config tracks the settings of your AWS resources and alerts you if something changes. This helps ensure compliance with security and organizational rules.  
+
+10. **Billing and Costing**  
+   AWS provides tools to monitor how much you are spending. You can analyze usage and set budgets to avoid overspending.  
+
+11. **AWS KMS (Key Management Service)**  
+   AWS KMS helps encrypt your data by creating and managing cryptographic keys securely. This is essential for protecting sensitive information.  
+
+12. **CloudTrail**  
+   CloudTrail logs all actions taken in your AWS account, such as who accessed what and when. It’s useful for auditing and tracking unusual activity.  
+
+13. **AWS EKS (Elastic Kubernetes Service)**  
+   EKS is a service to run Kubernetes, a tool that manages and deploys containerized applications. AWS handles the Kubernetes setup for you.  
+
+14. **Fargate and ECS (Elastic Container Service)**  
+   - **Fargate**: Lets you run containers without managing the underlying servers. It’s fully serverless.  
+   - **ECS**: AWS’s container service where you can deploy and manage Docker containers. It requires a bit more setup compared to Fargate.  
+
+15. **ELK (Elastic Stack)**  
+   ELK helps collect, process, and visualize logs. Elasticsearch stores the data, Logstash processes it, and Kibana makes it easy to analyze with graphs and dashboards.  
+
+---
+
+### **EKS vs. ECS**  
+- **EKS**: A Kubernetes-based solution for advanced container management. It's flexible but more complex to set up.  
+- **ECS**: A simpler AWS-native container management service that integrates well with other AWS services. Ideal for basic use cases.  

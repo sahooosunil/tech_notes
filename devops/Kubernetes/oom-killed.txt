@@ -1,0 +1,167 @@
+# **🚨 OOMKilled in Kubernetes (Easy Explanation)**  
+
+## **📌 What is `OOMKilled`?**  
+OOMKilled (Out of Memory Killed) happens when **a container uses more memory than allowed**, and the **Linux Kernel kills it** to protect the system.  
+
+In Kubernetes, when this happens:  
+- The pod **crashes** and goes into `CrashLoopBackOff`.  
+- If Kubernetes **doesn’t restart it**, the pod stays in `OOMKilled` state.  
+
+🔴 **Think of it like this:**  
+> "Your pod asked for too much memory, but the system couldn’t handle it, so it got killed!"  
+
+---
+
+## **📌 Why Does `OOMKilled` Happen?**  
+
+### **1️⃣ Pod Exceeds Its Memory Limit 🚀**  
+If a pod has **memory limits set**, but the app **uses more than allowed**, Kubernetes kills it.  
+
+#### 🚨 Example YAML (Limit Exceeded)  
+```yaml
+resources:
+  requests:
+    memory: "256Mi"  # Request 256MB
+  limits:
+    memory: "512Mi"   # Max 512MB
+```
+If the app **uses more than 512MB**, Kubernetes **kills the pod**.  
+
+---
+
+### **2️⃣ Node Runs Out of Memory 💥**  
+Even if the pod **has no memory limits**, it **shares memory** with other pods.  
+- If **too many pods** consume memory, the **node** runs out of RAM.  
+- The Linux Kernel **kills the largest memory consumer**.  
+
+🛑 **Solution:** Reduce pod memory usage or add more memory to the node.  
+
+---
+
+### **3️⃣ Memory Leak in the Application 🐛**  
+If the app **keeps using more memory over time**, it may eventually **consume all memory**.  
+- Example: A **Java application without GC tuning** may run into **OutOfMemoryError**.  
+
+✅ **Solution:** Fix memory leaks in code or **monitor memory usage**.  
+
+---
+
+## **📌 How to Debug OOMKilled?**  
+
+### **1️⃣ Check Pod Status**  
+```bash
+kubectl get pod <pod-name>
+```
+If you see:  
+```
+NAME       READY   STATUS      RESTARTS   AGE
+my-app     0/1     OOMKilled   3          5m
+```
+It means Kubernetes **killed it due to memory issues**.  
+
+---
+
+### **2️⃣ Check Event Logs**  
+```bash
+kubectl describe pod <pod-name>
+```
+Look for:  
+```
+Reason: OOMKilled
+```
+This confirms **the container was killed for using too much memory**.  
+
+---
+
+### **3️⃣ Check Previous Pod Logs**  
+```bash
+kubectl logs --previous <pod-name>
+```
+If the **logs suddenly stop**, the app was killed **before it could log an error**.  
+
+---
+
+### **4️⃣ Check Memory Usage on the Node**  
+```bash
+kubectl top nodes
+```
+If the node **is running out of memory**, all pods on that node **may be at risk**.  
+
+```bash
+kubectl top pods --namespace=<namespace>
+```
+Shows which pods **use the most memory**.  
+
+---
+
+## **📌 How to Prevent `OOMKilled`?**  
+
+### **1️⃣ Increase Memory Limits 🛠️**  
+If the pod **needs more memory**, increase the limit in the YAML:  
+```yaml
+resources:
+  limits:
+    memory: "1Gi"  # Increase limit to 1GB
+```
+🚨 **But be careful!** Setting **too high a limit** can cause **node-wide issues**.  
+
+---
+
+### **2️⃣ Optimize Application Memory Usage**  
+- **Java Apps**: Tune JVM GC settings (`-Xms`, `-Xmx`).  
+- **Node.js Apps**: Monitor and prevent memory leaks.  
+- **Go/Python Apps**: Use **profiling tools** to find memory hogs.  
+
+---
+
+### **3️⃣ Enable Resource Requests and Limits**  
+**Requests** ensure the pod **gets a minimum amount of memory**.  
+**Limits** prevent the pod from using **too much memory**.  
+
+```yaml
+resources:
+  requests:
+    memory: "512Mi"  # Guaranteed 512MB
+  limits:
+    memory: "1Gi"    # Max 1GB
+```
+
+---
+
+### **4️⃣ Use a Vertical Pod Autoscaler (VPA) 📈**  
+Automatically adjusts **memory based on usage**:  
+```bash
+kubectl apply -f vpa.yaml
+```
+It ensures pods **get enough memory without over-allocating**.  
+
+---
+
+## **📌 OOMKilled: Pod-Level vs Namespace-Level**  
+
+| Level  | Description | How to Debug? |
+|--------|------------|---------------|
+| **Pod-Level OOMKilled** | The pod used **more memory** than allowed | Check `kubectl describe pod` logs |
+| **Node-Level OOMKilled** | The node ran **out of memory**, so Linux **killed pods** | Check `kubectl top nodes` |
+| **Namespace-Level OOMKilled** | Namespace has a **memory quota**, and the pod exceeded it | Check `kubectl get resourcequota -n <namespace>` |
+
+💡 **Namespace Quotas**: If a namespace has a **memory limit**, pods inside it **cannot exceed that total memory**.  
+
+---
+
+## **📌 Other Details & Best Practices**  
+
+✅ **Monitor Memory Usage Regularly**  
+Use Prometheus + Grafana to **track memory consumption**.  
+
+✅ **Set Up Alerts for High Memory Usage**  
+Use Kubernetes Event-Driven Autoscaling (KEDA) or Prometheus alerts.  
+
+✅ **Prefer Horizontal Scaling Over Large Memory Limits**  
+Instead of increasing memory **for one pod**, scale **multiple replicas**:  
+```yaml
+replicas: 3
+```
+
+🚀 Fix `OOMKilled`, and your pods will **run smoothly without crashes!**  
+Would you like a YAML example for resource requests and limits? 😊

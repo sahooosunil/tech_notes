@@ -1,0 +1,140 @@
+## **Understanding @OneToMany and @ManyToOne in Spring Data JPA**  
+
+### **Relationship Explanation**  
+A **One-to-Many** relationship means that **one parent entity** is related to **multiple child entities**.  
+A **Many-to-One** relationship is the inverse: **many child entities** are related to **one parent entity**.
+
+📌 **Example Scenario:**  
+- A **Department** has **multiple Employees** → `@OneToMany`  
+- Each **Employee** belongs to exactly **one Department** → `@ManyToOne`  
+
+---
+
+## **1️⃣ Define the Entities**  
+
+### **Department Entity (Parent)**
+```java
+@Entity
+public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Employee> employees = new ArrayList<>();
+
+    // Getters and Setters
+}
+```
+✅ **`@OneToMany(mappedBy = "department")`** → One department has multiple employees.  
+✅ **`cascade = CascadeType.ALL`** → When a department is saved, its employees are also saved.  
+✅ **`orphanRemoval = true`** → If an employee is removed from the list, it will be deleted from the database.  
+
+---
+
+### **Employee Entity (Child)**
+```java
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String position;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false) // Foreign key column
+    private Department department;
+
+    // Getters and Setters
+}
+```
+✅ **`@ManyToOne`** → Many employees belong to one department.  
+✅ **`@JoinColumn(name = "department_id")`** → This sets up the foreign key in the `Employee` table.  
+✅ **`nullable = false`** → Ensures an employee **must** have a department.  
+
+---
+
+## **2️⃣ Define the Repositories**
+### **Department Repository**
+```java
+@Repository
+public interface DepartmentRepository extends JpaRepository<Department, Long> {
+}
+```
+### **Employee Repository**
+```java
+@Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+}
+```
+
+---
+
+## **3️⃣ Saving Data (Service Layer)**
+```java
+@Service
+public class CompanyService {
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    public void createDepartmentWithEmployees() {
+        Department department = new Department();
+        department.setName("IT Department");
+
+        Employee emp1 = new Employee();
+        emp1.setName("John Doe");
+        emp1.setPosition("Software Engineer");
+        emp1.setDepartment(department);
+
+        Employee emp2 = new Employee();
+        emp2.setName("Jane Smith");
+        emp2.setPosition("System Analyst");
+        emp2.setDepartment(department);
+
+        department.getEmployees().add(emp1);
+        department.getEmployees().add(emp2);
+
+        departmentRepository.save(department); // Saves both department and employees
+    }
+}
+```
+🔹 Since we used **`CascadeType.ALL`**, saving `Department` **also saves** `Employees`.  
+
+---
+
+## **4️⃣ Fetching Data**
+```java
+public void getDepartment(Long deptId) {
+    Optional<Department> department = departmentRepository.findById(deptId);
+    department.ifPresent(dept -> {
+        System.out.println("Department: " + dept.getName());
+        dept.getEmployees().forEach(emp -> System.out.println("Employee: " + emp.getName()));
+    });
+}
+```
+
+---
+
+## **5️⃣ Generated Tables (SQL Schema)**
+🔹 **Department Table**
+| id | name         |
+|----|-------------|
+| 1  | IT Department |
+
+🔹 **Employee Table**
+| id | name       | position           | department_id |
+|----|-----------|--------------------|--------------|
+| 1  | John Doe  | Software Engineer  | 1            |
+| 2  | Jane Smith | System Analyst    | 1            |
+
+---
+
+## **🔥 Key Takeaways**
+✅ **`@OneToMany`** on the **parent** (`Department`).  
+✅ **`@ManyToOne`** on the **child** (`Employee`).  
+✅ **`cascade = CascadeType.ALL`** ensures that saving/deleting a department also affects its employees.  
+✅ **`orphanRemoval = true`** ensures that removing an employee from the list deletes it from the database.  
+
+Would you like a **Spring Boot REST API** for this? 🚀

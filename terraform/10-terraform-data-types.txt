@@ -1,0 +1,211 @@
+Terraform supports a variety of data types that help in defining variables, resource attributes, and outputs in configurations. Below is a list of Terraform data types with examples:
+
+### 1. **Primitive Types**
+These are the simplest data types.
+
+#### `string`
+A sequence of characters enclosed in double quotes.
+
+- **Example:**
+  ```hcl
+  variable "name" {
+    type = string
+    default = "example"
+  }
+  ```
+
+#### `number`
+A numerical value that can be either an integer or a floating-point number.
+
+- **Example:**
+  ```hcl
+  variable "instance_count" {
+    type = number
+    default = 3
+  }
+  ```
+
+#### `bool`
+A boolean value: `true` or `false`.
+
+- **Example:**
+  ```hcl
+  variable "is_enabled" {
+    type = bool
+    default = true
+  }
+  ```
+
+### 2. **Complex Types**
+Terraform also supports more complex types, like lists, maps, and objects.
+
+#### `list` (or `tuple`)
+An ordered collection of elements, all of the same type.
+
+- **Example:**
+  ```hcl
+  variable "availability_zones" {
+    type = list(string)
+    default = ["us-west-2a", "us-west-2b", "us-west-2c"]
+  }
+  ```
+
+#### `set`
+A collection of unique elements, similar to `list`, but without any duplicates and without an inherent order.
+
+- **Example:**
+  ```hcl
+  variable "unique_ids" {
+    type = set(string)
+    default = ["id1", "id2", "id3"]
+  }
+  ```
+
+#### `map`
+A collection of key-value pairs, where the key is typically a string and the value can be any type.
+
+- **Example:**
+  ```hcl
+  variable "instance_tags" {
+    type = map(string)
+    default = {
+      Name = "my-instance"
+      Environment = "dev"
+      Owner = "user1"
+    }
+  }
+  ```
+
+#### `object`
+A complex type that allows you to define structured data with a specific schema. Each attribute can be a different type.
+
+- **Example:**
+  ```hcl
+  variable "server_config" {
+    type = object({
+      name      = string
+      instance  = number
+      enabled   = bool
+    })
+    default = {
+      name     = "web-server"
+      instance = 2
+      enabled  = true
+    }
+  }
+  ```
+
+#### `tuple`
+A fixed-length list where each element can be of a different type. Useful when the structure is well-defined and each element has a different type.
+
+- **Example:**
+  ```hcl
+  variable "server_details" {
+    type = tuple([string, number, bool])
+    default = ["web-server", 2, true]
+  }
+  ```
+
+### 3. **Specialized Data Types**
+
+#### `any`
+A flexible type that allows any kind of value. It's a supertype of all other types and is used when you need to accept a value of any type (string, number, list, etc.).
+
+- **Example:**
+  ```hcl
+  variable "dynamic_value" {
+    type = any
+    default = "some-value"
+  }
+  ```
+
+#### `null`
+This is used to represent an intentionally undefined value. The `null` value is used in some scenarios, like when you want to indicate the absence of a value.
+
+- **Example:**
+  ```hcl
+  variable "optional_value" {
+    type = string
+    default = null
+  }
+  ```
+
+### 4. **Other Advanced Types**
+These are less commonly used but can be useful in certain scenarios.
+
+#### `for_each` Expressions
+You can use `for_each` with complex types like lists and maps in a resource or module block to iterate over them.
+
+- **Example (with `for_each`):**
+  ```hcl
+  variable "instance_names" {
+    type = list(string)
+    default = ["app1", "app2", "app3"]
+  }
+
+  resource "aws_instance" "example" {
+    for_each = toset(var.instance_names)
+    ami           = "ami-123456"
+    instance_type = "t2.micro"
+    tags = {
+      Name = each.value
+    }
+  }
+  ```
+
+### 5. **Type Constraints and Type Aliases**
+You can define more flexible data types using **type constraints** and **type aliases**.
+
+#### Type Constraints (e.g., restricting types to specific values)
+
+- **Example (restricted to certain values):**
+  ```hcl
+  variable "env" {
+    type = string
+    validation {
+      condition = contains(["dev", "prod", "staging"], var.env)
+      error_message = "Environment must be one of 'dev', 'prod', or 'staging'."
+    }
+    default = "prod"
+  }
+  ```
+
+#### Type Aliases
+You can create custom type aliases using `type = type_name`.
+
+- **Example (type alias):**
+  ```hcl
+  type my_custom_type = object({
+    id      = string
+    enabled = bool
+  })
+
+  variable "custom_config" {
+    type = my_custom_type
+    default = {
+      id      = "abc123"
+      enabled = true
+    }
+  }
+  ```
+
+---
+
+### Summary Table
+
+| Type      | Description                                                  | Example                                      |
+|-----------|--------------------------------------------------------------|----------------------------------------------|
+| `string`  | A sequence of characters                                      | `"example"`                                  |
+| `number`  | A numerical value (integer or float)                          | `42`, `3.14`                                 |
+| `bool`    | A boolean value (`true` or `false`)                           | `true`, `false`                              |
+| `list`    | An ordered collection of elements of the same type           | `["a", "b", "c"]`                            |
+| `set`     | A collection of unique elements (no duplicates or order)     | `{"a", "b", "c"}`                            |
+| `map`     | A collection of key-value pairs (key: string, value: any)     | `{"key1" = "value1", "key2" = "value2"}`     |
+| `object`  | A complex type with a set of named attributes (can mix types) | `{name = "server", enabled = true}`          |
+| `tuple`   | A fixed-length list with different types for each element    | `["name", 2, true]`                          |
+| `any`     | Can be any type (flexible)                                    | `any`                                        |
+| `null`    | Represents an undefined or absent value                      | `null`                                       |
+
+These data types help Terraform understand the kind of value it’s dealing with, whether it's a simple number or a complex structure. If you're designing modules or writing complex Terraform configurations, understanding and using the correct data types is crucial to ensure your configurations are flexible and predictable. 
+
+Let me know if you'd like more detailed examples or explanations for any of the types!

@@ -1,0 +1,344 @@
+### Resilience4j: Key Design Patterns and Configuration
+
+**Resilience4j** is a lightweight library designed to help you build resilient and fault-tolerant microservices. It implements several important design patterns:
+
+1. **Circuit Breaker Pattern**:
+   - Protects your system by preventing repeated attempts to call a failing service, which could lead to system degradation or crashes.
+   
+2. **Bulkhead Pattern**:
+   - Isolates different parts of the system to prevent a failure in one part from cascading and affecting the entire system.
+
+3. **Rate Limiter Pattern**:
+   - Controls the rate at which requests are sent to a service, preventing it from being overwhelmed.
+
+4. **Retry Pattern**:
+   - Automatically retries failed requests, with configurable delays and retry limits.
+
+#### Circuit Breaker Pattern Explained:
+
+- **Problem**: If one service is down or responding slowly, services that depend on it (in a service chain) can also fail, potentially bringing down the entire system.
+- **Solution**: Use a circuit breaker to monitor the health of a service and prevent further calls to a failing service, instead triggering fallback logic.
+
+For example:
+- **Service A** calls **Service B**.
+- If **Service B** is down or slow, **Service A** will experience delays, leading to poor performance.
+- The **Circuit Breaker** detects the issue and opens the circuit, preventing further calls from **A** to **B**.
+- When the circuit is open, **Service A** will immediately execute its fallback logic instead of waiting for **B**. (because anyway the call will fail, so no use of waiting)
+
+#### Circuit Breaker States:
+1. **Closed**: 
+   - All requests go through.
+   - The circuit breaker monitors the success/failure ratio.
+   
+2. **Open**: 
+   - Requests are blocked to prevent strain on the failing service.
+   - Fallback logic is executed immediately.
+   
+3. **Half-Open**: 
+   - A limited number of test requests are sent to the service.
+   - If successful, the circuit closes; if failures persist, it reopens.
+
+#### Example Configuration (`application.yml`):
+
+```yaml
+resilience4j:
+  circuitbreaker:
+    instances:
+      routingservice:
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 2
+    configs:
+      default:
+        register-health-indicator: true
+```
+
+#### Configuration Breakdown:
+
+1. **Minimum Number of Calls**:
+   - The circuit breaker starts monitoring after 5 calls (`minimum-number-of-calls: 5`).
+
+2. **Failure Rate Threshold**:
+   - If 50% of the calls fail (`failure-rate-threshold: 50`), the circuit transitions to the **Open** state.
+
+3. **Wait Duration in Open State**:
+   - The circuit stays open for 30 seconds (`wait-duration-in-open-state: 30000`), during which no requests are sent to the failing service.
+
+4. **Permitted Calls in Half-Open State**:
+   - After the wait duration, the circuit transitions to **Half-Open** and allows 2 test calls (`permitted-number-of-calls-in-half-open-state: 2`).
+
+5. **Half-Open State Behavior**:
+   - If both test calls fail, the circuit transitions back to **Open**.
+   - If successful, the circuit transitions back to **Closed**.
+
+#### How It Works:
+
+1. **Monitoring**:
+   - The circuit breaker tracks service call outcomes.
+   
+2. **Opening the Circuit**:
+   - If failure rate exceeds the threshold (e.g., 3 out of 5 calls fail), the circuit opens, blocking further calls.
+
+3. **Reevaluation**:
+   - After the open state duration, the system tests the service with limited calls.
+   
+4. **Decision**:
+   - Based on the test results, the circuit either reopens or fully closes.
+
+By implementing **Resilience4j** and configuring it as shown, you can ensure your services handle failures gracefully, improving the overall reliability and performance of your system.
+------------------------------------------
+### Steps to Configure Circuit Breaker Using Resilience4j
+
+**1. Add the Dependency:**
+Include the Resilience4j circuit breaker starter in your `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+</dependency>
+```
+
+**2. Create an Interface:**
+Define the interface for the service you want to protect with a circuit breaker.
+
+```java
+public interface CargoRoutingService {
+    TransitPath findOptimalRoute(String originUnLocode, String destinationUnLocode, String deadline);
+}
+```
+
+**3. Implement the Interface:**
+Create a class that implements the interface and annotate the method with `@CircuitBreaker`.
+
+```java
+@Service
+public class CargoRoutingServiceImpl implements CargoRoutingService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @CircuitBreaker(name = "routingservice", fallbackMethod = "findOptimalRouteFallback")
+    public TransitPath findOptimalRoute(String originUnLocode, String destinationUnLocode, String deadline) {
+        final String REST_URI = "http://localhost:8082/cargorouting/optimalRoute?origin={origin}&destination={destination}&deadline={deadline}";
+        System.err.println("CargoRoutingServiceImpl.findOptimalRoute() - Calling Cargo Routing Service");
+
+        return restTemplate.getForObject(REST_URI, TransitPath.class, originUnLocode, destinationUnLocode, deadline);
+    }
+
+    public TransitPath findOptimalRouteFallback(String originUnLocode, String destinationUnLocode, String deadline, Throwable t) {
+        System.err.println("CargoRoutingServiceImpl.findOptimalRouteFallback() - Fallback Logic Triggered");
+        return new TransitPath(); // Return a default or alternative response
+    }
+}
+```
+
+**4. Calling the Circuit Breaker Method:**
+Use the service in another class by injecting it and invoking the method.
+
+```java
+@Service
+public class ExternalCargoRoutingService {
+
+    @Autowired
+    private CargoRoutingService cargoRoutingService;
+
+    public CargoItinerary fetchRouteForSpecification(RouteSpecification routeSpecification) {
+        System.out.println("ExternalCargoRoutingService.fetchRouteForSpecification() - Fetching Route");
+
+        TransitPath transitPath = cargoRoutingService.findOptimalRoute(
+            routeSpecification.getOrigin().getUnLocCode(),
+            routeSpecification.getDestination().getUnLocCode(),
+            routeSpecification.getArrivalDeadline().toString()
+        );
+
+        return toCargoItinerary(transitPath);
+    }
+}
+```
+
+**5. Add Configuration in `application.yml`:**
+Configure Resilience4j for the circuit breaker.
+
+```yaml
+resilience4j:
+  circuitbreaker:
+    instances:
+      routingservice: # This name matches the one in @CircuitBreaker(name = "routingservice")
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 2
+    configs:
+      default:
+        register-health-indicator: true # to see circuit breaker logs/calls/state using actuator endpoint
+```
+
+### Explanation:
+
+1. **Dependency Injection with AOP:**
+   - When `@Autowired private CargoRoutingService cargoRoutingService;` is used, Spring creates a proxy object for `CargoRoutingServiceImpl` using Aspect-Oriented Programming (AOP).
+   - This proxy manages the circuit breaker logic.
+
+2. **Method Invocation Flow:**
+   - When `findOptimalRoute()` is called, the proxy checks the circuit breaker status.
+   - If the circuit is **closed**, the original method (`findOptimalRoute()`) is invoked.
+   - If the method call fails (e.g., returns a 500 error), the circuit breaker triggers the fallback method (`findOptimalRouteFallback`).
+
+3. **Circuit Breaker Behavior:**
+   - The circuit breaker monitors the number of calls and failure rate.
+   - If failures exceed the threshold, the circuit opens, and subsequent calls directly invoke the fallback logic without attempting the original method.
+
+By following these steps, you can effectively use Resilience4j to enhance the resilience of your services with circuit breaker functionality.
+You can see circuit breaker logs/calls/state using actuator endpoint. you have to enabale spring boot actuator endpoints 
+---------------------------------------------------------------------------------------------------
+### Bulkhead Pattern in Microservices with Threads Concept
+
+The **Bulkhead Pattern** is a resilience pattern used in microservices to isolate failures and prevent a single component failure from cascading and affecting the entire system. It is analogous to compartments in a ship, where each compartment can be sealed off to prevent flooding from spreading.
+
+#### Key Concepts:
+
+1. **Isolation**:
+   - The pattern isolates different parts of the system, often by dividing resources like thread pools, to ensure that failures in one part don’t affect others.
+   
+2. **Thread Pools**:
+   - In microservices, the bulkhead pattern is implemented using separate thread pools for different tasks or service calls.
+   - Each service or operation has its own thread pool. If one service is overwhelmed or fails, it only affects its thread pool, preventing a thread starvation scenario where other services can't get resources.
+
+#### How It Works:
+
+- **Service Isolation**:
+  - Suppose you have multiple microservices: `Service A`, `Service B`, and `Service C`.
+  - `Service A` handles critical operations, while `Service B` and `Service C` handle less critical ones.
+  - To implement the bulkhead pattern, you assign separate thread pools for each service.
+
+- **Example Scenario**:
+  - `Service A` has a dedicated thread pool of 10 threads.
+  - `Service B` and `Service C` also have their own thread pools, say 5 threads each.
+  - If `Service B` experiences a spike in traffic or a slowdown, only its 5 threads will be occupied. Other services (`Service A` and `Service C`) will remain unaffected and continue to process their tasks with their dedicated thread pools.
+
+#### Benefits:
+
+1. **Fault Isolation**:
+   - If one service or operation fails or becomes slow, it doesn't exhaust the shared resources (like threads), ensuring other services can continue to function normally.
+
+2. **Improved Resilience**:
+   - By isolating failures, the system as a whole becomes more resilient. Only the failing service or component is impacted, while others remain operational.
+
+3. **Resource Management**:
+   - Resources are allocated efficiently and fairly among services. No single service can monopolize the resources, leading to better stability and performance.
+
+#### Example in Microservices with Resilience4j:
+
+In **Resilience4j**, the bulkhead pattern can be implemented by configuring thread pools for each service or method call.
+
+```yaml
+resilience4j:
+  bulkhead:
+    instances:
+      serviceA:
+        max-concurrent-calls: 10 # Maximum threads for Service A
+        max-wait-duration: 500ms # Max wait time if threads are busy
+      serviceB:
+        max-concurrent-calls: 5  # Maximum threads for Service B
+        max-wait-duration: 300ms # Max wait time if threads are busy
+```
+
+- **`max-concurrent-calls`**: Defines the maximum number of concurrent calls (threads) allowed for a service.
+- **`max-wait-duration`**: Specifies how long a request will wait if all threads are busy before it gets rejected.
+
+#### Summary:
+
+The Bulkhead Pattern in microservices ensures that failures or high loads in one service don’t cascade to others by isolating resources using separate thread pools.
+This allows the system to degrade gracefully rather than fail completely, ensuring better reliability and user experience.
+----------------------
+### Steps to Configure Bulkhead Pattern Using Resilience4j
+
+#### 1. Add the Dependency:
+Include the Resilience4j circuit breaker starter in your `pom.xml` to enable the necessary components:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+</dependency>
+```
+
+#### 2. Define the Service Interface:
+Create an interface for the service that will use the bulkhead pattern:
+
+```java
+public interface CargoRoutingService {
+    CompletableFuture<TransitPath> findOptimalRoute(String originUnLocode, String destinationUnLocode, String deadline);
+}
+```
+
+#### 3. Implement the Service with Bulkhead:
+
+```java
+@Service
+public class CargoRoutingServiceImpl implements CargoRoutingService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Bulkhead(name = "rsbh", fallbackMethod = "findOptimalRouteFallback", type = Bulkhead.Type.THREADPOOL)
+    public CompletableFuture<TransitPath> findOptimalRoute(String originUnLocode, String destinationUnLocode, String deadline) {
+        final String REST_URI = "http://localhost:8082/cargorouting/optimalRoute?origin={origin}&destination={destination}&deadline={deadline}";
+
+        System.err.println("CargoRoutingServiceImpl.findOptimalRoute() - Hitting cargo routing service");
+
+        // Simulating network delay
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        TransitPath transitPath = restTemplate.getForObject(REST_URI, TransitPath.class, originUnLocode, destinationUnLocode, deadline);
+        return CompletableFuture.completedFuture(transitPath);
+    }
+
+    public CompletableFuture<TransitPath> findOptimalRouteFallback(String originUnLocode, String destinationUnLocode, String deadline, Throwable t) {
+        System.err.println("CargoRoutingServiceImpl.findOptimalRouteFallback() - Executing fallback logic");
+        return CompletableFuture.completedFuture(new TransitPath());
+    }
+}
+```
+
+#### 4. Configure Resilience4j in `application.yml`:
+
+```yaml
+resilience4j:
+  bulkhead: 
+    instances:
+      rsbh:
+        max-concurrent-calls: 10 # This will be ignored when using THREADPOOL bulkhead
+        max-wait-duration: 500ms # This will also be ignored
+
+  thread-pool-bulkhead:
+    instances:
+      rsbh: # Matches the name used in @Bulkhead annotation
+        core-thread-pool-size: 1          # Core number of threads
+        max-thread-pool-size: 1           # Maximum number of threads
+        queue-capacity: 1                 # Size of the queue
+        keep-alive-duration: 2s           # Time to keep idle threads alive
+```
+
+#### Explanation:
+
+1. **Thread Pool Bulkhead**: 
+   - **`core-thread-pool-size`**: The core number of threads always kept alive.
+   - **`max-thread-pool-size`**: The maximum number of threads allowed in the pool.
+   - **`queue-capacity`**: The capacity of the queue to hold tasks before rejecting them.
+   - **`keep-alive-duration`**: The time threads above the core size are kept alive before being terminated if idle.
+
+2. **Fallback Method**:
+   - The `findOptimalRouteFallback` method provides a default response when the main method fails due to thread pool exhaustion or other exceptions.
+
+3. **Behavior**:
+   - When `findOptimalRoute` is called, Resilience4j's bulkhead limits the number of concurrent threads accessing the service.
+   - If all threads and the queue are full, new requests are immediately sent to the fallback method, preventing the system from overloading.
+
+This setup ensures that the service remains responsive under high load by limiting the number of concurrent requests and providing graceful degradation through fallback logic.

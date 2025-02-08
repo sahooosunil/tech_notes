@@ -1,0 +1,147 @@
+In jenkins pipe line first I am doign checkout then maven build, then test then docker build then docker push. then update k8 menifest file. in jenkins pipeline I am using argo cd for deployment in kubernetes cluster.(Actually argo cd is automatically doing deployment once manifest file got updated in  git in jenkins pipeline)
+But once the deployment  (dev cluster) is successful I want to run integration test in jenkins, if it's successful then I want  to trigger stage kubernetes cluster deployment. How to achieve it?
+note for integration test I am using java test ng
+To achieve this, you can break down your pipeline into multiple stages and introduce conditional logic to trigger subsequent stages based on the successful completion of each step. Since you're using **Argo CD** for deployment and want to run integration tests after deployment, you can use the following approach:
+
+### Pipeline Outline
+
+1. **Checkout code**: Get your code from the repository.
+2. **Build**: Maven build the application.
+3. **Test**: Run unit tests (e.g., using TestNG).
+4. **Docker Build & Push**: Build Docker images and push them to a registry.
+5. **Update Kubernetes Manifest**: Update the Kubernetes manifest files in Git.
+6. **Argo CD Deployment**: Argo CD will handle deployment automatically as soon as the manifest files are updated.
+7. **Wait for Deployment Completion**: Use a `sleep` or better, a check to ensure the deployment is complete.
+8. **Run Integration Tests**: After deployment, trigger integration tests.
+9. **Kubernetes Cluster Deployment (Production)**: If the integration tests pass, deploy to production.
+
+### Detailed Steps
+
+1. **Checkout**: Start by checking out the code from your Git repository.
+
+```groovy
+stage('Checkout') {
+    steps {
+        checkout scm
+    }
+}
+```
+
+2. **Maven Build**: Build the application using Maven.
+
+```groovy
+stage('Build') {
+    steps {
+        sh 'mvn clean install'
+    }
+}
+```
+
+3. **Unit Tests**: Run your unit tests with TestNG.
+
+```groovy
+stage('Test') {
+    steps {
+        sh 'mvn test'
+    }
+}
+```
+
+4. **Docker Build and Push**: Build the Docker image and push it to your registry.
+
+```groovy
+stage('Docker Build & Push') {
+    steps {
+        script {
+            // Assuming Dockerfile is in the root of your repo
+            sh 'docker build -t myregistry/myapp:latest .'
+            sh 'docker push myregistry/myapp:latest'
+        }
+    }
+}
+```
+
+5. **Update Kubernetes Manifest**: Update the Kubernetes manifest in your Git repo. This triggers Argo CD to start the deployment in the dev cluster.
+
+```groovy
+stage('Update Kubernetes Manifest') {
+    steps {
+        script {
+            // Assuming your manifest files are in a folder called 'k8s'
+            sh 'git clone https://github.com/myorg/my-k8s-manifests.git'
+            dir('my-k8s-manifests') {
+                // Update the deployment YAML (or any other manifest)
+                sh 'sed -i "s/tag: .*/tag: latest/" deployment.yaml'
+                sh 'git commit -am "Update manifest for latest build"'
+                sh 'git push'
+            }
+        }
+    }
+}
+```
+
+6. **Wait for Argo CD to Deploy**: Introduce a wait mechanism to ensure that Argo CD has completed the deployment in the dev cluster. If you can, use a Kubernetes API or a simple `kubectl` command to check the status.
+
+```groovy
+stage('Wait for Argo CD Deployment') {
+    steps {
+        script {
+            // Check if the deployment is successful (you can adjust this logic)
+            def deploymentSuccess = false
+            timeout(time: 15, unit: 'MINUTES') {
+                while (!deploymentSuccess) {
+                    // Assuming kubectl is installed and configured
+                    def result = sh(script: 'kubectl get pods -n mynamespace -l app=myapp -o jsonpath="{.items[0].status.phase}"', returnStdout: true).trim()
+                    if (result == "Running") {
+                        deploymentSuccess = true
+                    } else {
+                        echo "Waiting for deployment to complete..."
+                        sleep 30
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+7. **Run Integration Tests**: After Argo CD deploys to the dev cluster, you can run your integration tests. If these tests pass, trigger the production deployment.
+
+```groovy
+stage('Run Integration Tests') {
+    steps {
+        script {
+            // Assuming you have integration tests in a different test suite
+            def integrationTestResult = sh(script: 'mvn -Dtest=IntegrationTestNGTest suite run', returnStatus: true)
+            if (integrationTestResult != 0) {
+                error "Integration tests failed. Aborting pipeline."
+            }
+        }
+    }
+}
+```
+
+8. **Trigger Production Deployment**: If integration tests pass, you can update the manifest for the production cluster and trigger deployment.
+
+```groovy
+stage('Production Deployment') {
+    steps {
+        script {
+            // Update the manifest for production (e.g., change tag to "prod" or update version)
+            sh 'git clone https://github.com/myorg/my-k8s-manifests.git'
+            dir('my-k8s-manifests') {
+                sh 'sed -i "s/tag: latest/tag: prod/" deployment.yaml'
+                sh 'git commit -am "Update manifest for production deployment"'
+                sh 'git push'
+            }
+        }
+    }
+}
+```
+
+### Key Points:
+- **Wait for Argo CD**: You need to ensure that Argo CD has successfully deployed your changes to the dev cluster before proceeding with the integration tests.
+- **Integration Tests**: Only run them after ensuring the deployment is successful.
+- **Trigger Production Deployment**: If the integration tests pass, update the Kubernetes manifest and push it for production deployment through Argo CD.
+
+By using this approach, you ensure that the pipeline waits for successful deployment before proceeding with integration tests and only triggers the production deployment if those tests pass.

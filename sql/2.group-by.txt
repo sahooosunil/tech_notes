@@ -1,0 +1,128 @@
+## **GROUP BY in SQL – Explained with Examples** 🚀  
+
+### **1️⃣ What is GROUP BY in SQL?**  
+`GROUP BY` is used to **group rows that have the same values** in specified columns and perform **aggregate functions** (like COUNT, SUM, AVG, MIN, MAX) on those groups.  
+
+---
+
+### **2️⃣ Syntax of GROUP BY**
+```sql
+SELECT column_name, AGGREGATE_FUNCTION(column_name)
+FROM table_name
+WHERE condition
+GROUP BY column_name;
+```
+
+---
+
+### **3️⃣ Example Table: Orders**
+| order_id | customer_id | product  | amount | city      |
+|----------|------------|----------|--------|-----------|
+| 101      | 1          | Laptop   | 50000  | New York  |
+| 102      | 2          | Phone    | 20000  | London    |
+| 103      | 1          | Headphones | 5000  | New York  |
+| 104      | 3          | Laptop   | 60000  | Paris     |
+| 105      | 2          | Phone    | 25000  | London    |
+| 106      | 3          | Phone    | 22000  | Paris     |
+
+---
+
+## **4️⃣ Basic GROUP BY Examples**
+### **Example 1: Count orders per customer**
+```sql
+SELECT customer_id, COUNT(order_id) AS total_orders
+FROM Orders
+GROUP BY customer_id;
+```
+✅ **Output:**  
+| customer_id | total_orders |
+|------------|-------------|
+| 1          | 2           |
+| 2          | 2           |
+| 3          | 2           |
+
+---
+
+### **Example 2: Total sales per customer**
+```sql
+SELECT customer_id, SUM(amount) AS total_spent
+FROM Orders
+GROUP BY customer_id;
+```
+✅ **Output:**  
+| customer_id | total_spent |
+|------------|------------|
+| 1          | 55000      |
+| 2          | 45000      |
+| 3          | 82000      |
+
+---
+
+### **Example 3: Average order amount per city**
+```sql
+SELECT city, AVG(amount) AS avg_order_value
+FROM Orders
+GROUP BY city;
+```
+✅ **Output:**  
+| city     | avg_order_value |
+|----------|----------------|
+| New York | 27500          |
+| London   | 22500          |
+| Paris    | 41000          |
+
+---
+
+## **5️⃣ GROUP BY with HAVING**
+🔹 `HAVING` is used to **filter groups after aggregation**, similar to `WHERE`, but `WHERE` cannot be used with aggregate functions.
+
+### **Example: Customers who spent more than 50,000**
+```sql
+SELECT customer_id, SUM(amount) AS total_spent
+FROM Orders
+GROUP BY customer_id
+HAVING SUM(amount) > 50000;
+```
+✅ **Output:**  
+| customer_id | total_spent |
+|------------|------------|
+| 3          | 82000      |
+
+---
+
+## **6️⃣ GROUP BY Multiple Columns**
+🔹 You can group by multiple columns to get more detailed results.
+
+### **Example: Total sales per city and product**
+```sql
+SELECT city, product, SUM(amount) AS total_sales
+FROM Orders
+GROUP BY city, product;
+```
+✅ **Output:**  
+| city     | product     | total_sales |
+|----------|------------|-------------|
+| New York | Laptop     | 50000       |
+| New York | Headphones | 5000        |
+| London   | Phone      | 45000       |
+| Paris    | Laptop     | 60000       |
+| Paris    | Phone      | 22000       |
+
+---
+
+## **7️⃣ Difference Between GROUP BY and DISTINCT**
+| Feature  | GROUP BY | DISTINCT |
+|----------|---------|----------|
+| **Purpose** | Groups data and applies aggregate functions | Returns unique values |
+| **Supports Aggregation?** | ✅ Yes | ❌ No |
+| **Example Usage** | `SELECT city, COUNT(*) FROM Orders GROUP BY city;` | `SELECT DISTINCT city FROM Orders;` |
+
+---
+
+## **📌 When to Use GROUP BY?**
+✅ **Use GROUP BY when:**  
+- You need **aggregated results** (SUM, COUNT, AVG, etc.).  
+- You want to **group rows by a specific column**.  
+- You need **HAVING for filtering aggregated results**.  
+
+Would you like more complex queries, like **window functions**? 😊

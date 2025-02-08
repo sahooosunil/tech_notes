@@ -1,0 +1,230 @@
+### URI Prefix-Based Routing in Istio
+
+In Istio, URI prefix-based routing allows you to direct traffic to different versions of your application based on the request path. This is especially useful when you want to test new features in production without exposing them to all users.
+
+#### Scenario:
+Suppose your domain is `xyz.com`, and you have a new feature you want to test under `xyz.com/experimental`. Only users accessing this specific URI should see the new feature, while others continue using the stable version.
+
+#### Routing Configuration:
+Istio enables routing based on URI prefixes, exact matches, or even regex patterns. Additionally, you can route traffic based on other request attributes like scheme (HTTP/HTTPS), HTTP method (GET/POST/PUT), query parameters, and headers.
+
+### Example Configuration
+
+#### Prefix-Based Routing:
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ingress-gateway-configuration
+spec:
+  selector:
+    istio: ingressgateway  # Use Istio's default ingress gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"  # Accept traffic for all domain names
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  hosts:
+    - "*"  # Match incoming requests for all hosts
+  gateways:
+    - ingress-gateway-configuration
+  http:
+    - match:
+      - uri:  # If URI starts with /experimental
+          prefix: "/experimental"
+      - uri:  # Or if URI starts with /canary
+          prefix: "/canary"
+      route:  # Then route to the experimental subset
+      - destination:
+          host: fleetman-webapp
+          subset: experimental
+    - match:
+      - uri:  # Default routing for other URIs
+          prefix: "/"
+      route:
+      - destination:
+          host: fleetman-webapp
+          subset: original
+---
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  host: fleetman-webapp
+  subsets:
+    - name: original
+      labels:
+        version: original  # Pods labeled with version: original
+    - name: experimental
+      labels:
+        version: experimental  # Pods labeled with version: experimental
+```
+
+#### Subdomain-Based Routing:
+If your application is sensitive to path/prefix changes, you can use subdomain-based routing. For example, `experimental.xyz.com` can point to the experimental version of your application.
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ingress-gateway-configuration
+spec:
+  selector:
+    istio: ingressgateway  # Use Istio's default ingress gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*.xyz.com"  # Match subdomains like experimental.xyz.com
+    - "xyz.com"    # Match the main domain
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  hosts:
+    - "xyz.com"  # Main domain for original traffic
+  gateways:
+    - ingress-gateway-configuration
+  http:
+    - route:
+      - destination:
+          host: fleetman-webapp
+          subset: original
+---
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp-experiment
+  namespace: default
+spec:
+  hosts:
+    - "experimental.xyz.com"  # Subdomain for experimental traffic
+  gateways:
+    - ingress-gateway-configuration
+  http:
+    - route:
+      - destination:
+          host: fleetman-webapp
+          subset: experimental
+---
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  host: fleetman-webapp
+  subsets:
+    - name: original
+      labels:
+        version: original
+    - name: experimental
+      labels:
+        version: experimental
+```
+
+### Key Points:
+- **Prefix-Based Routing**: Directs traffic based on URI prefixes like `/experimental` or `/canary`.
+- **Subdomain-Based Routing**: Useful for applications sensitive to URI paths, using subdomains like `experimental.xyz.com`.
+- **Flexible Matching**: Istio allows traffic routing based on various request attributes like headers, methods, and query parameters.
+
+This approach ensures precise control over traffic flow, enabling gradual feature rollouts and minimizing the risk of exposing new features prematurely.
+-------------------------------------------------------------------
+### Dark Releases in Istio
+---------------------------------------
+Dark releases allow you to deploy a new version of your application in production while only making it accessible to specific users, such as developers or testers. In Istio, you can achieve this by configuring custom routing in a `VirtualService` based on a specific header value. If the header is present in the request, the traffic is routed to the new version (a different subset of pods). If the header is not present, the traffic is routed to the existing version.
+
+This setup enables you to safely test new features in a live environment without exposing them to all users.
+
+### Example Configuration
+
+#### Gateway Configuration
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: ingress-gateway-configuration
+spec:
+  selector:
+    istio: ingressgateway  # Use Istio's default ingress gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "sunil.com"  # Accept traffic for all domain names
+```
+
+#### VirtualService Configuration
+
+```yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  hosts:
+    - "sunil.com"  # Apply proxy rules to all incoming hosts/ here also you can mention the service name if service to service call happens
+  gateways:
+    - ingress-gateway-configuration
+  http:
+    - match:  # IF the header 'my-header' equals 'canary'
+      - headers:
+          my-header:
+            exact: canary
+      route:  # THEN route to the experimental subset
+      - destination:
+          host: fleetman-webapp
+          subset: experimental
+    - route:  # ELSE route to the original subset (default behavior)
+      - destination:
+          host: fleetman-webapp
+          subset: original
+```
+
+#### DestinationRule Configuration
+
+```yaml
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-webapp
+  namespace: default
+spec:
+  host: fleetman-webapp
+  subsets:
+    - name: original
+      labels:
+        version: original  # Pods labeled with version: original
+    - name: experimental
+      labels:
+        version: experimental  # Pods labeled with version: experimental
+```
+
+### Key Points:
+- **Custom Header Routing**: Use a specific header (e.g., `my-header: canary`) to route traffic to the new version of your app.
+- **Selective Access**: Only users or systems with the appropriate header can access the new feature, making it ideal for internal testing.
+- **Safe Rollout**: Test new features in production without affecting regular users, reducing the risk of widespread issues.
+
+This approach ensures a controlled and safe rollout of new features, allowing developers and testers to validate the new version in a real-world environment.
+      

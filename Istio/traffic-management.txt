@@ -1,0 +1,182 @@
+### What is Canary Deployment?
+suppose you release a new verison into prod and it did not work and if million users are accessing your app then you ll get a million of unhappy customers and 
+you ll get a million of support tickets.
+
+Canary deployment is a strategy used to release a new version of an application alongside the old version. A small percentage of the traffic is directed to the new version, allowing you to test it with a limited audience. 
+This approach minimizes the impact if something goes wrong with the new version, as only a small portion of users will be affected. 
+This also helps in reducing support tickets, as you can catch issues early with fewer users.
+
+### Simple Way to Implement Canary Deployment in Kubernetes
+
+To implement a basic canary deployment in Kubernetes, you can create a new deployment with the updated version of your app. 
+For example, suppose you have 2 pods running the old version and 1 pod running the new version. 
+Kubernetes' built-in load balancing will route around 33% of the traffic to the new version and 66% to the old version.
+This works, but it is not the most efficient method. If you want to adjust the traffic distribution (e.g., increase or decrease the percentage of traffic going to the new version), you’ll have to manually change the number of pods, which can be cumbersome and inefficient.
+
+### Limitations of This Approach
+This approach is not ideal because adjusting traffic percentages requires manual intervention in pod scaling. 
+A better solution involves using more advanced strategies, like Istio or other traffic management tools, to handle traffic distribution more dynamically and efficiently.
+-----------------------------------------------------
+When working with Istio, it's important to label your pods with `app: appname`. 
+This helps in organizing and visualizing the services as a group in the **App Graph** within the **Kiali UI**.
+
+If you want to view versioned application graphs in Kiali, you should also add a label called `version` to your pods. 
+This allows Kiali to group multiple pods based on their version, making it easier to visualize and compare the different versions of your application in the graph.
+
+By adding these labels, you enhance the observability and management of your application in Istio, 
+allowing you to track traffic, performance, and deployment status for different versions and services within your mesh.
+------------------------------------------------------
+In Kubernetes, a **Service** is a logical abstraction that enables communication between different components, such as between pods or between external clients and your app. Here's how it works:
+
+### How a Service Works in Kubernetes:
+
+1. **Pods and Internal DNS**
+   Suppose you have an application deployed in Kubernetes, with 3 pods running instances of that app. 
+   Kubernetes maintains an internal DNS (using **Kube-DNS** or **CoreDNS**) that keeps track of the IP addresses of these pods.
+
+2. **Service Creation**
+   A **Kubernetes Service** is created to expose these pods, providing a stable endpoint for accessing the application. 
+   Rather than accessing individual pods directly, clients can connect to the Service using its DNS name (e.g., `my-app-service.default.svc.cluster.local`). 
+   This Service resolves to the corresponding set of pods.
+
+3. **Load Balancing**
+   When a client makes a request to the Service, Kubernetes applies **load balancing** to distribute the traffic evenly across the available pods. 
+   Kubernetes uses an **iptables** or **IPVS** mechanism to manage the load balancing. 
+   The Service will return one of the pod IPs based on the load balancing strategy.
+
+4. **Stable Network Identity**
+   Kubernetes Services provide a stable **IP address** and **DNS name**, even if the underlying pods' IPs change over time (due to pod restarts or scaling). 
+   This ensures that clients can consistently access the app without worrying about the individual pod IPs.
+
+### Summary
+A Kubernetes Service acts as a stable, virtual IP address for accessing a set of pods. 
+It automatically manages load balancing between those pods, ensuring that traffic is distributed evenly and reliably. 
+The Service abstracts the complexity of dealing with pod IPs, providing a simple and consistent way to interact with the application.
+------------------------------------------------------------------------------
+### Virtual Service and Destination Rules
+
+#### Virtual Service
+A **Virtual Service** in Istio allows you to define custom routing rules for your service mesh. When you apply a virtual service, **istiod** (the Istio control plane) configures these rules in each **Envoy proxy** running as a sidecar in your pods. Since all traffic passes through these proxies, the custom rules are automatically applied, enabling features like **canary deployments**.
+
+In this setup, Istio handles the configuration of the virtual service and the custom routing rules across all proxies, while **Envoy** (the proxy) actually enforces these rules, performing tasks like canary deployments and advanced traffic management.
+
+#### Destination Rule
+A **Destination Rule** defines how traffic is routed to different subsets of pods. It allows you to apply custom load balancing, connection pooling, and more. Subsets are groups of pods that are selected based on specific labels.
+
+In the example below, the destination rule creates two subsets: `safe-group` and `risky-group`, based on the `version` label. This allows you to manage traffic routing between these groups, such as directing 90% of traffic to the "safe" version and 10% to the "risky" version. 
+
+### Example Configuration
+
+#### Virtual Service
+```yaml
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: custom-routing-rules  # A name for this virtual service
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service.default.svc.cluster.local  # The Service DNS name
+  http:
+    - route:
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local  # Target Service DNS
+            subset: safe-group  # Defined in the DestinationRule
+          weight: 90
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local  # Target Service DNS
+            subset: risky-group  # Defined in the DestinationRule
+          weight: 10
+```
+
+#### Destination Rule
+```yaml
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: canary-release-groups  # A descriptive name
+  namespace: default
+spec:
+  host: fleetman-staff-service  # Service name
+  subsets:
+    - name: safe-group  # Subset name
+      labels:
+        version: safe  # Pods with this label are part of this subset
+    - name: risky-group  # Subset name
+      labels:
+        version: risky  # Pods with this label are part of this subset
+```
+
+### Summary
+- **Virtual Services** allow you to define how traffic is routed within your service mesh.
+- **Destination Rules** group pods into subsets based on labels and define how traffic is managed between these subsets.
+- By using these configurations, you can implement sophisticated traffic management strategies like canary deployments, 
+ensuring smooth rollouts and better control over your application’s traffic.
+------------------------------------------------------------------------------------------------
+### Session Affinity (Stickiness)
+---------------------------------------------
+
+**Session Affinity** ensures that once a user connects to a specific version of your application (e.g., during a canary deployment), they continue to be routed to the same version for all subsequent requests. This maintains a consistent experience for the user.
+
+You can implement session stickiness using various methods such as an HTTP header, user IP address, HTTP cookie, or `minimumRingSize`.
+
+### How Sticky Sessions Work
+
+When a client sends a request, the load balancer calculates a hash based on factors like the user’s IP address, HTTP headers, or cookies. This hash determines which pod the request is routed to. As long as the same factors are used, the hash remains consistent, and the user is routed to the same pod for subsequent requests.
+
+Here’s how it works:
+1. **Hashing**: A hashing algorithm generates a consistent hash value from the input data. Repeated inputs produce the same hash, ensuring consistent routing.
+2. **Sticky Session in Action**: Each time the user sends a request, the load balancer calculates the hash, ensuring the request goes to the same pod.
+
+### Important Considerations
+
+- **Hashing Algorithm**: The same input data always produces the same hash, ensuring consistent routing.
+- **Sticky Sessions with Weighted Routing**: Sticky sessions don't work well with weighted routing across multiple load balancers. If there are multiple sets of pods with different weights, the request may go to different load balancers, breaking the sticky session.
+- **Header Propagation**: Ensure that the header used for consistent hashing is propagated through all microservices involved in the request chain.
+
+### Example Configuration for Sticky Session
+
+Here’s a simple configuration using Istio to implement sticky sessions with a consistent hash based on an HTTP header:
+
+```yaml
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: custom-routing-rules  # A descriptive name for this VirtualService
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service.default.svc.cluster.local  # The Service DNS name
+  http:
+    - route:
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local  # Target Service DNS
+            subset: all-staff-service-pods  # Subset defined in the DestinationRule
+```
+
+```yaml
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: canary-release-grouping  # A descriptive name for this DestinationRule
+  namespace: default
+spec:
+  host: fleetman-staff-service  # Service name
+  trafficPolicy:
+    loadBalancer:
+      consistentHash:
+        httpHeaderName: "x-myval"  # Header used for consistent hashing
+  subsets:
+    - name: all-staff-service-pods  # Subset name
+      labels:
+        app: staff-service  # Pods with this label are part of this subset
+```
+
+### Summary
+- **Session Affinity** ensures consistent user experience by routing a user's requests to the same pod.
+- It uses consistent hashing based on factors like headers, IP addresses, or cookies.
+- Sticky sessions don’t work well with weighted routing across multiple load balancers.
+- Ensure proper header propagation across microservices for consistent hashing.
+
+One good usecase of stikysession is if a user request always go to the same pod and you want to cache the response in the pod if the input is same(to save heavy performace )
+but it will not work 100% of the time because the pod may crach and a new pod may come up or rescheduled. in that case cache will not work and the request will go to another pod and again the processing/calculation will happen

@@ -1,0 +1,280 @@
+Linux has different shells, such as Bash, `sh`, and `zsh`.  
+
+- **What are shells?**  
+  Shells act as a layer between the user and the kernel (the core of the operating system). They take the commands you type, check the syntax, and, if the command is valid, convert it into a format that the kernel understands.  
+
+- **Commonality across shells**  
+  Most commands work the same across different shells, but some advanced features might differ.  
+
+- **What is a shebang?**  
+  When you write `#!/bin/bash` at the beginning of a shell script, it tells the operating system to use the Bash shell to run the script.  
+  ---
+
+**Common Linux Commands**  
+1. **Check free memory:**  
+   ```bash
+   free
+   ```  
+2. **Check available CPUs:**  
+   ```bash
+   nproc
+   ```  
+3. **Check disk space usage:**  
+   ```bash
+   df
+   ```  
+4. **View memory, CPU, and other system information in real-time:**  
+   ```bash
+   top
+   ```  
+---
+**Debugging Shell Scripts**  
+To enable debug mode in a shell script (to see commands as they are executed), add the following line:  
+```bash
+set -x
+```  
+---
+**Best Practices for Writing Shell Scripts**  
+1. **Include metadata at the beginning of the script.**  
+   Metadata should provide useful details about the script, such as:  
+   - Author: Who created the script  
+   - Date: When the script was created  
+   - Version: The version of the script  
+   - Purpose: What the script is designed to do  
+   **Example:**  
+   ```bash
+   #!/bin/bash
+   # Author: John Doe
+   # Created: 2024-12-26
+   # Version: 1.0
+   # Purpose: Automates system monitoring tasks
+   ```  
+By following these practices, your shell scripts will be easier to understand, debug, and maintain.  
+------------------------------------------------------------------
+Interview questions
+-------------------------
+### **Linux and Shell Scripting Questions**
+
+#### 1. **How to find all the running processes and their process IDs?**
+```bash
+ps -ef
+```
+- Lists all processes with details such as user, PID, start time, and command.
+
+#### 2. **How to find all processes running from a specific user, e.g., "amazon"?**
+```bash
+ps -ef | grep "amazon"
+```
+- Searches the list of running processes for those containing the keyword "amazon".
+
+---
+
+#### 3. **Explain the below commands in one line:**
+- **`set -e`:** Exit the script immediately if any command returns a non-zero exit code.
+- **`set -o pipefail`:** Ensures the script exits if any command in a pipeline fails.
+- **`curl <url>`:** Makes an API call to the specified URL and displays the response.
+
+---
+
+#### 4. **Write a shell script to print all the process IDs running in the system.**
+```bash
+ps -ef | awk '{print $2}'
+```
+- Extracts and prints the second column (PID) of the output from `ps -ef`.
+
+---
+
+#### 5. **Command to get a remote log file and filter only the trace logs:**
+```bash
+curl "file-url" | grep "Trace"
+```
+- Downloads the log file from the specified URL and filters lines containing the keyword "Trace".
+
+---
+
+#### 6. **Write a program to print numbers divisible by 3 or 5 but not 15.**
+```bash
+#!/bin/bash
+for ((i=1; i<=200; i++)); do
+  if ((i % 3 == 0 || i % 5 == 0)) && ((i % 15 != 0)); then
+    echo "$i"
+  fi
+done
+```
+
+---
+
+#### 7. **What is the `<<<` operator?**
+- The `<<<` operator (here-string) sends a string as input to a command.
+
+**Example:**
+```bash
+x="misssssing"
+grep -o "s" <<< "$x" | wc -l
+```
+- Counts the number of occurrences of "s" in the string `x`. Output: `6`.
+
+---
+
+#### 8. **How to debug a shell script?**
+- Use these options:
+  - **`set -x`:** Enables debugging by printing each command before executing it.
+  - **`set -e`:** Stops the script if an error occurs.
+  - Add `echo` statements to inspect variables and logic flow.
+
+---
+
+#### 9. **What is `crontab` in Linux shell scripting?**
+- **`crontab`** is a scheduler to automate tasks. It allows you to run scripts or commands at specific intervals (daily, weekly, etc.).
+
+**Example:**
+```bash
+# Edit crontab
+crontab -e
+# Schedule a script to run every day at 2 AM
+0 2 * * * /path/to/script.sh
+```
+---
+### 10.What is du -sh Command?
+- The du -sh command in Linux is used to display the total size of a directory or file in a human-readable format.
+
+Breakdown of the Command:
+du: Disk Usage - A command to check the size of files and directories.
+-s: Summary - Shows only the total size of the specified directory or file, not the size of individual files within it.
+-h: Human-readable - Formats the output in KB, MB, or GB for easy understanding.
+
+---
+
+#### 10. **How to open a file in read-only mode?**
+```bash
+less <filename>
+```
+- Opens the file in a read-only mode with navigation options.
+
+---
+
+#### 11. **Difference between soft link and hard link:**
+| Feature          | Soft Link (Symbolic Link)   | Hard Link               |
+|-------------------|-----------------------------|-------------------------|
+| Points To         | File path                  | File data (inode)       |
+| Broken Link       | Becomes invalid            | Remains valid           |
+| Cross Filesystem  | Allowed                    | Not allowed             |
+| Use               | Creates shortcuts          | Backup or duplicate use |
+
+---
+
+#### 12. **Disadvantages of Shell Scripting**
+- Frequent and costly errors.
+- Slow execution speed.
+- Limited language syntax.
+- Poor handling of large/complex tasks.
+- Minimal data structure support.
+- New process launched for each command.
+- Doesn't complain about undeclared variables unless `set -u` is used.
+
+---
+
+#### 13. **Is Shell dynamically or statically typed?**
+- **Dynamically typed**: Variables do not require a declared type.
+
+---
+
+#### 14. **Networking troubleshooting tools in Linux:**
+- **`traceroute <host>`:** Traces the route packets take to reach a host.
+- **`tracepath <host>`:** Similar to `traceroute`, but more user-friendly.
+
+---
+
+#### 15. **How do you sort in shell scripts?**
+- Use the `sort` command.
+
+**Example:**
+```bash
+sort file.txt
+```
+- Sorts the lines in the file alphabetically.
+
+---
+
+#### 16. **What is Logrotate in shell scripts?**
+- **Logrotate**: Manages log files by compressing, rotating, and removing old logs.
+
+----------------------------
+
+### **Cloud and DevOps Questions**
+
+#### 17. **Why are organizations moving to the cloud?**
+1. **Scalability:** Easily scale resources up or down as needed.
+2. **Cost-effectiveness:** Pay for what you use; reduce hardware costs.
+3. **Accessibility:** Access from anywhere with an internet connection.
+4. **Reliability:** Improved uptime and disaster recovery options.
+
+---
+
+#### 18. **How do DevOps and Cloud work together?**
+- DevOps processes such as CI/CD, automation, and monitoring are implemented on cloud platforms for faster and more reliable deployments.
+
+---
+
+#### 19. **Write a script to report AWS usage in your project.**
+```bash
+#!/bin/bash
+echo "Listing S3 Buckets:"
+aws s3 ls
+
+echo "Listing EC2 Instances:"
+aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name]" --output table
+
+echo "Listing Lambda Functions:"
+aws lambda list-functions
+
+echo "Listing IAM Users:"
+aws iam list-users
+```
+-------------------------------------------------------------------------
+The `nohup` (short for "no hang up") command in Unix and Linux systems is used to run another command or script in such a way that it will continue running even after the user logs out or closes the terminal.
+
+### Key Features of `nohup`:
+1. **Persistent Execution:** Normally, when a user logs out or closes a terminal, processes started from that terminal receive a SIGHUP (hangup signal) and terminate. `nohup` prevents this by ignoring the SIGHUP signal, allowing the process to continue running.
+
+2. **Output Redirection:** By default, `nohup` redirects the standard output (stdout) and standard error (stderr) to a file named `nohup.out` in the current directory. This is because once the terminal is closed, the process loses its output streams.
+
+3. **Background Execution:** Typically used in conjunction with `&` to run the command in the background, freeing up the terminal for other tasks.
+
+### Syntax:
+```bash
+nohup command [arguments] &
+```
+
+### Example:
+```bash
+nohup python myscript.py &
+```
+This runs `myscript.py` in the background and ensures it continues to run even if the terminal is closed.
+
+### Practical Use:
+- **Running Long-Running Jobs:** Useful for running scripts or programs that take a long time to complete without needing an open terminal.
+- **Daemon Processes:** Often used for starting server processes or daemons that should persist independently of user sessions.
+
+Would you like more examples or details about using `nohup`?
+-----------------------------------------------------------------------
+The `&` symbol in a Unix or Linux command is used to run the command in the background. Here's what it does:
+
+### Key Points about `&`:
+1. **Background Execution:** Placing `&` at the end of a command tells the shell to run the command in the background, freeing up the terminal for other tasks. The shell will not wait for the command to finish; instead, it returns immediately with a prompt for the next command.
+
+2. **Process ID Display:** When a command is run with `&`, the shell displays the process ID (PID) of the background job. You can use this PID to manage the background process later, such as stopping it or bringing it back to the foreground.
+
+### Example:
+```bash
+nohup python myscript.py &
+```
+- **Without `&`:** The terminal would be occupied by `myscript.py` until it finishes.
+- **With `&`:** `myscript.py` runs in the background, and you can immediately use the terminal for other commands.
+
+### Managing Background Jobs:
+- **Listing Jobs:** You can use the `jobs` command to list background jobs.
+- **Bringing a Job to Foreground:** Use `fg %job_number` to bring a background job to the foreground.
+- **Killing a Job:** Use `kill PID` to stop a background job using its PID.
+
+The `&` symbol is a powerful way to manage multiple processes in a Unix/Linux environment. Would you like to know more about job control or any other related commands?

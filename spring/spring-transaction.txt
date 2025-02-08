@@ -1,0 +1,447 @@
+### **Spring Transactions & ACID Properties**  
+
+**Transaction** in Spring ensures that a sequence of operations executes as a single unit, maintaining data integrity and consistency. Spring uses **Spring Transaction Management (Declarative & Programmatic)** to handle transactions effectively.  
+
+---
+
+## **1️⃣ ACID Properties in Transactions**  
+A **transaction** should follow the **ACID** properties to ensure consistency in the database.
+
+### **🔹 A - Atomicity (All or Nothing)**
+- A transaction should be **fully completed or fully rolled back**.
+- If one step fails, the entire transaction is undone.
+- **Spring Solution**: `@Transactional(rollbackFor = Exception.class)`
+
+🔹 **Example**:  
+```java
+@Transactional
+public void transferMoney(String fromAccount, String toAccount, double amount) {
+    withdraw(fromAccount, amount); // If fails, deposit won't execute
+    deposit(toAccount, amount);
+}
+```
+If `withdraw()` fails, **deposit() won't execute**, and changes are rolled back.
+
+---
+
+### **🔹 C - Consistency (Maintains Data Integrity)**
+- The database **must always remain in a valid state** before and after a transaction.
+- Constraints (e.g., foreign keys, unique constraints) ensure consistency.
+
+🔹 **Spring Solution**:  
+- Enforce **constraints at the database level**.
+- Use `@Transactional` to **rollback if constraints fail**.
+
+🔹 **Example**:  
+```java
+@Transactional
+public void createOrder(Order order) {
+    orderRepository.save(order); // Order is inserted
+    paymentService.processPayment(order); // If payment fails, rollback order
+}
+```
+If `processPayment()` fails, **orderRepository.save(order)** is rolled back.
+
+---
+
+### **🔹 I - Isolation (Concurrency Control)**
+- Prevents multiple transactions from interfering with each other.
+- Different **isolation levels** prevent problems like **dirty reads, non-repeatable reads, and phantom reads**.
+
+🔹 **Spring Solution**: `@Transactional(isolation = Isolation.SERIALIZABLE)`
+
+#### **Isolation Levels in Spring**:
+1. **READ_UNCOMMITTED** – Dirty reads allowed (fastest, least safe).  
+2. **READ_COMMITTED (Default)** – No dirty reads but allows non-repeatable reads.  
+3. **REPEATABLE_READ** – Prevents dirty and non-repeatable reads, but allows phantom reads.  
+4. **SERIALIZABLE** – Fully isolates transactions (slowest but safest).  
+
+🔹 **Example**:  
+```java
+@Transactional(isolation = Isolation.REPEATABLE_READ)
+public void checkAccountBalance(Long accountId) {
+    Account account = accountRepository.findById(accountId);
+    // Other transactions cannot modify this account until this transaction is complete
+}
+```
+---
+
+### **🔹 D - Durability (Permanent Changes)**
+- Once a transaction is committed, changes are **permanently saved**, even if the system crashes.
+- **Spring Solution**: Database ensures durability via **logs & disk storage**.
+
+🔹 **Example**:  
+```java
+@Transactional
+public void processOrder(Order order) {
+    orderRepository.save(order);
+    paymentService.charge(order);
+    // Once committed, order and payment records are permanently saved
+}
+```
+Even if the server crashes, the order is **not lost** after a commit.
+
+---
+
+## **2️⃣ How Spring Prevents Transaction Issues?**
+| Issue                 | Description | Spring Solution |
+|-----------------------|-------------|----------------|
+| **Dirty Read** | Reading uncommitted data from another transaction | **Use `READ_COMMITTED` isolation** |
+| **Non-Repeatable Read** | Data changes between two reads in a transaction | **Use `REPEATABLE_READ` isolation** |
+| **Phantom Read** | New records added in another transaction while reading | **Use `SERIALIZABLE` isolation** |
+| **Lost Update** | Two transactions overwrite each other’s changes | **Use `OPTIMISTIC` or `PESSIMISTIC` locking** |
+
+---
+
+## **3️⃣ Spring Transaction Management Approaches**
+### **🔹 Declarative (Preferred)**
+- Uses `@Transactional` annotation to **automatically manage transactions**.
+- **Example**:  
+```java
+@Service
+public class PaymentService {
+    @Transactional
+    public void processPayment(Payment payment) {
+        paymentRepository.save(payment);
+    }
+}
+```
+Spring **automatically begins, commits, or rolls back** the transaction.
+
+### **🔹 Programmatic (Manual Handling)**
+- Explicitly **begin, commit, and rollback** transactions.
+- **Example**:  
+```java
+public void processOrder() {
+    TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+    try {
+        orderRepository.save(order);
+        transactionManager.commit(status);
+    } catch (Exception e) {
+        transactionManager.rollback(status);
+    }
+}
+```
+---
+
+## **Conclusion**
+- **Use `@Transactional` for automatic transaction management**.  
+- **Choose the right `isolation level`** to avoid concurrency issues.  
+- **Handle rollback properly** to maintain atomicity.  
+- **Leverage database durability mechanisms** for reliability.  
+
+Would you like an in-depth example with multiple services? 🚀
+-------------------
+### **`@Transactional` Annotation in Spring Boot – All Variations & Examples**  
+
+Spring Boot's `@Transactional` annotation provides different variations to control transaction behavior based on use cases. Here’s a detailed breakdown:
+
+---
+
+## **1️⃣ Default Usage of `@Transactional`**
+By default, `@Transactional` ensures that all operations within the annotated method execute **as a single transaction**.  
+If any exception occurs, the **entire transaction is rolled back**.  
+
+🔹 **Example (Default Behavior)**:
+```java
+@Service
+public class OrderService {
+    
+    @Transactional
+    public void placeOrder(Order order) {
+        orderRepository.save(order);
+        paymentService.charge(order.getPayment()); // If this fails, rollback happens
+    }
+}
+```
+**Default Behavior**:
+- **Commit** when no exception occurs.
+- **Rollback** if a **runtime exception (unchecked exception)** occurs.
+
+---
+
+## **2️⃣ `rollbackFor` & `noRollbackFor` (Exception Handling)**
+By default, Spring **only rolls back for unchecked exceptions (`RuntimeException`)**, but not for checked exceptions (`Exception`).  
+
+### **🔹 Force Rollback for Checked Exception**
+```java
+@Transactional(rollbackFor = Exception.class)
+public void updateOrder(Order order) throws Exception {
+    orderRepository.save(order);
+    throw new Exception("Some business logic error!"); // Will be rolled back
+}
+```
+
+### **🔹 Prevent Rollback for Specific Exceptions**
+```java
+@Transactional(noRollbackFor = {NullPointerException.class})
+public void updateInventory() {
+    inventoryRepository.updateStock();
+    throw new NullPointerException("Error occurred!"); // Will NOT be rolled back
+}
+```
+
+---
+
+## **3️⃣ `propagation` (Transaction Propagation Behavior)**
+**Propagation** defines how a method should behave **inside or outside an existing transaction**.
+
+| Propagation Type | Description |
+|-----------------|-------------|
+| `REQUIRED` (Default) | Uses existing transaction, or creates a new one if none exists. |
+| `REQUIRES_NEW` | Always creates a new transaction, suspending any existing one. |
+| `SUPPORTS` | Uses existing transaction if available, else runs without a transaction. |
+| `NOT_SUPPORTED` | Runs without a transaction, suspending any existing one. |
+| `NEVER` | Throws an error if an active transaction exists. |
+| `MANDATORY` | Requires an existing transaction, else throws an error. |
+| `NESTED` | Runs in a nested transaction inside an existing one. |
+
+### **🔹 `REQUIRED` (Default)**
+```java
+@Transactional(propagation = Propagation.REQUIRED)
+public void processOrder(Order order) {
+    orderRepository.save(order); // Uses the existing transaction or creates a new one
+}
+```
+
+### **🔹 `REQUIRES_NEW` (For Independent Transactions)**
+```java
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public void sendEmailNotification() {
+    emailService.sendEmail(); // Runs in a separate transaction
+}
+```
+- **Existing transaction is suspended**.
+- If this transaction fails, the outer transaction remains unaffected.
+
+### **🔹 `NESTED` (Sub-Transaction Inside a Main Transaction)**
+```java
+@Transactional(propagation = Propagation.NESTED)
+public void applyDiscount(Order order) {
+    discountRepository.save(order.getDiscount());
+}
+```
+- If **inner transaction fails**, it **rolls back** only its changes.
+- **Outer transaction remains active**.
+
+---
+
+## **4️⃣ `isolation` (Concurrency Control)**
+Defines how transactions **isolate** from other transactions.
+
+| Isolation Level | Description |
+|----------------|-------------|
+| `DEFAULT` | Uses database's default isolation level. |
+| `READ_UNCOMMITTED` | Allows dirty reads (Fastest, Least Safe). |
+| `READ_COMMITTED` | Prevents dirty reads but allows non-repeatable reads. |
+| `REPEATABLE_READ` | Prevents non-repeatable reads but allows phantom reads. |
+| `SERIALIZABLE` | Fully isolates transactions (Slowest, Most Safe). |
+
+### **🔹 Prevent Dirty Reads (`READ_COMMITTED`)**
+```java
+@Transactional(isolation = Isolation.READ_COMMITTED)
+public void updateProductStock() {
+    productRepository.updateStock();
+}
+```
+
+### **🔹 Prevent Phantom Reads (`SERIALIZABLE`)**
+```java
+@Transactional(isolation = Isolation.SERIALIZABLE)
+public void generateMonthlyReport() {
+    reportRepository.generateReport();
+}
+```
+- Ensures that **no new data is added** while reading.
+
+---
+
+## **5️⃣ `timeout` (Transaction Timeout)**
+If a transaction **takes longer than the specified time**, it **automatically rolls back**.
+
+### **🔹 Example: Rollback if the Transaction Takes More than 5 Seconds**
+```java
+@Transactional(timeout = 5)
+public void processBulkOrders() {
+    orderRepository.bulkInsert();
+}
+```
+If this method **runs longer than 5 seconds**, it is **rolled back**.
+
+---
+
+## **6️⃣ `readOnly` (Optimizing Read Transactions)**
+For **read-only operations**, setting `readOnly = true` improves **performance**.
+
+### **🔹 Example: Fetching Data (No Updates Allowed)**
+```java
+@Transactional(readOnly = true)
+public List<Product> getAllProducts() {
+    return productRepository.findAll();
+}
+```
+- **Optimized for queries** (Prevents accidental modifications).
+
+---
+
+## **7️⃣ Combining Multiple Parameters**
+You can combine different parameters in `@Transactional`.
+
+### **🔹 Example**
+```java
+@Transactional(
+    propagation = Propagation.REQUIRED,
+    isolation = Isolation.REPEATABLE_READ,
+    timeout = 10,
+    rollbackFor = {SQLException.class, RuntimeException.class}
+)
+public void makePayment(Payment payment) {
+    paymentRepository.save(payment);
+}
+```
+- Uses an **existing transaction** or creates a new one.
+- Ensures **repeatable reads** (prevents data inconsistency).
+- **Rolls back** for SQL exceptions and runtime exceptions.
+- **Timeout of 10 seconds**.
+
+---
+
+## **8️⃣ `@Transactional` at Class Level**
+Instead of applying `@Transactional` to every method, you can **declare it at the class level**.
+
+🔹 **Example**:
+```java
+@Service
+@Transactional
+public class AccountService {
+    
+    public void withdrawMoney() {
+        // Transactional automatically applies
+    }
+    
+    public void depositMoney() {
+        // Transactional automatically applies
+    }
+}
+```
+- **All public methods** inside this class are **transactional by default**.
+
+---
+
+## **Conclusion**
+| Feature | Description | Example |
+|---------|-------------|---------|
+| **Rollback on Exception** | Rollback for checked/unchecked exceptions | `rollbackFor = Exception.class` |
+| **No Rollback on Exception** | Prevent rollback for specific exceptions | `noRollbackFor = SQLException.class` |
+| **Propagation** | Control transaction behavior across methods | `propagation = Propagation.REQUIRES_NEW` |
+| **Isolation** | Manage concurrency issues | `isolation = Isolation.REPEATABLE_READ` |
+| **Timeout** | Automatically rollback if execution time exceeds limit | `timeout = 5` |
+| **Read-Only** | Optimize performance for queries | `readOnly = true` |
+
+Would you like an advanced example with **multiple services**? 🚀
+---------------------------
+
+### **Database Read Anomalies**  
+When multiple transactions operate concurrently, **read anomalies** can occur. These include:
+
+1️⃣ **Dirty Read**  
+2️⃣ **Non-Repeatable Read**  
+3️⃣ **Phantom Read**  
+
+Each occurs due to different isolation levels in SQL transactions.
+
+---
+
+## **1️⃣ Dirty Read (Reading Uncommitted Data)**
+**Definition:**  
+A dirty read occurs when a transaction **reads data that has been modified by another transaction but not yet committed**.  
+If the other transaction **rolls back**, the read data becomes invalid.  
+
+### **Example:**  
+**T1 (Transaction 1) – Updates Salary**  
+```sql
+BEGIN;
+UPDATE employees SET salary = 100000 WHERE id = 1;
+-- (No COMMIT yet)
+```
+**T2 (Transaction 2) – Reads Salary**  
+```sql
+SELECT salary FROM employees WHERE id = 1;
+-- Reads salary as 100000 (Uncommitted data)
+```
+Now, if **T1 rolls back**, then T2 has read **incorrect data**.
+
+🔹 **Prevention:**  
+Use **`READ_COMMITTED`** or higher isolation levels.
+
+---
+
+## **2️⃣ Non-Repeatable Read (Inconsistent Reads)**
+**Definition:**  
+A non-repeatable read occurs when a transaction **reads the same row multiple times** and **gets different results** because another transaction has **modified and committed** the data in between.  
+
+### **Example:**  
+**T1 – Reads Salary**  
+```sql
+SELECT salary FROM employees WHERE id = 1;
+-- Salary = 50000
+```
+**T2 – Updates & Commits Salary**  
+```sql
+UPDATE employees SET salary = 60000 WHERE id = 1;
+COMMIT;
+```
+**T1 – Reads Salary Again**  
+```sql
+SELECT salary FROM employees WHERE id = 1;
+-- Salary = 60000 (Changed)
+```
+Now, **T1 sees different values** in the same transaction.
+
+🔹 **Prevention:**  
+Use **`REPEATABLE_READ`** or **higher isolation levels**.
+
+---
+
+## **3️⃣ Phantom Read (New Rows Appear)**
+**Definition:**  
+A phantom read occurs when a transaction **re-executes a query** and finds that **new rows have been added or removed** by another transaction.  
+
+### **Example:**  
+**T1 – Reads Count of Employees**  
+```sql
+SELECT COUNT(*) FROM employees;
+-- Returns 100
+```
+**T2 – Inserts a New Employee & Commits**  
+```sql
+INSERT INTO employees (id, name, salary) VALUES (101, 'John', 70000);
+COMMIT;
+```
+**T1 – Reads Count Again**  
+```sql
+SELECT COUNT(*) FROM employees;
+-- Now returns 101 (New row added)
+```
+Now, **T1 sees a different result**.
+
+🔹 **Prevention:**  
+Use **`SERIALIZABLE`** isolation level.
+
+---
+
+## **Comparison Table**
+| Issue | Occurs When? | Example | Prevention |
+|--------|-------------|----------|--------------|
+| **Dirty Read** | Reading uncommitted changes | Read a value that later gets rolled back | `READ_COMMITTED` |
+| **Non-Repeatable Read** | Reading the same row twice, but it changes | A row's value changes between reads | `REPEATABLE_READ` |
+| **Phantom Read** | A query returns a different set of rows | A new row is inserted between reads | `SERIALIZABLE` |
+
+---
+
+## **Conclusion**
+- **Use `READ_COMMITTED`** to prevent **dirty reads**.  
+- **Use `REPEATABLE_READ`** to prevent **non-repeatable reads**.  
+- **Use `SERIALIZABLE`** to prevent **phantom reads** (most restrictive).  
+
+Would you like an **example with Spring Boot Transactions**? 🚀 

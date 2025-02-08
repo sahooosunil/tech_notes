@@ -1,0 +1,138 @@
+### Transaction Management in Microservices Explained
+
+**Traditional Monolithic Applications:**
+- In a monolithic architecture, all components of the application typically share a **single database**.
+- Transactions are straightforward because they are managed within the **same database**. 
+    This allows for **ACID (Atomicity, Consistency, Isolation, Durability)** properties to be maintained across multiple operations within a single transaction.
+- Even if multiple services or modules interact, transaction management is simplified as everything operates on the same database.
+
+**Microservices Architecture:**
+- In a microservices architecture, **each service has its own database**. 
+    This isolation ensures **loose coupling** and **independence** of services, which is one of the core principles of microservices.
+- A single user request often needs to pass through multiple microservices, each interacting with its own database.
+- Since each microservice manages its own database, **traditional transaction management** (spanning multiple databases) is not directly applicable.
+
+---
+
+### Challenges in Microservices Transactions:
+1. **Distributed Nature**:
+   - Each microservice has its own **data store** and operates independently.
+   - Transactions that span multiple microservices cannot rely on a single database transaction to maintain consistency.
+
+2. **Multiple Database Calls**:
+   - A single user request can involve multiple microservices, each performing its own set of operations.
+   - Ensuring **data consistency** across these distributed services becomes challenging.
+
+3. **Lack of Global Transaction Manager**:
+   - Unlike in a monolithic system, there's no **centralized transaction manager** that can coordinate transactions across multiple databases.
+
+---
+
+### Solutions for Transaction Management in Microservices:
+
+1. **Eventual Consistency and Compensation (Sagas)**:
+   - **Sagas** are a series of **distributed transactions** where each service executes its own local transaction and publishes an event.
+   - If any part of the saga fails, **compensating transactions** (undo operations) are triggered to roll back the changes made by previous services.
+
+   - **Example**:
+     - A user places an order, triggering multiple services (e.g., inventory, payment, shipping).
+     - If the payment service fails after the inventory service has reserved items, a compensating transaction in the inventory service will release the reserved items.
+
+2. **Event-Driven Architecture**:
+   - Microservices communicate asynchronously using **events**.
+   - Services listen for relevant events and update their own databases accordingly.
+   - This approach ensures **loose coupling** and **scalability**, but requires careful handling to maintain consistency.
+
+3. **Database per Service with API Contracts**:
+   - Each service ensures its own database consistency.
+   - **API contracts** define the interaction between services, ensuring that the data passed between them adheres to agreed-upon formats and rules.
+
+---
+
+### Conclusion:
+In microservices, transaction management requires a shift from traditional monolithic transaction models to distributed approaches. Techniques like **Sagas**, **event-driven architecture**, and **eventual consistency** help maintain data integrity across multiple services. While these methods introduce complexity, they are essential for maintaining consistency in a distributed, scalable microservices environment.
+---------------------------------------
+### SAGAS Explained in Simple Terms
+
+A **Saga** is a design pattern used to manage distributed transactions in a microservices architecture. 
+It ensures that even when a transaction spans multiple services, the system remains consistent by using a series of coordinated local transactions. 
+Each local transaction updates its service’s database and then publishes an event to trigger the next step in the process.
+
+If something goes wrong, a **compensating transaction** is executed to undo the changes made by the preceding transactions, ensuring the system returns to a consistent state.
+
+---
+
+### Ways to Implement Saga Coordination
+
+There are two main ways to coordinate sagas:
+
+#### 1. **Choreography** (Event-Driven Coordination)
+In choreography, each service listens for events and decides what to do next based on the events it receives.
+
+**Example: Order Service -> Payment Service -> Stock Service -> Delivery Service**
+- **Order Service**: Receives an order and publishes an "Order Created" event.
+- **Payment Service**: Listens for "Order Created," processes the payment, and publishes a "Payment Completed" event.
+- **Stock Service**: Listens for "Payment Completed," checks inventory, and publishes a "Stock Reserved" or "Out of Stock" event.
+- **Delivery Service**: Listens for "Stock Reserved," schedules the delivery, and publishes a "Delivery Scheduled" event.
+
+**Negative Scenario: Out of Stock**
+- **Stock Service**: Finds there is no stock, publishes an "Out of Stock" event.
+- **Compensating Transaction**:
+  - **Payment Service**: Listens for "Out of Stock," processes a refund, and publishes a "Refund Issued" event.
+
+**Advantages**:
+- Easy to add new services without changing existing services. For example, a **Recommendation Service** can listen for the "Delivery Scheduled" event and suggest related products. orther services do not need to know that Recommendation service exists.
+
+**Limitations**:
+- Can become **complex** with too many events.
+- Hard to trace and debug due to the decentralized nature of event handling.
+
+---
+
+#### 2. **Orchestration** (Centralized Control)
+In orchestration, a central component, called the **Orchestrator**, controls the flow of the saga by sending commands to different services.
+
+**Example: Order Service as Orchestrator**
+- **Order Service**: Acts as the orchestrator. When an order is placed, it starts the saga.
+  - Publishes a **"Execute Payment"** command to the **Payment Service**.
+  - **Payment Service**: Processes the payment and responds back to the reply channel, which is beign listened by the orchestrator.
+  - Orchestrator understand that payment successful and then publishes a **"Prepare Order"** command to the **Stock Service**.
+  - **Stock Service**: Checks inventory and responds to reply channel.
+  - Finally, the orchestrator publishes a **"Deliver Order"** command to the **Delivery Service**.
+  - **Delivery Service**: Delivers the order and responds back to the orchestrator.
+
+**Negative Scenario: Out of Stock**
+- Orchestrator publishes **"Prepare Order"** to the Stock Service.
+- **Stock Service**: Responds with "Out of Stock."
+- Orchestrator publishes a **"Refund Client"** command to the Payment Service to process the refund.
+
+**Advantages**:
+- Centralized control makes it easier to manage and trace the flow.
+- Easier to handle complex business logic.
+
+**Limitations**:
+- The orchestrator can become a **bottleneck** and a **single point of failure**.
+
+---
+
+### Benefits of Using SAGAS:
+- **Decoupling**: Services are loosely coupled, especially with choreography.
+- **Scalability**: Each service can scale independently.
+- **Resilience**: Failure handling is built-in with compensating transactions.
+
+### Example of Adding a New Service (Choreography Advantage):
+- Suppose a **Recommendation Service** needs to suggest products after an order is delivered.
+- It can simply listen for the "Delivery Scheduled" event without needing changes to the existing services.
+
+---
+
+### Filters in SAGAS:
+- **Pre-filters**: Handle incoming requests or commands before processing. Example: Validating an order before payment.
+- **Post-filters**: Handle responses or events after processing. Example: Logging a successful transaction after delivery.
+
+---
+
+### Summary:
+- **Choreography** is suitable for systems with a smaller number of services and where new services might be added frequently.
+- **Orchestration** is ideal for more complex scenarios where a centralized control flow is needed.
+- SAGAS help maintain consistency across distributed systems by ensuring that every step in a transaction either completes successfully or is compensated if something goes wrong.

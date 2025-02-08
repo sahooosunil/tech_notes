@@ -1,0 +1,89 @@
+### Fault Injection in Istio
+
+Distributed computing often brings unexpected challenges, as highlighted by L. Peter Deutsch's "Fallacies of Distributed Computing." These fallacies include assumptions like:
+
+- The network is reliable.
+- Latency is zero.
+- Bandwidth is infinite.
+- The network is secure.
+- Topology doesn't change.
+- There is one administrator.
+- Transport cost is zero.
+- The network is homogeneous.
+
+When building applications with multiple microservices, it's crucial to ensure that the system remains functional even if one service fails. A failure could be due to various reasons like network issues, system errors, or bugs. While one service's failure might cause some degradation, the rest of the application should continue to operate normally.
+
+One powerful feature of Istio that helps with this is **Fault Injection**. Fault Injection allows you to test how your application behaves under failure conditions. You can simulate scenarios such as:
+
+- **Service Outages**: Make a service entirely unavailable.
+- **Delayed Responses**: Simulate response delays to mimic network latency.
+- **Error Responses**: Return specific HTTP error codes like 500.
+- **Controlled Latency**: Configure how long a service should take to respond.
+
+These faults can be triggered based on specific criteria, such as matching a particular header. This targeted approach allows you to test how your application handles failures in a controlled manner.
+
+### Example Configuration
+
+```yaml
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-staff-service
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service
+  http:
+    - match:
+        - headers:
+            x-my-header:
+              exact: canary  # Apply fault only when 'x-my-header' equals 'canary'
+      fault:
+        abort:
+          percentage:
+            value: 100.0  # 100% of requests with this header will be aborted
+          httpStatus: 418  # Simulate a "I'm a teapot" HTTP status
+      route:
+        - destination:
+            host: fleetman-staff-service
+            subset: risky
+    - route:  # Default route for all other requests
+        - destination:
+            host: fleetman-staff-service
+            subset: safe
+```
+
+```yaml
+kind: DestinationRule
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: fleetman-staff-service
+  namespace: default
+spec:
+  host: fleetman-staff-service
+  subsets:
+    - name: safe
+      labels:
+        version: safe  # Subset for the stable version
+    - name: risky
+      labels:
+        version: risky  # Subset for the experimental version
+```
+
+### Chaos Engineering with Chaos Monkey
+
+**Chaos Engineering** is the practice of introducing random failures into a system to identify and fix weaknesses. A popular tool for this is **Chaos Monkey**, developed by Netflix. Chaos Monkey randomly disables parts of a system to ensure that it can tolerate failures and recover gracefully.
+
+**Key Concepts of Chaos Engineering:**
+
+1. **Resilience Testing**: Test how well your system can handle failures.
+2. **Random Failures**: Inject random disruptions to simulate real-world issues.
+3. **Improved Stability**: Identify and fix vulnerabilities, improving overall system reliability.
+
+**Chaos Monkey**:
+
+- Randomly terminates instances in a production environment.
+- Forces teams to build resilient systems that can handle unexpected failures.
+- Helps uncover weaknesses and dependencies in your infrastructure.
+
+By using Chaos Monkey and Istio’s Fault Injection, you can build and maintain robust, fault-tolerant systems that can withstand real-world conditions.

@@ -1,0 +1,244 @@
+### Spring Cloud Config Server
+
+Imagine your application consists of 10 microservices, each with three different environments: `dev`, `qa`, and `prod`. Managing separate configuration files (YAML) for each service and environment can quickly become a tedious task. Additionally, if you need to change a configuration, rebuilding, repackaging, and redeploying the entire application is time-consuming and inefficient.
+
+Spring Cloud Config Server simplifies this by centralizing the management of configuration files. It allows your microservices to fetch their configuration from a centralized source, such as Git, SVN, a database, or a vault, at runtime. This eliminates the need for manual updates and redeployments, making the configuration management process seamless and dynamic.
+
+### How It Works:
+- **Centralized Configuration**: Configurations are stored in a central repository (Git, SVN, database, or vault).
+- **Dynamic Retrieval**: Microservices fetch their configuration from the Config Server at startup via a simple REST endpoint.
+- **Layered Configuration**: Config Server supports hierarchical configuration, where general settings are overridden by service-specific and environment-specific settings.
+
+### Example Structure:
+1. **`application.yml`**: Contains configurations common to all services.
+2. **`s1.yml`**: Contains configurations specific to the `s1` microservice, common across all profiles.
+3. **`s1-prod.yml`**: Contains configurations specific to the `s1` microservice for the `prod` profile.
+
+When a request is made to fetch `/s1/prod`, the server retrieves `application.yml`, `s1.yml`, and `s1-prod.yml`, combining them as needed.
+
+### Steps to Configure Spring Cloud Config Server:
+
+1. **Add Dependency**:
+   Include the Spring Cloud Config Server dependency in your `pom.xml`:
+
+   ```xml
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-config-server</artifactId>
+   </dependency>
+   ```
+
+2. **Application Properties**:
+   Configure the source repository in `application.properties`:
+
+   ```properties
+   spring.cloud.config.server.git.uri=https://github.com/sunil/micro.git
+   ```
+
+3. **Main Application Class**:
+   Enable the Config Server with `@EnableConfigServer` and run your Spring Boot application:
+
+   ```java
+   @SpringBootApplication
+   @EnableConfigServer
+   public class ConfigserverApplication {
+       public static void main(String[] args) {
+           SpringApplication.run(ConfigserverApplication.class, args);
+       }
+   }
+   ```
+
+### Summary:
+- **Centralized Configuration Management**: No need to manage separate configuration files for each microservice and environment.
+- **Dynamic Updates**: Fetch configurations dynamically at runtime without rebuilding or redeploying.
+- **Ease of Use**: Simple REST endpoint (`/app-name/profile`) for retrieving configuration.
+
+Spring Cloud Config Server streamlines the management of configurations, making your microservices more flexible and maintainable.
+----------------------------------------------------------------------------------------------
+### How to Configure a Microservice to Fetch Configuration from Config Server
+
+To configure a microservice to fetch its configuration from a Spring Cloud Config Server, follow these detailed steps:
+
+---
+
+### Steps to Configure Config Client:
+
+1. **Add Dependency**:
+   You need to add the Spring Cloud Config Client dependency in your `pom.xml`:
+
+   ```xml
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-config</artifactId>
+   </dependency>
+   ```
+
+2. **Configure `bootstrap.yml`**:
+   Create a `bootstrap.yml` file in your microservice's `src/main/resources` directory. This file is used to configure the Config Server URL and other related properties.
+
+   ```yaml
+   spring:
+     application:
+       name: your-microservice-name
+     cloud:
+       config:
+         uri: http://localhost:8888  # URL of your Config Server
+         fail-fast: true  # If true, the app will fail to start if the Config Server is not reachable
+   ```
+
+---
+
+### What is `@RefreshScope` and Why It’s Needed?
+
+- **`@RefreshScope`** is used on Spring beans to indicate that their configuration should be refreshed at runtime without restarting the application.
+- **Why it’s required**: If a configuration changes in the Config Server, you don’t need to restart the entire microservice to apply the changes. Instead, `@RefreshScope` allows the beans to be refreshed dynamically.
+
+   ```java
+   @RestController
+   @RefreshScope
+   public class MyController {
+   
+       @Value("${some.config.value}")
+       private String configValue;
+   
+       @GetMapping("/config")
+       public String getConfigValue() {
+           return configValue;
+       }
+   }
+   ```
+
+---
+
+### Enable Actuator:
+
+**Actuator** is a Spring Boot module that provides production-ready features such as monitoring, metrics, and managing your application.
+
+- **Why enable it**: Actuator endpoints allow you to manage and monitor your application, including refreshing configurations.
+- **How to enable it**: Add the Actuator dependency in your `pom.xml`:
+
+   ```xml
+   <dependency>
+       <groupId>org.springframework.boot</groupId>
+       <artifactId>spring-boot-starter-actuator</artifactId>
+   </dependency>
+   ```
+
+   Configure Actuator in your `application.yml` to expose necessary endpoints:
+
+   ```yaml
+   management:
+     endpoints:
+       web:
+         exposure:
+           include: refresh, bus-refresh, health, info
+   ```
+
+---
+
+### Spring Boot Actuator Endpoints to Refresh:
+
+1. **`/actuator/refresh`**:
+   - **Purpose**: This endpoint is used to refresh the configuration properties for beans annotated with `@RefreshScope`.
+   - **How it works**: When you hit this endpoint, the application will re-fetch the configurations from the Config Server and update the relevant beans.
+
+2. **`/actuator/bus-refresh`**:
+   - **Purpose**: This endpoint refreshes all instances of a microservice at once when used with Spring Cloud Bus.
+   - **How it works**: It broadcasts a refresh event to all connected instances of the microservice, ensuring that configurations are updated across the board.
+
+/actuator/refresh calls applicationContext.refresh().
+`applicationContext.refresh()` reloads the Spring context, reinitializing beans and configurations without stopping the application, 
+ideal for applying runtime changes like configuration updates. It's less resource-intensive and typically used with `@RefreshScope`. 
+In contrast, `applicationContext.restart()` stops and then starts the entire application context, 
+releasing all resources and reinitializing from scratch. This is more resource-intensive and used when a complete reinitialization is necessary. 
+Essentially, `refresh()` is for lightweight reloading, while `restart()` is for a full application context reset.
+---
+
+### How to Make API Calls to Refresh:
+
+1. **To Refresh a Single Instance**:
+   - Use a tool like `curl` or Postman to send a POST request to `/actuator/refresh`.
+
+     ```bash
+     curl -X POST http://localhost:8080/actuator/refresh
+     ```
+
+2. **To Refresh All Instances (Bus Refresh)**:
+   - Use a POST request to `/actuator/bus-refresh`.
+
+     ```bash
+     curl -X POST http://localhost:8080/actuator/bus-refresh
+     ```
+
+---
+
+### Configure Broker for Multiple Instance Refresh:
+
+To refresh configurations across multiple instances simultaneously, you need to configure a message broker. 
+Spring Cloud Bus can use brokers like RabbitMQ or Kafka for this purpose.
+
+When we configure the spring-cloud-starter-bus dependency and the /actuator/bus-refresh endpoint along with broker-related settings in the application.yml file, 
+each microservice automatically registers a listener. These listeners continuously monitor the broker exchange for any configuration update messages.
+When the /actuator/bus-refresh endpoint is triggered on any instance of a microservice, it publishes an update message to the broker (such as RabbitMQ or Kafka). 
+All microservices listening to this broker receive the notification and refresh their configurations accordingly, pulling the latest changes from the centralized configuration source. 
+This ensures that configuration updates are propagated across all instances without manual intervention, promoting consistency and reducing downtime.
+
+Anothrer approach is instead of we manually calling /actuator/bus-refresh, we can automate this process. Need to configure one webhook in github. 
+on any change event, git will call a enpoint in config server, config server will push one message into the broker. 
+In config server we need to configure borker depedency and configuration. 
+
+1. **Add Broker Dependency**:
+   Add the RabbitMQ or Kafka dependency based on your choice.
+
+   For RabbitMQ:
+   ```xml
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+   </dependency>
+   ```
+
+   For Kafka:
+   ```xml
+   <dependency>
+       <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-bus-kafka</artifactId>
+   </dependency>
+   ```
+
+2. **Broker Configuration in `application.yml`**:
+   Configure RabbitMQ or Kafka in your `application.yml`.
+
+   **For RabbitMQ**:
+   ```yaml
+   spring:
+     rabbitmq:
+       host: localhost
+       port: 5672
+       username: guest
+       password: guest
+   ```
+
+   **For Kafka**:
+   ```yaml
+   spring:
+     kafka:
+       bootstrap-servers: localhost:9092
+   ```
+
+---
+
+### Summary:
+
+- **Add necessary dependencies**: Include Config Client, Actuator, and Broker (RabbitMQ/Kafka).
+- **Configure `bootstrap.yml`**: Set the Config Server URL.
+- **Use `@RefreshScope`**: For beans that need dynamic configuration updates.
+- **Enable Actuator**: Expose management endpoints for monitoring and refreshing.
+- **Use `/actuator/refresh`**: For refreshing single instances.
+- **Use `/actuator/bus-refresh`**: For refreshing all instances via Spring Cloud Bus.
+- **Configure a message broker**: Use RabbitMQ or Kafka for broadcasting configuration refresh events.
+
+This setup ensures your microservices can dynamically fetch and update configurations from the Config Server efficiently.
+-------------------------------------
+
+

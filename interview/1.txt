@@ -1,0 +1,22 @@
+kafka internals in 20 lines
+spring kfka integration
+java 8 programs (steams, comparator)
+webclient rest call
+SOLID principle
+spring transaction
+best practices in microservice
+swagger and annotations
+
+
+10 logical programs 
+
+join queries
+group by
+index vs partitioning
+2nd 3rd largest Salary
+
+How to tuen a fullstack application 
+How to make a request to faster in react and spring boot and sql 
+How to debug a issue in a fullstack app
+what challanges you faced while working on microservice application.
+

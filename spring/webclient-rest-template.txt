@@ -1,0 +1,361 @@
+### **WebClient vs RestTemplate in Spring Boot**  
+
+Spring provides **RestTemplate** (synchronous) and **WebClient** (reactive) for making HTTP calls. Below is a comparison to help you decide when to use which.
+
+---
+
+## **1️⃣ RestTemplate (Synchronous)**
+**✅ When to Use:**  
+- Simple and traditional **blocking** HTTP calls.  
+- If the application is not reactive and does not need non-blocking execution.  
+- When working in a monolithic architecture or synchronous microservices.  
+
+### **🔹 Example Usage**
+```java
+RestTemplate restTemplate = new RestTemplate();
+String response = restTemplate.getForObject("https://api.example.com/data", String.class);
+System.out.println(response);
+```
+
+### **🔹 Advantages**
+✅ Simple and easy to use.  
+✅ Works well for traditional Spring MVC applications.  
+✅ Well-documented and widely adopted.
+
+### **🔹 Disadvantages**
+❌ **Blocking (Synchronous):** A thread is blocked until the response is received.  
+❌ **Deprecated:** Spring recommends **WebClient** instead.  
+❌ **Not efficient for high-throughput applications.**  
+
+---
+
+## **2️⃣ WebClient (Asynchronous & Reactive)**
+**✅ When to Use:**  
+- Non-blocking, **asynchronous** HTTP calls.  
+- Microservices architecture where performance and scalability matter.  
+- Working with **Spring WebFlux** or reactive programming.  
+- Streaming large amounts of data (e.g., Server-Sent Events).  
+
+### **🔹 Example Usage**
+```java
+WebClient webClient = WebClient.create("https://api.example.com");
+String response = webClient.get()
+        .retrieve()
+        .bodyToMono(String.class)
+        .block(); // Blocks only if needed
+System.out.println(response);
+```
+
+### **🔹 Advantages**
+✅ **Non-blocking & Asynchronous** → Uses fewer resources for high-load systems.  
+✅ **Better performance** in a reactive environment.  
+✅ **Supports streaming** for large data.  
+✅ **More flexible** than RestTemplate.  
+
+### **🔹 Disadvantages**
+❌ **More complex than RestTemplate.**  
+❌ **Needs additional setup for synchronous calls** (`.block()`).  
+❌ **Steeper learning curve** if you're not familiar with reactive programming.  
+
+---
+
+## **3️⃣ When to Choose What?**
+| Scenario | Use **RestTemplate** | Use **WebClient** |
+|----------|----------------|----------------|
+| Simple synchronous calls | ✅ Yes | ❌ No |
+| High-performance & scalability | ❌ No | ✅ Yes |
+| Spring MVC (Blocking) | ✅ Yes | ❌ No |
+| Spring WebFlux (Reactive) | ❌ No | ✅ Yes |
+| Streaming large data (SSE) | ❌ No | ✅ Yes |
+| Making multiple concurrent calls | ❌ No | ✅ Yes |
+
+---
+
+### **🚀 Final Recommendation**
+- If working with **Spring WebFlux** → **Use WebClient** (fully non-blocking).  
+- If in a **Spring MVC (Blocking) project**, and performance is **not a concern**, RestTemplate is fine.  
+- If making **high-volume API calls**, prefer WebClient.  
+- **Spring recommends WebClient over RestTemplate**, as RestTemplate is being phased out.
+
+----------------------------------------
+## **Spring WebClient Examples: GET, POST, PUT, DELETE (Mono & Flux)**  
+
+`WebClient` is a **non-blocking, reactive HTTP client** in Spring WebFlux. Below are examples of how to use it for different HTTP methods with **Mono** (single result) and **Flux** (multiple results).  
+
+---
+
+## **1️⃣ Setting Up WebClient**
+```java
+import org.springframework.web.reactive.function.client.WebClient;
+
+WebClient webClient = WebClient.create("https://api.example.com");
+```
+
+---
+
+## **2️⃣ GET Request (Mono & Flux)**
+### **🟢 GET (Fetching a Single Object) - Mono**
+```java
+Mono<String> responseMono = webClient.get()
+        .uri("/user/{id}", 1)
+        .retrieve()
+        .bodyToMono(String.class);
+
+responseMono.subscribe(System.out::println); // Non-blocking: prints response when available
+```
+🔹 **`bodyToMono(String.class)`** → Converts response into a single object (`Mono`).  
+
+---
+
+### **🟢 GET (Fetching a List of Objects) - Flux**
+```java
+Flux<String> responseFlux = webClient.get()
+        .uri("/users")
+        .retrieve()
+        .bodyToFlux(String.class);
+
+responseFlux.subscribe(System.out::println); // Prints each user one by one
+```
+🔹 **`bodyToFlux(String.class)`** → Converts response into a stream of multiple objects (`Flux`).  
+
+---
+
+## **3️⃣ POST Request (Creating a Resource)**
+```java
+Mono<String> postResponse = webClient.post()
+        .uri("/users")
+        .bodyValue(new User("John", "Doe"))  // Sending request body
+        .retrieve()
+        .bodyToMono(String.class);
+
+postResponse.subscribe(System.out::println); // Prints response (e.g., created user ID)
+```
+🔹 **`bodyValue(object)`** → Sends the request body in JSON format.  
+🔹 **`retrieve().bodyToMono(String.class)`** → Retrieves the response as a `Mono`.  
+
+---
+
+## **4️⃣ PUT Request (Updating a Resource)**
+```java
+Mono<String> putResponse = webClient.put()
+        .uri("/users/{id}", 1)
+        .bodyValue(new User("UpdatedName", "UpdatedLastName"))
+        .retrieve()
+        .bodyToMono(String.class);
+
+putResponse.subscribe(System.out::println);
+```
+🔹 **Updates an existing user with `id=1`**.  
+🔹 The response could be a success message or updated user details.  
+
+---
+
+## **5️⃣ DELETE Request (Deleting a Resource)**
+```java
+Mono<Void> deleteResponse = webClient.delete()
+        .uri("/users/{id}", 1)
+        .retrieve()
+        .bodyToMono(Void.class);
+
+deleteResponse.subscribe(unused -> System.out.println("User deleted"));
+```
+🔹 **`Void.class`** → No response body is expected.  
+🔹 **`subscribe()`** executes the request asynchronously.  
+
+---
+
+## **6️⃣ Handling Errors (onStatus)**
+```java
+Mono<String> response = webClient.get()
+        .uri("/users/{id}", 999) // Non-existing user
+        .retrieve()
+        .onStatus(status -> status.value() == 404, 
+                  clientResponse -> Mono.error(new RuntimeException("User Not Found")))
+        .bodyToMono(String.class)
+        .doOnError(error -> System.out.println("Error: " + error.getMessage()));
+
+response.subscribe(System.out::println);
+```
+🔹 **`onStatus()`** → Custom error handling for HTTP status codes.  
+🔹 **`doOnError()`** → Handles errors without breaking the flow.  
+
+---
+
+## **7️⃣ WebClient Exchange (More Control Over Response)**
+```java
+Mono<ClientResponse> clientResponseMono = webClient.get()
+        .uri("/users/{id}", 1)
+        .exchangeToMono(response -> {
+            if (response.statusCode().is2xxSuccessful()) {
+                return response.bodyToMono(String.class);
+            } else {
+                return Mono.error(new RuntimeException("Request failed"));
+            }
+        });
+
+clientResponseMono.subscribe(System.out::println);
+```
+🔹 **`exchangeToMono()`** → Gives full control over the response.  
+
+---
+
+## **🎯 When to Use Mono vs Flux?**
+| **Scenario** | **Use** |
+|-------------|---------|
+| Fetching a **single object** (GET by ID) | `Mono<T>` |
+| Fetching **multiple objects** (GET all) | `Flux<T>` |
+| Creating, updating, deleting | `Mono<T>` |
+| Handling API errors | `Mono<T>` |
+
+---
+
+### **🚀 Key Takeaways**
+✅ `WebClient` is **non-blocking** and efficient.  
+✅ `Mono` → **For single objects** (One response).  
+✅ `Flux` → **For multiple objects** (Streaming).  
+✅ `onStatus()` for handling HTTP errors.  
+✅ `exchangeToMono()` for **full response control**.  
+
+Would you like a **Spring Boot example** with a real API? 🚀
+-----------------------------------------
+## **Spring Cloud OpenFeign Example**  
+
+**Feign Client** is a declarative REST client in Spring Cloud that simplifies calling external APIs.
+
+---
+
+### **1️⃣ Add Dependencies**
+Add the required dependencies in `pom.xml`:
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+Make sure to include **Spring Cloud BOM**:
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-dependencies</artifactId>
+            <version>${spring-cloud.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+---
+
+### **2️⃣ Enable Feign in Spring Boot**
+In your main Spring Boot class, enable Feign clients:
+```java
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableFeignClients  // Enables Feign Clients
+public class FeignClientApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(FeignClientApplication.class, args);
+    }
+}
+```
+
+---
+
+### **3️⃣ Define a Feign Client**
+Create an interface for calling an external API:
+```java
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+// Define a Feign client with a base URL
+@FeignClient(name = "userClient", url = "https://jsonplaceholder.typicode.com")
+public interface UserClient {
+
+    @GetMapping("/users/{id}")
+    User getUserById(@PathVariable("id") Long id);
+}
+```
+✅ **`@FeignClient(name = "userClient", url = "...")`** → Defines the external API.  
+✅ **`@GetMapping("/users/{id}")`** → Maps to the actual API endpoint.  
+✅ **`User getUserById(Long id)`** → Calls the API and returns a `User` object.  
+
+---
+
+### **4️⃣ Create a Model Class**
+```java
+public class User {
+    private Long id;
+    private String name;
+    private String email;
+
+    // Getters and Setters
+}
+```
+
+---
+
+### **5️⃣ Inject Feign Client in a Service**
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserClient userClient;
+
+    public User getUser(Long id) {
+        return userClient.getUserById(id);
+    }
+}
+```
+
+---
+
+### **6️⃣ Expose a REST API to Test Feign**
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/fetch-user/{id}")
+    public User fetchUser(@PathVariable Long id) {
+        return userService.getUser(id);
+    }
+}
+```
+✅ **Feign will automatically call `https://jsonplaceholder.typicode.com/users/{id}`**  
+
+---
+
+### **7️⃣ Run & Test**
+Start the Spring Boot application and test using:
+```
+GET http://localhost:8080/fetch-user/1
+```
+🎯 **Feign will make an HTTP request to `https://jsonplaceholder.typicode.com/users/1` and return the response.**  
+
+---
+
+### **✨ Advantages of Feign**
+✔️ **Declarative API calls (No `RestTemplate`)**  
+✔️ **Built-in integration with Spring Cloud**  
+✔️ **Automatic serialization/deserialization**  
+✔️ **Load balancing (with Ribbon or Spring Cloud LoadBalancer)**  
+
+Would you like to see **a Feign client with authentication**? 🚀

@@ -1,0 +1,153 @@
+### **Swagger (OpenAPI) and Annotations in Spring Boot** 🚀  
+
+Swagger is an API documentation tool that helps generate interactive API documentation for your Spring Boot REST APIs. It is now known as **OpenAPI**.  
+
+---
+
+## **1️⃣ Adding Swagger to Spring Boot**  
+First, add the required dependencies in your **pom.xml** (if using Maven):  
+
+```xml
+<dependency>
+    <groupId>org.springdoc</groupId>
+    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
+
+For **Gradle**, add:  
+```gradle
+implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+```
+
+Once added, start your Spring Boot application and visit:  
+📌 **http://localhost:8080/swagger-ui.html**  
+
+---
+
+## **2️⃣ Common Swagger Annotations in Spring Boot**
+Swagger uses **annotations** to generate API documentation.  
+
+### **📌 `@Operation` (API Endpoint Documentation)**
+Used to describe a REST endpoint.  
+```java
+@RestController
+@RequestMapping("/bank")
+public class BankController {
+
+    @Operation(summary = "Get account details", description = "Fetches details of a bank account by its ID")
+    @GetMapping("/account/{id}")
+    public ResponseEntity<Account> getAccount(@PathVariable Long id) {
+        // Fetch account logic
+        return ResponseEntity.ok(new Account(id, "John Doe", 5000.0));
+    }
+}
+```
+
+---
+
+### **📌 `@ApiResponse` (Response Documentation)**
+Used to document different responses.  
+```java
+@Operation(summary = "Withdraw money", description = "Withdraws money from a bank account")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Successful Withdrawal"),
+    @ApiResponse(responseCode = "400", description = "Insufficient Balance"),
+    @ApiResponse(responseCode = "404", description = "Account Not Found")
+})
+@PostMapping("/withdraw")
+public ResponseEntity<String> withdraw(@RequestParam Long accountId, @RequestParam double amount) {
+    return ResponseEntity.ok("Withdrawal successful");
+}
+```
+
+---
+
+### **📌 `@Parameter` (Describing Request Parameters)**
+Used to provide details about request parameters.  
+```java
+@Operation(summary = "Deposit money", description = "Deposits money into a bank account")
+@PostMapping("/deposit")
+public ResponseEntity<String> deposit(
+        @Parameter(description = "ID of the bank account") @RequestParam Long accountId,
+        @Parameter(description = "Amount to deposit", example = "100.0") @RequestParam double amount) {
+    return ResponseEntity.ok("Deposit successful");
+}
+```
+
+---
+
+### **📌 `@Schema` (Model Documentation)**
+Used to define how a model (DTO or entity) should be documented.  
+```java
+@Schema(description = "Bank Account Model")
+public class Account {
+
+    @Schema(description = "Unique ID of the account", example = "1")
+    private Long id;
+
+    @Schema(description = "Account Holder Name", example = "John Doe")
+    private String name;
+
+    @Schema(description = "Current Account Balance", example = "5000.0")
+    private double balance;
+    
+    // Constructor, Getters, Setters
+}
+```
+
+---
+
+### **📌 `@RequestBody` + `@Operation` (Request Body Documentation)**
+Used when accepting JSON input.  
+```java
+@Operation(summary = "Create Account", description = "Creates a new bank account")
+@PostMapping("/create")
+public ResponseEntity<Account> createAccount(@RequestBody Account account) {
+    return ResponseEntity.ok(account);
+}
+```
+
+---
+
+## **3️⃣ Running Swagger UI**
+Once your Spring Boot app is running, open:  
+📌 **http://localhost:8080/swagger-ui.html**  
+📌 **http://localhost:8080/v3/api-docs** (JSON documentation)  
+
+---
+
+## **4️⃣ Customizing Swagger Configuration**
+If you want to change the default settings, create a config class:  
+
+```java
+@Configuration
+public class OpenApiConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Banking API")
+                        .version("1.0")
+                        .description("API documentation for the Banking System")
+                        .contact(new Contact().name("Support Team").email("support@bank.com"))
+                );
+    }
+}
+```
+
+---
+
+## **📌 Summary**
+| Annotation | Purpose |
+|------------|---------|
+| `@Operation` | Describes API endpoints |
+| `@ApiResponse` | Documents response codes |
+| `@Parameter` | Describes query/path parameters |
+| `@Schema` | Defines API models |
+| `@RequestBody` | Describes request body |
+
+Now, your API is well-documented and ready to be shared with front-end developers, testers, or other teams! 🚀  
+
+Would you like to see a **full working Spring Boot Swagger example**? 😊

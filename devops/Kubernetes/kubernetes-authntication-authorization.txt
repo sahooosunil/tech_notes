@@ -1,0 +1,243 @@
+## **Kubernetes Authentication and Authorization Explained**  
+
+Kubernetes provides a **flexible security model** to control **who can access** the cluster and **what actions** they can perform. It has multiple **authentication** and **authorization** mechanisms.  
+
+---
+
+# **1️⃣ Authentication in Kubernetes**  
+Kubernetes does **not** handle user authentication directly (it does not store user accounts or passwords). Instead, it delegates authentication to **external identity providers**.  
+
+🔹 **How Kubernetes Identifies Users?**  
+- **Service Accounts** (Managed inside Kubernetes)  
+- **Certificates** (X.509 Client Certificates)  
+- **Bearer Tokens** (Static tokens, ServiceAccount tokens)  
+- **OIDC (OpenID Connect)** (Google, Azure, AWS Cognito, Keycloak, etc.)  
+- **Webhook Authentication** (Custom authentication backends)  
+
+### **🚀 Why Kubernetes Doesn't Support User Creation?**  
+Kubernetes is **not a user management system**. It assumes user authentication is handled externally via an **Identity Provider (IdP)** (like LDAP, IAM, Okta, or Active Directory).  
+
+💡 **Where Do We Create Users?**  
+- On **Cloud IAM** (AWS IAM, Azure AD, Google IAM)  
+- On an **OIDC Provider** (Keycloak, Okta, Auth0)  
+- On an **LDAP Server** (Active Directory)  
+- Through **Certificates** (Self-signed X.509 Certs)  
+
+---
+
+# **2️⃣ Authorization in Kubernetes (RBAC - Role-Based Access Control)**  
+Once a user or service is authenticated, Kubernetes checks **what actions** they can perform using **RBAC (Role-Based Access Control)**.
+
+### **🚀 Kubernetes RBAC Components**  
+| **Component** | **Description** |
+|--------------|----------------|
+| **Role** | Defines permissions within a namespace |
+| **ClusterRole** | Defines permissions across the entire cluster |
+| **RoleBinding** | Grants a Role to a user/service account within a namespace |
+| **ClusterRoleBinding** | Grants a ClusterRole to a user/service account for the whole cluster |
+| **ServiceAccount** | An identity for processes running in Pods |
+
+---
+
+# **3️⃣ Understanding Kubernetes Users, Roles, and Bindings**  
+
+## **👤 Kubernetes Users**
+- There are **no native users** inside Kubernetes.  
+- Users are authenticated via **IAM, OIDC, or X.509 certificates**.  
+- Two types of users exist:
+  - **Normal Users**: Created outside Kubernetes (IAM, OIDC, Certs).  
+  - **Service Accounts**: Created inside Kubernetes for Pods.  
+
+## **🔑 Kubernetes Roles & ClusterRoles**
+- **Role** → Defines **namespace-scoped** permissions.  
+- **ClusterRole** → Defines **cluster-wide** permissions.  
+
+📝 **Example of a Role (Namespace Scope)**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+```
+
+📝 **Example of a ClusterRole (Cluster Scope)**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cluster-admin
+rules:
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["*"]
+```
+
+## **🔗 Kubernetes RoleBinding & ClusterRoleBinding**
+- **RoleBinding** → Grants a **Role** to a user or service account within a **namespace**.  
+- **ClusterRoleBinding** → Grants a **ClusterRole** to a user or service account **across the cluster**.  
+
+📝 **Example of RoleBinding**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: User
+  name: johndoe
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+📝 **Example of ClusterRoleBinding**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-binding
+subjects:
+- kind: User
+  name: johndoe
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+```
+
+---
+
+# **4️⃣ How to Create a User in IAM and Integrate with Kubernetes?**  
+
+## **Step 1: Create a User in AWS IAM**
+```sh
+aws iam create-user --user-name johndoe
+```
+- Attach necessary IAM policies.
+
+## **Step 2: Generate IAM Credentials for the User**
+```sh
+aws iam create-access-key --user-name johndoe
+```
+- Store the **Access Key ID** and **Secret Access Key**.
+
+## **Step 3: Configure Kubernetes to Use IAM via OIDC**
+1. Enable **IAM OIDC Provider** in EKS.  
+2. Map IAM Users/Roles to Kubernetes.  
+
+📝 **Example AWS Auth ConfigMap in EKS**
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapUsers: |
+    - userarn: arn:aws:iam::123456789012:user/johndoe
+      username: johndoe
+      groups:
+        - system:masters
+```
+- This maps `johndoe` IAM user to Kubernetes **admin access**.
+
+## **Step 4: Verify the User in Kubernetes**
+```sh
+kubectl auth can-i list pods --as=johndoe
+```
+
+---
+
+# **5️⃣ In AWS EKS, How Does a Pod Access AWS Services?**
+By default, Pods cannot access AWS services unless explicitly configured. There are **three ways** to allow Pods to access AWS services:
+
+## ✅ **1. Using IAM User Credentials (Not Recommended)**
+- Hardcoding AWS credentials inside Pods is insecure.
+
+## ✅ **2. Using Kubernetes Service Account with IRSA (IAM Roles for Service Accounts)**
+- EKS allows mapping a Kubernetes **ServiceAccount** to an **IAM Role**.
+- This is **the best way** to grant AWS permissions.
+
+### **How to Setup IRSA in EKS?**
+1. **Create an IAM Role with AWS Permissions**  
+```sh
+aws iam create-role --role-name eks-s3-access \
+    --assume-role-policy-document file://trust-policy.json
+```
+
+📝 **Example Trust Policy (`trust-policy.json`)**
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::<ACCOUNT-ID>:oidc-provider/oidc.eks.<REGION>.amazonaws.com/id/<OIDC-ID>"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity"
+    }
+  ]
+}
+```
+
+2. **Attach AWS Policy (e.g., S3 Access)**
+```sh
+aws iam attach-role-policy --role-name eks-s3-access --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+```
+
+3. **Create a Kubernetes ServiceAccount with IAM Role Binding**
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: s3-reader
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT-ID>:role/eks-s3-access
+```
+
+4. **Deploy a Pod Using This ServiceAccount**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: s3-pod
+spec:
+  serviceAccountName: s3-reader
+  containers:
+    - name: app
+      image: amazonlinux
+      command: ["/bin/sh", "-c", "aws s3 ls"]
+```
+
+---
+
+# **6️⃣ Where Can We See These Details in Kubernetes?**
+| **Component** | **Command to View** |
+|--------------|--------------------|
+| Users (IAM) | `aws iam list-users` |
+| IAM Role Mappings | `kubectl get configmap aws-auth -n kube-system` |
+| Service Accounts | `kubectl get serviceaccounts` |
+| Roles | `kubectl get roles -A` |
+| ClusterRoles | `kubectl get clusterroles` |
+| RoleBindings | `kubectl get rolebindings -A` |
+| ClusterRoleBindings | `kubectl get clusterrolebindings` |
+
+---
+
+## **🔹 Summary**
+- Kubernetes **delegates authentication** to external providers.
+- **RBAC** controls user permissions using **Roles & Bindings**.
+- **EKS uses IAM Roles for Service Accounts (IRSA)** to allow Pods to access AWS services **securely**.
+- **Service Accounts are the recommended way** to grant AWS permissions to Pods.
+
+Would you like a full **end-to-end hands-on example** for this setup? 🚀

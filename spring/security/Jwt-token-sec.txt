@@ -1,0 +1,355 @@
+Here's a **complete Spring Boot project** for handling JWT authentication and authorization using **RSA public/private key pair**.
+
+### **Steps Covered in This Code**
+1. **User sends username and password** → `/auth/login`
+2. **Spring Boot validates credentials** and generates a JWT token.
+3. **JWT contains:** 
+   - `username`
+   - `roles` (admin or customer)
+   - `additional details`
+4. **Two protected endpoints:**
+   - `/admin` → **Accessible only by ADMIN**
+   - `/customer` → **Accessible by both ADMIN & CUSTOMER**
+5. **JWT verification is done using RSA public/private keys.**
+
+---
+
+## **Step 1: Generate RSA Key Pair**
+Run the following command to generate an RSA key pair:
+```bash
+openssl genpkey -algorithm RSA -out private_key.pem
+openssl rsa -in private_key.pem -pubout -out public_key.pem
+```
+Place the generated **`private_key.pem`** and **`public_key.pem`** in the `src/main/resources/keys/` folder.
+
+---
+
+## **Step 2: Create the Spring Boot Project**
+You'll need:
+- **Spring Security**
+- **Spring Boot Starter Web**
+- **Spring Boot Starter Data JPA**
+- **jjwt (for JWT token generation and validation)**
+
+### **Dependencies (pom.xml)**
+```xml
+<dependencies>
+    <!-- Spring Boot Starter Web -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Spring Boot Starter Security -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+
+    <!-- Spring Boot Starter Data JPA -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+
+    <!-- Spring Boot Starter Validation -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- JWT Token Library -->
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt</artifactId>
+        <version>0.11.5</version>
+    </dependency>
+
+    <!-- Lombok -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <scope>provided</scope>
+    </dependency>
+
+    <!-- H2 Database for Testing -->
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
+```
+
+---
+
+## **Step 3: Configure RSA Keys in Spring Boot**
+### **RSAKeyUtil.java**
+```java
+package com.example.security.util;
+
+import org.springframework.core.io.ClassPathResource;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+
+public class RSAKeyUtil {
+    public static PrivateKey getPrivateKey() throws Exception {
+        byte[] keyBytes = Files.readAllBytes(new ClassPathResource("keys/private_key.pem").getFile().toPath());
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        return KeyFactory.getInstance("RSA").generatePrivate(spec);
+    }
+
+    public static PublicKey getPublicKey() throws Exception {
+        byte[] keyBytes = Files.readAllBytes(new ClassPathResource("keys/public_key.pem").getFile().toPath());
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+        return KeyFactory.getInstance("RSA").generatePublic(spec);
+    }
+}
+```
+
+---
+
+## **Step 4: Create JWT Token Utility**
+### **JwtUtil.java**
+```java
+package com.example.security.util;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Date;
+import java.util.Map;
+
+public class JwtUtil {
+
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
+
+    public static String generateToken(String username, String role, Map<String, Object> additionalClaims) throws Exception {
+        PrivateKey privateKey = RSAKeyUtil.getPrivateKey();
+
+        return Jwts.builder()
+                .setSubject(username)
+                .addClaims(additionalClaims)
+                .claim("role", role)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(privateKey, SignatureAlgorithm.RS256)
+                .compact();
+    }
+
+    public static boolean validateToken(String token) throws Exception {
+        PublicKey publicKey = RSAKeyUtil.getPublicKey();
+        Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token);
+        return true;
+    }
+
+    public static Jws<Claims> parseClaims(String token) throws Exception {
+        PublicKey publicKey = RSAKeyUtil.getPublicKey();
+        return Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(token);
+    }
+
+}
+```
+
+---
+
+## **Step 5: Implement Authentication and Authorization**
+### **User Entity (User.java)**
+```java
+package com.example.security.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String username;
+    private String password;
+    private String role; // ADMIN or CUSTOMER
+}
+```
+
+---
+
+### **User Repository (UserRepository.java)**
+```java
+package com.example.security.repository;
+
+import com.example.security.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByUsername(String username);
+}
+```
+
+---
+
+### **Authentication Controller**
+#### **AuthController.java**
+```java
+package com.example.security.controller;
+
+import com.example.security.model.User;
+import com.example.security.repository.UserRepository;
+import com.example.security.util.JwtUtil;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+    private final UserRepository userRepository;
+
+    public AuthController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @PostMapping("/login")
+    public Map<String, String> login(@RequestBody Map<String, String> credentials) throws Exception {
+        User user = userRepository.findByUsername(credentials.get("username"))
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getPassword().equals(credentials.get("password"))) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        String token = JwtUtil.generateToken(user.getUsername(), user.getRole(), Map.of("extra", "info"));
+        return Map.of("token", token);
+    }
+}
+```
+---
+#### **JwtAuthenticationFilter.java**
+```java
+
+package com.example.security.filter;
+
+import com.example.security.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Collections;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7); // Remove "Bearer " prefix
+
+        try {
+            if (JwtUtil.validateToken(token)) {
+                Jws<Claims> claimsJws = JwtUtil.parseClaims(token);
+                String username = claimsJws.getBody().getSubject();
+                String role = claimsJws.getBody().get("role", String.class);
+
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        username, null, Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role))
+                );
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+        }
+
+        chain.doFilter(request, response);
+    }
+}
+```
+
+---
+
+### **Securing Endpoints**
+#### **SecurityConfig.java**
+```java
+package com.example.security.config;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .authorizeRequests()
+            .requestMatchers("/admin").hasRole("ADMIN")
+            .requestMatchers("/customer").hasAnyRole("ADMIN", "CUSTOMER")
+            .anyRequest().authenticated()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+}
+```
+
+
+---
+
+### **Admin and Customer Controllers**
+```java
+@RestController
+@RequestMapping("/admin")
+public class AdminController {
+    @GetMapping
+    public String adminAccess() {
+        return "Admin Access Granted!";
+    }
+}
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+    @GetMapping
+    public String customerAccess() {
+        return "Customer Access Granted!";
+    }
+}
+```
+
+---
+

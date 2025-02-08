@@ -1,0 +1,312 @@
+Certainly! I'll help you convert the **Redux Toolkit** version of the program to a **normal Redux** setup, where we manually write the action creators, reducers, and store configuration. This will involve a bit more boilerplate code but will provide a clear understanding of how Redux works without the toolkit.
+
+Here's the **complete program** using **normal Redux** (without Redux Toolkit):
+
+---
+
+### **Step 1: Set up the React App**
+
+You can start with a new React app using `create-react-app` if you don't have one already:
+
+```bash
+npx create-react-app todo-redux
+cd todo-redux
+```
+
+### **Step 2: Install Redux and React-Redux**
+
+Install **`redux`** and **`react-redux`**:
+
+```bash
+npm install redux react-redux
+```
+
+### **Step 3: Create Redux Actions and Reducers**
+
+Let's start by creating the necessary actions and reducers.
+
+#### **1. Action Types**
+
+Create a file `actionTypes.js` to define the action types.
+
+```javascript
+// src/redux/actionTypes.js
+export const FETCH_TODOS_REQUEST = 'FETCH_TODOS_REQUEST';
+export const FETCH_TODOS_SUCCESS = 'FETCH_TODOS_SUCCESS';
+export const FETCH_TODOS_FAILURE = 'FETCH_TODOS_FAILURE';
+
+export const ADD_TODO = 'ADD_TODO';
+export const REMOVE_TODO = 'REMOVE_TODO';
+```
+
+#### **2. Action Creators**
+
+Create a file `actions.js` for action creators.
+
+```javascript
+// src/redux/actions.js
+import {
+  FETCH_TODOS_REQUEST,
+  FETCH_TODOS_SUCCESS,
+  FETCH_TODOS_FAILURE,
+  ADD_TODO,
+  REMOVE_TODO,
+} from './actionTypes';
+
+// Action creator for fetching todos
+export const fetchTodosRequest = () => ({
+  type: FETCH_TODOS_REQUEST,
+});
+
+export const fetchTodosSuccess = (todos) => ({
+  type: FETCH_TODOS_SUCCESS,
+  payload: todos,
+});
+
+export const fetchTodosFailure = (error) => ({
+  type: FETCH_TODOS_FAILURE,
+  payload: error,
+});
+
+// Action creator for adding a todo
+export const addTodo = (todo) => ({
+  type: ADD_TODO,
+  payload: todo,
+});
+
+// Action creator for removing a todo
+export const removeTodo = (id) => ({
+  type: REMOVE_TODO,
+  payload: id,
+});
+
+// Async action creator for fetching todos
+export const fetchTodos = () => {
+  return (dispatch) => {
+    dispatch(fetchTodosRequest());
+    fetch('https://jsonplaceholder.typicode.com/todos')
+      .then((response) => response.json())
+      .then((data) => dispatch(fetchTodosSuccess(data)))
+      .catch((error) => dispatch(fetchTodosFailure(error.message)));
+  };
+};
+
+// Async action creator for creating a todo
+export const createTodo = (newTodo) => {
+  return (dispatch) => {
+    fetch('https://jsonplaceholder.typicode.com/todos', {
+      method: 'POST',
+      body: JSON.stringify({
+        title: newTodo.text,
+        completed: false,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => dispatch(addTodo(data)))
+      .catch((error) => console.error('Error creating todo:', error));
+  };
+};
+```
+
+#### **3. Reducer**
+
+Create a file `reducer.js` to handle state changes.
+
+```javascript
+// src/redux/reducer.js
+import {
+  FETCH_TODOS_REQUEST,
+  FETCH_TODOS_SUCCESS,
+  FETCH_TODOS_FAILURE,
+  ADD_TODO,
+  REMOVE_TODO,
+} from './actionTypes';
+
+// Initial state for todos
+const initialState = {
+  todos: [],
+  status: 'idle', // idle, loading, succeeded, failed
+  error: null,
+};
+
+const todoReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case FETCH_TODOS_REQUEST:
+      return {
+        ...state,
+        status: 'loading',
+      };
+    case FETCH_TODOS_SUCCESS:
+      return {
+        ...state,
+        status: 'succeeded',
+        todos: action.payload,
+      };
+    case FETCH_TODOS_FAILURE:
+      return {
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      };
+    case ADD_TODO:
+      return {
+        ...state,
+        todos: [...state.todos, action.payload],
+      };
+    case REMOVE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter((todo) => todo.id !== action.payload),
+      };
+    default:
+      return state;
+  }
+};
+
+export default todoReducer;
+```
+
+---
+
+### **Step 4: Configure the Redux Store**
+
+Create a file `store.js` to configure the Redux store.
+
+```javascript
+// src/redux/store.js
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import todoReducer from './reducer';
+
+const store = createStore(todoReducer, applyMiddleware(thunk));
+
+export default store;
+```
+
+- We're using **`redux-thunk`** middleware to allow async action creators (like fetching data from an API).
+
+---
+
+### **Step 5: Set up the React App with Redux Provider**
+
+Now we need to connect Redux to our React app.
+
+Modify `index.js` to wrap the app with the **`Provider`** component from **`react-redux`**, passing the Redux store to it.
+
+```javascript
+// src/index.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import App from './App';
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+```
+
+---
+
+### **Step 6: Modify the App Component to Dispatch Actions**
+
+Now, let's modify **`App.js`** to use Redux actions and display the to-dos. We'll also handle adding and removing to-dos.
+
+```javascript
+// src/App.js
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTodos, createTodo, removeTodo } from './redux/actions';
+
+function App() {
+  const [input, setInput] = useState('');
+  const dispatch = useDispatch();
+  const { todos, status, error } = useSelector((state) => state);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchTodos());
+    }
+  }, [dispatch, status]);
+
+  const handleAddTodo = () => {
+    if (input.trim()) {
+      dispatch(createTodo({ text: input }));
+      setInput('');
+    }
+  };
+
+  const handleRemoveTodo = (id) => {
+    dispatch(removeTodo(id));
+  };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div className="App">
+      <h1>To-Do List</h1>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={handleAddTodo}>Add Todo</button>
+
+      <ul>
+        {todos.map((todo) => (
+          <li key={todo.id}>
+            {todo.title}
+            <button onClick={() => handleRemoveTodo(todo.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### **Explanation**:
+1. **`useDispatch`**: To dispatch actions to Redux.
+2. **`useSelector`**: To read the current state of to-dos from Redux.
+3. **Fetching To-Dos**: We dispatch `fetchTodos()` to load to-dos when the component first mounts (`useEffect`).
+4. **Adding To-Dos**: The `handleAddTodo` function dispatches `createTodo()` when adding a new to-do.
+5. **Removing To-Dos**: The `handleRemoveTodo` function dispatches `removeTodo()` when deleting a to-do.
+
+---
+
+### **Step 7: Run the Application**
+
+Now, run the application:
+
+```bash
+npm start
+```
+
+### **Expected Behavior**:
+- When the app loads, it will fetch the to-dos from the API and display them.
+- The user can add new to-dos, which will send a **POST request** to the API and add the new to-do to the list.
+- The user can remove to-dos by clicking the delete button, which removes them from the state.
+
+---
+
+### **Summary of Changes**:
+- **Actions**: We created action types and action creators for handling fetch, create, and remove to-dos.
+- **Reducers**: We wrote a reducer to handle all actions (`fetchTodos`, `createTodo`, `removeTodo`).
+- **Store**: We configured the Redux store with `redux-thunk` middleware to handle asynchronous actions.
+- **React App**: We used `useDispatch` and `useSelector` to dispatch actions and read the state from the Redux store.
+
+This is the **complete program** using **normal Redux**! You can now manage your state without Redux Toolkit, but keep in mind that it requires more boilerplate code.

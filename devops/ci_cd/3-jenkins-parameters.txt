@@ -1,0 +1,162 @@
+In Jenkins, **parameters** are a way to pass dynamic values into a build process. They allow you to customize and control your build behavior at runtime. Parameters enable you to reuse Jenkins jobs and make them more flexible, providing inputs such as version numbers, environment names, or other build configurations.
+
+### Types of Parameters in Jenkins
+
+There are several types of parameters in Jenkins, each suited to different kinds of inputs. Here are the most common ones:
+
+1. **String Parameter**  
+   This is a simple text field. It allows you to enter any string value.
+
+2. **Boolean Parameter**  
+   A checkbox that allows you to specify a true or false value (i.e., "Yes" or "No").
+
+3. **Choice Parameter**  
+   A dropdown list that allows you to select from a predefined set of options.
+
+4. **Password Parameter**  
+   A text field where the input is masked (similar to a password field) for sensitive values.
+
+5. **File Parameter**  
+   This allows users to upload files as part of the job.
+
+6. **Run Parameter**  
+   A parameter that references another Jenkins build, and you can select from a list of past builds.
+
+7. **Label Parameter**  
+   Similar to a choice parameter, but this is specifically used for selecting a Jenkins agent or node.
+
+8. **Git Parameter**  
+   Allows users to choose a Git branch, commit, or tag from a repository.
+
+9. **Active Choices Parameter (requires plugin)**  
+   A dynamic parameter that can generate values on the fly based on other parameters or script execution.
+
+### How to Define Parameters in Jenkins
+
+To add parameters to a Jenkins job, follow these steps:
+
+1. **Navigate to the job configuration page:**
+   - Go to your Jenkins job.
+   - Click on **Configure**.
+
+2. **Add Parameters:**
+   - Check the **This project is parameterized** checkbox.
+   - Click **Add Parameter** and choose the type of parameter you want.
+
+3. **Set the Parameter Details:**
+   - Define the name, description, and default value for each parameter. For example, for a **Choice Parameter**, you would specify the list of choices.
+
+4. **Save the job configuration** by clicking **Save** or **Apply**.
+
+### Passing Parameter Values
+
+There are several ways to pass parameter values when triggering a job in Jenkins:
+
+1. **Manually (through the Jenkins UI):**
+   - When you click **Build with Parameters**, you’ll see fields for all the parameters you've defined. Fill them out and then click **Build** to start the job.
+
+2. **Using Jenkins CLI:**
+   - You can pass parameters when triggering a build from the Jenkins command line interface (CLI).
+     ```
+     java -jar jenkins-cli.jar -s http://jenkins-server build <job-name> -p PARAM_NAME=VALUE
+     ```
+
+3. **Using API (RESTful):**
+   - You can trigger a build and pass parameters via Jenkins API. A typical URL might look like:
+     ```
+     http://<jenkins-server>/job/<job-name>/buildWithParameters?PARAM_NAME=VALUE
+     ```
+
+4. **From a script (e.g., pipeline script or shell script):**
+   - In a **Jenkins Pipeline** (Declarative or Scripted), you can pass parameters as environment variables or define them in the pipeline's `parameters` block.
+
+### Using Parameters in Jenkins
+
+In a Jenkins Pipeline, you can use parameters by referencing them via the `params` object. Here’s an example of how to define parameters and use them in a **Declarative Pipeline**:
+
+### Example: Simple Jenkins Pipeline Using Parameters
+
+1. **Create a Jenkins Job with Parameters:**
+   - Go to **Configure** in your job.
+   - Check **This project is parameterized**.
+   - Add the following parameters:
+     - `BRANCH` (Choice Parameter) with choices like `develop`, `master`, `feature`.
+     - `DEPLOY_ENV` (Choice Parameter) with choices like `staging`, `production`.
+
+2. **Jenkinsfile (Declarative Pipeline Example):**
+
+   ```groovy
+   pipeline {
+       agent any
+
+       parameters {
+           choice(name: 'BRANCH', choices: ['develop', 'master', 'feature'], description: 'Select the branch to deploy')
+           choice(name: 'DEPLOY_ENV', choices: ['staging', 'production'], description: 'Select the environment')
+       }
+
+       stages {
+           stage('Checkout') {
+               steps {
+                   script {
+                       // Checkout the selected branch
+                       echo "Checking out branch: ${params.BRANCH}"
+                       checkout scm: [
+                           $class: 'GitSCM',
+                           branches: [[name: "*/${params.BRANCH}"]],
+                           userRemoteConfigs: [[url: 'https://github.com/your-repo.git']]
+                       ]
+                   }
+               }
+           }
+
+           stage('Build') {
+               steps {
+                   echo "Building application for branch: ${params.BRANCH}"
+                   // Build commands here
+               }
+           }
+
+           stage('Deploy') {
+               steps {
+                   echo "Deploying to ${params.DEPLOY_ENV} environment"
+                   // Deploy commands here, for example:
+                   // if (params.DEPLOY_ENV == 'production') {
+                   //     // Deploy to production
+                   // } else {
+                   //     // Deploy to staging
+                   // }
+               }
+           }
+       }
+   }
+   ```
+
+3. **Trigger the Job:**
+   - Once the job is configured, you can trigger the build via the **Build with Parameters** option.
+   - Select the values for `BRANCH` and `DEPLOY_ENV` before triggering the job.
+
+### Breakdown of Example:
+
+- **Parameters Block**:  
+  The `parameters` block inside the pipeline defines the input fields:
+  - `BRANCH` lets the user select the Git branch to deploy.
+  - `DEPLOY_ENV` lets the user select the deployment environment (e.g., `staging` or `production`).
+
+- **Usage in Stages**:  
+  The parameters are accessed using `params.BRANCH` and `params.DEPLOY_ENV`. In the `Checkout` stage, it checks out the specified Git branch, and in the `Deploy` stage, it prints out which environment to deploy to.
+
+### Triggering the Job via API:
+
+If you want to trigger this job via an API with parameters, the URL might look like:
+
+```
+http://your-jenkins-server/job/your-job-name/buildWithParameters?BRANCH=master&DEPLOY_ENV=staging
+```
+
+This will start the job with the `BRANCH` set to `master` and the `DEPLOY_ENV` set to `staging`.
+
+### Conclusion
+
+Parameters in Jenkins add flexibility to your CI/CD pipelines, allowing you to pass dynamic inputs to your jobs. You can define various types of parameters (String, Choice, Boolean, etc.), and use them within your pipelines or jobs for different purposes. Whether you’re building, testing, or deploying code, parameters let you control and customize the process easily.
+
+Let me know if you'd like more details or examples!

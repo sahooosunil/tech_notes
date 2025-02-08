@@ -1,0 +1,29 @@
+### What is Envoy in Istio?
+
+Envoy is a powerful tool used in Istio as part of its service mesh. It's a separate project, not made by the Istio team, but Istio relies on Envoy to manage the communication between services. Envoy is widely used beyond Istio for various purposes, including handling network traffic in different environments.
+
+### Why Not Use Envoy Directly Instead of Istio?
+
+1. **Generic Nature of Envoy:**
+   - Envoy is a very general-purpose tool. While powerful, it's not specifically designed for Kubernetes, making it harder to use directly in Kubernetes environments.
+
+2. **Complexity of Envoy:**
+   - Working with Envoy can be complex and requires a deep understanding of its configurations. This complexity can lead to a steep learning curve and significant time investment.
+
+3. **Kubernetes Integration with Istio:**
+   - Istio is designed to work seamlessly with Kubernetes. It understands Kubernetes concepts, and you can use familiar Kubernetes commands to manage Istio. This makes it easier for those already familiar with Kubernetes.
+
+4. **Abstraction Layer:**
+   - Istio acts as an abstraction layer over Envoy. It simplifies the process by hiding the low-level details of Envoy, allowing you to focus on high-level configurations without dealing with the complexities of Envoy directly.
+
+### How Istio Works in a Kubernetes Cluster
+
+1. **Sidecar Proxy Injection:**
+   - When you configure Istio in a Kubernetes cluster, it automatically adds a sidecar proxy container (Envoy) alongside your application container in each pod.
+
+2. **Traffic Routing Through the Proxy:**
+   - Any communication between containers in different pods goes through the sidecar proxy. This proxy can perform various tasks such as traffic management, security checks, and logging.
+
+3. **Enhancing Requests:**
+   - The sidecar proxy can modify, control, and observe the traffic as it passes through. This is where Istio's magic happens, enabling features like load balancing, retries, encryption, and more.
+

@@ -1,0 +1,263 @@
+### **Commonly Used Terraform Built-in Functions**
+
+Terraform provides numerous built-in functions to manipulate and process data. 
+Here's a list of commonly used functions categorized by type, with examples:
+
+---
+
+### **1. String Functions**
+
+- **`length`**: Returns the length of a string or list.
+  ```hcl
+  variable "my_string" {
+    default = "hello"
+  }
+
+  output "string_length" {
+    value = length(var.my_string)
+  }
+  ```
+
+- **`join`**: Concatenates elements of a list with a delimiter.
+  ```hcl
+  variable "my_list" {
+    default = ["apple", "banana", "cherry"]
+  }
+
+  output "joined_string" {
+    value = join(", ", var.my_list)
+  }
+  ```
+
+- **`replace`**: Replaces parts of a string using a pattern.
+  ```hcl
+  variable "old_string" {
+    default = "hello world"
+  }
+
+  output "new_string" {
+    value = replace(var.old_string, "world", "Terraform")
+  }
+  ```
+
+---
+
+### **2. Numeric Functions**
+
+- **`min`**: Returns the smallest number from a list of numbers.
+  ```hcl
+  output "minimum_value" {
+    value = min(10, 20, 5)
+  }
+  ```
+
+- **`max`**: Returns the largest number from a list of numbers.
+  ```hcl
+  output "maximum_value" {
+    value = max(10, 20, 5)
+  }
+  ```
+
+---
+
+### **3. Collection Functions**
+
+- **`lookup`**: Retrieves a value from a map or returns a default if the key is missing.
+  ```hcl
+  variable "my_map" {
+    default = {
+      key1 = "value1"
+      key2 = "value2"
+    }
+  }
+
+  output "map_value" {
+    value = lookup(var.my_map, "key1", "default_value")
+  }
+  ```
+
+- **`keys`**: Returns a list of all keys in a map.
+  ```hcl
+  variable "my_map" {
+    default = {
+      key1 = "value1"
+      key2 = "value2"
+    }
+  }
+
+  output "map_keys" {
+    value = keys(var.my_map)
+  }
+  ```
+
+- **`values`**: Returns a list of all values in a map.
+  ```hcl
+  variable "my_map" {
+    default = {
+      key1 = "value1"
+      key2 = "value2"
+    }
+  }
+
+  output "map_values" {
+    value = values(var.my_map)
+  }
+  ```
+
+---
+
+### **4. File and Path Functions**
+
+- **`file`**: Reads the content of a file.
+  ```hcl
+  output "file_content" {
+    value = file("example.txt")
+  }
+  ```
+
+- **`dirname`**: Returns the directory portion of a file path.
+  ```hcl
+  output "directory_name" {
+    value = dirname("/home/user/example.txt")
+  }
+  ```
+
+---
+
+### **5. IP Address Functions**
+
+- **`cidrsubnet`**: Splits a CIDR block into subnets.
+  ```hcl
+  variable "vpc_cidr" {
+    default = "10.0.0.0/16"
+  }
+
+  output "subnet_cidr" {
+    value = cidrsubnet(var.vpc_cidr, 8, 1)
+  }
+  ```
+
+- **`cidrhost`**: Gets a specific host address within a CIDR block.
+  ```hcl
+  variable "subnet_cidr" {
+    default = "10.0.1.0/24"
+  }
+
+  output "host_ip" {
+    value = cidrhost(var.subnet_cidr, 5)
+  }
+  ```
+
+---
+
+### **6. Encoding and Decoding Functions**
+
+- **`base64encode`**: Encodes a string into Base64.
+  ```hcl
+  output "encoded_string" {
+    value = base64encode("hello world")
+  }
+  ```
+
+- **`base64decode`**: Decodes a Base64 string.
+  ```hcl
+  output "decoded_string" {
+    value = base64decode("aGVsbG8gd29ybGQ=")
+  }
+  ```
+
+---
+
+### **7. Logical Functions**
+
+- **`coalesce`**: Returns the first non-null value from a list of values.
+  ```hcl
+  output "first_non_null" {
+    value = coalesce(null, null, "default_value")
+  }
+  ```
+
+- **`can`**: Checks if an expression is valid (doesn't error).
+  ```hcl
+  output "is_valid" {
+    value = can(1 / 0) # Will return false since dividing by 0 is invalid
+  }
+  ```
+
+---
+
+### **8. Hash and Crypto Functions**
+
+- **`sha256`**: Computes the SHA-256 hash of a string.
+  ```hcl
+  output "hashed_value" {
+    value = sha256("my_secret_value")
+  }
+  ```
+
+- **`md5`**: Computes the MD5 hash of a string.
+  ```hcl
+  output "md5_hash" {
+    value = md5("my_secret_value")
+  }
+  ```
+
+---
+
+### **9. Type Conversion Functions**
+
+- **`tostring`**: Converts a value to a string.
+  ```hcl
+  variable "num" {
+    default = 42
+  }
+
+  output "string_value" {
+    value = tostring(var.num)
+  }
+  ```
+
+- **`tolist`**: Converts a value to a list.
+  ```hcl
+  variable "my_set" {
+    default = ["a", "b", "c"]
+  }
+
+  output "list_value" {
+    value = tolist(var.my_set)
+  }
+  ```
+
+---
+
+### **10. Formatting Functions**
+
+- **`format`**: Formats a string with placeholders.
+  ```hcl
+  output "formatted_string" {
+    value = format("Hello, %s!", "Terraform")
+  }
+  ```
+
+---
+
+### **Example Combining Multiple Functions**
+Here’s an example combining multiple functions in a real-world use case:
+```hcl
+variable "cidr_block" {
+  default = "192.168.0.0/16"
+}
+
+output "subnet_cidrs" {
+  value = tolist([cidrsubnet(var.cidr_block, 8, 0), cidrsubnet(var.cidr_block, 8, 1)])
+}
+
+output "formatted_output" {
+  value = format("First subnet: %s, Second subnet: %s", cidrsubnet(var.cidr_block, 8, 0), cidrsubnet(var.cidr_block, 8, 1))
+}
+```
+
+---
+
+### **Conclusion**
+These Terraform functions allow you to efficiently manipulate data and infrastructure configurations, making your code modular, reusable, and dynamic.

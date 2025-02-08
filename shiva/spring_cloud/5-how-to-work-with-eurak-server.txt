@@ -1,0 +1,161 @@
+### Eureka Server and Client in Spring Cloud
+
+#### Setting Up Eureka Server
+
+**1. Adding Dependencies:**
+- To set up a Eureka Server, you need to include the `spring-cloud-starter-netflix-eureka-server` dependency in your project’s `pom.xml` file.
+
+  ```xml
+  <dependencies>
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+      </dependency>
+  </dependencies>
+  ```
+
+**2. Managing Spring Cloud Versions:**
+- Spring Cloud versions are not managed by the parent Spring Boot `pom`. You need to manually add them under `<dependencyManagement>`.
+
+  ```xml
+  <dependencyManagement>
+      <dependencies>
+          <dependency>
+              <groupId>org.springframework.cloud</groupId>
+              <artifactId>spring-cloud-dependencies</artifactId>
+              <version>Hoxton.SR3</version> <!-- Replace with the desired version -->
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+  ```
+
+**3. Enabling Eureka Server:**
+- Add the `@EnableEurekaServer` annotation in the main Spring Boot application class. This triggers Eureka’s auto-configuration and exposes the Eureka endpoints.
+
+  ```java
+  import org.springframework.boot.SpringApplication;
+  import org.springframework.boot.autoconfigure.SpringBootApplication;
+  import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+
+  @SpringBootApplication
+  @EnableEurekaServer
+  public class EurekaServerApplication {
+      public static void main(String[] args) {
+          SpringApplication.run(EurekaServerApplication.class, args);
+      }
+  }
+  ```
+
+**4. High Availability Setup:**
+- **Single Point of Failure:** If the Eureka Server is deployed in a single availability zone, it becomes a single point of failure. If the server goes down, no service can register or discover other services, impacting the entire system.
+- **Performance Impact:** Services in different zones may experience latency when registering or discovering services from a Eureka Server located in another zone.
+- **Cluster of Eureka Servers:** To ensure high availability and resilience, it is recommended to deploy multiple Eureka servers in different zones. Each service registers with the Eureka server in its zone, and the servers synchronize with each other. This setup ensures fault tolerance and reduces latency.
+
+  **Zone-specific Registration:**
+  - Services in Zone 1 register with the Eureka Server in Zone 1.
+  - Services in Zone 2 register with the Eureka Server in Zone 2.
+  - The Eureka servers sync their registries, ensuring consistency.
+
+#### Eureka Client Setup
+
+**1. Adding Eureka Client Dependency:**
+- Each microservice that wants to register with Eureka needs to add the `spring-cloud-starter-netflix-eureka-client` dependency.
+
+  ```xml
+  <dependencies>
+      <dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+      </dependency>
+  </dependencies>
+  ```
+
+**2. Auto-Configuration:**
+- Adding the Eureka client dependency triggers auto-configuration for Eureka client-specific beans.
+- The client automatically registers with the Eureka Server by making a POST request during startup.
+- A background thread is started, which periodically sends heartbeat signals to the Eureka Server to indicate that the service is still alive.
+
+**3. Eureka Client Properties for a eureka server:**
+- Eureka Server as a Eureka Client: A Eureka Server can also act as a Eureka client to another Eureka Server in a cluster setup. This allows multiple Eureka servers to synchronize their registries, providing high availability and resilience.
+- **`eureka.client.fetch-registry: false`**:
+  - This property disables fetching the registry from the Eureka Server. By default, Eureka clients fetch the registry information (list of services) from the server. Setting this to `false` is useful for eureka server as it is not a eureka client.
+  
+- **`eureka.client.register-with-eureka: false`**:
+  - This property prevents the service from registering itself with Eureka. if you have only one eureka server(no cluser (other copies)).
+- **`eureka.instance.hostname: hostname`**:
+  - This property sets the hostname that the Eureka client will register with the Eureka Server. It’s useful when the service is running in an environment where the default hostname might not be resolvable or needs to be explicitly defined.
+
+#### Eureka Server as a Eureka Client
+
+
+### Summary
+- **Eureka Server:** Centralized service registry for managing microservice instances.
+- **Eureka Client:** Microservices register themselves and discover other services through Eureka.
+- **High Availability:** Deploy multiple Eureka servers across different zones to avoid single points of failure.
+- **Eureka Client Properties:** Control registry fetching, registration behavior, and hostname configuration.
+
+This setup ensures a resilient, scalable, and highly available microservices environment.
+-------------------------------------
+### Eviction Timer in Eureka Server
+
+The **eviction timer** in Eureka Server is responsible for removing instances of services that are no longer healthy or have stopped sending heartbeat signals. Here’s how it works:
+
+1. **Regular Heartbeats:**
+   - Each Eureka client (microservice instance) sends a heartbeat to the Eureka server at regular intervals (default is every 30 seconds).
+   
+2. **Missed Heartbeats:**
+   - If a client fails to send heartbeats for a certain period (default is 90 seconds or three missed heartbeats), the Eureka server considers the client instance unhealthy.
+
+3. **Eviction Process:**
+   - The Eureka server has an eviction timer that periodically checks for instances that have not sent heartbeats within the expected timeframe.
+   - These instances are then removed from the registry to ensure that only healthy services are available for discovery by other microservices.
+
+4. **Configuration:**
+   - The eviction interval can be configured using the `eureka.server.eviction-interval-timer-in-ms` property, which specifies the frequency of the eviction task. The default is 60,000 ms (1 minute).
+
+   ```yaml
+   eureka:
+     server:
+       eviction-interval-timer-in-ms: 60000
+   ```
+
+### Self-Preservation Mode in Eureka Server
+
+**Self-preservation mode** is a safety mechanism in Eureka Server designed to prevent a complete purge of services from the registry during network issues or partial failures. Here’s how it works:
+
+1. **Purpose:**
+   - The primary goal is to maintain availability and avoid a mass eviction of instances due to temporary network partitions or high latency.
+
+2. **Activation:**
+   - If the number of heartbeats received by the Eureka server drops below a certain threshold (85% of the expected heartbeats over a 15-minute window by default), self-preservation mode is activated.
+
+3. **Behavior in Self-Preservation Mode:**
+   - **Reduced Eviction:** The server will stop evicting instances even if they miss heartbeats, assuming that the issue might be a temporary network partition rather than a genuine service failure.
+   - **Maintains Registry:** This ensures that the registry is not entirely wiped out, which could lead to a catastrophic failure in service discovery.
+
+4. **Configuration:**
+   - The threshold for self-preservation can be configured using `eureka.server.renewal-percent-threshold`.
+
+   ```yaml
+   eureka:
+     server:
+       renewal-percent-threshold: 0.85
+   ```
+
+5. **Disabling Self-Preservation:**
+   - You can disable self-preservation mode by setting `eureka.server.enable-self-preservation` to `false`. However, this is generally not recommended as it could lead to unintended mass evictions during transient network issues.
+
+   ```yaml
+   eureka:
+     server:
+       enable-self-preservation: false
+   ```
+
+### Summary
+
+- **Eviction Timer:** Periodically removes instances that fail to send heartbeats within the configured timeframe to ensure only healthy instances are registered.
+- **Self-Preservation Mode:** Protects the system from mass evictions during network issues by maintaining the registry despite missing heartbeats, ensuring continued service availability.
+
+This balance between eviction and self-preservation helps Eureka Server maintain a robust service registry even under challenging network conditions.

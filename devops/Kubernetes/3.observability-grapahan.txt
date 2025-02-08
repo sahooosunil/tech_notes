@@ -1,0 +1,33 @@
+User can interact with http server (a component inside Prometheus) to communicate with Prometheus.
+User cna use Promql query (Prometheus query language) to get/filter` the output in graph or desired output.
+when you install Prometheus by default below thing will be installed along with others
+ - node exporters
+ - kbestate metrics
+ - Graphana
+
+Node exporter exposes as servce one enpoint called /mertrics. Prometheus calls this enpoint to get data related to nodes and store them in time sharing db.
+ you can get all the node related data by curl below endpoint in node exporters
+ curl node-exporter-service-ip:node-exporter-service-port/metrics.
+
+ same way Kube state mertics exporter also exposes one enpoint called /metrics.Prometheus calls this enpoint to get data related to kubernetes and store them in time sharing db.
+ you can get all the kubernetes cluster related data by curl below endpoint in node exporters
+ curl kube-state-service-ip:kube-state-service-port/metrics.
+ curl kube-state-service-ip:kube-state-service-port/metrics | grep continer //container related data
+
+ what common kuberntes mertics/logs you check in Prometheus regularly?
+     - How many time the pod has been crashed?
+     - How many secrects are there in your kubernetes cluster?
+     - How many users got registered?
+     - How many cput/mermory usage in last 24 hours.
+     - http requests
+Prometheus has basic uI. (it can do scrape the metrics/ it can do graphing / it can do alerts = A completr monitoring tool)
+but Graphana has better dashboard.
+Graphana is loosly coupled with Prometheus. if you move to some other option instead of Prometheus, there is no effect on Graphana.
+Graphana is a visulizaton platform.
+Graphana can be integrated with IAM, SSO to handle Authentication and Authorization.
+    - for ex: only manager should see the dashboard
+    - only devops team can create/update/delte dashboad.
+    - Dev/qa team has certain permissions.
+Graphana has some predefined graphs out of the box which are useful day to day basis.
+ - fox ex: see all pods in default namespace
+ - you can add new datasources (like Prometheus (url, port and other details)) in Graphana in Connections tab -> "data source" option

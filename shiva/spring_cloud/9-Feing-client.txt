@@ -1,0 +1,119 @@
+### Spring Cloud Feign Client
+
+Feign is a declarative web service client that simplifies the process of consuming REST APIs by abstracting away the need for boilerplate code. With Feign, you can define REST API clients using simple annotations and configuration. The library generates the necessary logic to make HTTP requests, handle responses, and manage errors automatically.
+
+#### Key Features:
+- **Declarative REST Clients**: Define APIs with annotations, reducing boilerplate code.
+- **Eureka Integration**: Seamlessly integrates with Eureka for service discovery.
+- **Client-Side Load Balancing**: Uses Ribbon (deprecated) or Spring Cloud LoadBalancer for client-side load balancing.
+- **Retry Capabilities**: Automatically retries failed requests.
+- **Resilience4j Integration**: Works well with Resilience4j for circuit breaker and bulkhead patterns.
+
+### Steps to Configure Feign Client with Circuit Breaker and Load Balancer
+
+#### 1. Add Dependencies:
+Include the necessary dependencies in your `pom.xml` file:
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+</dependency>
+```
+
+The Spring Cloud LoadBalancer dependency is automatically included when you add the Spring Cloud OpenFeign starter.
+
+#### 2. Enable Discovery Client:
+Annotate your main application class to enable service discovery with Eureka.
+
+```java
+@EnableDiscoveryClient
+@SpringBootApplication
+public class CargoBookingApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(CargoBookingApplication.class, args);
+    }
+}
+```
+
+#### 3. Feign Client Configuration:
+Create a configuration class to enable Feign clients.
+
+```java
+@Configuration
+@EnableFeignClients(basePackages = "com.way2learnonline.booking.application.internal.outboundservices")
+public class FeignConfiguration {
+}
+```
+
+#### 4. Define Feign Client:
+Create an interface for the Feign client, specifying the service name and fallback class.
+
+```java
+package com.way2learnonline.booking.application.internal.outboundservices;
+
+@FeignClient(name = "routing-service", fallback = CargoRoutingServiceFallback.class)
+public interface CargoRoutingService {
+
+    @GetMapping(path = "/cargorouting/optimalRoute")
+    TransitPath findOptimalRoute(
+            @RequestParam("origin") String originUnLocode,
+            @RequestParam("destination") String destinationUnLocode,
+            @RequestParam("deadline") String deadline);
+}
+```
+
+#### 5. Implement Fallback Class:
+Provide a fallback implementation for the Feign client to handle failures gracefully.
+
+```java
+@Service
+public class CargoRoutingServiceFallback implements CargoRoutingService {
+
+    @Override
+    public TransitPath findOptimalRoute(String originUnLocode, String destinationUnLocode, String deadline) {
+        System.err.println("Fallback method executed for findOptimalRoute()");
+        return new TransitPath();
+    }
+}
+```
+
+#### 6. Configure Application YAML:
+Set up Resilience4j and LoadBalancer configurations in `application.yml`.
+
+```yaml
+resilience4j:
+  circuitbreaker:
+    instances:
+      "CargoRoutingService#findOptimalRoute(String,String,String)":
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 2
+    configs:
+      default:
+        register-health-indicator: true
+
+loadBalancer:
+  enabled: true
+  retry:
+    enabled: true
+    retry-on-all-operations: true
+    max-retries-on-next-service-instance: 3
+    max-retries-on-same-service-instance: 1
+```
+
+### Summary:
+- **Declarative API Client**: Feign simplifies REST API consumption.
+- **Resilience4j**: Protects against failures with circuit breaker and bulkhead patterns.
+- **Load Balancer & Retry**: Ensures reliability with client-side load balancing and automatic retries.
+
+This setup provides a robust, fault-tolerant, and easy-to-maintain solution for consuming REST APIs in a Spring Cloud environment.

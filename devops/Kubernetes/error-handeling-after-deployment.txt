@@ -1,0 +1,194 @@
+Debugging and handling errors after a Kubernetes deployment requires a systematic approach. Here's a step-by-step guide to identify and resolve issues effectively:
+
+---
+
+## **1. Check Deployment Status**
+Verify that the deployment was created successfully.
+
+- **Get the Deployment Status**:
+  ```bash
+  kubectl get deployments
+  kubectl describe deployment <deployment-name>
+  ```
+  Look for events such as `FailedScheduling` or configuration issues.
+
+---
+
+## **2. Check Pod Status**
+Identify if the pods created by the deployment are running or stuck.
+
+- **List Pods**:
+  ```bash
+  kubectl get pods
+  ```
+  - Check the `STATUS` column. Common statuses to debug:
+    - `CrashLoopBackOff`: The container is crashing repeatedly.
+    - `ImagePullBackOff`: Kubernetes can't pull the image.
+    - `ContainerCreating`: The pod is stuck creating the container.
+
+- **Describe the Pod**:
+  ```bash
+  kubectl describe pod <pod-name>
+  ```
+  Look for events such as:
+  - Errors in pulling images.
+  - Node scheduling issues.
+  - Resource constraints.
+
+---
+
+## **3. Check Logs**
+Inspect the logs of the container for runtime errors.
+
+- **Fetch Logs**:
+  ```bash
+  kubectl logs <pod-name>
+  ```
+  - For multi-container pods:
+    ```bash
+    kubectl logs <pod-name> -c <container-name>
+    ```
+  - For pods that crashed, check previous logs:
+    ```bash
+    kubectl logs <pod-name> --previous
+    ```
+
+---
+
+## **4. Investigate Events**
+Check Kubernetes events for warnings or errors.
+
+- **View Events**:
+  ```bash
+  kubectl get events --sort-by='.metadata.creationTimestamp'
+  ```
+  Look for clues about scheduling, image pulling, or configuration issues.
+
+---
+
+## **5. Validate Configurations**
+Misconfigurations can lead to deployment failures.
+
+- **Check YAML Files**:
+  Validate your deployment, service, and other Kubernetes resource YAML files for syntax or logical errors.
+
+- **Dry Run Validation**:
+  Test your manifest files before applying:
+  ```bash
+  kubectl apply -f <file>.yaml --dry-run=client
+  ```
+
+- **Check ConfigMaps/Secrets**:
+  Ensure they are correctly set up and accessible.
+  ```bash
+  kubectl describe configmap <name>
+  kubectl describe secret <name>
+  ```
+
+---
+
+## **6. Debug Networking Issues**
+If pods are running but the application is unreachable, check networking:
+
+- **Check Service Configuration**:
+  ```bash
+  kubectl get services
+  kubectl describe service <service-name>
+  ```
+  Ensure the service type (ClusterIP, NodePort, LoadBalancer) and ports are configured correctly.
+
+- **Check DNS Resolution**:
+  If your app communicates with other services, verify DNS is resolving:
+  ```bash
+  kubectl exec -it <pod-name> -- nslookup <service-name>
+  ```
+
+- **Test Service Accessibility**:
+  Use a port-forward to test locally:
+  ```bash
+  kubectl port-forward <pod-name> <local-port>:<container-port>
+  ```
+
+---
+
+## **7. Check Resource Constraints**
+Ensure the pod has enough resources to run.
+
+- **Inspect Resource Requests and Limits**:
+  ```bash
+  kubectl describe pod <pod-name>
+  ```
+  Look for events like `Insufficient CPU` or `Memory`.
+
+- **Increase Limits** in the deployment YAML:
+  ```yaml
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1"
+  ```
+
+---
+
+## **8. Debug Using kubectl exec**
+If the container is running but not behaving as expected, debug inside it.
+
+- **Access the Pod Shell**:
+  ```bash
+  kubectl exec -it <pod-name> -- /bin/bash
+  ```
+  Use this to inspect logs, configs, and run commands inside the container.
+
+---
+
+## **9. Enable More Debugging**
+Add debugging tools or verbose logging to your container.
+
+- **Use a Debug Image**:
+  Replace the image with a debug-friendly one, like `busybox` or `ubuntu`, for troubleshooting.
+
+- **Attach Ephemeral Debugging Containers**:
+  ```bash
+  kubectl alpha debug -it <pod-name> --image=busybox
+  ```
+
+---
+
+## **10. Monitor Logs and Metrics**
+Integrate monitoring and logging tools:
+
+- **Logs**:
+  Use centralized logging (e.g., EFK stack or Loki).
+- **Monitoring**:
+  Use tools like Prometheus and Grafana to monitor cluster and application performance.
+
+---
+
+## **11. Roll Back Deployment**
+If the new deployment causes issues, roll back to the previous version:
+
+- **Rollback**:
+  ```bash
+  kubectl rollout undo deployment/<deployment-name>
+  ```
+- **Check Rollout History**:
+  ```bash
+  kubectl rollout history deployment/<deployment-name>
+  ```
+
+---
+
+## **12. Common Issues and Fixes**
+| Issue                         | Cause                                              | Solution                                                 |
+|-------------------------------|----------------------------------------------------|----------------------------------------------------------|
+| `ImagePullBackOff`            | Incorrect image name or tag                        | Check the image name and tag. Ensure the registry is accessible. |
+| `CrashLoopBackOff`            | App crashes repeatedly due to a bug or config      | Check logs for errors. Fix the app or configs.           |
+| `ContainerCreating`           | Missing volume, network, or resource constraints   | Check `kubectl describe pod` for details.                |
+| Application unreachable       | Service misconfiguration or network issue          | Verify service type and port mappings.                   |
+
+---
+
+Would you like specific help debugging an issue you're encountering right now?

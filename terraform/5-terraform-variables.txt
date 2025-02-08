@@ -1,0 +1,450 @@
+### What is a Terraform Variable?
+
+A **Terraform variable** is a mechanism to make configurations flexible and reusable by parameterizing values that might differ across environments. 
+It allows you to set inputs for modules, resources, and providers dynamically.
+
+---
+
+### Types of Variables in Terraform
+
+1. **Input Variables**:
+   - Defined by the `variable` block.
+   - Used to provide input values to a Terraform configuration.
+
+2. **Output Variables**:
+   - Defined by the `output` block.
+   - Used to extract and display information after Terraform applies the configuration.
+
+---
+
+### Data Types in Terraform
+
+Terraform supports the following data types for variables:
+
+1. **String**:
+   - Represents a single text value.
+   - Example:
+     ```hcl
+     variable "environment" {
+       type    = string
+       default = "dev"
+     }
+     ```
+
+2. **Number**:
+   - Represents numeric values (integers or floats).
+   - Example:
+     ```hcl
+     variable "instance_count" {
+       type    = number
+       default = 3
+     }
+     ```
+
+3. **Boolean**:
+   - Represents `true` or `false`.
+   - Example:
+     ```hcl
+     variable "enable_monitoring" {
+       type    = bool
+       default = true
+     }
+     ```
+
+4. **List**:
+   - Represents a collection of values in order.
+   - Example:
+     ```hcl
+     variable "subnet_ids" {
+       type    = list(string)
+       default = ["subnet-1", "subnet-2", "subnet-3"]
+     }
+     ```
+5. **set**
+    - A collection of unique elements, similar to `list`, but without any duplicates and without an inherent order.
+    - **Example:**
+      ```hcl
+      variable "unique_ids" {
+        type = set(string)
+        default = ["id1", "id2", "id3"]
+      }
+      ```
+
+6. **Map**:
+   - Represents a collection of key-value pairs.
+   - Example:
+     ```hcl
+     variable "tags" {
+       type    = map(string)
+       default = {
+         environment = "dev"
+         team        = "backend"
+       }
+     }
+     ```
+
+7. **Object**:
+   - Represents structured data with defined attributes.
+   - Example:
+     ```hcl
+     variable "app_config" {
+       type = object({
+         app_name  = string
+         app_port  = number
+         debug     = bool
+       })
+       default = {
+         app_name  = "my-app"
+         app_port  = 8080
+         debug     = false
+       }
+     }
+     ```
+
+8. **Tuple**:
+   - Represents a collection of values of various types.
+   - Example:
+     ```hcl
+     variable "tuple_example" {
+       type    = tuple([string, number, bool])
+       default = ["item1", 10, true]
+     }
+     ```
+
+---
+
+### Output Variable
+
+- **Definition**: Used to output values after Terraform applies a configuration.
+- Example:
+  ```hcl
+  output "instance_ids" {
+    value = aws_instance.my_instance.*.id
+  }
+  ```
+
+- Access the output after applying:
+  ```bash
+  terraform output instance_ids
+  ```
+
+---
+
+### Input Variable
+
+- **Definition**: Used to parameterize configuration inputs dynamically.
+- Example:
+  ```hcl
+  variable "instance_type" {
+    type    = string
+    default = "t2.micro"
+  }
+  ```
+
+---
+
+### How to Pass Variable Values?
+
+1. **Default Value**:
+   - Define a `default` in the variable block.
+   - Example:
+     ```hcl
+     variable "region" {
+       default = "us-east-1"
+     }
+     ```
+
+2. **Command-Line Flags**:
+   - Pass variables directly in the `terraform apply` or `terraform plan` command.
+   - Example:
+     ```bash
+     terraform apply -var="region=us-west-2"
+     ```
+
+3. **Variable Files (`.tfvars`)**:
+   - Create a `.tfvars` file and pass it to Terraform.
+   - Example (`variables.tfvars`):
+     ```hcl
+     region = "us-west-2"
+     ```
+   - Apply using:
+     ```bash
+     terraform apply -var-file="variables.tfvars"
+     ```
+
+4. **Environment Variables**:
+   - Set environment variables using the `TF_VAR_` prefix.
+   - Example:
+     ```bash
+     export TF_VAR_region=us-west-2
+     terraform apply
+     ```
+
+5. **Interactive Input**:
+   - Terraform prompts for input if no value is provided.
+   - Example:
+     ```bash
+     terraform apply
+     # Terraform will ask: Enter a value for region:
+     ```
+
+---
+
+### Best Practices for Using Variables
+
+1. **Use Default Values for Common Inputs**:
+   - Provide defaults to minimize user input.
+
+2. **Secure Sensitive Data**:
+   - Mark sensitive variables using the `sensitive` attribute:
+     ```hcl
+     variable "password" {
+       type      = string
+       sensitive = true
+     }
+     ```
+
+3. **Organize Variable Files**:
+   - Use separate `.tfvars` files for different environments, such as `dev.tfvars` and `prod.tfvars`.
+
+4. **Use Descriptive Names**:
+   - Ensure variable names clearly indicate their purpose.
+
+---
+
+### Summary
+
+- **Input Variables**: Parameterize configurations for flexibility.
+- **Output Variables**: Extract and display results after an apply.
+- **Data Types**: String, Number, Boolean, List, Map, Object, Tuple.
+- **Pass Variable Values**: Default, CLI flags, `.tfvars` files, environment variables, or interactively.
+
+-----------------------------
+
+### What is `terraform.tfvars` (and `.auto.tfvars`)?
+
+`terraform.tfvars` and `.auto.tfvars` files are used to set default values for input variables in a Terraform configuration. 
+These files automatically load without requiring explicit flags in the `terraform plan` or `terraform apply` commands. 
+They provide a way to manage variable values in a consistent and reusable way.
+
+---
+
+### **How They Work**
+
+1. **`terraform.tfvars`**:
+   - A special file Terraform looks for by default to load variable values.
+
+2. **`<name>.auto.tfvars`**:
+   - Files with the `.auto.tfvars` suffix are automatically loaded by Terraform. 
+   This allows multiple variable files without using `-var-file` explicitly.
+
+---
+
+### **Lowest to Highest Priority of Variable Assignment**
+
+Terraform evaluates variables in the following order, from **lowest** to **highest** priority:
+
+1. **Default Value in Variable Block**:
+   - If a variable is defined with a `default` value in the `variable` block, it is the lowest priority and overridden by any other method.
+   - Example:
+     ```hcl
+     variable "region" {
+       type    = string
+       default = "us-east-1"
+     }
+     ```
+
+2. **Environment Variables (`TF_VAR_`)**:
+   - Variables prefixed with `TF_VAR_` are considered next.
+   - Example:
+     ```bash
+     export TF_VAR_region=us-west-1
+     ```
+
+3. **`terraform.tfvars` or `terraform.tfvars.json`**:
+   - If this file exists, Terraform automatically loads it for variable values.
+
+4. **`<name>.auto.tfvars` or `<name>.auto.tfvars.json`**:
+   - All `.auto.tfvars` files in the working directory are automatically loaded.
+
+5. **Explicit `-var-file` Flag**:
+   - When running Terraform commands, you can explicitly specify a `.tfvars` file using the `-var-file` flag. 
+   This has a higher priority than auto-loaded files.
+   - Example:
+     ```bash
+     terraform apply -var-file="prod.tfvars"
+     ```
+
+6. **Explicit `-var` Flag**:
+   - Directly passing variable values using the `-var` flag overrides everything else.
+   - Example:
+     ```bash
+     terraform apply -var="region=eu-central-1"
+     ```
+
+---
+
+### **Example Scenario**
+
+1. **Variable Definition**:
+   ```hcl
+   variable "region" {
+     type    = string
+     default = "us-east-1"
+   }
+   ```
+
+2. **`terraform.tfvars`**:
+   ```hcl
+   region = "us-west-1"
+   ```
+
+3. **`custom.auto.tfvars`**:
+   ```hcl
+   region = "eu-west-1"
+   ```
+
+4. **CLI Execution**:
+   ```bash
+   terraform apply -var-file="custom.tfvars" -var="region=ap-southeast-1"
+   ```
+
+5. **Final Value**:
+   - The value `region=ap-southeast-1` is used because it is explicitly passed via `-var`, overriding all other sources.
+
+---
+
+### Summary of Priorities
+
+| **Priority** | **Source**                                      | **Example**              |
+|--------------|--------------------------------------------------|--------------------------|
+| Lowest       | Default value in `variable` block                | `default = "us-east-1"`  |
+| ↑            | Environment variables (`TF_VAR_`)                | `export TF_VAR_region`   |
+| ↑            | `terraform.tfvars` or `.tfvars.json`             | File in working dir      |
+| ↑            | `<name>.auto.tfvars` or `.auto.tfvars.json`      | Automatically loaded     |
+| ↑            | Explicit `-var-file` flag                        | `-var-file="prod.tfvars"`|
+| Highest      | Explicit `-var` flag                             | `-var="region=ap-south-1"`|
+
+--- 
+
+### Best Practice
+
+- **Use `.tfvars` and `.auto.tfvars` for Default Values**:
+  Keep reusable environment-specific settings in `.auto.tfvars` or separate `.tfvars` files (e.g., `dev.tfvars`, `prod.tfvars`).
+
+- **Override Using CLI for Testing**:
+  Use the `-var` flag during one-off runs to override values explicitly.
+
+This layered approach ensures flexibility while keeping configurations maintainable and secure.
+------------------------------------------------------------------------------------------
+
+When the same variable value is passed through all possible methods in Terraform, the value used is determined by the **priority hierarchy** of variable assignment. 
+Terraform evaluates variable values from **lowest** to **highest** priority, and the highest-priority method is the one that overrides all others.
+
+---
+
+### **Priority of Variable Assignment**
+
+From **lowest** to **highest** priority:
+
+1. **Default Value in the `variable` Block**
+2. **Environment Variables (`TF_VAR_`)**
+3. **`terraform.tfvars` or `terraform.tfvars.json`**
+4. **`<name>.auto.tfvars` or `.auto.tfvars.json`**
+5. **Explicit `-var-file` Flag**
+6. **Explicit `-var` Flag**
+
+---
+
+### **Example**
+
+#### **Variable Definition**
+```hcl
+variable "region" {
+  type    = string
+  default = "us-east-1" # Lowest priority
+}
+```
+
+#### **Configuration Files and Methods**
+
+1. **Default Value**:
+   - Defined in the `variable` block: `us-east-1`.
+
+2. **Environment Variable (`TF_VAR_`)**:
+   ```bash
+   export TF_VAR_region=us-west-1
+   ```
+
+3. **`terraform.tfvars`**:
+   ```hcl
+   region = "eu-central-1"
+   ```
+
+4. **`custom.auto.tfvars`**:
+   ```hcl
+   region = "ap-south-1"
+   ```
+
+5. **Explicit `-var-file`**:
+   - Run command:
+     ```bash
+     terraform apply -var-file="prod.tfvars"
+     ```
+   - `prod.tfvars` content:
+     ```hcl
+     region = "sa-east-1"
+     ```
+
+6. **Explicit `-var` Flag**:
+   - Run command:
+     ```bash
+     terraform apply -var="region=ap-southeast-1"
+     ```
+
+---
+
+### **Final Evaluation**
+
+Terraform evaluates variable values in the following order:
+
+| **Source**                | **Value Provided**    | **Priority** | **Used Value**   |
+|---------------------------|-----------------------|--------------|------------------|
+| Default (`variable` block) | `us-east-1`           | Lowest       | Ignored          |
+| Environment Variable       | `us-west-1`           | ↑            | Ignored          |
+| `terraform.tfvars`         | `eu-central-1`        | ↑↑           | Ignored          |
+| `.auto.tfvars`             | `ap-south-1`          | ↑↑↑          | Ignored          |
+| Explicit `-var-file`       | `sa-east-1`           | ↑↑↑↑         | Ignored          |
+| Explicit `-var` Flag       | `ap-southeast-1`      | Highest      | **Used**         |
+
+**Result**: The value `ap-southeast-1` from the `-var` flag will be used because it has the **highest priority**.
+
+---
+
+### **Explanation**
+
+1. **Default Value**:
+   - It is overridden by every other source.
+
+2. **Environment Variables**:
+   - Override default values but are lower in priority compared to any `.tfvars` or `-var` values.
+
+3. **`terraform.tfvars` and `.auto.tfvars`**:
+   - Auto-loaded `.tfvars` files override environment variables but are overridden by explicitly specified files or flags.
+
+4. **Explicit `-var-file`**:
+   - Overrides `.tfvars` files and environment variables.
+
+5. **Explicit `-var`**:
+   - The `-var` flag is the highest-priority method and overrides **everything else**.
+
+---
+
+### **Best Practice**
+
+- Use **default values** for generic variables that apply universally.
+- Use **environment variables** for secret or dynamic values (like credentials).
+- Use **`.tfvars` files** for environment-specific configurations (e.g., `dev.tfvars`, `prod.tfvars`).
+- Use the **`-var` flag** for one-time or quick overrides during testing or debugging.
+
+This layered approach ensures flexibility and clarity in your Terraform configurations.

@@ -1,0 +1,174 @@
+Here are the **Top 5 Java 8 Logical Programs** frequently asked in interviews, using **Streams, Comparator, and Functional Programming**.
+
+---
+
+## **1️⃣ Find Second Highest Number in an Array using Streams**
+### **Problem:** Given an array, find the second-highest number.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class SecondHighest {
+    public static void main(String[] args) {
+        int[] numbers = {10, 20, 4, 45, 99, 99, 99, 34};
+
+        int secondHighest = Arrays.stream(numbers)
+                .distinct()  // Remove duplicates
+                .sorted()    // Sort in natural order
+                .skip(numbers.length - 2) // Skip till second last
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Not enough elements"));
+
+        System.out.println("Second highest number: " + secondHighest);
+    }
+}
+```
+### **Explanation:**
+- `distinct()` removes duplicate numbers.
+- `sorted()` sorts the numbers in **ascending order**.
+- `skip(n-2)` moves to the **second last element**.
+- `findFirst()` gets the second-highest number.
+
+---
+## **2️⃣ Find Duplicate Elements in a List using Streams**
+### **Problem:** Given a list of numbers, find duplicate elements.
+
+### **Solution:**
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class FindDuplicates {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(4, 5, 6, 4, 9, 6, 4, 8, 9, 10);
+
+        Set<Integer> duplicates = numbers.stream()
+                .collect(Collectors.groupingBy(num -> num, Collectors.counting())) // Count occurrences
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)  // Keep only duplicates
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
+        System.out.println("Duplicate elements: " + duplicates);
+    }
+}
+```
+### **Explanation:**
+- `groupingBy(num -> num, Collectors.counting())` groups and counts occurrences.
+- `filter(entry -> entry.getValue() > 1)` keeps only duplicates.
+- `collect(Collectors.toSet())` returns unique duplicate numbers.
+
+---
+## **3️⃣ Sort a List of Objects using Comparator (Java 8)**
+### **Problem:** Sort employees by salary in **descending order** using `Comparator`.
+
+### **Solution:**
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+class Employee {
+    String name;
+    double salary;
+
+    public Employee(String name, double salary) {
+        this.name = name;
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return name + " - " + salary;
+    }
+}
+
+public class SortEmployees {
+    public static void main(String[] args) {
+        List<Employee> employees = Arrays.asList(
+                new Employee("Alice", 60000),
+                new Employee("Bob", 75000),
+                new Employee("Charlie", 50000),
+                new Employee("David", 90000)
+        );
+
+        List<Employee> sortedEmployees = employees.stream()
+                .sorted(Comparator.comparing(Employee::getSalary).reversed()) // Descending order
+                .collect(Collectors.toList());
+
+        sortedEmployees.forEach(System.out::println);
+    }
+}
+```
+### **Explanation:**
+- `Comparator.comparing(Employee::getSalary).reversed()` sorts employees by salary in **descending** order.
+- `collect(Collectors.toList())` collects the sorted list.
+
+---
+## **4️⃣ Find First Non-Repeating Character in a String**
+### **Problem:** Given a string, find the first **non-repeating character**.
+
+### **Solution:**
+```java
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+public class FirstNonRepeatingCharacter {
+    public static void main(String[] args) {
+        String input = "interview";
+
+        Character firstNonRepeatingChar = input.chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() == 1)
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(null);
+
+        System.out.println("First non-repeating character: " + firstNonRepeatingChar);
+    }
+}
+```
+### **Explanation:**
+- `groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting())` counts occurrences while maintaining order.
+- `filter(entry -> entry.getValue() == 1)` keeps only **non-repeating characters**.
+- `findFirst()` returns the **first non-repeating character**.
+
+---
+## **5️⃣ Merge Two Lists and Remove Duplicates**
+### **Problem:** Given two lists, merge them and remove duplicates.
+
+### **Solution:**
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class MergeLists {
+    public static void main(String[] args) {
+        List<Integer> list1 = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> list2 = Arrays.asList(4, 5, 6, 7, 8);
+
+        List<Integer> mergedList = Stream.concat(list1.stream(), list2.stream())
+                .distinct() // Remove duplicates
+                .collect(Collectors.toList());
+
+        System.out.println("Merged list without duplicates: " + mergedList);
+    }
+}
+```
+### **Explanation:**
+- `Stream.concat(list1.stream(), list2.stream())` merges both lists.
+- `distinct()` removes **duplicates**.
+- `collect(Collectors.toList())` collects the final merged list.
+
+---
+
+## **Conclusion**
+🔹 These Java 8 logical programs cover **Streams, Comparators, Functional Programming, and Collections**.  
+🔹 They are **commonly asked in interviews** for Java developers.  
+
+Would you like more **advanced problems**? 🚀

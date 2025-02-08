@@ -1,0 +1,253 @@
+To handle **JWT authentication and authorization** in a **React JS** application, follow these steps:
+
+---
+
+### **1. Backend Setup (Spring Boot Example)**
+Before implementing authentication in React, ensure your backend:
+- Issues a JWT token on successful login.
+- Verifies the JWT token on protected API requests.
+
+A typical authentication flow:
+1. User logs in.
+2. Server validates credentials and returns a JWT token.
+3. Client stores the token securely.
+4. Client sends the token in subsequent API requests.
+5. Server verifies and authorizes the request.
+
+---
+
+### **2. Install Required Packages in React**
+Run the following command in your React project:
+```bash
+npm install axios jwt-decode
+```
+- `axios`: For API requests.
+- `jwt-decode`: To decode JWT and extract user roles.
+
+---
+
+### **3. Login and Store JWT Token Securely**
+Use **localStorage** or **HttpOnly Cookies** (preferred for security) to store JWT.
+
+#### **Login Component**
+```jsx
+import React, { useState } from "react";
+import axios from "axios";
+
+const Login = ({ setAuth }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8080/api/login", { email, password });
+      const { token } = response.data;
+
+      // Store token in localStorage (or HttpOnly cookies via backend)
+      localStorage.setItem("token", token);
+      setAuth(true); // Update authentication state
+
+      alert("Login Successful!");
+    } catch (error) {
+      alert("Invalid Credentials");
+    }
+  };
+
+  return (
+    <form onSubmit={handleLogin}>
+      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+  );
+};
+
+export default Login;
+```
+
+---
+
+### **4. Protect API Requests with JWT**
+Set the `Authorization` header in Axios for authenticated requests.
+
+#### **Axios Configuration**
+```jsx
+import axios from "axios";
+
+const API = axios.create({
+  baseURL: "http://localhost:8080/api",
+});
+
+// Add Authorization header before sending requests
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export default API;
+```
+
+#### **Using Axios in Components**
+```jsx
+import React, { useEffect, useState } from "react";
+import API from "./api"; // Import axios instance
+
+const Dashboard = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    API.get("/protected-endpoint")
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Access Denied", error));
+  }, []);
+
+  return <div>{data ? <p>{data}</p> : <p>Loading...</p>}</div>;
+};
+
+export default Dashboard;
+```
+
+---
+
+### **5. User Authentication State Management**
+Manage authentication globally using **React Context**.
+
+#### **AuthContext.js**
+```jsx
+import React, { createContext, useState, useEffect } from "react";
+import jwtDecode from "jwt-decode";
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUser(decoded); // Store user data from JWT
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
+  return <AuthContext.Provider value={{ user, logout }}>{children}</AuthContext.Provider>;
+};
+```
+
+#### **Protect Routes with AuthContext**
+```jsx
+import { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useContext(AuthContext);
+  return user ? children : <Navigate to="/login" />;
+};
+
+export default ProtectedRoute;
+```
+
+#### **Apply ProtectedRoute in React Router**
+```jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+import { AuthProvider } from "./AuthContext";
+import ProtectedRoute from "./ProtectedRoute";
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+}
+
+export default App;
+```
+
+---
+
+### **6. Role-Based Authorization**
+If your JWT contains roles (`admin`, `user`, etc.), control access using `AuthContext`.
+
+#### **Restrict Components Based on Role**
+```jsx
+import { useContext } from "react";
+import { AuthContext } from "./AuthContext";
+
+const AdminPage = () => {
+  const { user } = useContext(AuthContext);
+  
+  if (!user || user.role !== "admin") {
+    return <p>Access Denied</p>;
+  }
+
+  return <h1>Welcome Admin</h1>;
+};
+
+export default AdminPage;
+```
+
+---
+
+### **7. Logout and Token Expiry Handling**
+Ensure users are logged out automatically when the token expires.
+
+#### **Check Expiry in AuthContext**
+```jsx
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    const decoded = jwtDecode(token);
+    if (decoded.exp * 1000 < Date.now()) {
+      logout();
+    } else {
+      setUser(decoded);
+    }
+  }
+}, []);
+```
+
+#### **Logout Button**
+```jsx
+const LogoutButton = () => {
+  const { logout } = useContext(AuthContext);
+  
+  return <button onClick={logout}>Logout</button>;
+};
+```
+
+---
+
+## **Conclusion**
+✅ **Login** → Get JWT from backend.  
+✅ **Store JWT** → LocalStorage (or HttpOnly cookies for better security).  
+✅ **Protect API Calls** → Send JWT in Authorization header using Axios.  
+✅ **Manage Authentication State** → Use React Context.  
+✅ **Protect Routes** → Use `ProtectedRoute` component.  
+✅ **Role-Based Access** → Check user roles in `AuthContext`.  
+✅ **Logout & Expiry Handling** → Remove JWT if expired.
+
+---
+
+**Next Steps:**  
+- Use **HttpOnly cookies** instead of `localStorage` to enhance security.
+- Implement **refresh tokens** to extend session without re-login.
+
+----------------------------------------------------

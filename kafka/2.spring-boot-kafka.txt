@@ -1,0 +1,267 @@
+I'll walk you through a **Spring Boot Kafka producer-consumer example** step by step. This example will cover:  
+
+1. **Setting up Kafka in Docker**  
+2. **Spring Boot producer to send messages to Kafka**  
+3. **Spring Boot consumer to consume messages from Kafka**  
+4. **Kafka topic configuration**  
+
+---
+
+## **1️⃣ Setting Up Kafka in Docker**
+We will use **Apache Kafka and Zookeeper** in Docker. Create a `docker-compose.yml` file:
+
+```yaml
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+```
+
+Run Kafka:
+```sh
+docker-compose up -d
+```
+
+---
+
+## **2️⃣ Spring Boot Kafka Producer**
+Create a Spring Boot project with the dependencies:
+
+- **Spring Web**
+- **Spring Boot for Apache Kafka**
+- **Spring Boot DevTools (optional)**
+
+### **2.1 Maven Dependencies**
+Add the Kafka dependency in `pom.xml`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.kafka</groupId>
+    <artifactId>spring-kafka</artifactId>
+</dependency>
+```
+
+---
+
+### **2.2 Kafka Configuration**
+Create `KafkaConfig.java`:
+
+```java
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class KafkaConfig {
+
+    @Bean
+    public NewTopic createTopic() {
+        return new NewTopic("test-topic", 3, (short) 1);
+    }
+}
+```
+
+---
+
+### **2.3 Producer Service**
+Create `KafkaProducerService.java`:
+
+```java
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+public class KafkaProducerService {
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public void sendMessage(String message) {
+        kafkaTemplate.send("test-topic", message);
+    }
+}
+```
+
+---
+
+### **2.4 REST Controller to Send Messages**
+Create `KafkaController.java`:
+
+```java
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/kafka")
+public class KafkaController {
+
+    private final KafkaProducerService kafkaProducerService;
+
+    public KafkaController(KafkaProducerService kafkaProducerService) {
+        this.kafkaProducerService = kafkaProducerService;
+    }
+
+    @PostMapping("/send")
+    public String sendMessage(@RequestParam String message) {
+        kafkaProducerService.sendMessage(message);
+        return "Message sent: " + message;
+    }
+}
+```
+
+Now, send a message using:  
+```sh
+curl -X POST "http://localhost:8080/kafka/send?message=HelloKafka"
+```
+
+---
+
+## **3️⃣ Spring Boot Kafka Consumer**
+Now, create a consumer that listens to `test-topic`.
+
+### **3.1 Consumer Service**
+Create `KafkaConsumerService.java`:
+
+```java
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class KafkaConsumerService {
+
+    @KafkaListener(topics = "test-topic", groupId = "my-group")
+    public void consumeMessage(String message) {
+        System.out.println("Received: " + message);
+    }
+}
+```
+
+Now, when you send a message, the consumer will print:  
+```sh
+Received: HelloKafka
+```
+
+---
+
+## **4️⃣ Running the Application**
+1. Start Kafka with `docker-compose up -d`.  
+2. Run your Spring Boot application.  
+3. Send a message using the REST API.  
+4. The consumer will print the message.
+
+---
+
+### **📌 Summary**
+✔ Kafka is set up in Docker  
+✔ Spring Boot **Producer** sends messages to Kafka  
+✔ Spring Boot **Consumer** listens for messages  
+--------------------------------------------------------------------
+### **What is `groupId` in Kafka Consumer?**
+In **Kafka**, `groupId` is used to identify a group of consumers that work together to consume messages from a topic.
+
+### **1️⃣ Consumer Groups Explained**
+- A **consumer group** is a collection of consumers that share a common `groupId`.
+- Kafka ensures that each message in a topic **is processed by only one consumer** in the group.
+- If multiple consumers belong to the same group, Kafka **distributes the partitions** among them.
+
+### **2️⃣ Example**
+```java
+@KafkaListener(topics = "test-topic", groupId = "my-group")
+public void consumeMessage(String message) {
+    System.out.println("Received: " + message);
+}
+```
+Here, **`groupId = "my-group"`** means:
+- If multiple instances of this consumer **run with the same `groupId`**, Kafka will distribute messages among them.
+- If all consumers **have different `groupId`s**, each one gets all messages (like a fan-out pattern).
+
+---
+
+### **3️⃣ How `groupId` Affects Message Consumption**
+#### **Case 1: Multiple Consumers in the Same Group**
+- Suppose **3 consumers** have `groupId = "my-group"`.
+- Kafka **divides partitions among them**, so each consumer **gets different messages**.
+
+#### **Case 2: Different Consumer Groups**
+- If **3 consumers** have different `groupId`s (`group-1`, `group-2`, `group-3`):
+  - **Each consumer gets all messages** (independent processing).
+
+---
+
+### **4️⃣ When to Change `groupId`?**
+- If you want **only one instance of a message to be processed**, keep all consumers in the same group.
+- If you want **multiple independent consumers to receive all messages**, use different `groupId`s.
+
+--------------------------------------------------------------------
+### how to setup topic gourp id and broker in application.yml for consumer
+-------------------
+
+### **Configuring Kafka Consumer in `application.yml`**  
+To set up the **Kafka topic, group ID, and broker** for a Spring Boot consumer, you need to configure the `application.yml` file.
+
+---
+
+### **📝 Example `application.yml` Configuration**
+```yaml
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092  # Kafka broker address
+    consumer:
+      group-id: my-consumer-group       # Consumer group ID
+      auto-offset-reset: earliest       # Start consuming from the beginning if no offset is found
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      enable-auto-commit: false         # Manually commit offsets for better control
+```
+
+---
+
+### **🚀 Explanation of Each Property**
+| Property | Description |
+|----------|------------|
+| `bootstrap-servers` | Kafka broker(s) where the consumer connects (can be multiple: `host1:9092,host2:9092`). |
+| `group-id` | Defines the consumer group ID. All consumers with the same group share the topic partitions. |
+| `auto-offset-reset` | Controls where the consumer starts reading if no offset is found: `earliest` (from start) or `latest` (only new messages). |
+| `key-deserializer` | Deserializes the key of Kafka messages (commonly `StringDeserializer`). |
+| `value-deserializer` | Deserializes the value of Kafka messages. |
+| `enable-auto-commit` | If `true`, Kafka automatically commits offsets. If `false`, you manually commit after processing. |
+
+---
+
+### **📌 Sample Kafka Consumer Code**
+```java
+@Component
+@KafkaListener(topics = "my-topic", groupId = "${spring.kafka.consumer.group-id}")
+public void consumeMessage(String message) {
+    System.out.println("Received message: " + message);
+}
+```
+
+---
+
+### **🔥 Next Steps**
+- Do you need a producer setup as well?
+- Would you like a **manual offset commit example**? 🚀

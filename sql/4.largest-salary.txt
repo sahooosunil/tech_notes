@@ -1,0 +1,82 @@
+### **Find the 2nd or 3rd Largest Salary in SQL**  
+
+---
+
+### **1️⃣ Find the 2nd Largest Salary**  
+Using `DISTINCT` and `LIMIT`:
+```sql
+SELECT DISTINCT salary 
+FROM Employees
+ORDER BY salary DESC
+LIMIT 1 OFFSET 1;
+```
+✅ **How it works?**  
+- `ORDER BY salary DESC`: Sorts salaries in descending order.  
+- `DISTINCT`: Ensures unique salaries.  
+- `OFFSET 1`: Skips the highest salary.  
+- `LIMIT 1`: Retrieves only the second-highest salary.  
+
+---
+
+### **2️⃣ Find the 3rd Largest Salary**
+Modify the `OFFSET` value to **2**:
+```sql
+SELECT DISTINCT salary 
+FROM Employees
+ORDER BY salary DESC
+LIMIT 1 OFFSET 2;
+```
+✅ This will return the **3rd highest salary**.
+
+---
+
+### **3️⃣ Alternative Using Subquery**
+For **2nd largest salary**:
+```sql
+SELECT MAX(salary) 
+FROM Employees 
+WHERE salary < (SELECT MAX(salary) FROM Employees);
+```
+For **3rd largest salary**:
+```sql
+SELECT MAX(salary) 
+FROM Employees 
+WHERE salary < (SELECT MAX(salary) FROM Employees WHERE salary < (SELECT MAX(salary) FROM Employees));
+```
+
+✅ **How it works?**  
+- The subquery finds the **highest salary**.  
+- The outer query finds the **next highest salary below it**.  
+- Nested subqueries allow finding the 3rd highest and so on.  
+
+---
+
+### **4️⃣ Using `DENSE_RANK()` (Best for Handling Duplicates)**
+```sql
+SELECT salary 
+FROM (
+    SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk 
+    FROM Employees
+) ranked
+WHERE rnk = 2;  -- Change to 3 for the 3rd largest salary
+```
+✅ **Why use `DENSE_RANK()`?**  
+- Handles duplicate salaries properly.  
+- Ensures correct ranking even when salaries repeat.
+
+---
+To find the **1st largest salary**, simply remove the `OFFSET 1`, as we don't need to skip any rows:  
+-------
+```sql
+SELECT DISTINCT salary 
+FROM Employees
+ORDER BY salary DESC
+LIMIT 1;
+```
+
+✅ **How it works?**  
+- `ORDER BY salary DESC`: Sorts salaries from highest to lowest.  
+- `DISTINCT`: Ensures unique salaries.  
+- `LIMIT 1`: Fetches only the top salary.  
+
+Would you like a version that handles duplicates using `DENSE_RANK()`? 🚀

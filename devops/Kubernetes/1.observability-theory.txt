@@ -1,0 +1,32 @@
+https://github.com/iam-veeramalla/observability-zero-to-hero/blob/main/day-1/readme.md
+what is observability?
+if you have observability in place then you can understand below 3 things
+-> state of your Applicaiton
+-> state of your infrastructure
+-> state of your network
+for example you can understand/get info like what is the cpu/memory utilization of a particular node of your kuberntes cluster in last 24 hours?
+Out of 100 api calls to my application how many are failure and how many are passed?
+observability will not stop here, it will also tell you that why your system is int this state?
+out of 100 request if 5 request has been failed then it will tell why this 5 request got failed? in which part of the app it failed? you will get complete traces of the request. how the request went through multiple parts (service ) of your app.
+why there is a memeroy leak?
+once you get all this info you can fix the problem easily.
+
+thre are 3 pillers of observability (if you have configured below 3 things then you configure observability)
+1. what = metrics (what is the state of your system) (historical data of your events) (event can be the state of cpu/memory or disk or http request)
+    ex: over the last 30 minutes out of 100 request 20 request got failed. you can get this historical data using metrics.
+        you can find like if your cpu is over utilized or under utilized.
+        you can find out if at a particular time of the day the cpu utilization went to its peak. if you dont have this historical data then you ll never understand the issuel.
+2. why = logging  (why is your system in this state)
+    ex: you can pickup one http request using above historical data, you can get the timestamp then you can go to the logs of the particular application. you can see what happed at 10 clock, who sent the request to whcih part it went. and why exactly it failed.
+        logs helps you understand your application better. you can find out if 10 am today your cpu utilization is high, then you can get the logs of 10 am and find out why it happened. which request sent at 10 am?
+3. how = tracing  (How to fix the particular state)
+    ex: it will trace how the request went throu multiple components of you application. LB -> Front end -> back end -> database. how much time taken in each component.
+        trace will give you extensive info to debug, troubleshoot and fix the issue.
+
+difference between monitoring and observability?
+ observability is metrics, logging and tracing. but monitoring is only metrics (metrics + alerts + dashboard) alert can be sent to mail/slack
+ monitoring is a sub part of observability.
+observability is a collective effort of developers and devops engineer.
+    developers should add proper logs like error, warn, info and implement tracing. devops engineer should implement monitoring stack, logging stack amd distributed tracing.
+
+

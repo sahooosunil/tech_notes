@@ -1,0 +1,169 @@
+### Event Sourcing Explained
+
+**What is Event Sourcing?**
+Event Sourcing is a design pattern used in software architecture where **every change in the state of an application** is captured and stored as a series of **events**. Instead of storing only the current state of an entity, Event Sourcing records each state change as a separate event. These events represent all the modifications made to the system over time.
+
+**Key Concepts:**
+1. **Events**: 
+   - Each event represents a meaningful change in the application’s state.
+   - Events are **immutable** (they cannot be changed once created).
+   - Examples: "UserCreated," "OrderPlaced," "PaymentProcessed."
+
+2. **Event Store**: 
+   - A specialized database that records all the events.
+   - It acts as the source of truth, maintaining the complete history of changes for an entity.
+
+3. **Current State Reconstruction**:
+   - The current state of an entity can be rebuilt by **replaying all the events** from the event store.
+   - This means the system does not need to store the current state separately; it can always be reconstructed from the event history.
+
+---
+
+### Why Event Sourcing?
+
+**1. Historical Accuracy and Auditability:**
+   - **Complete History**: Event Sourcing stores a **full history of changes**. Every event represents a point-in-time state change, allowing you to track the entire lifecycle of an entity.
+   - **Audit Trails**: Since every change is captured as an event, it’s easy to see what changes were made, when, and by whom, providing a clear audit trail.
+
+**2. State Reconstruction:**
+   - **Rebuilding State**: You can reconstruct the exact state of an object at any point in time by replaying the events. This is particularly useful for debugging or investigating historical data.
+   - **Time Travel**: Event Sourcing allows you to "time travel" to view the state of the system at any given moment in history.
+
+**3. Debugging and Issue Resolution:**
+   - **Production Issues**: In case of a production issue, you can replay the events leading up to the issue to understand what went wrong. This can help in diagnosing and fixing bugs effectively.
+
+**4. Event-Driven Systems:**
+   - **Event Publishing**: Events can be published to other parts of the system or external systems (e.g., via a message broker like Kafka), enabling **reactive systems** that respond to changes in real-time.
+
+**5. Scalability and Decoupling:**
+   - Since events are immutable, they can be **replicated** and **distributed** easily across different systems, improving scalability and fault tolerance.
+   - Systems can be decoupled, as they only need to listen to relevant events instead of querying a shared database.
+
+---
+
+### Traditional Persistence vs. Event Sourcing
+
+**Traditional Approach**:
+- **Current State Storage**: Only the current state of the entity is stored.
+- **Data Loss**: Historical state changes are lost once the current state is updated.
+- **Limited Debugging**: It’s harder to investigate past issues as previous states are not stored.
+
+**Event Sourcing**:
+- **Event Storage**: Every state change is stored as an event.
+- **Complete History**: Full history of all changes is maintained.
+- **Reconstruction**: The current or any historical state can be reconstructed by replaying events.
+
+---
+
+### Example Workflow of Event Sourcing
+
+1. **User Action**: A user places an order.
+2. **Event Creation**: An `OrderPlaced` event is created with details like user ID, order items, and timestamp.
+3. **Event Storage**: The event is saved in the **event store**.
+4. **Event Processing**:
+   - The event is used to update a **projection** (a read-optimized view of the data) for querying.
+   - The event may trigger other processes (e.g., sending a confirmation email).
+
+5. **Rebuilding State**:
+   - To find out the current state of the order, all events related to the order (`OrderPlaced`, `PaymentProcessed`, etc.) are replayed.
+   - This allows you to see the entire journey of the order from creation to completion.
+
+---
+
+### Event Sourcing Benefits
+- **Full Audit Trail**: Every change is recorded, providing complete traceability.
+- **Debugging and Recovery**: Easier to debug issues by replaying events to see what happened.
+- **Flexibility**: Allows for flexible data structures and schema evolution without losing historical data.
+- **Reactive Systems**: Events can be used to build reactive systems that respond in real-time.
+
+### Event Sourcing Challenges
+- **Complexity**: Managing event stores and replaying events can be complex.
+- **Event Versioning**: Handling changes in event structures (event schema evolution) over time.
+- **Storage**: Requires more storage as all events are retained indefinitely.
+
+---
+
+**Conclusion**:
+Event Sourcing is a powerful pattern for capturing the complete history of changes in an application. It provides benefits like auditability, state reconstruction, and better debugging capabilities. However, it also comes with challenges like increased complexity and the need for effective event versioning and storage management.
+-------------------------------------------
+### CQRS Pattern (Command Query Responsibility Segregation)
+
+**What is CQRS?**
+CQRS stands for **Command Query Responsibility Segregation**. It is a software architectural pattern that separates the **write operations** (commands) from the **read operations** (queries) in an application. Instead of having a single model handling both reads and writes, CQRS divides these responsibilities into two distinct models.
+
+**Why CQRS?**
+- **Performance**: Separating read and write operations can optimize performance, allowing each to scale independently.
+- **Scalability**: You can scale the read and write sides of your application separately based on demand.
+- **Flexibility**: Different data models can be used for reads and writes, tailored to their specific use cases.
+- **Complexity Management**: It helps manage complexity by clearly separating concerns.
+
+---
+
+### Detailed Explanation
+
+#### 1. **Command Request**
+- **What is a Command?**
+  - A command represents a **write operation** like creating, updating, or deleting data.
+  - It modifies the state of the application.
+  
+- **Examples of Commands:**
+  - Create a new user (`POST /users`)
+  - Update a user’s profile (`PUT /users/{id}`)
+  - Delete an order (`DELETE /orders/{id}`)
+  
+- **Process:**
+  - A command request is sent to the **Command Application**.
+  - The command modifies the database by creating, updating, or deleting records.
+
+#### 2. **Query Request**
+- **What is a Query?**
+  - A query represents a **read operation** that retrieves data without modifying it.
+  
+- **Examples of Queries:**
+  - Get user details (`GET /users/{id}`)
+  - List orders (`GET /orders`)
+  
+- **Performance Consideration:**
+  - Queries can become slow if they require **joining multiple tables** to retrieve data.
+  - To improve performance, the **Query Application** can be optimized by using pre-joined, denormalized, or indexed views of the data.
+
+#### 3. **Create, Update, Delete = Command; Read = Query**
+- **Command Operations**:
+  - **Create**: Adding new data (e.g., new user registration).
+  - **Update**: Changing existing data (e.g., updating user info).
+  - **Delete**: Removing data (e.g., deleting an account).
+  
+- **Query Operations**:
+  - **Read**: Retrieving data without modification (e.g., fetching user details).
+
+#### 4. **Separate Command Application and Query Application**
+- **Command Application**:
+  - Focuses on processing **write operations**.
+  - Handles the business logic for creating, updating, or deleting data.
+  
+- **Query Application**:
+  - Focuses on handling **read operations**.
+  - Optimized for fetching data quickly and efficiently.
+
+#### 5. **Query Application Writes to DB Based on Consumer Format**
+- In CQRS, the **Query Application** can write data into the database in a way that matches the expected **response format**.
+- This means structuring the data to align with how consumers (like REST APIs or UI components) expect it.
+- For example, instead of joining tables at query time, the data might already be stored in the desired structure to serve the request faster.
+
+#### 6. **Scaling Command and Query Applications Separately**
+- **Command Application Scaling**:
+  - Scale based on the number of write operations. For instance, if there are frequent updates or new data being added, scale up the command side.
+  
+- **Query Application Scaling**:
+  - Scale based on the number of read operations. If your application has high traffic for reading data (like user dashboards or reporting), you can scale the query side independently.
+  
+---
+
+### Summary
+- **CQRS separates read and write operations** to improve performance, scalability, and manage complexity.
+- **Commands handle create, update, and delete operations**, modifying the application's state.
+- **Queries handle read operations**, optimized for retrieving data efficiently.
+- **Separate applications for commands and queries** allow for independent scaling and optimizations.
+- The **Query Application can pre-format data** to match the expected response, reducing query complexity and speeding up responses.
+  
+By using CQRS, applications can handle high traffic and complex data interactions more efficiently, making them more robust and responsive.

@@ -1,0 +1,103 @@
+### **Version Control System (VCS)**
+A **Version Control System** is a tool that tracks changes to files and helps manage different versions of those files. 
+It allows multiple people to work on a project, keep a history of all changes, and even go back to a previous version if needed.
+
+**Why is it needed?**
+1. **Collaboration:** Makes it easy for teams to work on the same files without overwriting each other’s changes.
+2. **Versioning - Tracking Changes:** Keeps a history of all edits for review or rollback.
+3. **Branching and Merging:** Enables experimenting with new features without affecting the main project.
+4. **Backup:** Acts as a safe storage for your project.
+
+---
+
+### **Centralized vs Distributed Version Control System**
+
+| Feature                         | Centralized VCS                      | Distributed VCS         |
+|---------------------------------|--------------------------------------|-------------------------|
+| **Structure**                   | Single central server stores the project. | Every user has a full copy of the project. |
+| **Offline Work**                | Requires internet to commit changes. | Can commit changes offline. |
+| **Failure Risk**                | If the central server fails, all work stops. | No single point of failure. |
+| **Examples**                    | SVN, Perforce.                       | Git, Mercurial.         |
+
+---
+
+### **Git vs GitHub**
+
+#### **Git**
+- Git is an open-source distributed version control system that you can install on your local machine or any virtual machine (e.g., an EC2 instance) to manage code repositories. 
+    By setting up a Git server, you can host and control your repositories, enabling collaboration, version tracking, and project management for your team or organization.
+- A distributed version control system to track changes in your code.
+- It is installed on your local machine and works offline.
+
+#### **GitHub**
+- A web-based platform for hosting Git repositories online.
+- Adds collaboration features like pull requests, issue tracking, and discussions.
+- Examples of similar platforms: **Bitbucket**, **GitLab**.
+
+**Why platforms like GitHub/Bitbucket came?**
+- GitHub and Bitbucket are platforms built on top of Git. 
+    They make Git easier to use and add extra features like online repository hosting, issue tracking, pull requests, and tools for teamwork. 
+    They also offer free plans for small projects and affordable options for bigger teams and organizations.
+- To make Git repositories shareable and accessible online.
+- Provides a centralized place for teams to collaborate.
+- Adds features like permissions, code review tools, and integration with CI/CD pipelines.
+
+---
+
+### **What is an Organization in Git?**
+An **Organization** in GitHub/Bitbucket is a group or team workspace. 
+- It is used to manage repositories, teams, and permissions under a single entity (e.g., for a company or project team).
+- Example: A company might create an organization to manage all its projects and control who can access them.
+
+---
+
+### **What is Fork in Git?**
+A **Fork** is a copy of someone else’s repository that you create in your GitHub/Bitbucket account. 
+- You can make changes to the forked repository without affecting the original repository.
+- Commonly used when contributing to open-source projects: you fork the project, make changes, and then request to merge them back into the original project (via a pull request). 
+-------------------------------------------------
+### What is Git Branching Strategy?  
+A **Git branching strategy** is a way to organize and manage your code changes using branches in Git. 
+It helps teams work on different tasks (like new features, bug fixes, or releases) without affecting each other's work until it's ready to be merged.
+---
+### Types of Branches:  
+
+1. **Master/Main/Trunk Branch**  
+   - This is the main branch of your project.  
+   - It always contains the stable, production-ready code.  
+   - Changes to this branch are usually made only after proper testing and approval.
+---
+2. **Feature Branch**  
+   - Used for developing a new feature or functionality.  
+   - Created from the main branch.  
+   - Once the feature is complete and tested, it is merged back into the main branch or a release branch.  
+   - Naming example: `feature/login-page`.
+---
+3. **Release Branch**  
+   - Used to prepare for a new release.  
+   - Created from the main branch.  
+   - You can test and fix small issues here before merging it back into the main branch.  
+   - Naming example: `release/v1.0`.
+---
+4. **Hotfix Branch**  
+   - Used to fix critical bugs or issues in production.  
+   - Created directly from the main branch to quickly address problems.  
+   - After the fix, it is merged back into the main branch and often into the development branch as well.  
+   - Naming example: `hotfix/security-patch`.
+
+---
+### Why Use a Branching Strategy?  
+It helps:  
+- Keep your code organized.  
+- Avoid conflicts when multiple people are working on the same project.  
+- Ensure stable and tested code in production.  
+--------------------------------------------------
+Command to add remote repo to your local repo?
+    git remote add "url"
+You can generate public key and private key and upload the public key to github. then you can git clone using the private key
+Git clone vs Git fork
+what is git cherry pic? why it is used and tell me the command?
+Git merge vs git rebase?
+-----------------------------------------
+
+

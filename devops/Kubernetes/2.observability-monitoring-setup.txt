@@ -1,0 +1,45 @@
+https://github.com/iam-veeramalla/observability-zero-to-hero/tree/main/day-2
+what is monitoring? monitoring is superset of metrics.
+monitoring = metrics + dashboard + alerts.
+
+Metrics can be info about below things
+ - cpu of nodes
+ - memory of nodes
+ - pod status
+ - deploy status
+ - deploy replicas
+ - total number of http request in a day (application specific)
+ - How many user have signed of in last 30 days (application specific)
+ - How much time user is speding on the platform (application specific)
+ - At what time of the day ther users are deactivating from the platform (application specific)
+
+ these metrics are either fed to the monitoring sytem or monitoring system will scrape/pull the metrics and show in a visulizaton format.
+  - push or pull the metrics by monitoring system.
+  - you can file alerts in the monitoring system. for example if cpu utilization is more than 80%, fire an alert. to teams / slack, for example if http request takes more than 5 seconds and this event happens more than 20 times a day then fire an alert.
+  Prometheus is the top open source mon.
+  Prometheus can pull the metrics from various sources like
+   - exporters
+   - kubestate metrics
+   - mertrics end point
+   Prometheus server has 3 components 
+    - Retrival -> it will scrpae the data from various sources like exporters or push gateway will push the data to retrival server.
+    - TSDB (Time seriese database) Time -> key -> value 10:00:06 -> cpu -> 80% (retrival will store the data in this TSDB database)
+    - HTTP server (http server will take care of push alerts and api, Prometheus ui, Graphana will get data from http server)
+
+ Service discovery in Prometheus server
+  - in kuberntes cluster there are multiple applications.
+  - Service discovery helps to configure Prometheus to read metrics from only 30 applications out of 100 applications in kuberntes cluster.
+Prometheus combined with Graphana, become very strog monitoring stack.
+
+How Prometheus takes care of monitoring of these 3 things
+ - AWS infra resources
+ - K8s on AWS
+ - the application inside K8s
+ with the help of exporters Prometheus is able to monitor above 3 things.
+ - Node exporters: (infra related metrics periodically)it can get the node related metrics. it goes to each node of your kuberntes cluster and pulls info related to nodes like cput, memory , disck and other metrics and stores them.
+ - Kubestate metrics: it a mertrics which will collect all info from kuberntes api server, such as pod status, deployment status, how many times the pod crashed, how many kuberntes events your pod has emited. Prometheus will pull/scrape all these info from kubestate exporters.
+ - mertrics server: (Custom Metrics) the application developer should expose /mertrics endpoint from wehre Prometheus will get/scrape info related to application status using service discovery.
+  there are other metrics exporters are also available like if you want to get mertics from mysql db then you can install mysql exporters.
+  exporters are nothing but pods in kuberntes cluster. if you tell the ip address of mysql then the mysql exporters will continuously talk to db and get the data and save in time series database.
+Prometheus has other competetors like Nagios, Influx db, Graphite
+ Prometheus is very strong community. and it is a CNCF project. lot of companies who are building observability tools are using Prometheus as monitoring instead of crating monitoring from scratch.

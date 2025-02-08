@@ -1,0 +1,166 @@
+### **SOLID Principles in Java with Examples** 🚀  
+SOLID is a set of five design principles for writing maintainable and scalable object-oriented code.
+
+---
+
+### **1️⃣ S - Single Responsibility Principle (SRP)**
+**👉 A class should have only one reason to change.**  
+
+✅ **Example (Bad Code - Violating SRP)**  
+```java
+class Report {
+    void generateReport() { /* Generates report */ }
+    void printReport() { /* Prints report */ }  // ❌ Violates SRP (Printing is not report's responsibility)
+}
+```
+✅ **Example (Fixed - Following SRP)**  
+```java
+class ReportGenerator {
+    void generateReport() { /* Generates report */ }
+}
+
+class ReportPrinter {
+    void printReport() { /* Prints report */ }
+}
+```
+🔹 **Now each class has a single responsibility!**
+
+---
+
+### **2️⃣ O - Open/Closed Principle (OCP)**
+**👉 Classes should be open for extension but closed for modification.**  
+
+✅ **Example (Bad Code - Violating OCP)**  
+```java
+class DiscountService {
+    double getDiscount(String customerType) {
+        if (customerType.equals("Premium")) return 10;
+        else return 5;
+    }
+}
+```
+❌ **Issue**: If a new customer type is added, we must modify this class.  
+
+✅ **Example (Fixed - Following OCP with Polymorphism)**  
+```java
+interface Discount {
+    double getDiscount();
+}
+
+class PremiumDiscount implements Discount {
+    public double getDiscount() { return 10; }
+}
+
+class RegularDiscount implements Discount {
+    public double getDiscount() { return 5; }
+}
+```
+🔹 **Now we can add new discount types without modifying existing code!**
+
+---
+
+### **3️⃣ L - Liskov Substitution Principle (LSP)**
+**👉 Subtypes should be substitutable for their base types.**  
+
+✅ **Example (Bad Code - Violating LSP)**  
+```java
+class Bird {
+    void fly() { System.out.println("Flying"); }
+}
+
+class Penguin extends Bird {  // ❌ Penguins can't fly!
+    void fly() { throw new UnsupportedOperationException("Penguins can't fly!"); }
+}
+```
+✅ **Example (Fixed - Following LSP)**  
+```java
+interface Bird { }
+interface FlyingBird extends Bird { void fly(); }
+
+class Sparrow implements FlyingBird {
+    public void fly() { System.out.println("Flying"); }
+}
+
+class Penguin implements Bird { /* No fly() method */ }
+```
+🔹 **Now, Penguin is correctly modeled!**
+
+---
+
+### **4️⃣ I - Interface Segregation Principle (ISP)**
+**👉 Clients should not be forced to depend on interfaces they do not use.**  
+
+✅ **Example (Bad Code - Violating ISP)**  
+```java
+interface Worker {
+    void work();
+    void eat();
+}
+
+class Robot implements Worker {  // ❌ Robots don't eat!
+    public void work() { /* Work */ }
+    public void eat() { throw new UnsupportedOperationException(); }
+}
+```
+✅ **Example (Fixed - Following ISP)**  
+```java
+interface Workable { void work(); }
+interface Eatable { void eat(); }
+
+class Human implements Workable, Eatable {
+    public void work() { /* Work */ }
+    public void eat() { /* Eat */ }
+}
+
+class Robot implements Workable {
+    public void work() { /* Work */ }
+}
+```
+🔹 **Now, classes implement only the methods they need!**
+
+---
+
+### **5️⃣ D - Dependency Inversion Principle (DIP)**
+**👉 High-level modules should not depend on low-level modules. Both should depend on abstractions.**  
+
+✅ **Example (Bad Code - Violating DIP)**  
+```java
+class MySQLDatabase {
+    void connect() { System.out.println("Connected to MySQL"); }
+}
+
+class Application {
+    MySQLDatabase db = new MySQLDatabase();  // ❌ Tight coupling
+}
+```
+✅ **Example (Fixed - Following DIP with Dependency Injection)**  
+```java
+interface Database {
+    void connect();
+}
+
+class MySQLDatabase implements Database {
+    public void connect() { System.out.println("Connected to MySQL"); }
+}
+
+class Application {
+    private Database db;
+    Application(Database db) { this.db = db; }  // ✅ Loose coupling
+}
+```
+🔹 **Now we can switch databases (e.g., PostgreSQL) without modifying `Application`!**
+
+---
+
+### **📌 Summary of SOLID Principles**
+| Principle | Meaning | Fix |
+|-----------|---------|-----|
+| **S** | One responsibility per class | Separate concerns into different classes |
+| **O** | Extend behavior without modifying code | Use polymorphism |
+| **L** | Subclasses must be substitutable | Avoid breaking base class behavior |
+| **I** | Don't force classes to implement unused methods | Split interfaces |
+| **D** | Depend on abstractions, not concrete classes | Use Dependency Injection |
+
+---
+
+Would you like **real-world examples** of SOLID in a Spring Boot application? 🚀

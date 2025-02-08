@@ -1,0 +1,146 @@
+### **One-to-One Relationship in Spring Data JPA**  
+A **one-to-one relationship** in JPA means that one entity is associated with exactly one other entity.
+
+---
+
+## **Example Scenario**
+Let's say we have:  
+- A **User** entity, and  
+- A **Profile** entity (containing additional user details).  
+Each **User** has **one Profile**, and each **Profile** belongs to only one **User**.
+
+---
+
+## **1️⃣ Define the Entities**
+
+### **User Entity**
+```java
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)  // 1-to-1 Relationship
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")  // Foreign Key
+    private Profile profile;
+
+    // Getters and Setters
+}
+```
+✅ **`@OneToOne`** → Defines a **one-to-one** relationship.  
+✅ **`cascade = CascadeType.ALL`** → Ensures that when a user is saved, the profile is also saved.  
+✅ **`@JoinColumn(name = "profile_id")`** → Defines the **foreign key** in the `user` table.
+
+---
+
+### **Profile Entity**
+```java
+@Entity
+public class Profile {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String email;
+    private String phone;
+
+    @OneToOne(mappedBy = "profile") // Refers to the field in User
+    private User user;
+
+    // Getters and Setters
+}
+```
+✅ **`mappedBy = "profile"`** → This **avoids creating an extra foreign key column** in the `Profile` table.  
+✅ This means `User` **owns** the relationship.
+
+---
+
+## **2️⃣ Define the Repositories**
+### **User Repository**
+```java
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+```
+
+### **Profile Repository**
+```java
+@Repository
+public interface ProfileRepository extends JpaRepository<Profile, Long> {
+}
+```
+
+---
+
+## **3️⃣ Save Data (Service Layer)**
+```java
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public void createUserWithProfile() {
+        User user = new User();
+        user.setName("John Doe");
+
+        Profile profile = new Profile();
+        profile.setEmail("john@example.com");
+        profile.setPhone("1234567890");
+
+        user.setProfile(profile); // Linking User with Profile
+
+        userRepository.save(user); // Saves both User & Profile
+    }
+}
+```
+🔹 Since we used **`CascadeType.ALL`**, saving `User` also saves `Profile`.
+
+---
+
+## **4️⃣ Fetch Data**
+```java
+public void getUser(Long userId) {
+    Optional<User> user = userRepository.findById(userId);
+    user.ifPresent(u -> {
+        System.out.println("User: " + u.getName());
+        System.out.println("Email: " + u.getProfile().getEmail());
+    });
+}
+```
+
+---
+
+## **5️⃣ Generated Tables (SQL Schema)**
+🔹 `User` table:
+| id | name     | profile_id |
+|----|---------|------------|
+| 1  | John Doe | 1          |
+
+🔹 `Profile` table:
+| id | email             | phone     |
+|----|------------------|----------|
+| 1  | john@example.com | 1234567890 |
+
+---
+
+## **6️⃣ Alternative: Using `@OneToOne` with `@PrimaryKeyJoinColumn`**
+By default, JPA creates a separate **foreign key column** in `User` (`profile_id`).  
+Instead, we can **use the same primary key for both tables**:
+
+```java
+@OneToOne
+@PrimaryKeyJoinColumn
+private Profile profile;
+```
+This makes **User's primary key also act as Profile’s primary key**.
+
+---
+
+## **🔥 Key Takeaways**
+✅ Use `@OneToOne` for **1-to-1 relationships**.  
+✅ Use `@JoinColumn` to define the **foreign key**.  
+✅ Use `cascade = CascadeType.ALL` to **save both entities together**.  
+✅ Use `mappedBy` on the **non-owning side** to avoid an extra column.
+
+Would you like a **Spring Boot CRUD API** for this? 🚀

@@ -1,0 +1,53 @@
+### What is a Multistage Docker Build?
+
+A multistage Docker build allows you to use multiple `FROM` statements in a single Dockerfile. This is useful for separating the build environment from the final production image, which results in a smaller and more secure image.
+
+**Example for a Java App:**
+```dockerfile
+# Stage 1: Build
+FROM maven:3.8.4-openjdk-11 AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package
+
+# Stage 2: Run
+FROM openjdk:11-jre-slim
+WORKDIR /app
+COPY --from=builder /app/target/my-app.jar .
+CMD ["java", "-jar", "my-app.jar"]
+```
+
+### Advantages of Multistage Docker Build:
+1. **Smaller Image Size:** Only the necessary files (like the built jar) are included in the final image, reducing its size.
+2. **Separation of Concerns:** Keeps the build environment and runtime environment separate, enhancing security.
+3. **Simplifies CI/CD Pipelines:** Only the final stage is deployed, making the image lightweight and production-ready.
+
+---
+
+### What is a Distroless Image?
+
+A distroless image is a minimal Docker image that contains only the application and its dependencies, with no package manager or shell.
+
+**Example:**
+```dockerfile
+# Use multistage build
+FROM maven:3.8.4-openjdk-11 AS builder
+WORKDIR /app
+COPY . .
+RUN mvn clean package
+
+# Use distroless base image
+FROM gcr.io/distroless/java:11
+WORKDIR /app
+COPY --from=builder /app/target/my-app.jar .
+CMD ["my-app.jar"]
+```
+
+### Advantages of Distroless Image:
+1. **Smaller Attack Surface:** No shell or package manager, reducing vulnerabilities and attack vectors.
+2. **Smaller Image Size:** Minimal set of files, leading to faster startup and reduced resource usage.
+3. **Improved Security:** Less risk of unauthorized changes or attacks since the image doesn't include unnecessary components.
+
+### Summary:
+- **Multistage Build:** Reduces image size and improves build efficiency by separating build and runtime stages.
+- **Distroless Image:** Focuses on security and minimalism by only including necessary application components, reducing vulnerabilities and image size.

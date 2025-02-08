@@ -1,0 +1,698 @@
+Automation in AWS
+-------------------------------------------------------------
+We can create AWS resources using the AWS Management Console (UI), but it is **not automation-friendly**. There are several challenges with using the console:
+
+1. **Not Scalable**:  
+   If you need to create 100 or more resources in a short time, doing it manually through the console is impractical and inefficient.
+
+2. **Error-Prone**:  
+   Manual processes are prone to mistakes. You might forget a step or configure something incorrectly, leading to resource misconfigurations.
+
+3. **Time-Consuming**:  
+   Creating resources manually takes a lot of time, especially when dealing with large-scale deployments or complex setups.
+
+---
+### **Why Automation?**
+
+To make the lives of DevOps engineers and infrastructure management teams easier, 
+AWS provides APIs to automate the creation and management of resources. 
+These APIs power several tools in the market, such as:
+
+1. **AWS CLI**  
+2. **Terraform**  
+3. **CloudFormation**  
+4. **AWS CDK (Cloud Development Kit)**  
+
+These tools help automate infrastructure on AWS, reduce errors, save time, and enable large-scale deployments.
+---
+
+### **Overview of Tools**
+
+#### **1. AWS CLI (Command Line Interface):**
+   - **What is it?**  
+     A command-line tool provided by AWS to interact with all AWS services. You can run commands to create, update, delete, or query resources.
+   - **Use Case**:  
+     - Automating repetitive tasks.
+     - Running scripts to manage resources.
+   - **Example Command**:  
+     ```bash
+     aws ec2 run-instances --image-id ami-12345678 --count 1 --instance-type t2.micro
+     ```
+
+#### **2. Terraform (by HashiCorp):**
+   - **What is it?**  
+     An open-source Infrastructure as Code (IaC) tool that works with AWS and other cloud providers. You define resources using a declarative language (HCL - HashiCorp Configuration Language).
+   - **Key Features**:  
+     - Multi-cloud support (AWS, Azure, GCP, etc.).
+     - State management to track resource changes.
+     - Reusable and modular configurations.
+   - **Use Case**:  
+     - Managing complex, multi-cloud infrastructure.
+     - Creating modular and reusable infrastructure templates.
+   - **Example Terraform Code**:
+     ```hcl
+     resource "aws_instance" "example" {
+       ami           = "ami-12345678"
+       instance_type = "t2.micro"
+     }
+     ```
+
+#### **3. AWS CloudFormation:**
+   - **What is it?**  
+     A native AWS service for Infrastructure as Code. You define resources in a JSON or YAML template, and CloudFormation provisions them.
+   - **Key Features**:  
+     - Fully integrated with AWS.
+     - Stack management (grouping related resources together).
+     - Rollback on failures.
+   - **Use Case**:  
+     - Deploying AWS-specific infrastructure with templates.
+     - Managing resource dependencies and relationships.
+   - **Example YAML Template**:
+     ```yaml
+     Resources:
+       MyInstance:
+         Type: "AWS::EC2::Instance"
+         Properties:
+           InstanceType: "t2.micro"
+           ImageId: "ami-12345678"
+     ```
+
+#### **4. AWS CDK (Cloud Development Kit):**
+   - **What is it?**  
+     A developer-friendly Infrastructure as Code tool that allows you to define AWS resources using programming languages like Python, Java, JavaScript, TypeScript, and C#.
+   - **Key Features**:  
+     - High-level abstractions for common patterns.
+     - Seamless integration with AWS services.
+     - Allows using familiar programming paradigms.
+   - **Use Case**:  
+     - Developers who prefer writing code over YAML/JSON templates.
+     - Building complex infrastructure with custom logic.
+
+---
+
+### **When to Use What?**
+
+| Tool             | Best For                                            |
+|-------------------|-----------------------------------------------------|
+| **AWS CLI**       | Quick tasks, scripting, or lightweight automation.  |
+| **Terraform**     | Multi-cloud infrastructure and modular setups.      |
+| **CloudFormation**| AWS-specific, native templates for large-scale AWS-only infrastructure. |
+| **AWS CDK**       | Developers who prefer coding over YAML/JSON templates. |
+
+---
+
+### **Summary**
+
+AWS automation tools make it easier to create and manage infrastructure. 
+They save time, reduce human errors, and enable scalability. 
+By using tools like AWS CLI, Terraform, CloudFormation, or AWS CDK, teams can build reliable and repeatable infrastructure for their applications.
+--------------------
+### **What is an IaC Tool?**
+
+An **Infrastructure as Code (IaC)** tool allows you to manage and provision your cloud infrastructure (e.g., servers, databases, networks) using code, rather than manual processes like clicking in a web console. IaC tools ensure that infrastructure is:
+
+1. **Declarative**:  
+   - You describe *what* you want (the desired state of resources), not *how* to create it.  
+   - For example, instead of step-by-step commands to create a server, you simply declare, “I need a server with these specifications.”
+   - **Simplified definition**: *What you see is what you get* — the code represents the actual state of your infrastructure.
+
+2. **Versioned in Nature**:  
+   - The IaC templates are stored as files (YAML, JSON, HCL, or other formats) that can be saved in version control systems like Git or S3.
+   - **Why this is useful**:  
+     - You can track changes made to your infrastructure.  
+     - Roll back to a previous version if something goes wrong.  
+
+3. **Convert Templates to Cloud API Calls**:  
+   - IaC tools convert your declared templates into API calls to interact with the cloud provider (e.g., AWS, Azure, GCP). These API calls are responsible for creating, updating, or deleting cloud resources as per the template.
+
+---
+
+### **Why Use IaC Tools?**
+
+- Automates resource creation, reducing manual errors.
+- Ensures consistency by creating the same resources in every environment.
+- Saves time, especially for large-scale deployments.
+- Simplifies collaboration, as teams can share and review infrastructure code.
+
+---
+
+### **Choosing Between CLI and CloudFormation**
+
+#### **AWS CLI**:
+   - **What is it?**  
+     A command-line interface to interact directly with AWS services by executing commands. It is not declarative; instead, it involves running imperative commands to manage resources.
+
+   - **When to Use CLI?**  
+     - For small tasks or ad-hoc actions.  
+       Example: Starting/stopping EC2 instances, querying S3 bucket details.  
+     - When you need quick results without writing a template.  
+     - For debugging or testing API-level functionality.
+
+   - **Why CLI is not Ideal for Large Deployments?**  
+     - It does not maintain state, so you can't track or revert changes easily.  
+     - It's harder to replicate infrastructure configurations consistently.
+
+---
+
+#### **AWS CloudFormation (CFT)**:
+   - **What is it?**  
+     A declarative IaC tool provided by AWS to define your cloud infrastructure using templates in JSON or YAML.
+
+   - **When to Use CloudFormation?**  
+     - For larger, repeatable, and complex infrastructure setups.  
+       Example: Creating a VPC, subnets, and EC2 instances together.  
+     - When you need infrastructure that can be versioned and tracked.  
+     - When collaboration and auditing are critical (e.g., in production environments).  
+     - If you want built-in dependency management (e.g., ensuring a database is created before an application server).
+
+   - **Advantages of CFT Over CLI**:  
+     - Tracks the state of resources in stacks, making it easy to manage related resources together.  
+     - Enables rollback to a previous version in case of failures.  
+     - Offers better scalability and consistency for complex deployments.
+
+---
+
+### **Summary: CLI vs. CFT**
+
+| Feature                     | AWS CLI                                   | CloudFormation (CFT)                     |
+|-----------------------------|-------------------------------------------|------------------------------------------|
+| **Type**                    | Imperative                               | Declarative                              |
+| **Best For**                | Quick, ad-hoc tasks                      | Complex, repeatable infrastructure setups |
+| **Scalability**             | Limited                                  | High                                     |
+| **State Management**        | Not supported                            | Supported (via stacks)                   |
+| **Version Control**         | Harder to implement                      | Easy to version templates in Git         |
+| **Rollback Support**        | Manual                                   | Automatic                                |
+
+---
+
+By understanding the use cases and differences, you can choose the right tool for your needs. 
+Use the CLI for small tasks and CloudFormation for larger, repeatable setups.
+----------------
+
+### **CloudFormation Template (CFT)**
+
+A **CloudFormation Template (CFT)** is a file written in either JSON or YAML format that defines your cloud resources and their configurations.
+AWS CloudFormation uses this template to automate the creation, updating, and management of infrastructure.
+
+---
+
+### **Features of CloudFormation Templates**
+
+1. **Supports Both JSON and YAML**:  
+   - **JSON**:  
+     - Allows you to define infrastructure in a structured format.  
+     - **Limitation**: JSON doesn’t support comments, making it less readable.  
+     - It is also verbose, meaning you need to write more lines of code.  
+   - **YAML**:  
+     - More concise and less verbose compared to JSON.  
+     - Allows comments, making it easier for humans to read and understand.  
+     - Preferred for its readability and ease of writing.
+
+2. **Drift Detection**:  
+   - Drift detection is a feature of CloudFormation that checks if the actual state of your resources matches the configuration defined in your template.  
+   - **Why It’s Useful**:  
+     - Sometimes, changes to resources are made manually outside of CloudFormation, leading to inconsistencies. Drift detection identifies such discrepancies so you can take corrective actions.
+
+3. **Implementation Options**:  
+   - **AWS Management Console (UI)**:  
+     - Easy to use for beginners.  
+     - Provides a guided interface to upload templates and manage stacks.  
+   - **AWS CLI**:  
+     - Useful for automation and scripting.  
+     - Enables you to deploy and manage resources programmatically.
+
+4. **Stacks in CloudFormation**:  
+   - A **stack** is a collection of AWS resources that are managed as a single unit.  
+   - When you create a stack, all the resources defined in the template (e.g., EC2, S3, VPC) are provisioned together.  
+   - **Why Use Stacks**:  
+     - Makes it easier to manage related resources.  
+     - Supports updates and rollbacks as a group.  
+   - **Example**:  
+     If your template defines a web application with an EC2 instance, an S3 bucket, and a security group, all these resources will be created as part of a single stack.
+----
+### **Benefits of Using CFT**
+- **Automation**: Automates the creation and updating of infrastructure.  
+- **Consistency**: Ensures the same resources are created every time.  
+- **Rollback**: Automatically rolls back changes if a failure occurs.  
+- **Drift Detection**: Identifies and fixes inconsistencies.  
+By using CloudFormation, you can manage your AWS resources efficiently, automate deployments, and ensure consistency across environments. 
+It’s a powerful tool for both developers and DevOps teams!
+---
+-----------------------------------------
+### **AWS CloudFormation Template Anatomy and Explanation**
+
+An AWS CloudFormation Template (CFT) is structured in a specific way to define and manage AWS resources programmatically. 
+Below is a breakdown of the key components of a CFT and what each section does.
+
+---
+
+### **1. Template Format**
+AWS CFT supports two formats: **JSON** and **YAML**.  
+- **YAML** is often preferred because it’s less verbose and supports comments for better readability.
+
+---
+
+### **2. Main Sections of a CloudFormation Template**
+
+#### **a. AWSTemplateFormatVersion (Optional)**  
+This defines the version of the CloudFormation template format you are using.  
+- It is mostly optional and doesn't impact the functionality of the template.  
+- Example:  
+  ```yaml
+  AWSTemplateFormatVersion: "2010-09-09"
+  ```
+
+---
+
+#### **b. Description (Optional)**  
+A text description of what the template does. This helps others understand the purpose of the template.  
+- Example:  
+  ```yaml
+  Description: "This template creates an EC2 instance for a web server."
+  ```
+
+---
+
+#### **c. Parameters (Optional)**  
+Defines inputs that can be passed into the template at runtime. Parameters make templates flexible and reusable.  
+- You can specify default values, allowed values, and descriptions for parameters.  
+- Example:  
+  ```yaml
+  Parameters:
+    InstanceType:
+      Type: String
+      Default: t2.micro
+      AllowedValues:
+        - t2.micro
+        - t2.small
+        - t2.medium
+      Description: "EC2 instance type"
+  ```
+
+---
+
+#### **d. Mappings (Optional)**  
+A way to define key-value pairs that can be used to customize templates based on environment, region, or other factors.  
+- Example:  
+  ```yaml
+  Mappings:
+    RegionMap:
+      us-east-1:
+        AMI: ami-12345678
+      us-west-1:
+        AMI: ami-87654321
+  ```
+
+---
+
+#### **e. Conditions (Optional)**  
+Specifies conditions under which certain resources are created or properties are applied. This is useful for environment-specific configurations.  
+- Example:  
+  ```yaml
+  Conditions:
+    IsProduction:
+      Fn::Equals:
+        - Ref: EnvironmentType
+        - production
+  ```
+
+---
+
+#### **f. Resources (Required)**  
+This is the **most important section** of a CloudFormation template.  
+- Defines the AWS resources (e.g., EC2, S3, VPC) to be created, updated, or deleted.  
+- Example:  
+  ```yaml
+  Resources:
+    MyEC2Instance:
+      Type: "AWS::EC2::Instance"
+      Properties:
+        InstanceType: !Ref InstanceType
+        ImageId: ami-12345678
+  ```
+
+---
+
+#### **g. Outputs (Optional)**  
+Defines the output values that the stack returns after the resources are created. Outputs are often used for things like resource IDs or URLs.  
+- Example:  
+  ```yaml
+  Outputs:
+    InstanceId:
+      Description: "The Instance ID of the created EC2 instance"
+      Value: !Ref MyEC2Instance
+  ```
+
+---
+
+#### **h. Metadata (Optional)**  
+Provides additional information about the template or resources, such as how the template should be processed or used by tools like CloudFormation Designer.  
+- Example:  
+  ```yaml
+  Metadata:
+    AWS::CloudFormation::Interface:
+      ParameterGroups:
+        - Label:
+            default: "Instance Configuration"
+          Parameters:
+            - InstanceType
+  ```
+
+---
+
+#### **i. Transform (Optional)**  
+Used for macros or AWS Serverless Application Model (SAM). 
+Allows you to include reusable snippets or simplify serverless app deployments.  
+- Example:  
+  ```yaml
+  Transform: AWS::Serverless-2016-10-31
+  ```
+
+---
+
+### **5. Why Use CloudFormation Templates?**
+
+- **Automation**: Simplifies the process of deploying infrastructure repeatedly.  
+- **Consistency**: Ensures resources are created the same way every time.  
+- **Scalability**: Makes it easy to manage complex environments.  
+- **Drift Detection**: Detects manual changes to resources.  
+- **Rollback**: Automatically reverts changes if a deployment fails.
+
+CloudFormation templates are a powerful way to manage AWS infrastructure as code, enabling scalability, consistency, and reliability in deployments.
+
+------------------------------------------------------------------------------------------------
+Below is a **complete example** of an AWS CloudFormation Template that utilizes all the major sections. This template sets up a basic infrastructure with an EC2 instance, an S3 bucket, and an associated security group.
+
+---
+
+### **CloudFormation Template Example**
+
+```yaml
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "A full example of a CloudFormation template with all sections"
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+    Description: "Type of EC2 instance to create"
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-0abcdef1234567890
+    us-west-1:
+      AMI: ami-0fedcba0987654321
+
+Conditions:
+  IsProdEnvironment:
+    Fn::Equals:
+      - Ref: EnvironmentType
+      - "prod"
+
+Resources:
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "my-sample-s3-bucket"
+
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      Tags:
+        - Key: "Name"
+          Value: "MyEC2Instance"
+
+  MySecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Allow HTTP and SSH access"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+Outputs:
+  EC2InstanceID:
+    Description: "The instance ID of the EC2 instance"
+    Value: !Ref MyEC2Instance
+    Export:
+      Name: EC2InstanceID
+
+  S3BucketName:
+    Description: "The name of the created S3 bucket"
+    Value: !Ref MyS3Bucket
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Instance Configuration"
+        Parameters:
+          - InstanceType
+    ParameterLabels:
+      InstanceType:
+        default: "EC2 Instance Type"
+
+Transform: AWS::Serverless-2016-10-31
+```
+
+---
+
+### **Explanation of Sections**
+
+#### **1. `AWSTemplateFormatVersion`**  
+- Specifies the format version used in the template.  
+- **Example**: `2010-09-09` (the latest version).
+
+#### **2. `Description`**  
+- Describes the purpose of the template.  
+- **Example**: `"A full example of a CloudFormation template with all sections"`
+
+#### **3. `Parameters`**  
+- Allows user input at runtime, making the template reusable.  
+- **Example**: `InstanceType` parameter to specify the EC2 instance type.
+
+#### **4. `Mappings`**  
+- Maps region-specific values, such as AMI IDs, to regions.  
+- **Example**: `RegionMap` mapping AMI IDs for `us-east-1` and `us-west-1`.
+
+#### **5. `Conditions`**  
+- Controls the creation of resources based on conditions.  
+- **Example**: `IsProdEnvironment` checks if the environment is production.
+
+#### **6. `Resources`**  
+- Defines AWS resources, like EC2, S3, and Security Groups.  
+- **Example**: Creates an S3 bucket, EC2 instance, and security group.
+
+#### **7. `Outputs`**  
+- Returns values after stack creation, like instance IDs or bucket names.  
+- **Example**: Outputs the EC2 instance ID and S3 bucket name.
+
+#### **8. `Metadata`**  
+- Adds additional information about the template or parameters for tools like CloudFormation Designer.  
+- **Example**: Labels the parameter group for the EC2 instance type.
+
+#### **9. `Transform`**  
+- Specifies a macro or serverless transformation.  
+- **Example**: `AWS::Serverless-2016-10-31` for AWS SAM support.
+
+---
+
+### **What Happens When You Deploy This Template?**
+1. **S3 Bucket**: A bucket named `my-sample-s3-bucket` is created.  
+2. **EC2 Instance**: An EC2 instance is launched using the specified `InstanceType` parameter and AMI ID based on the region.  
+3. **Security Group**: A security group is created allowing SSH and HTTP access from any IP address.  
+4. **Outputs**: After the stack is created, the EC2 instance ID and S3 bucket name are displayed in the outputs.  
+
+This template is comprehensive, covering every major section of a CloudFormation template.
+It can be extended to include more resources and conditions based on specific requirements.
+----------------------------------------------------------------------------------------
+To include **Network ACL (NACL) rules** in the example, we need to define a new NACL resource along with its rules, associate it with a subnet, and integrate it into the CloudFormation template. Below is the updated template:
+
+---
+
+### **Updated CloudFormation Template with NACL**
+
+```yaml
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "A CloudFormation template with NACL, EC2 instance, S3 bucket, and Security Group"
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+    Description: "Type of EC2 instance to create"
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      AMI: ami-0abcdef1234567890
+    us-west-1:
+      AMI: ami-0fedcba0987654321
+
+Conditions:
+  IsProdEnvironment:
+    Fn::Equals:
+      - Ref: EnvironmentType
+      - "prod"
+
+Resources:
+  # S3 Bucket
+  MyS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "my-sample-s3-bucket"
+
+  # Security Group
+  MySecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Allow HTTP and SSH access"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  # VPC
+  MyVPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: "Name"
+          Value: "MyVPC"
+
+  # Subnet
+  MySubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.0.1.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: "Name"
+          Value: "MySubnet"
+
+  # Network ACL
+  MyNACL:
+    Type: "AWS::EC2::NetworkAcl"
+    Properties:
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: "Name"
+          Value: "MyNACL"
+
+  # Network ACL Entry (Inbound Rule)
+  MyNACLInboundRule:
+    Type: "AWS::EC2::NetworkAclEntry"
+    Properties:
+      NetworkAclId: !Ref MyNACL
+      RuleNumber: 100
+      Protocol: 6 # TCP
+      RuleAction: allow
+      Egress: false
+      CidrBlock: "0.0.0.0/0"
+      PortRange:
+        From: 80
+        To: 80
+
+  # Network ACL Entry (Outbound Rule)
+  MyNACLOutboundRule:
+    Type: "AWS::EC2::NetworkAclEntry"
+    Properties:
+      NetworkAclId: !Ref MyNACL
+      RuleNumber: 100
+      Protocol: 6 # TCP
+      RuleAction: allow
+      Egress: true
+      CidrBlock: "0.0.0.0/0"
+      PortRange:
+        From: 1024
+        To: 65535
+
+  # Subnet Association with NACL
+  MySubnetNACLAssociation:
+    Type: "AWS::EC2::SubnetNetworkAclAssociation"
+    Properties:
+      NetworkAclId: !Ref MyNACL
+      SubnetId: !Ref MySubnet
+
+  # EC2 Instance
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
+      SubnetId: !Ref MySubnet
+      SecurityGroupIds:
+        - !Ref MySecurityGroup
+      Tags:
+        - Key: "Name"
+          Value: "MyEC2Instance"
+
+Outputs:
+  EC2InstanceID:
+    Description: "The instance ID of the EC2 instance"
+    Value: !Ref MyEC2Instance
+    Export:
+      Name: EC2InstanceID
+
+  S3BucketName:
+    Description: "The name of the created S3 bucket"
+    Value: !Ref MyS3Bucket
+```
+
+---
+
+### **What's New in the Template?**
+
+#### **1. VPC**
+- A VPC (`MyVPC`) is created to contain all the resources.
+
+#### **2. Subnet**
+- A public subnet (`MySubnet`) is created within the VPC.
+
+#### **3. Network ACL**
+- A Network ACL (`MyNACL`) is created to control traffic at the subnet level.
+
+#### **4. Network ACL Entries**
+- **Inbound Rule**: Allows HTTP traffic (port 80) from any IP (`0.0.0.0/0`).
+- **Outbound Rule**: Allows ephemeral ports (1024–65535) for outgoing traffic to any IP.
+
+#### **5. Subnet and NACL Association**
+- The subnet (`MySubnet`) is explicitly associated with the NACL (`MyNACL`).
+
+---
+
+### **How It Works**
+1. **VPC and Subnet**: A VPC and subnet provide the networking foundation.
+2. **NACL**: Controls access to/from the subnet.
+3. **Security Group**: Adds security at the EC2 instance level.
+4. **EC2 Instance**: Runs inside the subnet and is protected by both the NACL and Security Group.
+
+This structure ensures that the EC2 instance is secure and follows best practices for both **NACL (network-level security)** and **Security Groups (instance-level security)**.

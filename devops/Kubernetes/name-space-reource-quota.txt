@@ -1,0 +1,90 @@
+### **Namespace Resource Quota in Kubernetes – Explained with Example**  
+
+#### **🔹 What is a Resource Quota?**  
+A **ResourceQuota** in Kubernetes **limits the total amount of resources** (CPU, memory, storage, pods, etc.) that can be used **within a namespace**. It prevents a single team, application, or workload from consuming all available resources in the cluster.  
+
+---
+
+### **🔹 Why is Resource Quota Needed?**
+✅ Ensures **fair resource distribution** in multi-tenant environments.  
+✅ Prevents **one namespace from using too many cluster resources**.  
+✅ Helps in **capacity planning** by setting limits on CPU, memory, and storage.  
+
+---
+
+### **🔹 Example: Setting a Resource Quota**  
+#### **Scenario:**  
+You have a **namespace called `dev-team`**, and you want to **restrict the number of pods, CPU, and memory usage**.
+
+#### **ResourceQuota YAML:**
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-team-quota
+  namespace: dev-team
+spec:
+  hard:
+    pods: "10"                    # Max 10 pods allowed in this namespace
+    requests.cpu: "4"              # Max 4 CPU cores requested
+    requests.memory: "8Gi"         # Max 8GB memory requested
+    limits.cpu: "8"                # Max 8 CPU cores limit
+    limits.memory: "16Gi"          # Max 16GB memory limit
+    persistentvolumeclaims: "5"    # Max 5 PVCs allowed
+    requests.storage: "100Gi"      # Max 100GB storage
+```
+---
+
+### **🔹 What Happens After Applying the ResourceQuota?**
+1️⃣ If a user tries to create **more than 10 pods**, Kubernetes **blocks the request**.  
+2️⃣ If a pod requests **more CPU or memory** than allowed, it **won’t be scheduled**.  
+3️⃣ If a pod exceeds **the memory or CPU limit**, Kubernetes **kills it (OOMKilled)**.  
+
+---
+
+### **🔹 Example: Requesting a Pod Exceeding Quota**
+#### **Pod YAML (Exceeding Quota)**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: high-memory-pod
+  namespace: dev-team
+spec:
+  containers:
+  - name: my-app
+    image: nginx
+    resources:
+      requests:
+        cpu: "3"      # Allowed (within 4 CPU limit)
+        memory: "10Gi" # ❌ Exceeds 8Gi quota (Kubernetes will reject it)
+```
+#### **Error Message:**
+```
+Error: Pod "high-memory-pod" is forbidden: exceeded quota: dev-team-quota,
+requested: requests.memory=10Gi, but limit is 8Gi.
+```
+
+---
+
+### **🔹 How to Check Resource Quota Usage?**
+You can check the quota usage with:  
+```bash
+kubectl get resourcequota -n dev-team
+```
+#### **Example Output:**
+```
+NAME             CPU(REQ)   CPU(LIMIT)   MEM(REQ)   MEM(LIMIT)   PODS
+dev-team-quota   2/4        4/8          6Gi/8Gi    10Gi/16Gi    8/10
+```
+✅ This means **2 CPU cores** are used out of **4 available**, and **8 out of 10** pods are running.
+
+---
+
+### **🔹 Key Takeaways**
+✅ **ResourceQuota** **restricts resource usage** inside a namespace.  
+✅ **It applies to CPU, memory, storage, and number of pods/PVCs**.  
+✅ **Prevents resource hogging** and ensures **fair usage** in shared clusters.  
+✅ **Pods exceeding quota limits will be blocked or fail to start**.  
+
+Let me know if you need a more specific example! 🚀

@@ -1,0 +1,177 @@
+### **`React.memo` Overview**
+
+`React.memo` is a higher-order component (HOC) used to optimize functional components by preventing unnecessary re-renders. It works by memoizing the component and only re-rendering it if its props change. If the props remain the same between renders, React will skip rendering the component, which can improve performance, especially in complex UIs.
+
+In simpler terms, **`React.memo`** allows React to remember (memoize) a component’s output, and if the component’s props don’t change, React will reuse the previously rendered output without having to re-render the entire component.
+
+---
+
+### **When to Use `React.memo`?**
+
+- **Performance Optimization**: Use `React.memo` when you have a component that re-renders frequently with the same props.
+- **Avoid Unnecessary Re-renders**: This is particularly useful for components that are expensive to render (e.g., complex UIs or large lists).
+- **Pure Components**: `React.memo` works well for "pure" components, where the output depends solely on the props and state.
+
+---
+
+### **How `React.memo` Works**
+
+`React.memo` compares the current props with the previous ones. If the props are the same, React skips the render. If the props change, React re-renders the component.
+
+**Syntax**:
+```javascript
+const MemoizedComponent = React.memo(Component);
+```
+
+Where `Component` is the functional component that you want to memoize.
+
+---
+
+### **Basic Example of `React.memo`**
+
+Let's take a simple example where we have two components:
+
+- **ParentComponent**: Contains a state that gets updated periodically.
+- **ChildComponent**: A child that only re-renders when its props change.
+
+### **Step 1: Without `React.memo`**
+
+```javascript
+import React, { useState } from 'react';
+
+const ChildComponent = ({ count }) => {
+  console.log('ChildComponent rendered');
+  return <div>Count: {count}</div>;
+};
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+  const [toggle, setToggle] = useState(true);
+
+  // The parent component updates the `count` every time we click the button.
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={() => setToggle(!toggle)}>Toggle State</button>
+      <ChildComponent count={count} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### **Explanation of Above Code**:
+- When you click the **"Increment Count"** button, the `count` value changes, and **`ChildComponent`** re-renders every time because React doesn't know whether the `count` prop is changing or not.
+- Even when the `toggle` state changes, **`ChildComponent`** will still re-render since it's receiving new props from the parent.
+
+---
+
+### **Step 2: Using `React.memo`**
+
+Now, let's wrap `ChildComponent` with `React.memo` to prevent unnecessary re-renders:
+
+```javascript
+import React, { useState } from 'react';
+
+// Memoized ChildComponent
+const ChildComponent = React.memo(({ count }) => {
+  console.log('ChildComponent rendered');
+  return <div>Count: {count}</div>;
+});
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+  const [toggle, setToggle] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={() => setToggle(!toggle)}>Toggle State</button>
+      <ChildComponent count={count} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### **Explanation of Changes**:
+- **`React.memo(ChildComponent)`**: By wrapping `ChildComponent` with `React.memo`, it will only re-render when the `count` prop actually changes.
+- When you click the **"Toggle State"** button, even though the `toggle` state changes, **`ChildComponent`** will **NOT** re-render because its props (`count`) haven't changed.
+- The console will show "ChildComponent rendered" only when the `count` changes.
+
+---
+
+### **Output**:
+
+- **Initial render**: The `ChildComponent` will render because it's the first time the component is rendered.
+- **After clicking "Increment Count"**: `ChildComponent` will render again because the `count` prop changes.
+- **After clicking "Toggle State"**: `ChildComponent` will **NOT** render because the `count` prop has not changed, even though the `toggle` state has changed.
+
+### **Console Output Example**:
+```
+ChildComponent rendered
+ChildComponent rendered
+```
+If you click **"Toggle State"** without changing the `count`, you won't see the log again.
+
+---
+
+### **How to Optimize Further Using Custom Comparison in `React.memo`**
+
+By default, `React.memo` does a shallow comparison of props. This works fine for primitive values like strings, numbers, and booleans. However, if the props are complex (objects or arrays), you may want to define a custom comparison function to determine whether the component should re-render.
+
+### **Custom Comparison Function Example**:
+
+```javascript
+import React, { useState } from 'react';
+
+// Custom comparison function
+const areEqual = (prevProps, nextProps) => {
+  return prevProps.count === nextProps.count;
+};
+
+const ChildComponent = React.memo(({ count }) => {
+  console.log('ChildComponent rendered');
+  return <div>Count: {count}</div>;
+}, areEqual);
+
+const ParentComponent = () => {
+  const [count, setCount] = useState(0);
+  const [toggle, setToggle] = useState(true);
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      <button onClick={() => setToggle(!toggle)}>Toggle State</button>
+      <ChildComponent count={count} />
+    </div>
+  );
+};
+
+export default ParentComponent;
+```
+
+### **Explanation of Custom Comparison**:
+- **`areEqual`**: This custom function compares the previous and next props. If the `count` prop hasn't changed, the component won't re-render.
+- **`React.memo(ChildComponent, areEqual)`**: This will ensure that **`ChildComponent`** only re-renders if the `count` prop changes. It will prevent re-renders even for complex props that might change internally.
+
+---
+
+### **When Not to Use `React.memo`**:
+
+- **Very Frequent Updates**: If the component or props change frequently (e.g., every render), `React.memo` may not provide a performance boost, and it might actually add overhead.
+- **Small Components**: For very simple components, the overhead of using `React.memo` might not be worth it.
+- **State Changes**: If a parent component is constantly changing state and passing new props, `React.memo` won't help much.
+
+---
+
+### **Conclusion**
+
+- `React.memo` helps optimize functional components by memoizing them and preventing unnecessary re-renders when props don’t change.
+- It works well for performance optimization, especially when you have complex components or lists.
+- The default shallow comparison works for simple props, but you can provide a custom comparison function for more control.
+- However, don’t overuse `React.memo` in small, simple components, as it could add unnecessary complexity.
+
+By carefully applying `React.memo`, you can significantly improve the performance of your React applications by reducing the number of unnecessary renders.

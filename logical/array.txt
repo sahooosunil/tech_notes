@@ -1,0 +1,264 @@
+### **Top 10 Java Array Manipulation Programs**
+Here are **10 commonly asked Java array manipulation problems** with solutions.
+
+---
+
+## **1️⃣ Reverse an Array**
+### **Problem:** Reverse the given array in-place.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class ReverseArray {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        int left = 0, right = arr.length - 1;
+
+        while (left < right) {
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+            left++;
+            right--;
+        }
+
+        System.out.println("Reversed array: " + Arrays.toString(arr));
+    }
+}
+```
+### **Output:**
+```
+Reversed array: [5, 4, 3, 2, 1]
+```
+
+---
+
+## **2️⃣ Find the Maximum and Minimum Element in an Array**
+### **Problem:** Find the max and min elements in an array.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class MinMaxArray {
+    public static void main(String[] args) {
+        int[] arr = {12, 5, 8, 3, 19, 7};
+
+        int min = Arrays.stream(arr).min().getAsInt();
+        int max = Arrays.stream(arr).max().getAsInt();
+
+        System.out.println("Min: " + min + ", Max: " + max);
+    }
+}
+```
+### **Output:**
+```
+Min: 3, Max: 19
+```
+
+---
+
+## **3️⃣ Find the Second Largest Element**
+### **Problem:** Find the second-largest element in an array.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class SecondLargest {
+    public static void main(String[] args) {
+        int[] arr = {12, 5, 8, 19, 7, 19};
+
+        int secondLargest = Arrays.stream(arr)
+                .distinct()
+                .sorted()
+                .skip(arr.length - 2)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Not enough elements"));
+
+        System.out.println("Second largest: " + secondLargest);
+    }
+}
+```
+
+---
+
+## **4️⃣ Remove Duplicates from an Array**
+### **Problem:** Remove duplicate elements and return unique values.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+import java.util.stream.IntStream;
+
+public class RemoveDuplicates {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 2, 3, 4, 4, 5};
+
+        int[] uniqueArr = IntStream.of(arr).distinct().toArray();
+
+        System.out.println("Array without duplicates: " + Arrays.toString(uniqueArr));
+    }
+}
+```
+
+---
+
+## **5️⃣ Find Missing Number in an Array (1 to N)**
+### **Problem:** Find the missing number from an array of 1 to N.
+
+### **Solution:**
+```java
+public class MissingNumber {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 5}; // Missing 4
+        int n = arr.length + 1;
+        int expectedSum = n * (n + 1) / 2;
+        int actualSum = 0;
+
+        for (int num : arr) {
+            actualSum += num;
+        }
+
+        int missingNumber = expectedSum - actualSum;
+        System.out.println("Missing number: " + missingNumber);
+    }
+}
+```
+
+---
+
+## **6️⃣ Rotate Array to the Right by K Positions**
+### **Problem:** Rotate an array to the right by `k` positions.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class RotateArray {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3, 4, 5};
+        int k = 2;
+        int n = arr.length;
+
+        int[] rotatedArr = new int[n];
+        for (int i = 0; i < n; i++) {
+            rotatedArr[(i + k) % n] = arr[i];
+        }
+
+        System.out.println("Rotated array: " + Arrays.toString(rotatedArr));
+    }
+}
+```
+
+---
+
+## **7️⃣ Find the Intersection of Two Arrays**
+### **Problem:** Find common elements in two arrays.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class ArrayIntersection {
+    public static void main(String[] args) {
+        int[] arr1 = {1, 2, 3, 4, 5};
+        int[] arr2 = {3, 4, 5, 6, 7};
+
+        Set<Integer> set1 = Arrays.stream(arr1).boxed().collect(Collectors.toSet());
+        Set<Integer> set2 = Arrays.stream(arr2).boxed().collect(Collectors.toSet());
+
+        set1.retainAll(set2);
+
+        System.out.println("Intersection: " + set1);
+    }
+}
+```
+
+---
+
+## **8️⃣ Find the Union of Two Arrays**
+### **Problem:** Find the union of two arrays (all unique elements).
+
+### **Solution:**
+```java
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class ArrayUnion {
+    public static void main(String[] args) {
+        int[] arr1 = {1, 2, 3, 4, 5};
+        int[] arr2 = {3, 4, 5, 6, 7};
+
+        Set<Integer> unionSet = Stream.concat(Arrays.stream(arr1).boxed(), Arrays.stream(arr2).boxed())
+                .collect(Collectors.toSet());
+
+        System.out.println("Union: " + unionSet);
+    }
+}
+```
+
+---
+
+## **9️⃣ Move Zeros to End**
+### **Problem:** Move all zeros to the end while maintaining order.
+
+### **Solution:**
+```java
+import java.util.Arrays;
+
+public class MoveZeros {
+    public static void main(String[] args) {
+        int[] arr = {0, 1, 0, 3, 12};
+
+        int insertPos = 0;
+        for (int num : arr) {
+            if (num != 0) {
+                arr[insertPos++] = num;
+            }
+        }
+        while (insertPos < arr.length) {
+            arr[insertPos++] = 0;
+        }
+
+        System.out.println("Array after moving zeros: " + Arrays.toString(arr));
+    }
+}
+```
+
+---
+
+## **🔟 Find the Largest Subarray Sum (Kadane's Algorithm)**
+### **Problem:** Find the contiguous subarray with the maximum sum.
+
+### **Solution:**
+```java
+public class MaxSubarraySum {
+    public static void main(String[] args) {
+        int[] arr = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+
+        int maxSum = Integer.MIN_VALUE, currSum = 0;
+
+        for (int num : arr) {
+            currSum += num;
+            maxSum = Math.max(maxSum, currSum);
+            if (currSum < 0) {
+                currSum = 0;
+            }
+        }
+
+        System.out.println("Largest subarray sum: " + maxSum);
+    }
+}
+```
+
+---
+
+## **Conclusion**
+These **10 array manipulation problems** cover **sorting, searching, merging, and optimization techniques**.  
+Would you like **more advanced problems**? 🚀
