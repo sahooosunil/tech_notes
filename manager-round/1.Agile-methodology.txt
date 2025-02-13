@@ -1,0 +1,90 @@
+### **What is Software Lifecycle?**  
+The **Software Development Lifecycle (SDLC)** is the process of creating software from start to finish. It’s like a roadmap that helps developers build, test, and maintain software. Think of it as the different stages a product goes through from an idea to something you can use on your computer or phone. Here are the main stages:  
+
+1. **Planning:**  
+   - **What happens?** Requirements are gathered. The team figures out what the software should do and who will use it.  
+   - **Why is it important?** To make sure everyone understands the project goals.  
+
+2. **Analysis:**  
+   - **What happens?** The team analyzes the requirements in detail and checks if the project is feasible.  
+   - **Why is it important?** To identify potential challenges and make a clear plan.  
+
+3. **Design:**  
+   - **What happens?** Architects and designers create the blueprint for the software, including system design and user interface design.  
+   - **Why is it important?** It helps developers understand how the software should be structured.  
+
+4. **Implementation (Coding):**  
+   - **What happens?** Developers write the code based on the design.  
+   - **Why is it important?** This is where the actual product is built.  
+
+5. **Testing:**  
+   - **What happens?** Testers check the software for bugs and ensure it works as expected.  
+   - **Why is it important?** To make sure the product is reliable and error-free.  
+
+6. **Deployment:**  
+   - **What happens?** The software is delivered to users.  
+   - **Why is it important?** It makes the product accessible to the target audience.  
+
+7. **Maintenance:**  
+   - **What happens?** The team fixes bugs, adds new features, and updates the software as needed.  
+   - **Why is it important?** To keep the software relevant and functional over time.  
+
+
+---
+
+### **What is Agile Methodology?**  
+**Agile** is a way of managing software development projects by breaking them into small, manageable parts. It focuses on flexibility, customer feedback, and rapid delivery. The idea is to build the software step by step and make changes as needed rather than delivering everything at once.  
+
+**Key Principles of Agile:**  
+- **Customer Collaboration:** Constant feedback from the customer to make sure the product meets their needs.  
+- **Flexibility:** The ability to adapt to changes in requirements even late in development.  
+- **Incremental Delivery:** Delivering the software in small, workable parts, called **iterations** or **sprints**.  
+- **Team Collaboration:** Close communication within the team and with the customer.  
+- **Continuous Improvement:** Learning from each iteration to improve the next one.  
+
+
+---
+
+### **Agile Practices**  
+Agile practices are the techniques teams use to follow Agile methodology. Here are some commonly used practices:  
+
+1. **Scrum:**  
+   - **What is it?** A framework for managing work with small teams. Work is divided into short cycles called **sprints** (usually 2-4 weeks).  
+   - **Key Roles:**  
+     - **Product Owner:** Manages the requirements and priorities.  
+     - **Scrum Master:** Facilitates meetings and removes obstacles.  
+     - **Development Team:** Builds and tests the software.  
+   - **Ceremonies:**  
+     - **Sprint Planning:** Plan what to work on in the upcoming sprint.  
+     - **Daily Stand-up:** A short daily meeting to discuss progress and challenges.  
+     - **Sprint Review:** Demonstrate the completed work to stakeholders.  
+     - **Sprint Retrospective:** Reflect on the sprint and find ways to improve.  
+
+2. **Kanban:**  
+   - **What is it?** A visual method for managing work. Tasks are displayed on a **Kanban board** with columns like To Do, In Progress, and Done.  
+   - **Purpose:** To visualize workflow and limit the work in progress for better productivity.  
+
+3. **Extreme Programming (XP):**  
+   - **What is it?** Focuses on technical practices and frequent releases.  
+   - **Key Practices:**  
+     - **Pair Programming:** Two developers work on the same code simultaneously.  
+     - **Test-Driven Development (TDD):** Writing tests before writing the actual code.  
+     - **Continuous Integration:** Frequently integrating and testing code.  
+
+4. **User Stories:**  
+   - **What are they?** Short descriptions of a feature from the user’s perspective.  
+   - **Example:** “As a user, I want to reset my password so that I can regain access to my account.”  
+
+5. **Backlog Grooming (or Refinement):**  
+   - **What is it?** Reviewing and prioritizing the list of tasks (backlog) to ensure they are ready for future sprints.  
+
+---
+
+### **Summary:**  
+- **Software Lifecycle** is the process of building software step by step, from planning to maintenance.  
+- **Agile Methodology** is a flexible way to develop software in small increments with continuous feedback.  
+- **Agile Practices** include techniques like Scrum (sprints and stand-ups), Kanban (visual workflow), Extreme Programming (code quality), User Stories (requirement descriptions), and Backlog Grooming (prioritizing tasks).  
+
+These approaches help teams build better software faster, with less stress and more customer satisfaction.
+
+

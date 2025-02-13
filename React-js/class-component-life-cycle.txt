@@ -1,0 +1,228 @@
+### **React Class Component Lifecycle Methods (Detailed Explanation)**
+React class components go through a lifecycle with different phases:  
+
+1. **Mounting (Component Creation)**
+2. **Updating (Re-rendering)**
+3. **Unmounting (Cleanup)**
+4. **Error Handling (Handling Errors in Component Tree)**
+
+Each phase has specific lifecycle methods. Let’s explore them in detail with examples.
+
+---
+
+## **1. Mounting Phase (When the component is created)**
+Lifecycle methods in this phase:
+| Method | Purpose |
+|--------|---------|
+| `constructor()` | Initializes state and binds event handlers |
+| `static getDerivedStateFromProps()` | Syncs state with props before rendering |
+| `render()` | Returns JSX to display UI |
+| `componentDidMount()` | Runs after the first render, good for API calls |
+
+### **Example of Mounting Phase:**
+```jsx
+class LifecycleDemo extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log("1. Constructor - Component is created");
+    this.state = { count: 0 };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log("2. getDerivedStateFromProps - Sync state with props");
+    return null; // Usually used to update state based on props
+  }
+
+  componentDidMount() {
+    console.log("4. componentDidMount - Component added to the DOM");
+    // Example: Fetch API data here
+  }
+
+  render() {
+    console.log("3. Render - UI is rendered");
+    return <h1>Lifecycle Methods in React</h1>;
+  }
+}
+
+export default LifecycleDemo;
+```
+✅ **Execution Order:**
+1️⃣ `constructor()`  
+2️⃣ `getDerivedStateFromProps()`  
+3️⃣ `render()`  
+4️⃣ `componentDidMount()`
+
+---
+
+## **2. Updating Phase (When the component re-renders)**
+This phase occurs when:
+- The component’s **state changes** (`this.setState()`)
+- The **props change** (passed from parent)
+
+Lifecycle methods in this phase:
+| Method | Purpose |
+|--------|---------|
+| `static getDerivedStateFromProps()` | Sync state with new props |
+| `shouldComponentUpdate()` | Controls whether the component should re-render |
+| `render()` | Re-renders the component |
+| `getSnapshotBeforeUpdate()` | Captures UI state before update (e.g., scroll position) |
+| `componentDidUpdate()` | Runs after re-render, used for side effects |
+
+### **Example of Updating Phase:**
+```jsx
+class LifecycleDemo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log("1. getDerivedStateFromProps - Sync state with new props");
+    return null;
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("2. shouldComponentUpdate - Should component re-render?");
+    return true; // Returning false stops re-render
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log("4. getSnapshotBeforeUpdate - Capture state before update");
+    return null;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log("5. componentDidUpdate - Runs after re-render");
+    // Example: Fetch new data if state/props changed
+  }
+
+  handleIncrement = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    console.log("3. Render - Re-render UI");
+    return (
+      <div>
+        <h1>Count: {this.state.count}</h1>
+        <button onClick={this.handleIncrement}>Increment</button>
+      </div>
+    );
+  }
+}
+```
+✅ **Execution Order during Update:**
+1️⃣ `getDerivedStateFromProps()`  
+2️⃣ `shouldComponentUpdate()`  
+3️⃣ `render()`  
+4️⃣ `getSnapshotBeforeUpdate()`  
+5️⃣ `componentDidUpdate()`
+
+---
+
+## **3. Unmounting Phase (When the component is removed from the DOM)**
+Only one method exists in this phase:
+| Method | Purpose |
+|--------|---------|
+| `componentWillUnmount()` | Used for cleanup (removing event listeners, stopping API calls, etc.) |
+
+### **Example of Unmounting Phase:**
+```jsx
+class LifecycleDemo extends React.Component {
+  componentWillUnmount() {
+    console.log("Component is being removed!");
+    // Cleanup code here, like clearing timers or unsubscribing from events
+  }
+
+  render() {
+    return <h1>Component will be removed soon</h1>;
+  }
+}
+```
+✅ **Execution Order:**  
+When the component is removed, **only `componentWillUnmount()` runs.**
+
+---
+
+## **4. Error Handling Phase (Catching Errors in Component Tree)**
+React provides two special lifecycle methods to **catch errors** inside components.
+
+| Method | Purpose |
+|--------|---------|
+| `static getDerivedStateFromError()` | Updates state when an error occurs |
+| `componentDidCatch()` | Logs the error for debugging |
+
+### **Example of Error Handling with Error Boundary:**
+```jsx
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    console.log("getDerivedStateFromError - Update state after error");
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.log("componentDidCatch - Log error:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong!</h1>;
+    }
+    return this.props.children;
+  }
+}
+
+// Example usage:
+class BuggyComponent extends React.Component {
+  render() {
+    throw new Error("Oops! Buggy Component Crashed.");
+    return <h1>Normal Component</h1>;
+  }
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <BuggyComponent />
+    </ErrorBoundary>
+  );
+}
+```
+✅ **Execution Order if an error occurs:**  
+1️⃣ `getDerivedStateFromError()`  
+2️⃣ `componentDidCatch()`
+
+---
+
+## **Summary Table of React Class Lifecycle Methods**
+| Phase      | Method | Purpose |
+|------------|---------|---------|
+| **Mounting** | `constructor()` | Initialize state & bind methods |
+| | `getDerivedStateFromProps()` | Sync state with props before render |
+| | `render()` | Render UI |
+| | `componentDidMount()` | Runs after the first render (good for API calls) |
+| **Updating** | `getDerivedStateFromProps()` | Sync state with new props |
+| | `shouldComponentUpdate()` | Control whether the component should re-render |
+| | `render()` | Re-render the component |
+| | `getSnapshotBeforeUpdate()` | Capture UI state before update |
+| | `componentDidUpdate()` | Runs after re-render |
+| **Unmounting** | `componentWillUnmount()` | Cleanup before removing component |
+| **Error Handling** | `getDerivedStateFromError()` | Update state when an error occurs |
+| | `componentDidCatch()` | Logs errors |
+
+---
+
+## **Conclusion**
+✅ React class component lifecycle methods allow us to:
+- **Handle component initialization (`constructor`, `componentDidMount`)**
+- **Optimize rendering (`shouldComponentUpdate`)**
+- **Capture changes before update (`getSnapshotBeforeUpdate`)**
+- **Perform cleanup (`componentWillUnmount`)**
+- **Catch errors (`getDerivedStateFromError`, `componentDidCatch`)**
+
+Would you like a **comparison with React Hooks (`useEffect`)** for the same lifecycle phases? 🚀

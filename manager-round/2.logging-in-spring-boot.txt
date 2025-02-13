@@ -1,0 +1,152 @@
+In a Spring Boot application, logging is typically handled using **Spring Boot's built-in support for Logback**, which is the default logging framework. Here’s how you can manage logging effectively:  
+
+---
+
+### **1. Default Logging Setup in Spring Boot**  
+- Spring Boot uses **Logback** as the default logging framework.  
+- It also supports **SLF4J (Simple Logging Facade for Java)**, allowing you to write logging code independent of the underlying logging framework.  
+
+**Example:**  
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class LoggingController {
+    private static final Logger logger = LoggerFactory.getLogger(LoggingController.class);
+
+    @GetMapping("/log")
+    public String logExample() {
+        logger.debug("This is a DEBUG message");
+        logger.info("This is an INFO message");
+        logger.warn("This is a WARN message");
+        logger.error("This is an ERROR message");
+        return "Logging Example";
+    }
+}
+```
+
+**Log Levels:**  
+- `TRACE` < `DEBUG` < `INFO` < `WARN` < `ERROR`  
+- Default level is **INFO** (i.e., TRACE and DEBUG messages are not printed by default).  
+
+---
+
+### **2. Configuring Logging Levels**  
+You can configure logging levels in `application.properties` or `application.yml`.  
+
+**Using application.properties:**  
+```properties
+logging.level.root=INFO
+logging.level.com.example=DEBUG
+```
+
+**Using application.yml:**  
+```yaml
+logging:
+  level:
+    root: INFO
+    com.example: DEBUG
+```
+
+This sets the root logging level to **INFO** and the logging level for the package `com.example` to **DEBUG**.
+
+---
+
+### **3. Customizing Log Format and Output**  
+By default, logs are printed to the console. You can customize the format and output using Logback configuration.  
+
+**Example of application.properties:**  
+```properties
+# Change the log pattern
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+
+# Write logs to a file
+logging.file.name=application.log
+logging.file.path=logs
+```
+
+- `logging.file.name`: Creates a log file with the given name.  
+- `logging.file.path`: Creates log files in the specified directory.  
+
+**Custom Logback Configuration:**  
+Create a `logback-spring.xml` file in the `src/main/resources` directory for advanced configuration.  
+
+Example `logback-spring.xml`:  
+```xml
+<configuration>
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="fileAppender"/>
+    </root>
+</configuration>
+```
+
+**What it does:**  
+- Logs are printed to the console and saved to a file (`app.log`).  
+- Log files are rolled daily with a history of 30 days.  
+
+---
+
+### **4. Logging with Different Profiles**  
+You can have different logging configurations for different profiles (e.g., development and production).  
+
+**Example in application-dev.properties:**  
+```properties
+logging.level.root=DEBUG
+logging.file.name=logs/dev-application.log
+```
+
+**Example in application-prod.properties:**  
+```properties
+logging.level.root=WARN
+logging.file.name=logs/prod-application.log
+```
+
+Activate a profile using:  
+```properties
+spring.profiles.active=dev
+```
+
+Or with command line:  
+```bash
+java -jar myapp.jar --spring.profiles.active=prod
+```
+
+---
+
+### **5. External Logging Tools and Integrations**  
+For advanced logging requirements, you can integrate with external tools like:  
+- **ELK Stack (Elasticsearch, Logstash, and Kibana)** for searching and visualizing logs.  
+- **Splunk or Graylog** for centralized log management.  
+- **Spring Cloud Sleuth** for distributed tracing in microservices.  
+
+---
+
+### **Summary:**  
+1. **Default Logging:** Spring Boot uses Logback with SLF4J.  
+2. **Configuring Levels:** You can set logging levels in `application.properties` or `application.yml`.  
+3. **Customizing Output:** Customize output format and location with `logback-spring.xml`.  
+4. **Profiles:** Use different logging settings for different environments (dev, prod, etc.).  
+5. **Advanced Logging:** Integrate with ELK, Splunk, or Sleuth for centralized logging and tracing.  
+
+This approach provides flexibility, consistency, and maintainability in managing logs in a Spring Boot application.

@@ -1,0 +1,265 @@
+Here are **10 advanced React.js interview questions** along with detailed explanations and examples:
+
+---
+
+### **1. What are the differences between functional and class components?**
+| Feature         | Class Component      | Functional Component |
+|----------------|--------------------|--------------------|
+| State         | Uses `this.state`   | Uses `useState` hook |
+| Lifecycle Methods | Uses methods like `componentDidMount` | Uses `useEffect` hook |
+| Performance   | Slightly slower | Faster due to lack of `this` overhead |
+| Syntax        | Uses `this` keyword | More concise and readable |
+
+**Example (Class Component):**
+```jsx
+class Counter extends React.Component {
+  constructor() {
+    super();
+    this.state = { count: 0 };
+  }
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return <button onClick={this.increment}>{this.state.count}</button>;
+  }
+}
+```
+
+**Example (Functional Component with Hooks):**
+```jsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+}
+```
+
+---
+
+### **2. What is the Virtual DOM and how does it work?**
+The **Virtual DOM (VDOM)** is a lightweight representation of the actual DOM. React:
+1. Creates a **Virtual DOM copy** of the UI.
+2. Compares it with the **previous version** using **Reconciliation**.
+3. Updates only the **changed elements** using **Diffing Algorithm**.
+
+**Example:**
+```jsx
+const App = () => {
+  const [text, setText] = useState("Hello");
+
+  return (
+    <div>
+      <p>{text}</p>
+      <button onClick={() => setText("Hi")}>Change Text</button>
+    </div>
+  );
+};
+```
+🔹 Only the `<p>` tag is re-rendered, not the entire DOM.
+
+---
+
+### **3. What is React Fiber?**
+**React Fiber** is the new **reconciliation algorithm** in React (from React 16). It improves:
+- **Rendering performance**
+- **Concurrency (allows pausing and resuming rendering)**
+- **Better animation handling**
+
+---
+
+### **4. What are React Hooks?**
+React Hooks **allow functional components to use state and lifecycle features** without needing a class.
+
+| Hook           | Purpose |
+|---------------|---------|
+| `useState`    | Manages state in functional components |
+| `useEffect`   | Handles side effects (API calls, subscriptions) |
+| `useContext`  | Manages global state without prop drilling |
+| `useRef`      | Accesses and persists values without re-rendering |
+| `useMemo`     | Optimizes expensive calculations |
+
+**Example (`useState` Hook):**
+```jsx
+const Counter = () => {
+  const [count, setCount] = useState(0);
+  return <button onClick={() => setCount(count + 1)}>Count: {count}</button>;
+};
+```
+
+---
+
+### **5. Explain useEffect and its dependencies.**
+The `useEffect` hook performs **side effects** in functional components.
+
+**Syntax:**
+```jsx
+useEffect(() => {
+  // Effect logic here
+}, [dependencies]); // Runs when dependencies change
+```
+
+| Scenario | Dependencies |
+|----------|-------------|
+| Run once on mount | `[]` (empty array) |
+| Run on every render | No dependency array |
+| Run when a specific value changes | `[someValue]` |
+
+**Example (Fetching Data in `useEffect`):**
+```jsx
+import { useState, useEffect } from "react";
+
+const FetchData = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.example.com/items")
+      .then((res) => res.json())
+      .then((result) => setData(result));
+  }, []); // Runs only on mount
+
+  return <div>{data.length} items loaded</div>;
+};
+```
+
+---
+
+### **6. What is Prop Drilling and how to avoid it?**
+**Prop drilling** is passing props **through multiple components** to reach a deeply nested child.
+
+🔹 **Solution:** Use **React Context API** or **Redux** to manage global state.
+
+**Example (Using Context API to avoid Prop Drilling):**
+```jsx
+const UserContext = React.createContext();
+
+const Parent = () => {
+  return (
+    <UserContext.Provider value="Hari">
+      <Child />
+    </UserContext.Provider>
+  );
+};
+
+const Child = () => {
+  return <GrandChild />;
+};
+
+const GrandChild = () => {
+  const user = React.useContext(UserContext);
+  return <h1>Hello, {user}</h1>;
+};
+```
+
+---
+
+### **7. What is the difference between useMemo and useCallback?**
+| Hook       | Purpose |
+|------------|---------|
+| `useMemo`  | Caches **computed values** |
+| `useCallback` | Caches **functions** to prevent unnecessary re-creations |
+
+**Example (`useMemo` for expensive calculations):**
+```jsx
+const expensiveCalculation = (num) => {
+  console.log("Calculating...");
+  return num * 2;
+};
+
+const MemoizedComponent = ({ num }) => {
+  const result = useMemo(() => expensiveCalculation(num), [num]);
+  return <div>{result}</div>;
+};
+```
+
+---
+
+### **8. What is React Suspense and React Lazy?**
+They are used for **code-splitting** to improve performance by loading components **on demand**.
+
+**Example (`React.lazy` for Dynamic Importing):**
+```jsx
+import React, { Suspense, lazy } from "react";
+
+const LazyComponent = lazy(() => import("./HeavyComponent"));
+
+const App = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <LazyComponent />
+  </Suspense>
+);
+```
+🔹 **Improves initial load time by deferring component loading.**
+
+---
+
+### **9. What is Redux and how does it work?**
+**Redux** is a state management library that stores the **global state** in a single object.
+
+| Concept  | Description |
+|----------|-------------|
+| **Store** | Holds the state |
+| **Actions** | Define events to change the state |
+| **Reducers** | Specify how the state changes |
+| **Dispatch** | Sends an action to update state |
+
+**Example:**
+```jsx
+const initialState = { count: 0 };
+
+function counterReducer(state = initialState, action) {
+  switch (action.type) {
+    case "INCREMENT":
+      return { count: state.count + 1 };
+    default:
+      return state;
+  }
+}
+
+// Creating Store
+const store = createStore(counterReducer);
+
+// Dispatching action
+store.dispatch({ type: "INCREMENT" });
+console.log(store.getState()); // { count: 1 }
+```
+
+---
+
+### **10. What are React portals?**
+**React Portals** render components **outside the main DOM hierarchy** while keeping event bubbling intact.
+
+**Example (Rendering a Modal using Portal):**
+```jsx
+import ReactDOM from "react-dom";
+
+const Modal = ({ children }) => {
+  return ReactDOM.createPortal(
+    <div className="modal">{children}</div>,
+    document.getElementById("modal-root")
+  );
+};
+
+const App = () => (
+  <div>
+    <Modal>
+      <h2>This is a Portal Modal</h2>
+    </Modal>
+  </div>
+);
+```
+🔹 Used for **modals, popups, and tooltips** to avoid parent CSS interference.
+
+---
+
+### **Conclusion**
+These **10 advanced React.js interview questions** cover:
+✅ Hooks (`useState`, `useEffect`, `useMemo`, `useCallback`)  
+✅ Performance optimizations (React Fiber, Lazy Loading, Memoization)  
+✅ State management (Redux, Context API)  
+✅ Virtual DOM and event handling  
+
+Would you like **more questions** on **React performance** or **real-world projects**? 🚀

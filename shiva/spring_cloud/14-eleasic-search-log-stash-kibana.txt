@@ -1,8 +1,9 @@
 suppone you have 20 microservices running. each microservice will have multiple instances. all these instances will be generatiung logs. Usualy these instances running inside containers. if these apps write logs to local file, then once the contaner crash then all the logs will be lost. 
 so in microservice we should never write logs to loca files. we should alwasy stream logs to a logging serves like (log stash/splunk)
-these logging servers responible for persisting the logs into some location according to configuration. 
+these logging servers responsible for persisting the logs into some location according to configuration. 
 these logging server does not have ui where you can view logs. to fetch/search the logs fastly we need to index the files.
-we need to configure Elastic search, its a tool which will receive the logs from logstash server and create index files for the origianl file managed by logstash server. Again Elastic search does not have Ui.
+we need to configure Elastic search, its a tool which will receive the logs from logstash server and create index files for the origianl file managed by logstash server. 
+Again Elastic search does not have Ui.
 to view these logs in ui we have to start another tool called KIBANA.
 we can make kibana to call the index fiels getnerated by Elastic search. Kibana has very good web UI wehre we can view the logs.
 
@@ -142,7 +143,9 @@ output {
 
 ### Tracing Requests Across Microservices
 
-In a microservices architecture, a single request often involves multiple services. Distributed tracing helps track the flow of requests, making it easier to debug and optimize the system. Key concepts and tools include:
+In a microservices architecture, a single request often involves multiple services. 
+Distributed tracing helps track the flow of requests, making it easier to debug and optimize the system. 
+Key concepts and tools include:
 
 ---
 

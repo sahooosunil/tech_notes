@@ -83,7 +83,8 @@ export default ExpensiveFactorial;
 
 ### **Example Without `useMemo` (for Comparison)**
 
-To better understand the performance benefit, here’s the same example without using `useMemo`. Notice that the factorial calculation will be triggered on every render, even if the number hasn’t changed.
+To better understand the performance benefit, here’s the same example without using `useMemo`. 
+Notice that the factorial calculation will be triggered on every render, even if the number hasn’t changed.
 
 ```javascript
 import React, { useState } from 'react';
@@ -129,7 +130,8 @@ export default ExpensiveFactorialWithoutMemo;
 
 ### **Real-World Use Cases for `useMemo`**
 
-- **Filtering or Sorting Large Data Sets**: When working with large arrays or data sets that require sorting or filtering, `useMemo` can help by memoizing the result of the operation, preventing unnecessary recalculations on every render.
+- **Filtering or Sorting Large Data Sets**: When working with large arrays or data sets that require sorting or filtering, 
+`useMemo` can help by memoizing the result of the operation, preventing unnecessary recalculations on every render.
   
 - **Complex Computations**: Any operation that is computationally expensive, such as mathematical calculations or expensive DOM operations, can benefit from being memoized.
 

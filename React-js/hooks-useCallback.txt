@@ -1,4 +1,5 @@
-The **`useCallback`** hook in React is used to memoize callback functions, ensuring that they don't get recreated on every render unless their dependencies change. It's similar to `useMemo`, but instead of memoizing a value, it memoizes a function. This can be helpful to prevent unnecessary re-renders of child components or to avoid recalculating or recreating functions unnecessarily.
+The **`useCallback`** hook in React is used to memoize callback functions, ensuring that they don't get recreated on every render unless their dependencies change. 
+It's similar to `useMemo`, but instead of memoizing a value, it memoizes a function. This can be helpful to prevent unnecessary re-renders of child components or to avoid recalculating or recreating functions unnecessarily.
 
 ### **Why Use `useCallback`?**
 

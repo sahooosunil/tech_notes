@@ -1,0 +1,166 @@
+### **Differences Between `var`, `let`, and `const` in JavaScript**  
+
+In JavaScript, `var`, `let`, and `const` are used for variable declarations, but they behave differently in terms of **scope, hoisting, and mutability**. Let's go over these in detail.
+
+---
+
+## **1. `var`: Function-scoped, Hoisted with Undefined Initialization, Can be Redeclared**
+
+### **Characteristics of `var`**
+1. **Function-scoped**  
+   - Variables declared with `var` are only accessible within the function in which they are declared.
+   - If declared outside a function, they become globally scoped.
+
+2. **Hoisted with `undefined` initialization**  
+   - `var` declarations are hoisted to the top of their scope and initialized with `undefined`, meaning they can be used before their declaration without throwing an error.
+
+3. **Can be redeclared**  
+   - The same variable can be declared multiple times using `var`, which can lead to unintended overwrites.
+
+4. **Can be reassigned**  
+   - You can update the value of a `var` variable after its initial declaration.
+
+---
+
+### **Example of `var`**
+```js
+console.log(a); // undefined (due to hoisting)
+var a = 10;  
+console.log(a); // 10
+
+function example() {
+  var x = 5;
+  if (true) {
+    var x = 10; // Re-declares the same variable
+    console.log(x); // 10
+  }
+  console.log(x); // 10 (since var is function-scoped, not block-scoped)
+}
+
+example();
+console.log(x); // Error: x is not defined (x is function-scoped)
+```
+📌 **Key Takeaways**:  
+- `var` gets hoisted with `undefined` initialization.  
+- `var` is function-scoped, so it is accessible anywhere within a function.  
+- `var` does not respect block scope (inside `if`, `for`, `while` blocks).  
+- `var` can be redeclared, which may lead to bugs.
+
+---
+
+## **2. `let`: Block-scoped, Hoisted but Not Initialized, Cannot be Redeclared**
+
+### **Characteristics of `let`**
+1. **Block-scoped**  
+   - Variables declared with `let` are only accessible within the block `{}` they are defined in.
+
+2. **Hoisted but NOT initialized**  
+   - Unlike `var`, `let` is hoisted but remains in a **temporal dead zone (TDZ)** until it is assigned a value.
+
+3. **Cannot be redeclared**  
+   - Unlike `var`, `let` cannot be declared again within the same scope.
+
+4. **Can be reassigned**  
+   - You can change the value of a `let` variable after declaration.
+
+---
+
+### **Example of `let`**
+```js
+console.log(b); // ReferenceError: Cannot access 'b' before initialization
+let b = 20;
+console.log(b); // 20
+
+function example() {
+  let y = 5;
+  if (true) {
+    let y = 10; // This creates a new 'y' variable (block-scoped)
+    console.log(y); // 10
+  }
+  console.log(y); // 5 (original 'y' is not affected)
+}
+
+example();
+```
+📌 **Key Takeaways**:  
+- `let` gets hoisted but is **not initialized**, leading to a **ReferenceError** if accessed before declaration.  
+- `let` is block-scoped, meaning it is only accessible inside the `{}` block it is declared in.  
+- `let` **cannot** be redeclared within the same scope, reducing accidental overwrites.  
+
+---
+
+## **3. `const`: Block-scoped, Must be Initialized, Cannot be Reassigned**
+
+### **Characteristics of `const`**
+1. **Block-scoped**  
+   - Similar to `let`, `const` is also block-scoped.
+
+2. **Must be initialized**  
+   - Unlike `var` and `let`, `const` **must be assigned a value at the time of declaration**.
+
+3. **Cannot be reassigned**  
+   - Once a `const` variable is assigned a value, it cannot be changed.
+
+4. **Objects and Arrays are mutable**  
+   - `const` prevents reassignment of the variable itself, but **objects and arrays declared with `const` can still be modified**.
+
+---
+
+### **Example of `const`**
+```js
+const c = 30;
+console.log(c); // 30
+
+c = 40; // TypeError: Assignment to constant variable.
+
+const obj = { name: "Hari" };
+obj.name = "Krishnan"; // Allowed! Modifying object properties is fine
+console.log(obj.name); // "Krishnan"
+
+obj = {}; // TypeError: Assignment to constant variable (can't reassign)
+```
+📌 **Key Takeaways**:  
+- `const` **must be assigned a value** when declared.  
+- `const` is block-scoped, like `let`.  
+- You **cannot reassign** a `const` variable, but **you can modify the properties of objects and arrays**.  
+
+---
+
+## **4. Summary Table**
+
+| Feature      | `var`                           | `let`                        | `const`                       |
+|-------------|--------------------------------|-----------------------------|------------------------------|
+| **Scope**   | Function-scoped               | Block-scoped                | Block-scoped                 |
+| **Hoisting**| Hoisted and initialized to `undefined` | Hoisted but **not** initialized (TDZ) | Hoisted but **not** initialized (TDZ) |
+| **Redeclaration** | ✅ Allowed               | ❌ Not allowed              | ❌ Not allowed               |
+| **Reassignment** | ✅ Allowed               | ✅ Allowed                  | ❌ Not allowed               |
+| **Must Initialize?** | ❌ No                   | ❌ No                        | ✅ Yes                        |
+| **Mutable Objects?** | ✅ Yes                | ✅ Yes                       | ✅ Yes (object properties can change) |
+
+---
+
+## **5. When to Use `var`, `let`, or `const`?**
+✅ **Use `const`** by default for values that don’t change.  
+✅ **Use `let`** if the value will change later (loops, conditions, etc.).  
+❌ **Avoid `var`**, as it can cause unintended behavior due to function-scoping and hoisting.  
+
+### **Example of Best Practice**
+```js
+const API_URL = "https://api.example.com"; // Constants (won't change)
+
+let count = 0; // Reassigned later
+for (let i = 0; i < 5; i++) {
+  count++;
+}
+
+console.log(count); // 5
+```
+
+---
+
+### **Conclusion**
+- `var` is outdated and should be avoided due to hoisting issues and function scope.
+- `let` is useful for variables that change and need block scope.
+- `const` is best for variables that should not be reassigned.
+
+Would you like a deeper dive into **hoisting, TDZ, or variable scope**? 🚀

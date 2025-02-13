@@ -1,4 +1,6 @@
-Custom hooks in React are JavaScript functions that allow you to reuse stateful logic between components. They are a powerful way to extract logic from components and share it across your application. Custom hooks are used to abstract complex logic, making your components cleaner and more maintainable.
+Custom hooks in React are JavaScript functions that allow you to reuse stateful logic between components. 
+They are a powerful way to extract logic from components and share it across your application. 
+Custom hooks are used to abstract complex logic, making your components cleaner and more maintainable.
 
 ### **What is a Custom Hook?**
 

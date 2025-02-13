@@ -1,0 +1,110 @@
+### **Understanding `setInterval` in JavaScript**
+`setInterval` is a JavaScript function that repeatedly executes a function at a specified time interval. It is part of the **Web APIs** provided by browsers.
+
+### **Syntax**
+```javascript
+let intervalID = setInterval(callbackFunction, delay, param1, param2, ...);
+```
+- `callbackFunction`: Function to execute repeatedly.
+- `delay`: Interval time in milliseconds.
+- `param1, param2, ...`: Optional parameters passed to the callback function.
+- `intervalID`: A unique ID returned, which can be used to clear the interval.
+
+---
+
+## **Internals of `setInterval` – How It Works**
+`setInterval` **does not** execute in the main JavaScript thread. Instead, it uses the **Event Loop and Web APIs** to schedule the callback.
+
+### **Step-by-Step Execution**
+1. **Call to `setInterval`**: The function is registered with the **Web API Timer**.
+2. **Web API Timer waits**: The delay starts counting in the background **(not blocking the main thread)**.
+3. **Callback pushed to the Event Queue**: Once the delay is over, the callback is added to the **Event Queue**.
+4. **Event Loop Execution**:
+   - If the **main thread (Call Stack) is free**, the callback executes.
+   - If the **main thread is busy**, execution is delayed until it becomes free.
+5. **Repeats**: Steps 2–4 continue until `clearInterval(intervalID)` is called.
+
+🔴 **Important:**  
+- `setInterval` does **not guarantee exact timing** because execution depends on the main thread's availability.
+- If the main thread is blocked, the callback may execute **later than expected**.
+
+---
+
+## **Is `setInterval` Running in the Same Thread?**
+Yes, `setInterval` uses **only one thread**, the **main thread** (JavaScript is single-threaded). However:
+- The **Web API (provided by the browser)** handles the **timing part**.
+- When the timer completes, the callback function is pushed into the **Event Queue**.
+- The **Event Loop** ensures the callback executes **only when the Call Stack is free**.
+
+🚀 **Analogy:**  
+Think of `setInterval` as **setting an alarm clock**. The alarm rings after the set time (Web API Timer), but you can only react to it **when you are free** (main thread is available).
+
+---
+
+## **Example: `setInterval` in Action**
+```javascript
+let count = 1;
+
+let intervalID = setInterval(() => {
+  console.log(`Count: ${count}`);
+  count++;
+
+  if (count > 5) {
+    clearInterval(intervalID); // Stops execution after 5 times
+    console.log("Interval cleared!");
+  }
+}, 1000);
+```
+🔹 **Output (one log every second):**
+```
+Count: 1
+Count: 2
+Count: 3
+Count: 4
+Count: 5
+Interval cleared!
+```
+
+---
+
+## **How is `setInterval` Different from Promises?**
+| Feature | `setInterval` | `Promise` |
+|---------|-------------|-----------|
+| **Execution** | Runs periodically after delay | Executes once when resolved |
+| **Thread** | Uses Event Loop & Web APIs | Uses Microtask Queue |
+| **Blocking** | Non-blocking | Non-blocking |
+| **Guarantee** | Callback may be delayed | Resolves ASAP after being called |
+| **Clearing/Stopping** | `clearInterval(intervalID)` required | Not needed (executes once) |
+
+### **Example of a `Promise`**
+```javascript
+console.log("Start");
+
+new Promise((resolve) => {
+  setTimeout(() => {
+    resolve("Promise resolved");
+  }, 1000);
+}).then(console.log);
+
+console.log("End");
+```
+🔹 **Output (order is important due to microtask queue priority)**:
+```
+Start
+End
+Promise resolved  (after 1 second)
+```
+
+✅ **Key Difference**:  
+- `setInterval` **runs multiple times**, while a `Promise` executes **only once** when resolved.
+- `Promise` **has higher priority** in the event loop (Microtask Queue vs. Callback Queue).
+
+---
+
+## **Conclusion**
+- `setInterval` schedules repeated execution using the **Web API & Event Loop**.
+- It does **not create a new thread** but runs **asynchronously** within JavaScript's single-threaded model.
+- The **callback execution depends on the main thread's availability**.
+- **Different from `Promise`**, which executes only once and uses the **Microtask Queue** (higher priority than `setInterval`).
+
+Would you like a **deep dive into Event Loop internals with a visualization?** 🚀

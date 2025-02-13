@@ -1,0 +1,120 @@
+## **JavaScript Prototypes: A Clear Explanation**  
+
+### **What is a Prototype in JavaScript?**  
+In JavaScript, **prototypes** enable objects to inherit properties and methods from other objects. Every JavaScript object has an internal link to another object called its **prototype**, which acts as a **blueprint** for inheritance.  
+
+### **Understanding Prototypes**  
+- When we create an object using a **constructor function**, the object automatically gets a prototype.
+- If a property or method is not found on the object itself, JavaScript looks up the prototype chain to find it.
+- Prototypes help **save memory** by allowing methods to be shared among multiple instances.
+
+---
+
+## **Example: Using Prototypes**  
+
+### **1. Constructor Function with a Prototype Method**  
+```js
+// Constructor function
+function Person(name) {
+  this.name = name;
+}
+
+// Adding a method to the prototype
+Person.prototype.greet = function() {
+  console.log("Hello, " + this.name);
+};
+
+// Creating objects
+let person1 = new Person("Hari");
+let person2 = new Person("Krish");
+
+person1.greet(); // Output: Hello, Hari
+person2.greet(); // Output: Hello, Krish
+```
+
+### **How It Works**
+1. `Person(name)` is a **constructor function** that initializes the `name` property.
+2. `Person.prototype.greet` defines a method on the **prototype**, so all instances of `Person` share it.
+3. `person1.greet()` and `person2.greet()` both access the `greet` method from the prototype.
+
+👉 **Benefit**: Instead of each object having its own copy of `greet()`, all instances share a single function in the prototype, **saving memory**.
+
+---
+
+## **2. Prototype Chain: How JavaScript Finds Properties**
+If a property is not found on an object, JavaScript looks up the prototype chain.
+
+```js
+console.log(person1.hasOwnProperty("name")); // true (exists on object)
+console.log(person1.hasOwnProperty("greet")); // false (exists on prototype)
+```
+Here, `name` exists on `person1`, but `greet` is found in `Person.prototype`.
+
+---
+
+## **3. Overriding Prototype Methods**
+We can override prototype methods at the instance level.
+
+```js
+person1.greet = function() {
+  console.log("Custom greeting for " + this.name);
+};
+
+person1.greet(); // Output: Custom greeting for Hari
+person2.greet(); // Output: Hello, Krish (still uses prototype method)
+```
+
+👉 `person1.greet()` is now a **custom method**, while `person2.greet()` still uses the prototype.
+
+---
+
+## **4. Extending Built-in Objects with Prototypes**
+We can extend JavaScript's built-in objects using prototypes.
+
+```js
+Array.prototype.last = function() {
+  return this[this.length - 1];
+};
+
+let numbers = [1, 2, 3, 4, 5];
+console.log(numbers.last()); // Output: 5
+```
+👉 Now, **all arrays** have a `.last()` method!
+
+---
+
+## **5. Using `Object.create()` to Set Prototypes**
+Instead of constructor functions, we can use `Object.create()`.
+
+```js
+let personPrototype = {
+  greet: function() {
+    console.log("Hello, " + this.name);
+  }
+};
+
+let person3 = Object.create(personPrototype);
+person3.name = "Aryan";
+person3.greet(); // Output: Hello, Aryan
+```
+👉 `person3` inherits from `personPrototype` but has its own `name` property.
+
+---
+
+## **Summary**
+| Feature | Description |
+|---------|------------|
+| **Prototype** | A shared blueprint for objects to inherit properties and methods |
+| **Prototype Chain** | If a property is not found on an object, JavaScript checks its prototype |
+| **Memory Efficiency** | Methods are stored once in the prototype instead of being copied to every object |
+| **Object.create()** | Allows manual prototype inheritance without constructors |
+
+---
+
+## **Conclusion**
+- JavaScript **prototypes** allow objects to inherit methods and properties.
+- Prototypes enable **efficient memory usage** by sharing methods across instances.
+- The **prototype chain** allows JavaScript to search for missing properties up the hierarchy.
+- We can **extend built-in objects** like `Array` using prototypes.
+
+Would you like an example of **class-based inheritance with prototypes**? 🚀

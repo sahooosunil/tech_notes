@@ -1,0 +1,183 @@
+### **JavaScript `setTimeout` - Deep Dive 🚀**
+
+### **1️⃣ What is `setTimeout`?**
+`setTimeout` is a JavaScript function that **schedules a task to be executed after a specified delay** (in milliseconds). It **does not block** the execution of other code.
+
+#### **Syntax**
+```javascript
+setTimeout(callbackFunction, delay, param1, param2, ...);
+```
+- `callbackFunction`: The function to execute after the delay.
+- `delay`: Time in milliseconds (1000ms = 1 second).
+- `param1, param2, ...`: Optional arguments passed to the callback.
+
+---
+
+### **2️⃣ Example: Basic `setTimeout`**
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Executed after 2 seconds");
+}, 2000);
+
+console.log("End");
+```
+
+#### **Expected Output**
+```
+Start
+End
+Executed after 2 seconds
+```
+
+✔ **Why does this happen?**
+- JavaScript executes **"Start"**.
+- `setTimeout` is called, and the **callback is registered** in the Web API but does NOT execute immediately.
+- JavaScript moves to the next statement and executes **"End"**.
+- After **2 seconds**, the Event Loop moves the callback to the Call Stack, and **"Executed after 2 seconds"** is printed.
+
+---
+
+### **3️⃣ How `setTimeout` Works Internally?**
+`setTimeout` is **not part of JavaScript itself** but is provided by the **Web API** in the browser (or Node.js environment).
+
+1. `setTimeout` registers the **callback function** in the **Web API Timer**.
+2. JavaScript **continues execution** without waiting.
+3. After the specified **delay**, the callback is pushed to the **Callback Queue**.
+4. **Event Loop** moves it to the **Call Stack** when the stack is empty.
+5. The **callback function executes**.
+
+---
+
+### **4️⃣ `setTimeout` vs Synchronous Code**
+```javascript
+console.log("Before setTimeout");
+
+setTimeout(() => {
+  console.log("Inside setTimeout");
+}, 0);
+
+console.log("After setTimeout");
+```
+
+#### **Output**
+```
+Before setTimeout
+After setTimeout
+Inside setTimeout
+```
+
+✔ Even with a **0ms delay**, the callback is executed **after synchronous code** because:
+- `setTimeout` callbacks go to the **Callback Queue**.
+- JavaScript executes **all synchronous code first** before handling queued callbacks.
+
+---
+
+### **5️⃣ Example: Passing Arguments to `setTimeout`**
+```javascript
+function greet(name) {
+  console.log(`Hello, ${name}!`);
+}
+
+setTimeout(greet, 3000, "Harikrishnan"); // Pass "Harikrishnan" as an argument
+```
+
+#### **Output (after 3 seconds)**
+```
+Hello, Harikrishnan!
+```
+
+---
+
+### **6️⃣ Cancelling `setTimeout`**
+You can **cancel a scheduled timeout** using `clearTimeout`.
+
+```javascript
+let timer = setTimeout(() => {
+  console.log("This will not run");
+}, 5000);
+
+clearTimeout(timer); // Cancels the timeout
+```
+
+✔ `clearTimeout(timer)` **stops** the callback from executing.
+
+---
+
+### **7️⃣ Difference Between `setTimeout` and `setInterval`**
+| Feature          | `setTimeout` (One-time) | `setInterval` (Repeating) |
+|-----------------|------------------------|-------------------------|
+| **Execution**   | Runs once after delay  | Runs repeatedly |
+| **Clearing**    | `clearTimeout(id)`      | `clearInterval(id)` |
+| **Use Case**    | Delaying execution      | Running tasks repeatedly |
+
+**Example:**
+```javascript
+// setTimeout (one-time)
+setTimeout(() => console.log("Runs once"), 2000);
+
+// setInterval (repeats every 2 seconds)
+let interval = setInterval(() => console.log("Repeating task"), 2000);
+clearInterval(interval); // Stop interval when needed
+```
+
+---
+
+### **8️⃣ `setTimeout` vs Promises**
+| Feature         | `setTimeout` (Macrotask) | `Promise.then` (Microtask) |
+|---------------|-----------------------|-------------------------|
+| **Execution** | Uses Callback Queue    | Uses Microtask Queue |
+| **Priority**  | Lower                  | Higher |
+| **Timing Guarantee** | Not exact (delayed if Call Stack busy) | Executes ASAP after Call Stack is empty |
+
+✔ **Promise executes before `setTimeout`** even if `setTimeout` has a `0ms` delay.
+
+```javascript
+setTimeout(() => console.log("setTimeout"), 0);
+
+Promise.resolve().then(() => console.log("Promise"));
+
+console.log("Sync Code");
+```
+
+#### **Output**
+```
+Sync Code
+Promise
+setTimeout
+```
+✔ **Why?**
+- **Synchronous code** runs first.
+- **Promise** (Microtask) executes before **setTimeout** (Macrotask).
+
+---
+
+### **9️⃣ Nested `setTimeout` for Recursion**
+You can create **delayed intervals** using **nested `setTimeout`** instead of `setInterval`.
+
+```javascript
+function repeat() {
+  console.log("Runs every 2 seconds");
+
+  setTimeout(repeat, 2000);
+}
+
+repeat();
+```
+
+✔ **Advantage over `setInterval`**:  
+- Next execution happens only **after the previous one finishes**.
+- Avoids overlapping if execution time is long.
+
+---
+
+### **🔟 Summary**
+✅ `setTimeout` schedules execution **after a delay** (does not block execution).  
+✅ Uses the **Web API Timer, Callback Queue, and Event Loop** to handle execution.  
+✅ **Not exact timing** (execution can be delayed if the Call Stack is busy).  
+✅ `clearTimeout` cancels the timeout before execution.  
+✅ `setTimeout` is different from `setInterval` (one-time vs repeating).  
+✅ **Microtasks (`Promise.then`) execute before `setTimeout` callbacks**.  
+
+Would you like a deep dive into **JavaScript concurrency models** next? 🚀

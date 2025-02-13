@@ -1,0 +1,151 @@
+### **JavaScript Event Loop & `setInterval` Deep Dive 🚀**
+
+### **1️⃣ JavaScript Execution Model**
+JavaScript is **single-threaded**, meaning it can execute **one operation at a time** in the **Call Stack**. However, it can handle asynchronous tasks like `setTimeout`, `setInterval`, Promises, and API calls using **Web APIs, the Event Queue, and the Event Loop**.
+
+---
+
+### **2️⃣ Components of JavaScript’s Asynchronous Execution**
+1. **Call Stack**: Executes synchronous code (one function at a time).
+2. **Web APIs**: Handles asynchronous tasks (Timers, DOM, Fetch, etc.).
+3. **Callback Queue (Macrotask Queue)**: Stores timer callbacks (`setTimeout`, `setInterval`, etc.).
+4. **Microtask Queue**: Stores high-priority tasks (`Promises`, `process.nextTick` in Node.js).
+5. **Event Loop**: Moves tasks from queues to the Call Stack **when it’s empty**.
+
+---
+
+### **3️⃣ Understanding `setInterval` in the Event Loop**
+Let’s break it down **step by step** using an example:
+
+#### **Example**
+```javascript
+console.log("Start");
+
+setInterval(() => {
+  console.log("Interval callback executed");
+}, 2000);
+
+console.log("End");
+```
+---
+
+### **Step-by-Step Execution**
+
+#### **Step 1: Call Stack Starts Execution**
+1. `console.log("Start")` → Prints **"Start"**.
+2. `setInterval(callback, 2000)`:
+   - Registers the callback in the **Web API Timer**.
+   - **Does NOT block the Call Stack** (because the timer runs in the background).
+3. `console.log("End")` → Prints **"End"**.
+
+**Output so far:**
+```
+Start
+End
+```
+
+---
+
+#### **Step 2: Web API Timer Starts Counting (2 sec)**
+- The **Call Stack is empty** after executing synchronous code.
+- Meanwhile, the **Web API Timer counts down** to 2000ms.
+- After 2000ms, the **callback is pushed to the Callback Queue**.
+
+---
+
+#### **Step 3: Event Loop Checks the Call Stack**
+1. If the **Call Stack is empty**, the Event Loop moves the **callback from the Callback Queue to the Call Stack**.
+2. Callback executes: `console.log("Interval callback executed")`.
+3. Since `setInterval` is **repeating**, the timer **resets** and repeats the process.
+
+**Final Output (one line printed every 2 seconds):**
+```
+Start
+End
+Interval callback executed
+Interval callback executed
+Interval callback executed
+...
+```
+
+---
+
+### **4️⃣ Visualizing the Process** 🔥
+
+1️⃣ **Initial Execution (Synchronous Code Runs)**
+```
+[ Call Stack ]            [ Web APIs ]            [ Callback Queue ]
+----------------------------------------------------------------------
+console.log("Start")  -->  (setInterval runs)  -->  (empty)
+console.log("End")
+----------------------------------------------------------------------
+Output: "Start", "End"
+```
+
+2️⃣ **After 2 Seconds (Timer expires, Callback moves to Callback Queue)**
+```
+[ Call Stack ]            [ Web APIs ]            [ Callback Queue ]
+----------------------------------------------------------------------
+(empty)                  (Timer resets)         -->  intervalCallback()
+----------------------------------------------------------------------
+Event Loop moves `intervalCallback()` to Call Stack
+```
+
+3️⃣ **Execution of the Callback**
+```
+[ Call Stack ]            [ Web APIs ]            [ Callback Queue ]
+----------------------------------------------------------------------
+intervalCallback()   -->  (Timer running)      -->  (empty)
+----------------------------------------------------------------------
+Callback executes: "Interval callback executed"
+```
+- The timer **resets** for another 2 seconds.
+- **Event Loop waits for Call Stack to be empty before executing the next callback**.
+
+---
+
+### **5️⃣ How `setInterval` is Different from Promises?**
+| Feature          | `setInterval` (Macrotask) | `Promise.then` (Microtask) |
+|-----------------|-------------------------|---------------------------|
+| **Queue Type**  | Callback Queue (Macrotask) | Microtask Queue (High Priority) |
+| **Execution Order** | Lower priority | Higher priority |
+| **Blocking**    | Non-blocking | Non-blocking |
+| **Timing Guarantee** | Not exact (delayed if Call Stack busy) | Executes ASAP after Call Stack is empty |
+| **Repeats?**    | Yes, until `clearInterval` | No, executes once |
+
+🔹 **Key Takeaway:**  
+- **Promises execute faster than `setInterval` because Microtask Queue runs before Callback Queue**.
+- Even if `setInterval` is scheduled first, a `Promise.then` will always execute **before** it.
+
+---
+
+### **6️⃣ Example: `setInterval` vs. `Promise.then`**
+```javascript
+setInterval(() => {
+  console.log("Interval executed");
+}, 1000);
+
+Promise.resolve().then(() => {
+  console.log("Promise executed");
+});
+
+console.log("Script executed");
+```
+**Expected Output:**
+```
+Script executed
+Promise executed
+Interval executed  (every 1 sec)
+```
+✔ **Promise executes before `setInterval`** due to its priority.
+
+---
+
+### **7️⃣ Summary**
+✅ **`setInterval` does not block the main thread.**  
+✅ **Runs asynchronously using Web APIs and Event Loop.**  
+✅ **Callbacks are placed in the Callback Queue (lower priority than Microtask Queue).**  
+✅ **The timing is not exact** (delayed if the Call Stack is busy).  
+✅ **Event Loop ensures `setInterval` callbacks execute only when the Call Stack is free.**  
+
+Would you like a **Node.js event loop deep dive** next? 🚀

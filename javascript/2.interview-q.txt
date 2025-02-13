@@ -1,0 +1,374 @@
+Here are the **top 10 JavaScript interview questions** with brief answers:
+
+### **1. What are the differences between `let`, `const`, and `var`?**  
+- `var`: Function-scoped, hoisted with undefined initialization, can be redeclared.  
+- `let`: Block-scoped, hoisted but not initialized, cannot be redeclared.  
+- `const`: Block-scoped, must be initialized, cannot be reassigned.  
+
+---
+
+### **2. Explain closures in JavaScript.**  
+A **closure** is a function that remembers the variables from its outer scope even after the outer function has finished executing.  
+
+**Example:**  
+```js
+function outer() {
+  let count = 0;
+  return function inner() {
+    count++;
+    console.log(count);
+  };
+}
+const increment = outer();
+increment(); // 1
+increment(); // 2
+```
+Here, `inner()` retains access to `count` even after `outer()` has executed.
+
+---
+
+### **3. What is the difference between `==` and `===` in JavaScript?**  
+- `==` (loose equality) checks for value equality after type coercion.  
+- `===` (strict equality) checks for both value and type equality.  
+
+**Example:**  
+```js
+console.log(5 == "5");  // true  (type coercion happens)
+console.log(5 === "5"); // false (different types)
+```
+
+---
+
+### **4. Explain event delegation in JavaScript.**  
+Event delegation is a pattern where a parent element handles events of its child elements using **event bubbling**.  
+
+**Example:**  
+```js
+document.getElementById("parent").addEventListener("click", function(event) {
+  if (event.target.classList.contains("child")) {
+    console.log("Child clicked:", event.target);
+  }
+});
+```
+Instead of adding click events to every `.child` element, we attach a single listener to `#parent`.
+
+---
+
+### **5. What is the difference between `null` and `undefined`?**  
+- `null`: Explicitly set to represent "no value."  
+- `undefined`: A variable that has been declared but not assigned a value.  
+
+**Example:**  
+```js
+let x;       // undefined
+let y = null; // null
+console.log(typeof x); // "undefined"
+console.log(typeof y); // "object" (historical JS bug)
+```
+
+---
+
+### **6. What is the difference between `map()`, `forEach()`, and `filter()`?**  
+- `map()`: Returns a new array after applying a function to each element.  
+- `forEach()`: Iterates over an array but does not return a new array.  
+- `filter()`: Returns a new array with elements that satisfy a condition.  
+
+**Example:**  
+```js
+let arr = [1, 2, 3];
+console.log(arr.map(num => num * 2));  // [2, 4, 6]
+arr.forEach(num => console.log(num * 2)); // Logs: 2, 4, 6
+console.log(arr.filter(num => num > 1)); // [2, 3]
+```
+
+---
+
+### **7. Explain the difference between synchronous and asynchronous JavaScript.**  
+- **Synchronous**: Code executes line by line, blocking execution until completion.  
+- **Asynchronous**: Code runs in the background (e.g., `setTimeout`, API calls), allowing non-blocking execution.  
+
+**Example:**  
+```js
+console.log("Start");
+setTimeout(() => console.log("Async"), 1000);
+console.log("End");
+
+// Output: 
+// Start
+// End
+// Async (after 1 second)
+```
+
+---
+
+### **8. What is a Promise in JavaScript?**  
+A **Promise** represents an operation that is either resolved (success) or rejected (failure).  
+
+**Example:**  
+```js
+let fetchData = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("Data received"), 1000);
+});
+
+fetchData.then(data => console.log(data)).catch(err => console.log(err));
+// Output (after 1 sec): "Data received"
+```
+
+---
+
+### **9. What is `async` and `await`?**  
+- `async` makes a function return a Promise.  
+- `await` pauses execution until the Promise resolves.  
+
+**Example:**  
+```js
+async function fetchData() {
+  let response = await fetch("https://api.example.com/data");
+  let data = await response.json();
+  console.log(data);
+}
+fetchData();
+```
+It makes asynchronous code look synchronous.
+
+---
+
+### **10. What are JavaScript prototypes?**  
+Every JavaScript object inherits properties from a **prototype**.  
+
+**Example:**  
+```js
+function Person(name) {
+  this.name = name;
+}
+Person.prototype.greet = function() {
+  console.log("Hello, " + this.name);
+};
+
+let person1 = new Person("Hari");
+person1.greet(); // Hello, Hari
+```
+Here, `greet` is shared across all `Person` instances via the prototype.
+
+---------------------------------------------------------------------------------------------------
+Here are **10 fresh JavaScript interview questions** that are not repetitions of previous ones:  
+
+### **1. What is the Temporal Dead Zone (TDZ) in JavaScript?**  
+The **Temporal Dead Zone (TDZ)** refers to the period between the declaration of a `let` or `const` variable and its initialization, during which accessing the variable results in a **ReferenceError**.  
+
+**Example:**  
+```js
+console.log(myVar); // ReferenceError: Cannot access 'myVar' before initialization
+let myVar = 10;
+```
+🔹 `var` does not have a TDZ because it is **hoisted with undefined**.
+
+---
+
+### **2. What is the difference between shallow copy and deep copy?**  
+- A **shallow copy** copies only the first-level properties, but nested objects **still reference the original**.  
+- A **deep copy** creates completely independent copies of all nested objects.  
+
+**Example (Shallow Copy):**  
+```js
+let obj1 = { name: "Hari", address: { city: "Hyderabad" } };
+let obj2 = obj1; // Shallow copy
+obj2.address.city = "Mumbai";  
+console.log(obj1.address.city); // "Mumbai" (modified in both)
+```
+
+**Example (Deep Copy using JSON):**  
+```js
+let obj3 = JSON.parse(JSON.stringify(obj1)); // Deep copy
+obj3.address.city = "Bangalore";  
+console.log(obj1.address.city); // "Mumbai" (not affected)
+```
+---
+
+### **3. What is the difference between `map()`, `forEach()`, and `reduce()` in JavaScript?**  
+| Method  | Returns | Modifies Original Array? | Use Case |
+|---------|---------|---------------------|-----------|
+| `map()` | New array | No | Transform elements |
+| `forEach()` | `undefined` | No | Iterate without returning values |
+| `reduce()` | Single value | No | Accumulate values |
+
+**Example:**  
+```js
+let nums = [1, 2, 3];
+
+let doubled = nums.map(n => n * 2);  // [2, 4, 6]
+nums.forEach(n => console.log(n));   // 1 2 3 (no return)
+let sum = nums.reduce((acc, n) => acc + n, 0);  // 6
+```
+
+---
+
+### **4. What is a WeakMap and how is it different from a Map?**  
+- A **WeakMap** is a collection of key-value pairs where **keys must be objects** and they are **weakly referenced**, meaning they can be garbage-collected.  
+- A **Map** allows any type of key and prevents garbage collection of values.
+
+**Example:**  
+```js
+let wm = new WeakMap();
+let obj = {};
+wm.set(obj, "some value");
+
+obj = null;  // The object is garbage collected, and WeakMap entry is removed.
+```
+🔹 Useful for **caching** and avoiding memory leaks.
+
+---
+
+### **5. What is an Immediately Invoked Function Expression (IIFE)?**  
+An **IIFE** is a function that runs **immediately after being defined**.
+
+**Example:**  
+```js
+(function() {
+  console.log("Executed immediately!");
+})();  
+```
+🔹 Used to **avoid polluting the global scope**.
+
+---
+
+### **6. What is the purpose of `Object.freeze()` and `Object.seal()`?**  
+- **`Object.freeze(obj)`** makes an object **completely immutable** (no changes allowed).  
+- **`Object.seal(obj)`** allows **modifying existing properties** but **prevents adding/removing properties**.
+
+**Example:**  
+```js
+let obj = { name: "Hari" };
+Object.freeze(obj);
+obj.name = "Krish"; // No effect
+console.log(obj.name); // "Hari"
+```
+
+---
+
+### **7. What are JavaScript Symbols and why use them?**  
+A **Symbol** is a unique and immutable data type used as object keys to avoid property name collisions.
+
+**Example:**  
+```js
+let sym1 = Symbol("id");
+let user = { [sym1]: 101, name: "Hari" };
+
+console.log(user[sym1]); // 101
+console.log(Object.keys(user)); // ["name"] (Symbol keys are not enumerable)
+```
+🔹 Useful for **private object properties**.
+
+---
+
+### **8. How does JavaScript handle asynchronous operations?**  
+JavaScript handles async operations using **callbacks, Promises, and async/await**.  
+
+**Example (Promise with async/await):**  
+```js
+function fetchData() {
+  return new Promise(resolve => setTimeout(() => resolve("Data loaded"), 2000));
+}
+
+async function getData() {
+  let result = await fetchData();
+  console.log(result); // "Data loaded" (after 2 sec)
+}
+
+getData();
+```
+🔹 `async/await` makes async code look synchronous.
+
+---
+
+### **9. How does optional chaining (`?.`) work in JavaScript?**  
+Optional chaining (`?.`) allows accessing deeply nested object properties **without causing errors** if a property is `undefined` or `null`.
+
+**Example:**  
+```js
+let user = { name: "Hari", address: { city: "Hyderabad" } };
+console.log(user.address?.city); // "Hyderabad"
+console.log(user.company?.name); // undefined (no error)
+```
+🔹 Prevents `"Cannot read property of undefined"` errors.
+
+---
+
+### **10. What is debouncing and throttling in JavaScript?**  
+- **Debouncing** delays a function’s execution **until after a certain time** of inactivity.  
+- **Throttling** ensures a function **executes at most once in a given interval**.
+
+**Example (Debouncing for Search Input):**  
+```js
+function debounce(func, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+let searchInput = document.getElementById("search");
+searchInput.addEventListener("input", debounce(() => console.log("Searching..."), 300));
+```
+🔹 Prevents **too many API calls while typing**.
+
+----------------------------------------------------------------------------------------------------------
+### **1. How to iterate over keys in a JavaScript object?**  
+You can use `Object.keys(obj)` and loop through the keys using `forEach` or a `for...in` loop.
+
+**Example using `Object.keys()`**  
+```js
+let person = { name: "Hari", age: 33, city: "Hyderabad" };
+
+Object.keys(person).forEach(key => {
+  console.log(key);  // Output: name, age, city
+});
+```
+
+**Example using `for...in` loop**  
+```js
+for (let key in person) {
+  console.log(key);  // Output: name, age, city
+}
+```
+
+---
+
+### **2. How to iterate over entries in a JavaScript object?**  
+You can use `Object.entries(obj)`, which returns an array of `[key, value]` pairs.
+
+**Example using `Object.entries()`**  
+```js
+Object.entries(person).forEach(([key, value]) => {
+  console.log(`${key}: ${value}`);
+});
+// Output:
+// name: Hari
+// age: 33
+// city: Hyderabad
+```
+
+---
+
+### **3. How to get the set of keys in a JavaScript object?**  
+Use `Object.keys(obj)`, which returns an array of keys.
+
+**Example:**  
+```js
+let keys = Object.keys(person);
+console.log(keys); // ["name", "age", "city"]
+```
+
+---
+
+### **4. How to get the values in a JavaScript object?**  
+Use `Object.values(obj)`, which returns an array of values.
+
+**Example:**  
+```js
+let values = Object.values(person);
+console.log(values); // ["Hari", 33, "Hyderabad"]
+```
+
+Would you like more details or variations of these methods? 🚀

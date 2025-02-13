@@ -1,0 +1,85 @@
+Certainly! Here’s an example of a **parent component** with a `/parent` route that contains multiple child routes, using **React Router v6**. The parent route will use the `<Outlet>` to render different child components based on the URL.
+
+### Steps:
+1. Install React Router if you haven't already:
+
+   ```bash
+   npm install react-router-dom
+   ```
+
+2. Create the necessary components for the parent and child routes.
+
+### Code Example:
+
+```jsx
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, Outlet } from 'react-router-dom';
+
+// Parent Component
+const Parent = () => {
+  return (
+    <div>
+      <h1>Welcome to the Parent Route</h1>
+      <nav>
+        <ul>
+          <li><Link to="/parent/child1">Child 1</Link></li>
+          <li><Link to="/parent/child2">Child 2</Link></li>
+          <li><Link to="/parent/child3">Child 3</Link></li>
+        </ul>
+      </nav>
+      {/* Outlet where child routes will render */}
+      <Outlet />
+    </div>
+  );
+};
+
+// Child Components
+const Child1 = () => {
+  return <div><h2>This is Child 1</h2></div>;
+};
+
+const Child2 = () => {
+  return <div><h2>This is Child 2</h2></div>;
+};
+
+const Child3 = () => {
+  return <div><h2>This is Child 3</h2></div>;
+};
+
+// App Component
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        {/* Parent Route with multiple child routes */}
+        <Route path="/parent" element={<Parent />}>
+          <Route path="child1" element={<Child1 />} />
+          <Route path="child2" element={<Child2 />} />
+          <Route path="child3" element={<Child3 />} />
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+```
+
+### Explanation:
+1. **Parent Route (`/parent`):**
+   - The `Parent` component has an `<Outlet />` where child routes will render.
+   - It also includes a navigation menu with links to the child routes (`/parent/child1`, `/parent/child2`, `/parent/child3`).
+
+2. **Child Routes (`/parent/child1`, `/parent/child2`, `/parent/child3`):**
+   - These routes will render their respective components (`Child1`, `Child2`, `Child3`) inside the `<Outlet />` in the `Parent` component when the user navigates to each of these routes.
+
+3. **React Router Setup:**
+   - The `<Routes>` component defines the routing configuration. The `/parent` route has nested child routes, and each child route gets rendered in the `Outlet` of the `Parent` component.
+
+### Result:
+- When you visit `/parent/child1`, it will render the content of `Child1` inside the `Parent` component.
+- The same happens for `/parent/child2` and `/parent/child3`.
+
+This setup allows for clean and dynamic routing with nested routes in React.
+
+Let me know if you'd like more details or adjustments!

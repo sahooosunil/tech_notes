@@ -1,0 +1,257 @@
+## **What is React Query?**  
+React Query (now officially called **TanStack Query**) is a powerful data-fetching and state management library for React. It helps in **fetching, caching, synchronizing, and updating server data** efficiently.
+
+## **Problems React Query Solves**  
+### ✅ **1. Eliminates Manual Data Fetching & State Management**  
+Without React Query, you usually:  
+- Fetch data using `useEffect`
+- Store it in `useState`
+- Handle loading, error, and retry logic manually
+
+React Query **automates all of this**!
+
+### ✅ **2. Caching & Background Synchronization**  
+It **caches fetched data** and **re-fetches it in the background** when necessary, reducing unnecessary network requests.
+
+### ✅ **3. Automatic Refetching**  
+Data is **automatically refetched**:  
+- When it becomes **stale**  
+- When the **user focuses on the window**  
+- When network connectivity is restored  
+
+### ✅ **4. Pagination & Infinite Scrolling**  
+It simplifies implementing **pagination** and **infinite scrolling** using built-in hooks.
+
+### ✅ **5. Works Well with Server-Side Rendering (SSR)**  
+Supports prefetching data for SSR frameworks like **Next.js**.
+
+---
+
+## **How to Ensure React Query Doesn't Show Stale Data?**  
+By default, React Query keeps **stale data** in cache but refetches it when needed.  
+You can control this using:
+
+### **1️⃣ `staleTime`** (Controls How Long Data is Considered Fresh)  
+```js
+useQuery(['posts'], fetchPosts, { staleTime: 5000 }); // Data is fresh for 5 seconds
+```
+- **`staleTime: 0`** → Data is **stale immediately** after fetching (default).  
+- **Higher `staleTime`** → Data is considered fresh for longer, reducing unnecessary network calls.
+
+### **2️⃣ `refetchOnWindowFocus`** (Refetches When Window is Focused)  
+```js
+useQuery(['posts'], fetchPosts, { refetchOnWindowFocus: true });
+```
+- **Set to `true`** → Always fetches fresh data when user switches back to the tab.
+- **Set to `false`** → Avoids refetching when user comes back.
+
+### **3️⃣ `refetchInterval`** (Automatic Background Refetching)  
+```js
+useQuery(['posts'], fetchPosts, { refetchInterval: 10000 }); // Every 10 seconds
+```
+Useful for **real-time updates** (e.g., notifications, stock prices).
+
+### **4️⃣ `onSuccess` Callback**  
+If you need to update UI or trigger something after fetching:
+```js
+useQuery(['posts'], fetchPosts, {
+  onSuccess: (data) => console.log('New data received', data),
+});
+```
+
+---
+
+## **When to Use React Query?**  
+✅ **Go for React Query when:**  
+1. **You frequently fetch remote data** (REST API, GraphQL, Firebase, etc.).  
+2. **Your data changes often**, and you need automatic background updates.  
+3. **Multiple components need access to the same API response** (avoiding duplicate requests).  
+4. **You want caching and performance optimizations** to reduce network calls.  
+5. **You need infinite scrolling or pagination** without extra state management.  
+6. **You want automatic retries and error handling.**
+
+---
+
+## **When to Avoid React Query?**  
+❌ **Avoid it when:**  
+1. **Data is static** (e.g., configuration settings that don’t change).  
+2. **You only fetch data once and never update it** (simple `useEffect` + `useState` is enough).  
+3. **You need complex client-side state management** (React Query is for **server state**, not **local UI state**).  
+4. **You have a global state management library** (like Redux) that already handles caching well.  
+5. **Your app does not fetch external data** (React Query is useless without API calls).  
+
+---
+
+## **🚀 Final Thoughts**
+React Query is **great for API-based applications** where you need **caching, automatic revalidation, and background refetching**. However, if you’re dealing with UI state (like modals, form inputs), React Query **is not a replacement for Redux or Zustand**.
+
+Would you like an example setup using React Query? 🚀
+------------------------------------------------------------------------------------------------------------
+Integrating **React Query** with **Redux Toolkit** is a great approach when:  
+
+- **Redux Toolkit** manages global UI state (e.g., theme, auth, modals).  
+- **React Query** handles **server state** (API calls, caching, synchronization).  
+
+---
+
+## **Steps to Integrate React Query with Redux Toolkit**  
+
+### **1️⃣ Install Dependencies**
+Run the following command to install React Query and Redux Toolkit:
+
+```sh
+npm install @tanstack/react-query @reduxjs/toolkit react-redux
+```
+
+---
+
+### **2️⃣ Setup React Query Client**
+Modify `index.js` (or `App.js`) to wrap your app with **`QueryClientProvider`**:
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import store from "./store";
+import App from "./App";
+
+// Create React Query Client
+const queryClient = new QueryClient();
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+```
+
+---
+
+### **3️⃣ Setup Redux Store (`store.js`)**
+Create a simple Redux store for UI-related state.
+
+```js
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+// Example: Auth slice
+const authSlice = createSlice({
+  name: "auth",
+  initialState: { isLoggedIn: false },
+  reducers: {
+    login: (state) => {
+      state.isLoggedIn = true;
+    },
+    logout: (state) => {
+      state.isLoggedIn = false;
+    },
+  },
+});
+
+export const { login, logout } = authSlice.actions;
+
+const store = configureStore({
+  reducer: {
+    auth: authSlice.reducer,
+  },
+});
+
+export default store;
+```
+
+---
+
+### **4️⃣ Fetch API Data with React Query**
+Use `useQuery` for GET requests and `useMutation` for POST/PUT/DELETE.
+
+```jsx
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector, useDispatch } from "react-redux";
+import { login, logout } from "./store"; // Redux actions
+
+// Fetch function
+const fetchPosts = async () => {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  return res.json();
+};
+
+export default function Posts() {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  // Fetch posts using React Query
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["posts"],
+    queryFn: fetchPosts,
+  });
+
+  // Handle loading and error states
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>Error fetching posts!</p>;
+
+  return (
+    <div>
+      <h2>Posts</h2>
+      {data.map((post) => (
+        <p key={post.id}>{post.title}</p>
+      ))}
+
+      {/* Example: Toggle authentication using Redux */}
+      {isLoggedIn ? (
+        <button onClick={() => dispatch(logout())}>Logout</button>
+      ) : (
+        <button onClick={() => dispatch(login())}>Login</button>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+### **5️⃣ Updating Data using `useMutation`**
+Use `useMutation` for POST requests and **invalidate queries** to refresh data.
+
+```jsx
+const queryClient = useQueryClient();
+
+const mutation = useMutation({
+  mutationFn: async (newPost) => {
+    return fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      body: JSON.stringify(newPost),
+      headers: { "Content-Type": "application/json" },
+    }).then((res) => res.json());
+  },
+  onSuccess: () => {
+    // Invalidate and refetch posts
+    queryClient.invalidateQueries(["posts"]);
+  },
+});
+```
+
+---
+
+## **When to Use Redux Toolkit + React Query?**
+✅ **Use Redux Toolkit for:**  
+- App-wide UI state (auth, theme, modals, notifications).  
+- State that is **not** fetched from the backend.  
+
+✅ **Use React Query for:**  
+- Server-side state (API calls, caching, re-fetching).  
+- Automatic background updates and synchronization.  
+
+---
+
+## **Conclusion**
+🎯 **Redux + React Query is a powerful combination!**  
+- Keep **Redux** for UI-related state.  
+- Use **React Query** for API calls and caching.  
+- Ensure **React Query doesn't store data in Redux** (to avoid unnecessary complexity).  
+
+Would you like an example where Redux state **interacts** with React Query (e.g., passing the Redux token in API calls)? 🚀

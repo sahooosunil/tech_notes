@@ -1,0 +1,217 @@
+Here are **10 advanced JavaScript interview questions** to test deep JavaScript knowledge:
+
+---
+
+### **1. What is the difference between `call()`, `apply()`, and `bind()`?**
+These methods are used to set the `this` context in JavaScript.
+
+| Method  | Arguments | Execution |
+|---------|----------|-----------|
+| `call()`  | Comma-separated | Executes immediately |
+| `apply()` | Arguments as an array | Executes immediately |
+| `bind()`  | Comma-separated | Returns a new function |
+
+**Example:**
+```js
+function greet(place) {
+  console.log(`Hello, ${this.name} from ${place}`);
+}
+
+const user = { name: "Hari" };
+
+greet.call(user, "India");   // Hello, Hari from India
+greet.apply(user, ["India"]); // Hello, Hari from India
+const boundFunc = greet.bind(user, "India");
+boundFunc(); // Hello, Hari from India
+```
+
+---
+
+### **2. What is the event loop in JavaScript? How does it work?**
+The **event loop** allows JavaScript to handle **asynchronous operations** by continuously checking the **call stack** and the **callback queue**.
+
+**Example of event loop behavior:**
+```js
+console.log("Start");
+
+setTimeout(() => console.log("Inside Timeout"), 0);
+
+Promise.resolve().then(() => console.log("Inside Promise"));
+
+console.log("End");
+```
+**Output:**
+```
+Start
+End
+Inside Promise
+Inside Timeout
+```
+🔹 **Microtasks (Promises) execute before macrotasks (setTimeout).**
+
+---
+
+### **3. What is memoization, and how is it implemented in JavaScript?**
+**Memoization** is an optimization technique that caches function results to improve performance.
+
+**Example:**
+```js
+function memoize(fn) {
+  let cache = {};
+  return function (num) {
+    if (cache[num]) return cache[num];
+    cache[num] = fn(num);
+    return cache[num];
+  };
+}
+
+const factorial = memoize(function (n) {
+  return n === 0 ? 1 : n * factorial(n - 1);
+});
+
+console.log(factorial(5));  // Computed
+console.log(factorial(5));  // Cached
+```
+
+---
+
+### **4. What is the difference between deep copy and shallow copy?**
+| Copy Type   | Behavior |
+|------------|------------------------------------------|
+| **Shallow Copy** | Copies only first-level properties, nested objects remain referenced |
+| **Deep Copy** | Recursively copies all levels of nested objects |
+
+**Example (Shallow Copy using spread `...`):**
+```js
+let obj1 = { name: "Hari", address: { city: "Hyderabad" } };
+let obj2 = { ...obj1 };
+obj2.address.city = "Mumbai";
+
+console.log(obj1.address.city); // "Mumbai" (changes in both)
+```
+
+**Example (Deep Copy using `structuredClone()` in modern JS):**
+```js
+let obj3 = structuredClone(obj1);
+obj3.address.city = "Bangalore";
+
+console.log(obj1.address.city); // "Mumbai" (unchanged)
+```
+
+---
+
+### **5. What is the difference between `==` and `===`?**
+- `==` checks **value equality** and performs type coercion.
+- `===` checks **both value and type** without type conversion.
+
+**Example:**
+```js
+console.log(5 == "5");  // true (type conversion)
+console.log(5 === "5"); // false (strict check)
+console.log(null == undefined);  // true (special case)
+console.log(null === undefined); // false
+```
+
+---
+
+### **6. How does prototypal inheritance work in JavaScript?**
+Every JavaScript object has a **prototype**, and objects inherit properties from their prototype chain.
+
+**Example:**
+```js
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.greet = function () {
+  console.log("Hello, " + this.name);
+};
+
+let person1 = new Person("Hari");
+person1.greet(); // Hello, Hari
+
+console.log(person1.__proto__ === Person.prototype); // true
+```
+
+---
+
+### **7. What is function currying and how is it implemented?**
+Currying transforms a function with multiple arguments into a series of **functions returning functions**.
+
+**Example:**
+```js
+function curry(fn) {
+  return function curried(...args) {
+    return args.length >= fn.length
+      ? fn.apply(this, args)
+      : (...next) => curried(...args, ...next);
+  };
+}
+
+function sum(a, b, c) {
+  return a + b + c;
+}
+
+const curriedSum = curry(sum);
+console.log(curriedSum(1)(2)(3)); // 6
+```
+
+---
+
+### **8. What is the difference between `localStorage`, `sessionStorage`, and `cookies`?**
+
+| Feature         | `localStorage` | `sessionStorage` | `cookies` |
+|---------------|--------------|----------------|----------|
+| Storage Limit | 5MB          | 5MB            | 4KB      |
+| Expiry        | Never        | On tab close   | Manually set |
+| Sent to Server? | No         | No             | Yes      |
+
+**Example (`localStorage` usage):**
+```js
+localStorage.setItem("username", "Hari");
+console.log(localStorage.getItem("username")); // "Hari"
+localStorage.removeItem("username");
+```
+
+---
+
+### **9. What is hoisting in JavaScript?**
+Hoisting moves function and variable declarations to the top of their scope **before execution**.
+
+**Example:**
+```js
+console.log(a); // undefined (hoisted with default `undefined`)
+var a = 5;
+
+console.log(b); // ReferenceError: Cannot access 'b' before initialization
+let b = 10;
+```
+🔹 `var` is hoisted **with undefined**, but `let` and `const` are in the **Temporal Dead Zone**.
+
+---
+
+### **10. What is debouncing and throttling in JavaScript?**
+- **Debouncing**: Delays function execution until **after a delay** of inactivity.
+- **Throttling**: Ensures a function **executes at most once per interval**.
+
+**Example (Debounce for Search Input):**
+```js
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+let input = document.getElementById("search");
+input.addEventListener("input", debounce(() => console.log("Searching..."), 300));
+```
+🔹 **Used to prevent multiple API calls while typing in search boxes.**
+
+---
+
+### **Conclusion**
+These **10 advanced JavaScript interview questions** cover **hoisting, event loop, currying, async behavior, and optimization techniques**.  
+
+Would you like more **coding challenges** or **real-world problem-solving** examples? 🚀

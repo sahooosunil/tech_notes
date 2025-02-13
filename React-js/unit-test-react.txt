@@ -1,0 +1,118 @@
+### **Unit Testing Libraries for React.js**  
+
+When testing React applications, the most commonly used **unit testing libraries** are:  
+
+### **1️⃣ Jest (Default for React)**
+- **What is Jest?**  
+  Jest is a **JavaScript testing framework** created by Facebook. It is **built-in with Create React App (CRA)** and is used for testing components, functions, and Redux logic.  
+- **Features:**  
+  ✅ Fast and easy setup  
+  ✅ Supports **snapshot testing**  
+  ✅ Comes with **mocking and spies**  
+  ✅ Supports **code coverage reports**  
+
+👉 **Installation (if not using CRA):**  
+```sh
+npm install --save-dev jest
+```
+👉 **Example Test with Jest:**  
+```js
+// sum.js
+export const sum = (a, b) => a + b;
+
+// sum.test.js
+import { sum } from "./sum";
+
+test("adds 2 + 3 to equal 5", () => {
+  expect(sum(2, 3)).toBe(5);
+});
+```
+👉 **Run Tests:**  
+```sh
+npm test
+```
+
+---
+
+### **2️⃣ React Testing Library (RTL)**
+- **What is React Testing Library?**  
+  React Testing Library is used for **testing React components** by simulating user interactions. It focuses on **how users interact with the UI** rather than testing implementation details.  
+- **Features:**  
+  ✅ Encourages **testing UI behavior**  
+  ✅ Works with Jest  
+  ✅ Supports **DOM testing**  
+
+👉 **Installation:**  
+```sh
+npm install --save-dev @testing-library/react
+```
+👉 **Example Test for a Component:**  
+```js
+// Button.js
+export const Button = ({ onClick, label }) => (
+  <button onClick={onClick}>{label}</button>
+);
+
+// Button.test.js
+import { render, fireEvent } from "@testing-library/react";
+import { Button } from "./Button";
+
+test("calls onClick when button is clicked", () => {
+  const handleClick = jest.fn();
+  const { getByText } = render(<Button onClick={handleClick} label="Click Me" />);
+
+  fireEvent.click(getByText("Click Me"));
+  expect(handleClick).toHaveBeenCalledTimes(1);
+});
+```
+
+---
+
+### **3️⃣ Enzyme (Older but still used)**
+- **What is Enzyme?**  
+  Enzyme, created by Airbnb, is used to test React components by allowing **shallow rendering** and **full DOM rendering**.  
+- **⚠️ Note:** It is **no longer actively maintained**.  
+- **Installation:**  
+  ```sh
+  npm install --save-dev enzyme enzyme-adapter-react-16
+  ```
+- **Example:**  
+  ```js
+  import { shallow } from "enzyme";
+  import { Button } from "./Button";
+
+  test("renders button correctly", () => {
+    const wrapper = shallow(<Button label="Click Me" />);
+    expect(wrapper.text()).toBe("Click Me");
+  });
+  ```
+
+---
+
+### **4️⃣ Cypress (for Integration & E2E Testing)**
+- **What is Cypress?**  
+  Cypress is **not a unit testing library** but is great for **end-to-end (E2E) testing** in React applications.
+- **Features:**  
+  ✅ Fast browser-based testing  
+  ✅ Can test UI and API interactions  
+
+👉 **Installation:**  
+```sh
+npm install cypress --save-dev
+```
+
+---
+
+### **Which One Should You Use?**
+| Library | Usage |
+|---------|-------|
+| **Jest** | Best for testing **functions, logic, and Redux** |
+| **React Testing Library (RTL)** | Best for **React component testing (UI behavior)** |
+| **Enzyme** (⚠️ Deprecated) | Used in older projects, **shallow rendering** support |
+| **Cypress** | Best for **end-to-end testing** |
+
+### **Final Recommendation:**  
+✅ Use **Jest + React Testing Library** for unit and component testing in React.  
+✅ Use **Cypress** for full application (E2E) testing.  
+
+Need help writing tests? Let me know! 🚀

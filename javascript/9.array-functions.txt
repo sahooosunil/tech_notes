@@ -1,0 +1,220 @@
+# **JavaScript Array Manipulation Methods**
+
+JavaScript provides several built-in methods to manipulate arrays. Here’s a detailed breakdown of the most commonly used methods:
+
+---
+
+## **1️⃣ `splice()` - Add/Remove Elements (Modifies Original Array)**
+The `splice()` method **changes** the original array by **removing, replacing, or adding** elements.
+
+### **Syntax**
+```js
+array.splice(startIndex, deleteCount, item1, item2, ...);
+```
+- `startIndex` → Where to start modifying.
+- `deleteCount` → Number of elements to remove.
+- `item1, item2, ...` → Elements to add.
+
+### **Examples**
+#### **Remove Elements**
+```js
+let arr = [10, 20, 30, 40, 50];
+arr.splice(1, 2); // Removes 20, 30
+console.log(arr); // [10, 40, 50]
+```
+---
+#### **Replace Elements**
+```js
+let arr = [10, 20, 30, 40, 50];
+arr.splice(2, 1, 100); // Replace 30 with 100
+console.log(arr); // [10, 20, 100, 40, 50]
+```
+---
+#### **Insert Elements (Without Removing)**
+```js
+let arr = [10, 20, 30];
+arr.splice(1, 0, 15, 17); // Insert 15, 17 at index 1
+console.log(arr); // [10, 15, 17, 20, 30]
+```
+
+---
+
+## **2️⃣ `slice()` - Extract Portion (Returns New Array)**
+The `slice()` method extracts a portion of an array **without modifying the original array**.
+
+### **Syntax**
+```js
+array.slice(startIndex, endIndex);
+```
+- `startIndex` → Starting position (inclusive).
+- `endIndex` → Ending position (exclusive).
+
+### **Examples**
+#### **Extract Part of an Array**
+```js
+let arr = [10, 20, 30, 40, 50];
+let slicedArr = arr.slice(1, 4); // Extracts from index 1 to 3
+console.log(slicedArr); // [20, 30, 40]
+console.log(arr); // [10, 20, 30, 40, 50] (Original remains unchanged)
+```
+---
+#### **Copy an Entire Array**
+```js
+let arr = [1, 2, 3, 4];
+let copy = arr.slice();
+console.log(copy); // [1, 2, 3, 4]
+```
+---
+
+## **3️⃣ `map()` - Transform Elements**
+The `map()` method **creates a new array** by applying a function to each element.
+
+### **Example**
+```js
+let numbers = [1, 2, 3, 4];
+let squared = numbers.map(num => num * num);
+console.log(squared); // [1, 4, 9, 16]
+```
+✅ **Does not modify the original array.**
+
+---
+
+## **4️⃣ `filter()` - Select Specific Elements**
+The `filter()` method **creates a new array** with elements that pass a test.
+
+### **Example**
+```js
+let numbers = [10, 25, 30, 45, 50];
+let evenNumbers = numbers.filter(num => num % 2 === 0);
+console.log(evenNumbers); // [10, 30, 50]
+```
+✅ **Does not modify the original array.**
+
+---
+
+## **5️⃣ `reduce()` - Accumulate Values**
+The `reduce()` method **reduces** an array to a single value.
+
+### **Example: Sum of Array Elements**
+```js
+let numbers = [1, 2, 3, 4, 5];
+let sum = numbers.reduce((acc, curr) => acc + curr, 0);
+console.log(sum); // 15
+```
+✅ **Initial value (`0`) is optional but recommended.**
+
+---
+
+## **6️⃣ `forEach()` - Loop Over Elements**
+The `forEach()` method executes a function for **each element** in an array but does **not return a new array**.
+
+### **Example**
+```js
+let numbers = [1, 2, 3];
+numbers.forEach(num => console.log(num * 2)); 
+// Output: 2, 4, 6
+```
+❌ **Does not return anything. Use `map()` if you need a new array.**
+
+---
+
+## **7️⃣ `find()` - Find First Matching Element**
+The `find()` method returns the **first** element that matches a condition.
+
+### **Example**
+```js
+let users = [
+  { id: 1, name: "Hari" },
+  { id: 2, name: "Krishnan" },
+];
+
+let user = users.find(u => u.id === 2);
+console.log(user); // { id: 2, name: "Krishnan" }
+```
+✅ **Returns the first match. Use `filter()` if you need all matches.**
+
+---
+
+## **8️⃣ `findIndex()` - Find Index of First Match**
+Similar to `find()`, but returns the **index** instead of the element.
+
+### **Example**
+```js
+let numbers = [10, 20, 30, 40];
+let index = numbers.findIndex(num => num > 25);
+console.log(index); // 2
+```
+✅ **Returns `-1` if no match is found.**
+
+---
+
+## **9️⃣ `some()` - Check If Any Element Matches**
+Returns `true` if **at least one** element satisfies the condition.
+
+### **Example**
+```js
+let numbers = [5, 10, 15, 20];
+let hasEven = numbers.some(num => num % 2 === 0);
+console.log(hasEven); // true
+```
+✅ **Returns `true` if at least one element matches.**
+
+---
+
+## **🔟 `every()` - Check If All Elements Match**
+Returns `true` **only if all elements** satisfy the condition.
+
+### **Example**
+```js
+let numbers = [2, 4, 6, 8];
+let allEven = numbers.every(num => num % 2 === 0);
+console.log(allEven); // true
+```
+✅ **Returns `true` only if all elements match.**
+
+---
+
+## **1️⃣1️⃣ `sort()` - Sort Array (Modifies Original)**
+The `sort()` method **sorts** an array **in place**.
+
+### **Example: Sort Numbers (Ascending)**
+```js
+let numbers = [30, 10, 50, 20];
+numbers.sort((a, b) => a - b);
+console.log(numbers); // [10, 20, 30, 50]
+```
+⚠️ **Default `sort()` does lexicographic sorting. Always provide a comparator for numbers.**
+
+---
+
+## **1️⃣2️⃣ `reverse()` - Reverse an Array (Modifies Original)**
+### **Example**
+```js
+let numbers = [1, 2, 3, 4];
+numbers.reverse();
+console.log(numbers); // [4, 3, 2, 1]
+```
+✅ **Use `.slice().reverse()` if you need a non-mutating version.**
+
+---
+
+## **Summary Table 📌**
+
+| Method        | Modifies Original? | Returns New Array? | Purpose |
+|--------------|-------------------|------------------|----------|
+| `splice()`   | ✅ Yes  | ❌ No  | Add/Remove elements |
+| `slice()`    | ❌ No   | ✅ Yes | Extract part of array |
+| `map()`      | ❌ No   | ✅ Yes | Transform elements |
+| `filter()`   | ❌ No   | ✅ Yes | Select elements |
+| `reduce()`   | ❌ No   | ✅ Yes (Single value) | Accumulate values |
+| `forEach()`  | ❌ No   | ❌ No  | Loop over elements |
+| `find()`     | ❌ No   | ✅ Yes (Single match) | Find first match |
+| `findIndex()`| ❌ No   | ✅ Yes (Index) | Find index of match |
+| `some()`     | ❌ No   | ✅ Yes (Boolean) | Any match? |
+| `every()`    | ❌ No   | ✅ Yes (Boolean) | All match? |
+| `sort()`     | ✅ Yes  | ❌ No  | Sort elements |
+| `reverse()`  | ✅ Yes  | ❌ No  | Reverse array |
+
+---
+
+### **Which method do you need more details on? 🚀**
