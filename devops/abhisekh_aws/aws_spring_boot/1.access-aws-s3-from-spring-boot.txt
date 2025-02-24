@@ -1,0 +1,197 @@
+To access (upload, retrieve, and delete) objects from an **Amazon S3** bucket using Java and Spring Boot, you can use the **AWS SDK for Java**. Below is a step-by-step guide:
+
+---
+
+## **1. Add AWS SDK Dependencies**
+In your `pom.xml` (for **Maven**):
+```xml
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>s3</artifactId>
+    <version>2.20.92</version>  <!-- Use the latest version -->
+</dependency>
+```
+
+For **Gradle**:
+```gradle
+implementation 'software.amazon.awssdk:s3:2.20.92'
+```
+
+---
+
+## **2. Configure AWS Credentials**
+You need to configure AWS credentials (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`). You can set them in:
+
+- **Environment variables**
+  ```
+  export AWS_ACCESS_KEY_ID=your-access-key
+  export AWS_SECRET_ACCESS_KEY=your-secret-key
+  export AWS_REGION=your-region
+  ```
+  
+- **AWS credentials file** (`~/.aws/credentials`)
+  ```
+  [default]
+  aws_access_key_id=your-access-key
+  aws_secret_access_key=your-secret-key
+  ```
+
+---
+
+## **3. Create an S3 Client Bean**
+```java
+import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class S3Config {
+    
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.builder()
+                .region(Region.US_EAST_1) // Replace with your AWS region
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create("your-access-key", "your-secret-key")))
+                .build();
+    }
+}
+```
+
+---
+
+## **4. Implement S3 Service**
+Create a service class to handle file operations.
+
+```java
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.*;
+
+import java.nio.file.Paths;
+
+@Service
+public class S3Service {
+
+    private final S3Client s3Client;
+    private final String bucketName = "your-bucket-name";
+
+    public S3Service(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
+
+    // 1. Upload File
+    public String uploadFile(String filePath, String keyName) {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+
+        s3Client.putObject(request, RequestBody.fromFile(Paths.get(filePath)));
+
+        return "File uploaded successfully: " + keyName;
+    }
+
+    // 2. Retrieve (Download) File
+    public String downloadFile(String keyName, String destinationPath) {
+        GetObjectRequest request = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+
+        s3Client.getObject(request, Paths.get(destinationPath));
+
+        return "File downloaded successfully: " + destinationPath;
+    }
+
+    // 3. Delete File
+    public String deleteFile(String keyName) {
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+
+        s3Client.deleteObject(request);
+        return "File deleted successfully: " + keyName;
+    }
+}
+```
+
+---
+
+## **5. Create a REST Controller**
+Expose APIs for S3 operations using a REST controller.
+
+```java
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.File;
+import java.io.IOException;
+
+@RestController
+@RequestMapping("/s3")
+public class S3Controller {
+
+    private final S3Service s3Service;
+
+    public S3Controller(S3Service s3Service) {
+        this.s3Service = s3Service;
+    }
+
+    // Upload file API
+    @PostMapping("/upload")
+    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        File tempFile = File.createTempFile("upload-", file.getOriginalFilename());
+        file.transferTo(tempFile);
+        return s3Service.uploadFile(tempFile.getAbsolutePath(), file.getOriginalFilename());
+    }
+
+    // Download file API
+    @GetMapping("/download")
+    public String downloadFile(@RequestParam("key") String key) {
+        String destination = "/your/local/path/" + key;
+        return s3Service.downloadFile(key, destination);
+    }
+
+    // Delete file API
+    @DeleteMapping("/delete")
+    public String deleteFile(@RequestParam("key") String key) {
+        return s3Service.deleteFile(key);
+    }
+}
+```
+
+---
+
+## **6. Testing the APIs**
+### **Upload a File**
+```sh
+curl -X POST -F "file=@/path/to/file.jpg" http://localhost:8080/s3/upload
+```
+
+### **Download a File**
+```sh
+curl -X GET "http://localhost:8080/s3/download?key=file.jpg"
+```
+
+### **Delete a File**
+```sh
+curl -X DELETE "http://localhost:8080/s3/delete?key=file.jpg"
+```
+
+---
+
+## **7. Verify in AWS S3**
+You can check the uploaded files in **AWS S3 Console** under your bucket.
+
+---
+
+### ✅ **Conclusion**
+You have successfully implemented **file upload, retrieval, and deletion** from Amazon S3 using **Spring Boot** and the **AWS SDK v2**.
+
+Let me know if you need further modifications! 🚀

@@ -1,6 +1,7 @@
 ### **SQL Joins Explained with Examples** 🚀  
 
-SQL **joins** are used to retrieve data from multiple tables based on a related column. They help combine rows from two or more tables into a single result set.  
+SQL **joins** are used to retrieve data from multiple tables based on a related column. 
+They help combine rows from two or more tables into a single result set.  
 
 ---
 

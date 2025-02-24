@@ -4,7 +4,8 @@ Sure! Let's break down Amazon Route 53 and its core concepts in simple terms, in
 
 ### **What is Amazon Route 53?**
 
-Amazon Route 53 is a **scalable and highly available Domain Name System (DNS)** web service. DNS is like a phonebook for the internet. When you type a website name (like www.example.com) in your browser, DNS helps translate that into an IP address, which is needed for computers to communicate with each other.
+Amazon Route 53 is a **scalable and highly available Domain Name System (DNS)** web service. DNS is like a phonebook for the internet. 
+When you type a website name (like www.example.com) in your browser, DNS helps translate that into an IP address, which is needed for computers to communicate with each other.
 
 In simpler terms:
 - **Route 53** helps you manage how users access your website or application by pointing domain names to different resources like web servers, databases, and more.

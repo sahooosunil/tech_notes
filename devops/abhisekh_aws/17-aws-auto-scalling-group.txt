@@ -29,7 +29,8 @@ A **Target Group** is a logical grouping of instances that are part of a load ba
 
 ## 2. Auto Scaling Group
 
-An **Auto Scaling Group (ASG)** is a collection of EC2 instances that are treated as a logical group for automatic scaling and management purposes. It ensures that your application always has the right number of instances to handle the load.
+An **Auto Scaling Group (ASG)** is a collection of EC2 instances that are treated as a logical group for automatic scaling and management purposes. 
+It ensures that your application always has the right number of instances to handle the load.
 
 ### Key Features:
 - **Automatic Scaling**: Based on defined policies, the ASG can scale out (add instances) or scale in (remove instances) automatically.

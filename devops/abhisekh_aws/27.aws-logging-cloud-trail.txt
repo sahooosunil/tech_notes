@@ -1,0 +1,37 @@
+To track and audit who uploaded or deleted data in AWS S3, you can enable **AWS CloudTrail** logging. CloudTrail records API calls made to S3, which includes operations like uploading, deleting, and modifying objects.
+
+Here’s how to set it up:
+
+### 1. **Enable AWS CloudTrail**
+   - **CloudTrail** captures all the API activities in your AWS environment, including S3 operations.
+   - Go to the **CloudTrail** console: [AWS CloudTrail Console](https://console.aws.amazon.com/cloudtrail/)
+   - If it's not already enabled, click **Create trail** to set up logging for your AWS account.
+   - Choose to apply it across all regions (recommended) to capture all actions.
+
+### 2. **Configure CloudTrail to Log S3 Events**
+   - Under the trail settings, ensure that **S3 data events** are logged. 
+   - You can choose to log **Read events** (e.g., GetObject) and/or **Write events** (e.g., PutObject, DeleteObject).
+   - You can also configure CloudTrail to send logs to an S3 bucket for persistent storage.
+
+### 3. **View CloudTrail Logs**
+   - After logging is enabled, CloudTrail will record details of the operations, including the **AWS Identity and Access Management (IAM)** user who performed the action.
+   - You can view the logs in the **CloudTrail console** or search using the **CloudTrail Event History**. 
+   - In the logs, look for entries related to S3 actions. The log will include the following:
+     - **EventName**: What action was performed (e.g., `PutObject`, `DeleteObject`)
+     - **Username or IAM Role**: Who performed the action.
+     - **Source IP**: From where the request came.
+     - **Bucket Name**: The affected S3 bucket.
+     - **Timestamp**: When the action was performed.
+
+### 4. **Optional: Set up Amazon CloudWatch for Monitoring and Alerts**
+   - For real-time monitoring, you can create **CloudWatch Alarms** based on CloudTrail logs to notify you whenever specific actions (like object deletions) happen in your S3 bucket.
+   - You can use **Amazon CloudWatch Logs** to monitor your CloudTrail logs in near-real-time.
+
+### Example: Look for a `DeleteObject` action in CloudTrail logs
+1. Go to **CloudTrail** → **Event History**.
+2. Filter by event name: `DeleteObject`.
+3. Review the event details, which will include the IAM user/role that performed the deletion.
+
+This process provides an audit trail for user actions, including upload, modification, and deletion events in S3, and it helps ensure compliance and security within your AWS environment.
+
+Let me know if you'd like more details on setting any of these up!

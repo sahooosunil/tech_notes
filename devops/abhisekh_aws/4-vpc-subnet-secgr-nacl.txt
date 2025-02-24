@@ -39,7 +39,8 @@
 
 #### **How Does NAT Gateway Mask the IP? Why is IP Masking Needed?**
   - **Masking** means changing the real IP address of your instance to a different, publicly routable address.
-  - The NAT gateway uses its own **public IP address** to make requests to the internet on behalf of your private instances. The response is then sent back to the NAT gateway, which forwards it to the private instance.
+  - The NAT gateway uses its own **public IP address** to make requests to the internet on behalf of your private instances. 
+  The response is then sent back to the NAT gateway, which forwards it to the private instance.
   - **IP masking** is needed to protect the private instances from direct exposure to the internet and to ensure security.
 
 ### **What is a Security Group?**
@@ -53,7 +54,8 @@
 - A **NACL** (Network Access Control List) is a set of rules that control the inbound and outbound traffic to/from subnets in your VPC.
 - **Why is it required?**
   - NACLs work at the **subnet level**, meaning they apply to all instances within a subnet.
-  - NACLs are **stateless**, meaning you have to define both inbound and outbound rules separately. In contrast, security groups are **stateful**, meaning you don't need to define both inbound and outbound rules for responses.
+  - NACLs are **stateless**, meaning you have to define both inbound and outbound rules separately. 
+  In contrast, security groups are **stateful**, meaning you don't need to define both inbound and outbound rules for responses.
 
 ### **Security Group vs NACL**
 
@@ -279,4 +281,6 @@ Each NACL rule consists of the following parameters:
 ---
 
 ### **Conclusion**
-AWS NACLs provide a flexible, subnet-level firewall for controlling network traffic in your VPC. They are particularly useful for scenarios requiring coarse-grained control over traffic entering or leaving a subnet. When combined with Security Groups, NACLs enhance the overall security of your AWS environment.
+AWS NACLs provide a flexible, subnet-level firewall for controlling network traffic in your VPC. 
+They are particularly useful for scenarios requiring coarse-grained control over traffic entering or leaving a subnet. 
+When combined with Security Groups, NACLs enhance the overall security of your AWS environment.

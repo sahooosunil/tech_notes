@@ -1,10 +1,12 @@
 ## **Index vs Partitioning in SQL** 🔍🔀  
 
 ### **1️⃣ What is an Index?**  
-An **index** in SQL is a data structure that improves the **speed** of data retrieval. It allows the database engine to quickly locate rows without scanning the entire table.
+An **index** in SQL is a data structure that improves the **speed** of data retrieval. 
+It allows the database engine to quickly locate rows without scanning the entire table.
 
 ### **2️⃣ What is Partitioning?**  
-Partitioning is the process of **dividing a large table** into smaller, more manageable pieces, called **partitions**. Each partition can be stored and queried separately, improving performance for specific queries.
+Partitioning is the process of **dividing a large table** into smaller, more manageable pieces, called **partitions**. 
+Each partition can be stored and queried separately, improving performance for specific queries.
 
 ---
 

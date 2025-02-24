@@ -96,6 +96,19 @@ const FormValidation = () => {
 
     if (validateForm()) {
       // If validation passes, submit the form
+      const response = await axios.post(
+      'https://example.com/api/endpoint', // API endpoint
+      {
+        ...formData
+      },
+      {
+        headers: {
+          'Authorization': 'Bearer yourAccessTokenHere',  // Adding an Authorization header
+          'Content-Type': 'application/json',             // Ensuring the content type is JSON
+          'Custom-Header': 'customValue'                   // Any other custom headers
+        }
+      }
+    );
       console.log('Form submitted:', formData);
       // Clear form fields and errors after successful submission
       setFormData({

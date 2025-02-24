@@ -1,6 +1,7 @@
 ### What is a Service Mesh?
 
-A **service mesh** is a tool that helps different parts of an application talk to each other, especially when the app is made up of many small pieces called microservices. It works like a traffic manager, ensuring that messages between these parts are delivered correctly and safely.
+A **service mesh** is a tool that helps different parts of an application talk to each other, especially when the app is made up of many small pieces called microservices. 
+It works like a traffic manager, ensuring that messages between these parts are delivered correctly and safely.
 
 - **Service discovery:** It helps services find each other in a big network.
 - **Load balancing:** It spreads the workload evenly so no single service gets overwhelmed.

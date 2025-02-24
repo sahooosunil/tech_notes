@@ -2,7 +2,8 @@ Here’s an explanation in very simple language:
 
 ### **What is an EC2 Instance?**
 
-- **EC2** (Elastic Compute Cloud) is a service provided by AWS that allows you to rent virtual computers (called instances) on which you can run your applications. These instances are like virtual machines (VMs) in the cloud that can perform tasks just like a physical computer.
+- **EC2** (Elastic Compute Cloud) is a service provided by AWS that allows you to rent virtual computers (called instances) 
+on which you can run your applications. These instances are like virtual machines (VMs) in the cloud that can perform tasks just like a physical computer.
 - You can use EC2 to run websites, databases, applications, or any software without having to own and manage physical hardware.
 
 ### **Why Choose EC2 Instances Over On-Premise Physical Servers?**
@@ -11,7 +12,8 @@ Here’s an explanation in very simple language:
 - **Scalable**: You can easily increase or decrease the number of instances depending on your needs. No need to worry about hardware limitations.
 - **No Maintenance**: AWS manages the underlying hardware, so you don’t have to worry about repairs, upgrades, or replacements.
 - **Flexibility**: You can choose from various types of EC2 instances based on your requirements (like CPU power, memory, storage).
-- **Global Availability**: EC2 allows you to run your applications in different locations across the world (AWS Regions and Availability Zones), giving you more options for speed and reliability.
+- **Global Availability**: EC2 allows you to run your applications in different locations across the world (AWS Regions and Availability Zones), 
+giving you more options for speed and reliability.
 
 ### **Different Types of EC2 Instances**
 
@@ -32,7 +34,8 @@ Here’s an explanation in very simple language:
    - Example: i3 instances.
    
 5. **Accelerated**:
-   - Instances with special hardware like GPUs (Graphics Processing Units) for tasks that need high performance, like machine learning, deep learning, or video rendering.
+   - Instances with special hardware like GPUs (Graphics Processing Units) for tasks that need high performance, 
+   like machine learning, deep learning, or video rendering.
    - Example: p3, g4 instances.
 
 ### **What is an AWS Region? Why EC2 is Created Inside a Specific Region?**

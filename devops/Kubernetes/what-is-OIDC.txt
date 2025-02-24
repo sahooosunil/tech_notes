@@ -1,0 +1,64 @@
+OIDC stands for **OpenID Connect**. It's a way to **prove who you are** when you try to access a website or an application. Think of it like showing an ID card to get into a secure building.
+
+---
+
+### Real-World Example:
+
+Imagine you’re trying to enter a high-security office building:
+1. **Receptionist** asks for your ID.
+2. You **show your ID** (like a driver's license) that proves who you are.
+3. The **receptionist checks** your ID to see if it's valid.
+4. If everything is okay, you’re **allowed in**.
+
+---
+
+### OIDC in the Digital World:
+
+In the digital world, the process is similar but involves websites and apps:
+
+1. **You** want to access an online service (e.g., a cloud dashboard).
+2. The service asks, **"Who are you?"**
+3. Instead of entering a username and password, you choose to **log in with Google** (or another identity provider).
+4. You are redirected to Google, where you **prove who you are** by logging in.
+5. **Google checks** your identity and, if valid, gives you a **token** (like a digital ID card).
+6. You take this token back to the service.
+7. The service **verifies** the token with Google to ensure it's real.
+8. If the token is valid, you’re **allowed in**.
+
+---
+
+### Key Points:
+- **OIDC** is built on top of OAuth 2.0, but it’s mainly about identity (proving who you are).
+- The **token** is called an **ID Token**, which has information about you (like name, email, etc.).
+- It’s **secure** because your password is never shared with the app, only the token is.
+
+---
+
+### Example Flow:
+- You open an app and click **"Login with Google"**.
+- You’re redirected to Google to enter your credentials.
+- Google verifies you and gives an **ID Token** to the app.
+- The app checks the token and lets you in, knowing who you are.
+
+---
+
+### Why Use OIDC?
+- **Convenience:** No need to remember separate passwords for every app.
+- **Security:** Your credentials stay with the identity provider (like Google).
+- **Consistency:** Works across multiple apps and platforms.
+
+---
+
+### How EKS Uses OIDC:
+In EKS (Elastic Kubernetes Service):
+- OIDC helps map **Kubernetes service accounts** to **IAM roles** securely.
+- It lets a pod **prove its identity** to access AWS resources without using static keys.
+
+For example:
+- A pod in EKS wants to access an S3 bucket.
+- It uses OIDC to prove its identity using an associated IAM role.
+- The IAM role grants the necessary permissions, and the pod can access S3 securely.
+
+---
+
+Let me know if you need more details or examples!

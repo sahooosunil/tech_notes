@@ -1,0 +1,192 @@
+### **Canary Deployment in Istio**
+
+Canary deployment in Istio allows you to gradually roll out a new version of a service while monitoring its impact. This approach reduces risk compared to deploying a new version all at once.
+
+---
+
+## **Overview of the Setup**
+1. **Deployment**:
+   - Deploy two versions of a Spring Boot application (`v1` and `v2`) in EKS.
+2. **Service**:
+   - A single Kubernetes Service to expose the application.
+3. **DestinationRule**:
+   - Define subsets for each version.
+4. **VirtualService**:
+   - Control traffic routing between the two versions, initially sending a small percentage to the new version.
+
+---
+
+### **Step 1: Deployment and Service Files**
+
+- Deploy **v1** and **v2** of the application.
+- Use **labels** to differentiate between the versions.
+
+---
+
+### **1. Deployment for v1 (`deployment-v1.yaml`)**:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app-v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-boot-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+        version: v1
+    spec:
+      containers:
+      - name: spring-boot-app
+        image: your-docker-registry/spring-boot-app:v1
+        ports:
+        - containerPort: 8080
+```
+
+---
+
+### **2. Deployment for v2 (`deployment-v2.yaml`)**:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-app-v2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-boot-app
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: spring-boot-app
+        version: v2
+    spec:
+      containers:
+      - name: spring-boot-app
+        image: your-docker-registry/spring-boot-app:v2
+        ports:
+        - containerPort: 8080
+```
+
+---
+
+### **3. Service (`service.yaml`)**:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-app-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: spring-boot-app
+```
+
+---
+
+### **Step 2: Istio Configuration Files**
+
+---
+
+### **4. Destination Rule (`destination-rule.yaml`)**:
+
+```yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: spring-boot-app-destination
+spec:
+  host: spring-boot-app-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+```
+
+---
+
+### **5. Virtual Service (`virtual-service.yaml`)**:
+
+```yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: spring-boot-app-virtualservice
+spec:
+  hosts:
+  - spring-boot-app-service
+  http:
+  - route:
+    - destination:
+        host: spring-boot-app-service
+        subset: v1
+      weight: 90
+    - destination:
+        host: spring-boot-app-service
+        subset: v2
+      weight: 10
+```
+
+---
+
+### **Explanation**:
+- **DestinationRule**:
+  - Defines **subsets** for `v1` and `v2` based on the labels.
+- **VirtualService**:
+  - Routes **90%** of the traffic to `v1` and **10%** to `v2`.
+  - You can gradually increase the weight for `v2` as you gain confidence in the new version.
+
+---
+
+### **Step 3: Apply the Configuration**
+
+```sh
+kubectl apply -f deployment-v1.yaml
+kubectl apply -f deployment-v2.yaml
+kubectl apply -f service.yaml
+kubectl apply -f destination-rule.yaml
+kubectl apply -f virtual-service.yaml
+```
+
+---
+
+### **Step 4: Gradual Rollout**
+
+You can adjust the **weights** in the `VirtualService` to gradually roll out the new version:
+- Start with **90% v1 and 10% v2**
+- Then **50% v1 and 50% v2**
+- Finally **100% v2**
+
+Update the `virtual-service.yaml` and re-apply it to make these changes.
+
+---
+
+### **Step 5: Monitoring and Rollback**
+
+1. **Monitor** the performance and error rates using tools like **Prometheus** and **Grafana**.
+2. If issues are detected:
+   - Rollback by setting all traffic back to `v1`:
+     ```yaml
+     weight: 100 # for v1
+     weight: 0   # for v2
+     ```
+
+---
+
+### **Need More Help?**
+If you need help with monitoring, configuring Istio gateways, or CI/CD integration for this canary deployment, let me know! 🚀

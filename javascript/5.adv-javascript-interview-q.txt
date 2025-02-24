@@ -28,7 +28,8 @@ boundFunc(); // Hello, Hari from India
 ---
 
 ### **2. What is the event loop in JavaScript? How does it work?**
-The **event loop** allows JavaScript to handle **asynchronous operations** by continuously checking the **call stack** and the **callback queue**.
+The **event loop** allows JavaScript to handle **asynchronous operations** by continuously checking the 
+**call stack** and the **callback queue**.
 
 **Example of event loop behavior:**
 ```js

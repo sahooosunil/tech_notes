@@ -26,16 +26,20 @@ This keeps your account safe and ensures tasks are completed efficiently.
 AWS Users, Grops, Permissions, Roles
 ---------------------------------------
 1. **AWS Users**:  
-   A user represents an individual person or a system that needs access to AWS. Each user has their own login credentials (like username and password) and can have specific permissions to do things in AWS.  
+   A user represents an individual person or a system that needs access to AWS. 
+   Each user has their own login credentials (like username and password) and can have specific permissions to do things in AWS.  
 
 2. **AWS Groups**:  
-   A group is a collection of users. Instead of assigning permissions to each user one by one, you can put users into a group and give the group the necessary permissions. For example, a "Developers" group might have permissions to work with servers, and all developers in the group will automatically inherit those permissions.
+   A group is a collection of users. Instead of assigning permissions to each user one by one, you can put users into a group and give the group the necessary permissions. 
+   For example, a "Developers" group might have permissions to work with servers, and all developers in the group will automatically inherit those permissions.
 
 3. **AWS Permissions**:  
-   Permissions control what a user or group is allowed to do in AWS. They define the actions (like starting a server or accessing storage) a user or group can perform. Permissions are managed using "policies" written in JSON.
+   Permissions control what a user or group is allowed to do in AWS. They define the actions (like starting a server or accessing storage) a user or group can perform. 
+   Permissions are managed using "policies" written in JSON.
 
 4. **AWS Roles**:  
-   A role is like a set of temporary permissions that you assign to someone or something (like a service or application) to perform specific tasks. Unlike users, roles don’t have login credentials. For example, if an application needs to access a storage bucket, you assign a role to the application instead of creating a user for it.
+   A role is like a set of temporary permissions that you assign to someone or something (like a service or application) to perform specific tasks. 
+   Unlike users, roles don’t have login credentials. For example, if an application needs to access a storage bucket, you assign a role to the application instead of creating a user for it.
 
 ### Simple Example:
 - You (a user) log in to AWS.  
@@ -99,7 +103,8 @@ This approach simplifies secure access to AWS services while minimizing security
 ---
 
 #### **AWS Role**
-- **Definition:** An AWS Role is a set of permissions that define what actions are allowed and denied. Unlike a user, a role does not have long-term credentials.
+- **Definition:** An AWS Role is a set of permissions that define what actions are allowed and denied. 
+Unlike a user, a role does not have long-term credentials.
 - **Purpose:** Roles are used to delegate permissions to applications, services, or even users from other AWS accounts.
 - **Authentication:** Instead of a username and password, roles use temporary security credentials when assumed.
 - **Use Cases:** 

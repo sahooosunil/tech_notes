@@ -1,0 +1,154 @@
+To allow a pod running inside an EKS (Elastic Kubernetes Service) cluster to access AWS resources (like S3 or RDS), 
+you should use **IAM Roles for Service Accounts (IRSA)**. 
+This approach is secure and follows AWS best practices.
+
+---
+
+## How It Works:
+1. **IAM Role with Required Permissions:** Create an IAM Role with a policy granting the required permissions to access the AWS resources.
+2. **Service Account in EKS:** Create a Kubernetes service account and associate it with the IAM Role using an annotation.
+3. **Pod Access:** Deploy your pod using this service account, and it will automatically get the IAM Role permissions.
+
+---
+
+## Step-by-Step Configuration:
+
+### 1. Enable OIDC Provider in EKS:
+EKS uses OpenID Connect (OIDC) to map Kubernetes service accounts to IAM roles.
+
+- Confirm if an OIDC provider is associated with your EKS cluster:
+    ```sh
+    aws eks describe-cluster --name <cluster-name> --query "cluster.identity.oidc.issuer" --output text
+    ```
+- If not, create one using:
+    ```sh
+    eksctl utils associate-iam-oidc-provider --region <region> --cluster <cluster-name> --approve
+    ```
+
+---
+
+### 2. Create an IAM Policy:
+Create an IAM policy that grants the required permissions (e.g., access to S3 or RDS).
+
+Example for S3 access:
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::<bucket-name>/*"
+      ]
+    }
+  ]
+}
+```
+
+Create the policy using:
+```sh
+aws iam create-policy --policy-name S3AccessPolicy --policy-document file://s3-access-policy.json
+```
+
+---
+
+### 3. Create an IAM Role for Service Account:
+Create an IAM Role and attach the policy. This role is associated with the EKS service account.
+
+- Replace the following:
+  - `<cluster-name>`: Your EKS cluster name
+  - `<namespace>`: Kubernetes namespace (e.g., default)
+  - `<service-account-name>`: Name of the service account (e.g., s3-access-sa)
+  - `<oidc-issuer-url>`: Output from the earlier OIDC check
+
+```sh
+eksctl create iamserviceaccount \
+  --name <service-account-name> \
+  --namespace <namespace> \
+  --cluster <cluster-name> \
+  --attach-policy-arn arn:aws:iam::<account-id>:policy/S3AccessPolicy \
+  --approve \
+  --override-existing-serviceaccounts
+```
+
+---
+
+### 4. Create Kubernetes Service Account:
+Create a Kubernetes service account with the required IAM role annotation.
+
+Example:
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: s3-access-sa
+  namespace: default
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<account-id>:role/<iam-role-name>
+```
+
+Apply the service account:
+```sh
+kubectl apply -f service-account.yaml
+```
+
+---
+
+### 5. Deploy the Pod using Service Account:
+Associate the pod with the service account to give it the IAM permissions.
+
+Example:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3-access-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3-access
+  template:
+    metadata:
+      labels:
+        app: s3-access
+    spec:
+      serviceAccountName: s3-access-sa
+      containers:
+      - name: app-container
+        image: amazonlinux
+        command: ["/bin/bash", "-c", "sleep 3600"]
+```
+
+Apply the deployment:
+```sh
+kubectl apply -f deployment.yaml
+```
+
+---
+
+### 6. Verify Access:
+- Connect to the pod:
+    ```sh
+    kubectl exec -it <pod-name> -- /bin/bash
+    ```
+- Check if the pod can access S3:
+    ```sh
+    aws s3 ls s3://<bucket-name>
+    ```
+
+---
+
+## Key Points:
+- **No Static Credentials**: This approach avoids hardcoding AWS credentials in pods.
+- **Fine-grained Access Control**: You can create different service accounts and IAM roles with the least privilege principle.
+- **Secure**: IRSA leverages temporary credentials provided by the OIDC identity provider.
+
+This method is preferred over using instance roles or static access keys for security and maintainability.
+
+If you need help with specific services like RDS or more advanced configurations, let me know!

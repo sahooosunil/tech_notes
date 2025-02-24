@@ -1,6 +1,7 @@
 ### **What is Cloud?**  
 The cloud refers to using someone else’s computers and storage over the internet instead of owning and managing your own hardware. 
-It allows you to access servers, storage, databases, network and software from anywhere. Companies like AWS, Azure, and Google Cloud provide these services. 
+It allows you to access servers, storage, databases, network and software from anywhere. 
+Companies like AWS, Azure, and Google Cloud provide these services. 
 ---
 
 ### **Public vs Private Cloud**  

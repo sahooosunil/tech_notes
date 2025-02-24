@@ -1,4 +1,5 @@
-Terraform is an infrastructure-as-code (IaC) tool that allows you to define, provision, and manage cloud infrastructure using declarative configuration files. Some of the most important topics to understand when working with Terraform include:
+Terraform is an infrastructure-as-code (IaC) tool that allows you to define, provision, and manage cloud infrastructure using declarative configuration files. 
+Some of the most important topics to understand when working with Terraform include:
 
 ### 1. **Core Concepts**
    - **Infrastructure as Code (IaC):** Understanding the core philosophy of IaC and how Terraform automates infrastructure management.
@@ -6,15 +7,18 @@ Terraform is an infrastructure-as-code (IaC) tool that allows you to define, pro
    - **Terraform Configuration Files (`.tf`):** These files define your infrastructure resources and are written in HashiCorp Configuration Language (HCL).
 
 ### 2. **Terraform Providers**
-   - **Providers:** Providers are plugins that allow Terraform to interact with different APIs, such as AWS, Azure, GCP, and others. Each provider exposes resource types that you can manage.
+   - **Providers:** Providers are plugins that allow Terraform to interact with different APIs, such as AWS, Azure, GCP, and others. 
+   Each provider exposes resource types that you can manage.
    - **Provider Configuration:** How to authenticate and configure a provider, including API keys, regions, etc.
 
 ### 3. **Resources**
-   - **Terraform Resources:** Resources represent infrastructure components like EC2 instances, S3 buckets, VPCs, etc. They are the fundamental building blocks of Terraform configurations.
+   - **Terraform Resources:** Resources represent infrastructure components like EC2 instances, S3 buckets, VPCs, etc. 
+   They are the fundamental building blocks of Terraform configurations.
    - **Resource Blocks:** Syntax for defining resources in `.tf` files, including required parameters (e.g., instance type, AMI ID for EC2) and optional parameters.
    
 ### 4. **State Management**
-   - **Terraform State:** Terraform uses a state file (`terraform.tfstate`) to track the infrastructure it manages. The state file maps resources in the configuration to real-world objects in the cloud provider.
+   - **Terraform State:** Terraform uses a state file (`terraform.tfstate`) to track the infrastructure it manages. 
+   The state file maps resources in the configuration to real-world objects in the cloud provider.
    - **State Backend:** This refers to where Terraform stores its state, such as in local files, Amazon S3, or Terraform Cloud.
    - **State Locking:** State locking is important in a team setting to prevent multiple users from changing the infrastructure simultaneously.
    

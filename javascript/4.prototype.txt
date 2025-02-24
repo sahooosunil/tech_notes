@@ -1,7 +1,9 @@
 ## **JavaScript Prototypes: A Clear Explanation**  
 
 ### **What is a Prototype in JavaScript?**  
-In JavaScript, **prototypes** enable objects to inherit properties and methods from other objects. Every JavaScript object has an internal link to another object called its **prototype**, which acts as a **blueprint** for inheritance.  
+In JavaScript, **prototypes** enable objects to inherit properties and methods from other objects. 
+Every JavaScript object has an internal link to another object called its **prototype**, 
+which acts as a **blueprint** for inheritance.  
 
 ### **Understanding Prototypes**  
 - When we create an object using a **constructor function**, the object automatically gets a prototype.

@@ -1,0 +1,116 @@
+Here are all the **Dockerfile directives** you can use to build Docker images:  
+
+---
+
+## **1. Basic Directives**
+- **FROM**: Specifies the base image.
+  ```dockerfile
+  FROM node:14
+  ```
+
+- **RUN**: Executes a command during image build.
+  ```dockerfile
+  RUN apt update && apt install -y curl
+  ```
+
+- **CMD**: Sets the default command for the container.
+  ```dockerfile
+  CMD ["node", "app.js"]
+  ```
+
+- **ENTRYPOINT**: Configures a container to run as an executable.
+  ```dockerfile
+  ENTRYPOINT ["docker-entrypoint.sh"]
+  ```
+
+- **WORKDIR**: Sets the working directory for the container.
+  ```dockerfile
+  WORKDIR /usr/src/app
+  ```
+
+- **COPY**: Copies files from the host to the image.
+  ```dockerfile
+  COPY . /usr/src/app
+  ```
+
+- **ADD**: Similar to COPY but can also fetch remote URLs and extract tar archives.
+  ```dockerfile
+  ADD https://example.com/file.tar.gz /tmp/
+  ```
+
+- **ENV**: Sets environment variables.
+  ```dockerfile
+  ENV NODE_ENV=production
+  ```
+
+- **ARG**: Defines a variable that users can pass at build-time.
+  ```dockerfile
+  ARG VERSION=1.0
+  ```
+
+- **EXPOSE**: Informs Docker that the container listens on the specified network ports.
+  ```dockerfile
+  EXPOSE 8080
+  ```
+
+- **VOLUME**: Creates a mount point with a volume.
+  ```dockerfile
+  VOLUME /data
+  ```
+
+---
+
+## **2. Advanced Directives**
+- **USER**: Specifies the user to run the container as.
+  ```dockerfile
+  USER appuser
+  ```
+
+- **HEALTHCHECK**: Checks container health by running a command.
+  ```dockerfile
+  HEALTHCHECK --interval=30s CMD curl -f http://localhost:8080/health || exit 1
+  ```
+
+- **ONBUILD**: Adds a trigger instruction to be executed later.
+  ```dockerfile
+  ONBUILD RUN npm install
+  ```
+
+- **STOPSIGNAL**: Sets the system call signal to stop the container.
+  ```dockerfile
+  STOPSIGNAL SIGTERM
+  ```
+
+- **SHELL**: Overrides the default shell for the `RUN` commands.
+  ```dockerfile
+  SHELL ["powershell", "-Command"]
+  ```
+
+---
+
+## **3. Best Practices**
+- Use **multi-stage builds** to reduce image size:
+  ```dockerfile
+  FROM node:14 AS builder
+  WORKDIR /usr/src/app
+  COPY . .
+  RUN npm install && npm run build
+
+  FROM nginx:alpine
+  COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+  ```
+
+- Minimize the number of layers by combining commands:
+  ```dockerfile
+  RUN apt update && apt install -y \
+      curl \
+      vim \
+      && apt clean
+  ```
+
+- Use **COPY** instead of **ADD** unless fetching from a URL or extracting tar files.
+
+---
+
+## **Need Help with Docker?**
+If you need examples or help with optimizing Dockerfiles, CI/CD integration, or deploying Docker containers, let me know! 🚀

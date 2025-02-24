@@ -1,12 +1,14 @@
 Automation in AWS
 -------------------------------------------------------------
-We can create AWS resources using the AWS Management Console (UI), but it is **not automation-friendly**. There are several challenges with using the console:
+We can create AWS resources using the AWS Management Console (UI), but it is **not automation-friendly**. 
+There are several challenges with using the console:
 
 1. **Not Scalable**:  
    If you need to create 100 or more resources in a short time, doing it manually through the console is impractical and inefficient.
 
 2. **Error-Prone**:  
-   Manual processes are prone to mistakes. You might forget a step or configure something incorrectly, leading to resource misconfigurations.
+   Manual processes are prone to mistakes. You might forget a step or configure something incorrectly, 
+   leading to resource misconfigurations.
 
 3. **Time-Consuming**:  
    Creating resources manually takes a lot of time, especially when dealing with large-scale deployments or complex setups.
@@ -41,7 +43,8 @@ These tools help automate infrastructure on AWS, reduce errors, save time, and e
 
 #### **2. Terraform (by HashiCorp):**
    - **What is it?**  
-     An open-source Infrastructure as Code (IaC) tool that works with AWS and other cloud providers. You define resources using a declarative language (HCL - HashiCorp Configuration Language).
+     An open-source Infrastructure as Code (IaC) tool that works with AWS and other cloud providers. 
+     You define resources using a declarative language (HCL - HashiCorp Configuration Language).
    - **Key Features**:  
      - Multi-cloud support (AWS, Azure, GCP, etc.).
      - State management to track resource changes.
@@ -109,7 +112,8 @@ By using tools like AWS CLI, Terraform, CloudFormation, or AWS CDK, teams can bu
 --------------------
 ### **What is an IaC Tool?**
 
-An **Infrastructure as Code (IaC)** tool allows you to manage and provision your cloud infrastructure (e.g., servers, databases, networks) using code, rather than manual processes like clicking in a web console. IaC tools ensure that infrastructure is:
+An **Infrastructure as Code (IaC)** tool allows you to manage and provision your cloud infrastructure (e.g., servers, databases, networks) using code, 
+rather than manual processes like clicking in a web console. IaC tools ensure that infrastructure is:
 
 1. **Declarative**:  
    - You describe *what* you want (the desired state of resources), not *how* to create it.  
@@ -123,7 +127,8 @@ An **Infrastructure as Code (IaC)** tool allows you to manage and provision your
      - Roll back to a previous version if something goes wrong.  
 
 3. **Convert Templates to Cloud API Calls**:  
-   - IaC tools convert your declared templates into API calls to interact with the cloud provider (e.g., AWS, Azure, GCP). These API calls are responsible for creating, updating, or deleting cloud resources as per the template.
+   - IaC tools convert your declared templates into API calls to interact with the cloud provider (e.g., AWS, Azure, GCP). 
+   These API calls are responsible for creating, updating, or deleting cloud resources as per the template.
 
 ---
 
@@ -140,7 +145,8 @@ An **Infrastructure as Code (IaC)** tool allows you to manage and provision your
 
 #### **AWS CLI**:
    - **What is it?**  
-     A command-line interface to interact directly with AWS services by executing commands. It is not declarative; instead, it involves running imperative commands to manage resources.
+     A command-line interface to interact directly with AWS services by executing commands. 
+     It is not declarative; instead, it involves running imperative commands to manage resources.
 
    - **When to Use CLI?**  
      - For small tasks or ad-hoc actions.  

@@ -1,0 +1,20 @@
+### **ACID Properties:**  
+ACID is a set of properties that ensure reliable processing of database transactions. It stands for:  
+
+1. **Atomicity:**  
+   - Ensures that all operations within a transaction are completed successfully or none at all.  
+   - **Example:** In a bank transfer, either both debit and credit happen, or neither happens, ensuring no money is lost or created.  
+
+2. **Consistency:**  
+   - Guarantees that a transaction brings the database from one valid state to another, maintaining data integrity.  
+   - **Example:** If a transaction violates any database constraints (e.g., unique keys), it is rolled back.  
+
+3. **Isolation:**  
+   - Ensures that concurrent transactions do not interfere with each other.  
+   - **Example:** Two transactions updating the same account balance won't see each other's intermediate states, preventing conflicts.  
+
+4. **Durability:**  
+   - Ensures that once a transaction is committed, the changes are permanent, even in the event of a system failure.  
+   - **Example:** After booking a ticket, the reservation remains even if the server crashes immediately after confirmation.  
+
+Would you like examples of how ACID properties are implemented in SQL databases like MySQL or PostgreSQL?
