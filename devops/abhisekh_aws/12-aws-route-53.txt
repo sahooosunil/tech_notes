@@ -1,4 +1,5 @@
-Sure! Let's break down Amazon Route 53 and its core concepts in simple terms, including details about the types of records, what they do, and how to use Route 53 if your domain was created elsewhere. 
+Sure! Let's break down Amazon Route 53 and its core concepts in simple terms, including details about the types of records, 
+what they do, and how to use Route 53 if your domain was created elsewhere. 
 
 ---
 
@@ -88,7 +89,8 @@ If your domain was registered with a different registrar (like GoDaddy, Namechea
 
 1. **Create a Hosted Zone** in Route 53 for your domain (same as described above).
 2. **Get the Name Servers from Route 53**:
-   - After creating the hosted zone, Route 53 will give you a set of **NS (Name Server) records**. These are typically four name servers (e.g., `ns-1234.awsdns-56.org`).
+   - After creating the hosted zone, Route 53 will give you a set of **NS (Name Server) records**. 
+   These are typically four name servers (e.g., `ns-1234.awsdns-56.org`).
 3. **Update the Name Servers with Your Domain Registrar**:
    - Log in to your domain registrar’s dashboard (where you purchased the domain).
    - Find the DNS settings or Name Server settings for your domain.

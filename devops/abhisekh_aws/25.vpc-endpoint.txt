@@ -1,6 +1,7 @@
 ### What is a VPC Endpoint?
 
-A **VPC Endpoint** is a private connection between your Virtual Private Cloud (VPC) and supported AWS services without going through the public internet. It keeps traffic within the AWS network, enhancing security and reducing latency.
+A **VPC Endpoint** is a private connection between your Virtual Private Cloud (VPC) and supported AWS services without going through the public internet. 
+It keeps traffic within the AWS network, enhancing security and reducing latency.
 
 Imagine it like a private hallway connecting your office to a nearby data center. You can access services securely without stepping outside.
 
@@ -39,7 +40,8 @@ Imagine it like a private hallway connecting your office to a nearby data center
 
 ### Example Scenario
 
-You have an application in a private subnet that needs to read files from an S3 bucket. Instead of using a NAT Gateway or Internet Gateway, you can use a **Gateway Endpoint** for S3 to securely and privately access the bucket.
+You have an application in a private subnet that needs to read files from an S3 bucket. 
+Instead of using a NAT Gateway or Internet Gateway, you can use a **Gateway Endpoint** for S3 to securely and privately access the bucket.
 
 ---
 

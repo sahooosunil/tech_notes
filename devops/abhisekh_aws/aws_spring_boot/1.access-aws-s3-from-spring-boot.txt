@@ -194,4 +194,174 @@ You can check the uploaded files in **AWS S3 Console** under your bucket.
 ### ✅ **Conclusion**
 You have successfully implemented **file upload, retrieval, and deletion** from Amazon S3 using **Spring Boot** and the **AWS SDK v2**.
 
-Let me know if you need further modifications! 🚀
+----------------------------------------------------------------------------------------------------------
+When deploying your **Spring Boot** application in an **Amazon EKS cluster**, you can securely access **S3** without hardcoding AWS credentials by using **IAM Roles for Service Accounts (IRSA)**. This allows your application to assume an IAM role that grants access to S3.
+
+---
+
+## **1. Configure IAM Role for Service Account (IRSA)**
+Follow these steps to configure IRSA:
+
+### **Step 1: Create an IAM Policy for S3 Access**
+Create an IAM policy that allows access to your S3 bucket.
+
+1. Open the **AWS IAM Console**.
+2. Go to **Policies** → **Create Policy**.
+3. Choose **JSON** and paste the following policy:
+   
+   ```json
+   {
+       "Version": "2012-10-17",
+       "Statement": [
+           {
+               "Effect": "Allow",
+               "Action": [
+                   "s3:ListBucket",
+                   "s3:GetObject",
+                   "s3:PutObject",
+                   "s3:DeleteObject"
+               ],
+               "Resource": [
+                   "arn:aws:s3:::your-bucket-name",
+                   "arn:aws:s3:::your-bucket-name/*"
+               ]
+           }
+       ]
+   }
+   ```
+4. Click **Next**, give it a name (e.g., `S3AccessPolicy`), and create the policy.
+
+---
+
+### **Step 2: Create an IAM Role for Kubernetes Service Account**
+Now, create an **IAM Role** that can be assumed by your Kubernetes service account.
+
+#### **Create the Role via AWS CLI**
+1. **Get your OIDC provider**:
+   ```sh
+   aws eks describe-cluster --name your-cluster-name --query "cluster.identity.oidc.issuer" --output text
+   ```
+   - If you don't have an **OIDC provider**, create one:
+     ```sh
+     eksctl utils associate-iam-oidc-provider --cluster your-cluster-name --approve
+     ```
+
+2. **Create the IAM role**:
+   ```sh
+   eksctl create iamserviceaccount \
+       --name s3-service-account \
+       --namespace default \
+       --cluster your-cluster-name \
+       --attach-policy-arn arn:aws:iam::YOUR_AWS_ACCOUNT_ID:policy/S3AccessPolicy \
+       --approve
+   ```
+   - Replace `YOUR_AWS_ACCOUNT_ID` with your **AWS account ID**.
+
+---
+
+### **Step 3: Attach the Service Account to Your Deployment**
+Modify your **Kubernetes Deployment YAML** to use the new service account:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      serviceAccountName: s3-service-account  # Attach service account here
+      containers:
+        - name: springboot-container
+          image: your-springboot-image:latest
+          ports:
+            - containerPort: 8080
+```
+
+---
+
+## **2. Update Spring Boot Code to Use Default Credentials**
+Since the application runs in an **EKS cluster**, the **AWS SDK** will automatically pick up the role from the service account. **No need to hardcode credentials**.
+
+Modify your `S3Config` class:
+
+```java
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+
+@Configuration
+public class S3Config {
+
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.builder()
+                .region(Region.US_EAST_1)  // Replace with your region
+                .credentialsProvider(DefaultCredentialsProvider.create()) // Uses IAM Role
+                .build();
+    }
+}
+```
+
+### **How It Works**
+- **`DefaultCredentialsProvider.create()`** automatically fetches credentials from the environment.
+- In **EKS**, AWS credentials are injected through the **IAM Role for Service Account (IRSA)**.
+- No **access key** or **secret key** is required in `application.properties`.
+
+---
+
+## **3. Deploy Your Spring Boot App to EKS**
+Now, deploy your updated Spring Boot application to your EKS cluster:
+
+```sh
+kubectl apply -f deployment.yaml
+```
+
+### **Verify the IAM Role is Assigned**
+Check if the pod has the IAM role attached:
+
+```sh
+kubectl get pods
+kubectl describe pod <your-pod-name>
+```
+
+Look for the **Service Account** field.
+
+---
+
+## **4. Testing the S3 Integration**
+Once deployed, test the **S3 file operations** using REST API:
+
+### **Upload a File**
+```sh
+curl -X POST -F "file=@/path/to/file.jpg" http://your-eks-service-url/s3/upload
+```
+
+### **Download a File**
+```sh
+curl -X GET "http://your-eks-service-url/s3/download?key=file.jpg"
+```
+
+### **Delete a File**
+```sh
+curl -X DELETE "http://your-eks-service-url/s3/delete?key=file.jpg"
+```
+
+---
+
+## **✅ Conclusion**
+🔹 You have successfully configured **IAM Roles for Service Accounts (IRSA)** to securely access **S3** from a **Spring Boot** application running in **EKS**.  
+🔹 **No credentials are hardcoded**, and **IAM roles are used instead**.  
+🔹 The **AWS SDK automatically picks up the IAM role**, making authentication seamless.
+
+Let me know if you need any refinements! 🚀

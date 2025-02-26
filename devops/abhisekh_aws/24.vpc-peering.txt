@@ -1,8 +1,10 @@
 ### What is VPC Peering?
 
-VPC Peering is a networking connection between two Virtual Private Clouds (VPCs) that allows them to communicate with each other privately. This communication happens over private IP addresses, just as if they were within the same network.
+VPC Peering is a networking connection between two Virtual Private Clouds (VPCs) that allows them to communicate with each other privately. 
+This communication happens over private IP addresses, just as if they were within the same network.
 
-Imagine two separate office buildings (VPCs) that want to share information securely without going over the public internet. VPC Peering acts like a private tunnel between these buildings, enabling direct and secure communication.
+Imagine two separate office buildings (VPCs) that want to share information securely without going over the public internet. 
+VPC Peering acts like a private tunnel between these buildings, enabling direct and secure communication.
 
 ---
 

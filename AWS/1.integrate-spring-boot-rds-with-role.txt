@@ -1,0 +1,263 @@
+Here’s a **complete** step-by-step guide on how to access **Amazon RDS (PostgreSQL/MySQL)** from a **Spring Boot application** deployed in an **Amazon EKS cluster using IAM Roles for Service Accounts (IRSA)**.
+
+---
+
+# **🟢 Step 1: Enable IAM OIDC Provider for EKS**
+You need to enable an **OIDC provider** for your EKS cluster to use **IAM Roles for Service Accounts (IRSA)**.
+
+### **1.1 Check if OIDC provider is enabled**
+Run the following command:
+```sh
+aws eks describe-cluster --name <your-cluster-name> --query "cluster.identity.oidc.issuer" --output text
+```
+If an OIDC provider URL is returned (e.g., `https://oidc.eks.region.amazonaws.com/id/EXAMPLE`), you can skip the next step.
+
+### **1.2 Enable OIDC provider if not already enabled**
+```sh
+eksctl utils associate-iam-oidc-provider \
+  --region <your-region> \
+  --cluster <your-cluster-name> \
+  --approve
+```
+
+---
+
+# **🟢 Step 2: Create an IAM Policy to Access RDS**
+Create an IAM policy that allows **inserting, updating, deleting, and selecting data** in RDS.
+
+### **2.1 Create `rds-access-policy.json`**
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "rds-db:connect"
+            ],
+            "Resource": "arn:aws:rds-db:<your-region>:<your-account-id>:dbuser/<your-db-cluster-id>/<your-db-user>"
+        }
+    ]
+}
+```
+
+Replace:
+- `<your-region>` with your AWS region.
+- `<your-account-id>` with your AWS account ID.
+- `<your-db-cluster-id>` with your **Amazon RDS Cluster ARN**.
+- `<your-db-user>` with your **database username**.
+
+### **2.2 Create IAM Policy**
+```sh
+aws iam create-policy --policy-name RDSAccessPolicy --policy-document file://rds-access-policy.json
+```
+
+---
+
+# **🟢 Step 3: Create an IAM Role for EKS Service Account**
+### **3.1 Create the IAM Role with IRSA**
+```sh
+eksctl create iamserviceaccount \
+  --name rds-access-sa \
+  --namespace default \
+  --cluster <your-cluster-name> \
+  --attach-policy-arn arn:aws:iam::<your-account-id>:policy/RDSAccessPolicy \
+  --approve
+```
+
+---
+
+# **🟢 Step 4: Enable IAM Authentication on Amazon RDS**
+1. Modify your RDS instance to allow IAM authentication:
+   ```sh
+   aws rds modify-db-instance --db-instance-identifier <your-db-instance-id> --enable-iam-database-authentication
+   ```
+2. Attach the IAM role to RDS:
+   ```sh
+   aws rds add-role-to-db-instance \
+       --db-instance-identifier <your-db-instance-id> \
+       --role-arn arn:aws:iam::<your-account-id>:role/rds-access-role \
+       --feature-name "IAMAuthentication"
+   ```
+
+---
+
+# **🟢 Step 5: Implement Spring Boot Application**
+### **5.1 Add Dependencies in `pom.xml`**
+```xml
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>rds</artifactId>
+    <version>2.20.85</version>
+</dependency>
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>42.6.0</version>
+</dependency>
+```
+
+---
+
+### **5.2 Create IAM Token Generator**
+```java
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.rds.RdsUtilities;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class RdsIamAuthService {
+
+    private static final String REGION = "us-east-1"; // Change to your AWS region
+    private static final String DB_ENDPOINT = "your-db-endpoint.rds.amazonaws.com";
+    private static final String DB_NAME = "your-database-name";
+    private static final String DB_USER = "your-db-user";
+
+    public static Connection getConnection() throws SQLException {
+        String authToken = generateAuthToken();
+        String jdbcUrl = String.format("jdbc:postgresql://%s:5432/%s?ssl=true&sslmode=verify-full", DB_ENDPOINT, DB_NAME);
+
+        return DriverManager.getConnection(jdbcUrl, DB_USER, authToken);
+    }
+
+    private static String generateAuthToken() {
+        RdsUtilities rdsUtilities = RdsUtilities.builder()
+                .region(Region.of(REGION))
+                .credentialsProvider(DefaultCredentialsProvider.create())
+                .build();
+
+        return rdsUtilities.generateAuthenticationToken(builder -> builder
+                .hostname(DB_ENDPOINT)
+                .port(5432)
+                .userName(DB_USER));
+    }
+}
+```
+
+---
+
+### **5.3 Create Repository and Service**
+```java
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+```
+
+```java
+import org.springframework.stereotype.Service;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+@Service
+public class UserService {
+
+    public void insertUser(String name) {
+        try (Connection conn = RdsIamAuthService.getConnection()) {
+            String sql = "INSERT INTO users (name) VALUES (?)";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, name);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+---
+
+### **5.4 Create REST Controller**
+```java
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/create")
+    public String createUser(@RequestParam String name) {
+        userService.insertUser(name);
+        return "User added successfully";
+    }
+}
+```
+
+---
+
+# **🟢 Step 6: Deploy to EKS**
+### **6.1 Create Kubernetes Deployment YAML**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-app
+  template:
+    metadata:
+      labels:
+        app: spring-app
+    spec:
+      serviceAccountName: rds-access-sa
+      containers:
+        - name: spring-app
+          image: <your-ecr-repo>/spring-app:latest
+          env:
+            - name: AWS_REGION
+              value: "us-east-1"
+            - name: DB_HOST
+              value: "your-db-endpoint.rds.amazonaws.com"
+            - name: DB_NAME
+              value: "your-database-name"
+```
+
+Apply the deployment:
+```sh
+kubectl apply -f deployment.yaml
+```
+
+---
+
+# **🟢 Step 7: Verify and Test**
+### **7.1 Check Logs**
+```sh
+kubectl logs -f deployment/spring-app
+```
+
+### **7.2 Insert Data**
+```sh
+curl -X POST "http://<your-service-ip>:8080/users/create?name=JohnDoe"
+```
+
+### **7.3 Verify Data in RDS**
+```sh
+psql -h your-db-endpoint.rds.amazonaws.com -U your-db-user -d your-database-name
+SELECT * FROM users;
+```
+
+---
+
+# **🎯 Conclusion**
+✅ **Enabled IRSA for EKS**  
+✅ **Created IAM policy & role**  
+✅ **Enabled IAM authentication on RDS**  
+✅ **Implemented Spring Boot with IAM-based DB authentication**  
+✅ **Deployed the application in EKS**  
+
+This ensures **secure RDS access** without storing credentials in your application. Let me know if you need modifications! 🚀

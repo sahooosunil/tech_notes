@@ -1,6 +1,7 @@
 ### What is an **EBS Volume**?
 
-EBS stands for **Elastic Block Store**. It is a **block storage service** provided by AWS that is designed to be used with **EC2 instances**. Unlike instance storage (which is temporary), EBS volumes are **persistent**, meaning data is retained even when the EC2 instance is stopped or restarted.
+EBS stands for **Elastic Block Store**. It is a **block storage service** provided by AWS that is designed to be used with **EC2 instances**. 
+Unlike instance storage (which is temporary), EBS volumes are **persistent**, meaning data is retained even when the EC2 instance is stopped or restarted.
 
 ### Why is EBS Needed?
 

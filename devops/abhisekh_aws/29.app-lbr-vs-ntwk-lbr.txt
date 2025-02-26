@@ -1,0 +1,100 @@
+The main difference between a **Network Load Balancer (NLB)** and an **Application Load Balancer (ALB)** is the **layer at which they operate** in the OSI model and their use cases.
+
+---
+
+### 🏗 **1️⃣ Network Load Balancer (NLB)**
+- Works at **Layer 4 (Transport Layer)**.
+- Routes traffic based on **IP address and TCP/UDP ports**.
+- Faster than ALB because it operates at a lower level with less processing.
+- Ideal for **high-performance and low-latency applications**.
+- Can handle **millions of requests per second**.
+- Can load balance **any TCP/UDP-based service** (e.g., HTTPS, MQTT, WebSockets).
+
+📌 **Use Cases:**
+- Load balancing **non-HTTP traffic** (e.g., database servers, gaming, VoIP).
+- Handling **massive amounts of traffic** (low latency, high throughput).
+- **Static IP address** support (useful for firewall rules).
+
+🔧 **Example in Kubernetes (AWS NLB):**
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nlb-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: my-app
+```
+
+---
+
+### 🌍 **2️⃣ Application Load Balancer (ALB)**
+- Works at **Layer 7 (Application Layer)**.
+- Routes traffic based on **HTTP headers, URLs, cookies, and hostnames**.
+- Supports **advanced routing** (e.g., path-based, host-based routing).
+- Can perform **SSL termination** to offload encryption from backend servers.
+- Supports **WebSockets** and **gRPC**.
+
+📌 **Use Cases:**
+- Routing **HTTP/HTTPS traffic** (web applications, microservices).
+- Path-based routing (e.g., `/api` goes to one service, `/frontend` goes to another).
+- **Host-based routing** (e.g., `api.example.com` vs. `app.example.com`).
+- **WAF (Web Application Firewall)** support.
+
+🔧 **Example in Kubernetes (AWS ALB):**
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-alb-ingress
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+spec:
+  rules:
+    - host: example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api-service
+                port:
+                  number: 80
+```
+
+---
+
+### 🔥 **Key Differences**
+| Feature | Network Load Balancer (NLB) | Application Load Balancer (ALB) |
+|---------|-----------------|------------------|
+| OSI Layer | **Layer 4 (Transport)** | **Layer 7 (Application)** |
+| Protocols | **TCP, UDP** | **HTTP, HTTPS, WebSockets, gRPC** |
+| Routing | **IP + Port-based** | **Path-based, Host-based, Header-based** |
+| Latency | Lower (faster) | Higher (more processing) |
+| SSL Termination | ❌ No (passes encrypted traffic) | ✅ Yes (offloads SSL) |
+| WebSockets Support | ✅ Yes | ✅ Yes |
+| Best For | **High-performance, non-HTTP traffic** | **Web apps, microservices, API gateways** |
+
+---
+
+### 🚀 **Which One to Choose?**
+✅ **Use ALB if:**
+- You need **path-based routing** (e.g., `/api` → service A, `/user` → service B).
+- You want **host-based routing** (e.g., `app1.example.com` → service A, `app2.example.com` → service B).
+- Your application is **HTTP/HTTPS-based**.
+
+✅ **Use NLB if:**
+- You need **low-latency, high-performance** load balancing.
+- Your app uses **TCP/UDP** (e.g., real-time gaming, VoIP, databases).
+- You need a **static IP address** for firewall rules.
+
+Let me know if you need further clarification! 🚀

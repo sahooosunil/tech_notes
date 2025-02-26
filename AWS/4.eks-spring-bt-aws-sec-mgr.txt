@@ -1,0 +1,180 @@
+To access a secret (username/password) from AWS Secrets Manager in a **Spring Boot application** deployed in an **EKS cluster** using **IAM Roles for Service Accounts (IRSA)**, follow these steps:
+
+---
+
+### **1. Create an IAM Role with Necessary Permissions**
+Since your application is running in an **EKS cluster**, you need to use **IRSA (IAM Roles for Service Accounts)** to securely provide AWS credentials.
+
+#### **1.1 Create an IAM Policy**
+Create a policy that allows access to AWS Secrets Manager:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "arn:aws:secretsmanager:your-region:your-account-id:secret:your-secret-name-*"
+    }
+  ]
+}
+```
+Replace:
+- `your-region` with your AWS region (e.g., `us-east-1`).
+- `your-account-id` with your AWS account ID.
+- `your-secret-name` with the name of your secret.
+
+Attach this policy to an **IAM role** that will be used for your Kubernetes service account.
+
+#### **1.2 Create an IAM Role for Service Account (IRSA)**
+Create an IAM role and associate it with your Kubernetes service account:
+
+```sh
+eksctl create iamserviceaccount \
+  --cluster your-eks-cluster-name \
+  --namespace your-namespace \
+  --name your-service-account \
+  --attach-policy-arn arn:aws:iam::your-account-id:policy/your-secret-policy \
+  --approve
+```
+Replace:
+- `your-eks-cluster-name` with your EKS cluster name.
+- `your-namespace` with the namespace where your app is running.
+- `your-service-account` with your Kubernetes service account name.
+
+---
+
+### **2. Configure Kubernetes Deployment to Use the Service Account**
+Modify your **Deployment YAML** to reference the service account:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: your-app
+  namespace: your-namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: your-app
+  template:
+    metadata:
+      labels:
+        app: your-app
+    spec:
+      serviceAccountName: your-service-account  # <-- Associate with IRSA
+      containers:
+        - name: your-app
+          image: your-docker-image
+          env:
+            - name: AWS_REGION
+              value: "your-region"
+```
+
+---
+
+### **3. Retrieve the Secret in Spring Boot**
+Use **AWS SDK v2** to fetch the secret.
+
+#### **3.1 Add AWS SDK Dependencies**
+In **`pom.xml`**, add:
+
+```xml
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>secretsmanager</artifactId>
+</dependency>
+```
+
+#### **3.2 Create a Service to Fetch the Secret**
+Create a service that interacts with **AWS Secrets Manager**:
+
+```java
+package com.example.aws;
+
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
+import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SecretsManagerService {
+
+    private final SecretsManagerClient secretsManagerClient;
+
+    public SecretsManagerService() {
+        this.secretsManagerClient = SecretsManagerClient.builder()
+                .region(Region.of(System.getenv("AWS_REGION"))) // Read region from env
+                .credentialsProvider(DefaultCredentialsProvider.create()) // Uses IRSA
+                .build();
+    }
+
+    public String getSecret(String secretName) {
+        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
+                .secretId(secretName)
+                .build();
+        GetSecretValueResponse getSecretValueResponse = secretsManagerClient.getSecretValue(getSecretValueRequest);
+        return getSecretValueResponse.secretString();
+    }
+}
+```
+
+---
+
+### **4. Use the Secret in Your Application**
+Inject and use the **SecretsManagerService** in your Spring Boot app:
+
+```java
+package com.example.controller;
+
+import com.example.aws.SecretsManagerService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class SecretController {
+
+    private final SecretsManagerService secretsManagerService;
+
+    public SecretController(SecretsManagerService secretsManagerService) {
+        this.secretsManagerService = secretsManagerService;
+    }
+
+    @GetMapping("/get-secret")
+    public String getSecret(@RequestParam String secretName) {
+        return secretsManagerService.getSecret(secretName);
+    }
+}
+```
+
+---
+
+### **5. Deploy and Verify**
+1. **Deploy your Spring Boot app to EKS.**
+2. **Ensure the pod is using the correct service account with IRSA:**
+   ```sh
+   kubectl get pods -n your-namespace -o jsonpath="{.items[*].spec.serviceAccountName}"
+   ```
+   Ensure it returns `your-service-account`.
+
+3. **Test the API endpoint:**
+   ```sh
+   curl "http://your-app-url/get-secret?secretName=your-secret-name"
+   ```
+
+---
+
+### **Summary**
+✅ Used **IRSA** for AWS authentication (no hardcoded credentials).  
+✅ Created an **IAM Role** with **Secrets Manager permissions**.  
+✅ Assigned the IAM role to a **Kubernetes Service Account**.  
+✅ Used **AWS SDK v2** in **Spring Boot** to retrieve secrets.  
+
+Let me know if you need further clarification! 🚀

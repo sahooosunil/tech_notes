@@ -28,7 +28,8 @@ S3 buckets are commonly used for:
 ### Creating and Configuring S3 Buckets
 
 #### Creating an S3 Bucket
-You can create an S3 bucket using the AWS Management Console, AWS Command Line Interface (CLI), or AWS Software Development Kits (SDKs). During creation, you need to:
+You can create an S3 bucket using the AWS Management Console, AWS Command Line Interface (CLI), or AWS Software Development Kits (SDKs). 
+During creation, you need to:
 - Specify a unique bucket name. it should be unique across all the accounts.
 - Choose a region where the bucket will be stored.
 

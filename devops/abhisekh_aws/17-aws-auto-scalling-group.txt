@@ -12,7 +12,8 @@
 
 ## 1. Target Group
 
-A **Target Group** is a logical grouping of instances that are part of a load balancing solution in AWS. When a load balancer receives a request, it routes the request to one of the registered targets (such as EC2 instances) in the target group.
+A **Target Group** is a logical grouping of instances that are part of a load balancing solution in AWS. 
+When a load balancer receives a request, it routes the request to one of the registered targets (such as EC2 instances) in the target group.
 
 ### Key Features:
 - **Load Balancer Association**: Target groups are associated with a load balancer (either an Application Load Balancer or Network Load Balancer).
