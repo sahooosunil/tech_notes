@@ -1,0 +1,319 @@
+Q) wrtie terraform script to create eks cluster with ndoe group as 5 nodes. use modules. explain each detials (about vpc, subnets, security groups, s3 and rds access in same vpc).
+
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name   = "eks-vpc"
+  cidr   = "10.0.0.0/16"
+
+  azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway = true
+  enable_dns_hostnames = true
+}
+
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "my-cluster"
+  cluster_version = "1.27"
+  subnet_ids      = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+
+  node_groups = {
+    default = {
+      desired_capacity = 5
+      max_capacity     = 6
+      min_capacity     = 5
+
+      instance_types = ["t3.medium"]
+      key_name       = "my-key"
+    }
+  }
+}
+
+resource "aws_security_group" "eks_sg" {
+  name_prefix = "eks-sg"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_s3_bucket" "eks_bucket" {
+  bucket = "eks-cluster-logs-bucket"
+  acl    = "private"
+}
+
+resource "aws_db_instance" "eks_rds" {
+  identifier           = "eks-rds"
+  allocated_storage    = 20
+  engine              = "postgres"
+  instance_class      = "db.t3.micro"
+  db_name             = "eksdb"
+  username           = "admin"
+  password           = "securepassword"
+  vpc_security_group_ids = [aws_security_group.eks_sg.id]
+  db_subnet_group_name   = module.vpc.database_subnet_group
+}
+-------------------
+Here’s a Terraform script using modules to create an AWS EKS cluster with a managed node group of 5 nodes. It also includes networking (VPC, subnets, security groups) and access to S3 and RDS within the same VPC. I'll explain each component in detail.
+
+### Explanation:
+
+1. **VPC Module**:
+   - Uses `terraform-aws-modules/vpc/aws` to create a **VPC** with **CIDR `10.0.0.0/16`**.
+   - **Public and Private Subnets** are created across **3 Availability Zones (AZs)**.
+   - **NAT Gateway** is enabled for internet access from private subnets.
+
+2. **EKS Cluster Module**:
+   - Uses `terraform-aws-modules/eks/aws` to create an **EKS Cluster** (`my-cluster`).
+   - The cluster is deployed in **private subnets**.
+   - **Node group** has **5 nodes**, instance type **t3.medium**.
+
+3. **Security Group**:
+   - Allows **ingress on port 443** (HTTPS) from **anywhere**.
+
+4. **S3 Bucket**:
+   - Creates an **S3 bucket** for **storing logs**.
+
+5. **RDS Database**:
+   - Creates a **PostgreSQL RDS instance** within the **same VPC**.
+   - Uses the **same security group as EKS** for access control.
+   ------------------------------------------------------------
+ Q)###  how to create volume(ssd) in aws for above eks cluster where pods will mount data to aws volume (persistent volume claim ?)
+
+ To create an **AWS EBS (SSD) volume** for your **EKS cluster** and allow **pods to mount data using Persistent Volume Claims (PVCs)**, follow these steps:
+
+---
+
+### **Step 1: Create an AWS EBS Volume (SSD)**
+Modify your Terraform script to provision an **EBS volume** in the same **AZ as your EKS nodes**:
+
+#### **Terraform Code to Create an EBS Volume**
+```hcl
+resource "aws_ebs_volume" "eks_ebs" {
+  availability_zone = "us-east-1a"  # Ensure this matches your node AZ
+  size             = 20  # Size in GB
+  type             = "gp3"  # General Purpose SSD
+  encrypted        = true  # Encrypt the volume
+
+  tags = {
+    Name = "eks-data-volume"
+  }
+}
+```
+
+---
+
+### **Step 2: Enable EBS CSI Driver on EKS**
+AWS provides an **EBS Container Storage Interface (CSI) driver** to manage **dynamic EBS volume provisioning**.
+
+Enable it using the **AWS EKS add-on**:
+```hcl
+resource "aws_eks_addon" "ebs_csi_driver" {
+  cluster_name      = module.eks.cluster_name
+  addon_name        = "aws-ebs-csi-driver"
+  resolve_conflicts = "OVERWRITE"
+}
+```
+
+OR, install it manually via `kubectl`:
+```sh
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/ecr/?ref=release-1.9"
+```
+
+---
+
+### **Step 3: Define a Persistent Volume (PV)**
+Create a **Persistent Volume (PV)** in Kubernetes to map the AWS **EBS volume**.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: eks-ebs-pv
+spec:
+  capacity:
+    storage: 20Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: "gp3"
+  awsElasticBlockStore:
+    volumeID: "vol-0abcd1234efgh5678"  # Replace with your actual EBS volume ID
+    fsType: "ext4"
+```
+
+---
+
+### **Step 4: Create a Persistent Volume Claim (PVC)**
+Pods will request storage via a **PVC**, which binds to the **Persistent Volume (PV)**.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eks-ebs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: "gp3"
+  resources:
+    requests:
+      storage: 20Gi
+```
+
+---
+
+### **Step 5: Mount PVC in a Pod**
+Modify your pod deployment to use the PVC:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+    - name: app-container
+      image: nginx
+      volumeMounts:
+        - mountPath: "/data"
+          name: ebs-volume
+  volumes:
+    - name: ebs-volume
+      persistentVolumeClaim:
+        claimName: eks-ebs-pvc
+```
+
+---
+
+### **How It Works**
+1. **EBS Volume** (`aws_ebs_volume`) is provisioned in **AWS**.
+2. **EBS CSI Driver** is enabled on **EKS** to manage storage dynamically.
+3. **Persistent Volume (PV)** is created, referencing the **EBS volume ID**.
+4. **Persistent Volume Claim (PVC)** requests storage from the **PV**.
+5. **Pods mount the PVC**, allowing them to persist data in **AWS EBS**.
+
+---
+
+### **Next Steps**
+- If you want **dynamic volume provisioning**, use a **StorageClass** instead of manually creating PVs.
+- Ensure the **EKS worker nodes** have the IAM policy `AmazonEBSCSIDriverPolicy` attached.
+
+Would you like me to modify this setup for **dynamic provisioning**? 🚀
+------------------------------------------------------------------------
+### **Dynamic EBS Volume Provisioning in AWS EKS**
+Instead of manually creating an EBS volume, we can use **dynamic provisioning** with a **StorageClass**. This allows Kubernetes to automatically create and manage EBS volumes when PVCs are requested.
+
+---
+
+### **Step 1: Enable EBS CSI Driver on EKS**
+AWS provides an **EBS Container Storage Interface (CSI) driver** to handle dynamic provisioning.
+
+Modify your **Terraform script** to enable the EBS CSI driver:
+```hcl
+resource "aws_eks_addon" "ebs_csi_driver" {
+  cluster_name      = module.eks.cluster_name
+  addon_name        = "aws-ebs-csi-driver"
+  resolve_conflicts = "OVERWRITE"
+}
+```
+This ensures that EKS can manage EBS volumes dynamically.
+
+---
+
+### **Step 2: Create a StorageClass for EBS**
+A **StorageClass** tells Kubernetes how to provision volumes dynamically.
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  type: gp3
+  fsType: ext4
+  encrypted: "true"
+```
+
+🔹 **Explanation**:
+- `provisioner: ebs.csi.aws.com` → Uses the AWS EBS CSI driver.
+- `type: gp3` → General Purpose SSD.
+- `volumeBindingMode: WaitForFirstConsumer` → Delays volume provisioning until a pod is scheduled.
+- `fsType: ext4` → Default filesystem type.
+- `encrypted: "true"` → Ensures data encryption.
+
+---
+
+### **Step 3: Create a Persistent Volume Claim (PVC)**
+Now, create a **PVC** that dynamically provisions an EBS volume:
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eks-ebs-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ebs-sc
+  resources:
+    requests:
+      storage: 20Gi
+```
+
+🔹 **How it works**:
+- When this PVC is created, Kubernetes will **automatically** create an EBS volume and bind it to the PVC.
+- No need to manually create or specify an EBS volume ID.
+
+---
+
+### **Step 4: Mount the PVC in a Pod**
+Now, modify your pod deployment to use the PVC:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-pod
+spec:
+  containers:
+    - name: app-container
+      image: nginx
+      volumeMounts:
+        - mountPath: "/data"
+          name: ebs-volume
+  volumes:
+    - name: ebs-volume
+      persistentVolumeClaim:
+        claimName: eks-ebs-pvc
+```
+
+---
+
+### **How Dynamic EBS Volume Provisioning Works**
+1. **StorageClass (`ebs-sc`)** defines how EBS volumes should be created dynamically.
+2. **PVC (`eks-ebs-pvc`)** requests storage from the StorageClass.
+3. **EKS CSI Driver** provisions an **EBS volume** automatically and binds it to the PVC.
+4. **Pods** mount the PVC and use the EBS volume.
+
+---
+
+### **Benefits of Dynamic Provisioning**
+✅ **No manual volume creation** → Kubernetes provisions volumes as needed.  
+✅ **EBS volumes are automatically deleted** when PVCs are removed (configurable).  
+✅ **Scalable and efficient** for stateful workloads like databases or logs.  
+
+---
+
+### **Next Steps**
+Would you like to integrate this setup with **StatefulSets** for running databases like **PostgreSQL** or **MongoDB**? 🚀

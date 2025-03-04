@@ -1,4 +1,6 @@
-In Kubernetes, volumes provide storage to pods, and they allow data to persist beyond the lifecycle of a pod. You can create volumes and use them in your deployment files for accessing data. Below is a step-by-step guide on how to create volumes in Kubernetes and add them to a deployment.
+In Kubernetes, volumes provide storage to pods, and they allow data to persist beyond the lifecycle of a pod. 
+You can create volumes and use them in your deployment files for accessing data. 
+Below is a step-by-step guide on how to create volumes in Kubernetes and add them to a deployment.
 
 ### Step 1: Define the Volume in a Kubernetes Deployment
 

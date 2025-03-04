@@ -1,6 +1,7 @@
 ### **Canary Deployment in Istio**
 
-Canary deployment in Istio allows you to gradually roll out a new version of a service while monitoring its impact. This approach reduces risk compared to deploying a new version all at once.
+Canary deployment in Istio allows you to gradually roll out a new version of a service while monitoring its impact. 
+This approach reduces risk compared to deploying a new version all at once.
 
 ---
 

@@ -149,7 +149,10 @@ This approach ensures precise control over traffic flow, enabling gradual featur
 -------------------------------------------------------------------
 ### Dark Releases in Istio
 ---------------------------------------
-Dark releases allow you to deploy a new version of your application in production while only making it accessible to specific users, such as developers or testers. In Istio, you can achieve this by configuring custom routing in a `VirtualService` based on a specific header value. If the header is present in the request, the traffic is routed to the new version (a different subset of pods). If the header is not present, the traffic is routed to the existing version.
+Dark releases allow you to deploy a new version of your application in production while only making it accessible to specific users, 
+such as developers or testers. In Istio, you can achieve this by configuring custom routing in a `VirtualService` based on a specific header value. 
+If the header is present in the request, the traffic is routed to the new version (a different subset of pods). 
+If the header is not present, the traffic is routed to the existing version.
 
 This setup enables you to safely test new features in a live environment without exposing them to all users.
 

@@ -1,0 +1,153 @@
+    Docker networks allow containers to communicate with each other and external systems. Docker provides different types of networks, each designed for specific use cases. Let’s go through all the available options and details.
+
+---
+
+## 📌 **Types of Docker Networks**
+| **Network Type** | **Command to Create** | **Scope** | **Use Case** |
+|-----------------|----------------------|-----------|-------------|
+| **Bridge (default)** | `docker network create my-bridge` | Single host | Containers on the same host can communicate. Default for standalone containers. |
+| **Host** | `docker network create -d host my-host` | Single host | Containers share the host's network namespace (no isolation). |
+| **Overlay** | `docker network create -d overlay my-overlay` | Multi-host | Used in **Swarm mode** for multi-host communication. |
+| **Macvlan** | `docker network create -d macvlan ...` | Single/multi-host | Assigns real MAC addresses to containers for direct LAN communication. |
+| **None** | `docker network create -d none my-none` | Single host | Completely disables networking. |
+
+---
+
+## 🔹 **1. Bridge Network (Default)**
+- **Scope:** Single host
+- **Communication:** Containers on the same bridge network can communicate via **container name** instead of IP.
+- **Use Case:** Running multiple containers on a single machine that need to talk to each other.
+
+### ✅ **Example: Creating and Using a Bridge Network**
+```bash
+# Create a custom bridge network
+docker network create my-bridge
+
+# Run two containers and connect them to the bridge network
+docker run -d --name container1 --network my-bridge nginx
+docker run -d --name container2 --network my-bridge alpine sleep 1000
+
+# Test communication between containers
+docker exec -it container2 ping container1
+```
+👉 **Containers can communicate using container names (`container1`, `container2`) instead of IPs.**
+
+---
+
+## 🔹 **2. Host Network**
+- **Scope:** Single host
+- **Communication:** The container **shares** the host's network namespace.
+- **Use Case:** When you want the containerized app to **bind directly to the host’s network** (e.g., running an application that needs direct access to a specific port).
+
+### ✅ **Example: Running a Container with Host Networking**
+```bash
+docker run -d --network host nginx
+```
+👉 The container **does not get its own IP**—instead, it uses the host’s IP.  
+👉 **No need for port mapping (`-p`)** because the container is already using the host network.
+
+⚠ **Limitation:** Cannot use `host` networking on **Windows or Mac**, only on **Linux**.
+
+---
+
+## 🔹 **3. Overlay Network**
+- **Scope:** Multi-host (Docker Swarm required)
+- **Communication:** Containers across different hosts can communicate securely.
+- **Use Case:** For **Docker Swarm** deployments, enabling service-to-service communication.
+
+### ✅ **Example: Creating an Overlay Network in Swarm Mode**
+```bash
+# Initialize Swarm mode (needed for overlay networks)
+docker swarm init
+
+# Create an overlay network
+docker network create -d overlay my-overlay
+
+# Deploy a service using the overlay network
+docker service create --name web --network my-overlay nginx
+```
+👉 Overlay networks are **only used in Swarm mode**.  
+👉 Containers can **talk across different machines** without needing complex configurations.
+
+---
+
+## 🔹 **4. Macvlan Network**
+- **Scope:** Single/multi-host
+- **Communication:** Containers get a **real MAC address** and appear as physical devices on the LAN.
+- **Use Case:** When containers need to communicate **directly with external networks** (e.g., assigning IPs from your router’s DHCP).
+
+### ✅ **Example: Creating a Macvlan Network**
+```bash
+docker network create -d macvlan \
+    --subnet=192.168.1.0/24 \
+    --gateway=192.168.1.1 \
+    -o parent=eth0 my-macvlan
+
+docker run -d --name mac-container --network my-macvlan nginx
+```
+👉 This container will now behave like a **physical device** with its own IP address.  
+👉 Requires configuring **parent interfaces** correctly.
+
+---
+
+## 🔹 **5. None Network**
+- **Scope:** Single host
+- **Communication:** **No networking** at all.
+- **Use Case:** When you want to fully isolate a container (e.g., security-sensitive workloads).
+
+### ✅ **Example: Running a Container with No Network**
+```bash
+docker run -d --network none nginx
+```
+👉 The container will **not** be able to access the internet or talk to other containers.
+
+---
+
+## 🔥 **Docker Network Commands**
+| **Command** | **Description** |
+|------------|----------------|
+| `docker network ls` | List all available networks. |
+| `docker network create my-network` | Create a new bridge network. |
+| `docker network inspect my-network` | View details of a network. |
+| `docker network connect my-network my-container` | Attach a running container to a network. |
+| `docker network disconnect my-network my-container` | Remove a container from a network. |
+| `docker network rm my-network` | Delete a network (only if no containers are using it). |
+
+---
+
+## 🚀 **When to Use Each Network Type?**
+| **Use Case** | **Recommended Network** |
+|-------------|----------------|
+| Simple multi-container apps on one machine | **Bridge** |
+| Running a containerized app as a host service | **Host** |
+| Multi-host communication in Swarm | **Overlay** |
+| Need a separate IP/MAC for each container | **Macvlan** |
+| Maximum isolation (no network access) | **None** |
+
+---
+
+## 🌍 **Docker Networks vs Kubernetes Networking**
+| Feature | **Docker Network** | **Kubernetes Networking** |
+|---------|----------------|----------------|
+| Scope | Single/multi-host | Cluster-wide |
+| Default Type | Bridge | Pod-to-Pod (CNI) |
+| Multi-Host Support | Requires Overlay (Swarm) | Built-in with CNI plugins (Flannel, Calico, etc.) |
+| IP Assignment | Dynamic per container | Each **Pod** gets a unique IP |
+| Service Discovery | DNS in custom bridge networks | Built-in Kubernetes DNS (`ServiceName.Namespace.svc.cluster.local`) |
+
+In **Kubernetes**, Docker networking is **replaced** by **CNI plugins** like:
+- **Flannel**
+- **Calico**
+- **Weave**
+- **Cilium**
+
+---
+
+## 🎯 **Key Takeaways**
+✅ **Bridge** – Default network, good for multi-container apps on a single host.  
+✅ **Host** – No isolation, container shares host’s network.  
+✅ **Overlay** – Multi-host networking for Docker Swarm.  
+✅ **Macvlan** – Gives containers real IP addresses for direct LAN communication.  
+✅ **None** – Completely disables networking.  
+
+Would you like examples specific to your Kubernetes setup? 🚀

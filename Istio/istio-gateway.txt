@@ -1,12 +1,15 @@
 ### What is a Gateway and Why is it Required in Istio?
 
-In Istio, a **Gateway** acts as an edge proxy, controlling how traffic enters the service mesh from outside the Kubernetes cluster. It allows you to manage and configure external traffic in the same way you manage internal traffic, applying Istio's features such as traffic routing, security, and monitoring.
+In Istio, a **Gateway** acts as an edge proxy, controlling how traffic enters the service mesh from outside the Kubernetes cluster. 
+It allows you to manage and configure external traffic in the same way you manage internal traffic, applying Istio's features such as traffic routing, security, and monitoring.
 
 #### Why is a Gateway Needed?
 
-When you apply canary deployments within your cluster, the traffic routing (e.g., weighted routing for different versions) works because every pod has a sidecar proxy (like Envoy) injected. These proxies handle internal traffic and apply the canary or custom routing rules.
+When you apply canary deployments within your cluster, the traffic routing (e.g., weighted routing for different versions) works because every pod has a sidecar proxy (like Envoy) injected. 
+These proxies handle internal traffic and apply the canary or custom routing rules.
 
-However, when external clients send requests to your application, these requests do not pass through the internal proxy containers by default. Instead, they come directly to the application, bypassing Istio’s traffic management features like canary deployments. 
+However, when external clients send requests to your application, these requests do not pass through the internal proxy containers by default. 
+  Instead, they come directly to the application, bypassing Istio’s traffic management features like canary deployments. 
 
 To ensure that external traffic can leverage Istio’s capabilities, we need an entry point proxy, which is where the **Istio Ingress Gateway** comes into play. The Ingress Gateway acts as the front-facing proxy for all incoming external traffic. It enforces routing, security policies, and other Istio features before the traffic reaches the internal services.
 

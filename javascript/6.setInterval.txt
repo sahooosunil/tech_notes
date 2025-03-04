@@ -1,5 +1,6 @@
 ### **Understanding `setInterval` in JavaScript**
-`setInterval` is a JavaScript function that repeatedly executes a function at a specified time interval. It is part of the **Web APIs** provided by browsers.
+`setInterval` is a JavaScript function that repeatedly executes a function at a specified time interval. 
+It is part of the **Web APIs** provided by browsers.
 
 ### **Syntax**
 ```javascript

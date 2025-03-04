@@ -33,7 +33,8 @@ The **Software Development Lifecycle (SDLC)** is the process of creating softwar
 ---
 
 ### **What is Agile Methodology?**  
-**Agile** is a way of managing software development projects by breaking them into small, manageable parts. It focuses on flexibility, customer feedback, and rapid delivery. The idea is to build the software step by step and make changes as needed rather than delivering everything at once.  
+**Agile** is a way of managing software development projects by breaking them into small, manageable parts. 
+It focuses on flexibility, customer feedback, and rapid delivery. The idea is to build the software step by step and make changes as needed rather than delivering everything at once.  
 
 **Key Principles of Agile:**  
 - **Customer Collaboration:** Constant feedback from the customer to make sure the product meets their needs.  

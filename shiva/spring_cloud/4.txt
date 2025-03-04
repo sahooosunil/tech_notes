@@ -2,7 +2,9 @@
 
 #### What is an API Gateway?
 
-An **API Gateway** is a crucial component in microservices architecture, acting as a single entry point for all client requests to the backend services. It handles various tasks such as routing requests, load balancing, authentication, authorization, and more. Here’s a detailed breakdown of its functions:
+An **API Gateway** is a crucial component in microservices architecture, acting as a single entry point for all client requests to the backend services.
+It handles various tasks such as routing requests, load balancing, authentication, authorization, and more. 
+Here’s a detailed breakdown of its functions:
 
 1. **Single Entry Point:**
    - The API Gateway serves as a single access point for clients, simplifying the client’s interaction with multiple microservices.
@@ -29,7 +31,8 @@ An **API Gateway** is a crucial component in microservices architecture, acting 
 
 #### Spring Cloud Gateway
 
-**Spring Cloud Gateway** is a project within the Spring ecosystem that provides a simple, yet powerful way to route requests and handle cross-cutting concerns such as security and monitoring. It is built on Spring 5, Spring Boot 2, and Project Reactor, providing support for reactive programming.
+**Spring Cloud Gateway** is a project within the Spring ecosystem that provides a simple, 
+yet powerful way to route requests and handle cross-cutting concerns such as security and monitoring. It is built on Spring 5, Spring Boot 2, and Project Reactor, providing support for reactive programming.
 
 Key Features:
 - **Route Definition:** You can define routes in a simple, declarative way.
@@ -47,13 +50,15 @@ A **Configuration Server** is a central place to manage external properties for 
 #### Why is it Required?
 
 1. **Centralized Configuration Management:**
-   - In a microservices architecture, each service might have multiple instances running across various environments (development, QA, production). Managing configuration files separately for each instance can become a logistical nightmare.
+   - In a microservices architecture, each service might have multiple instances running across various environments (development, QA, production). 
+   Managing configuration files separately for each instance can become a logistical nightmare.
 
 2. **Dynamic Updates:**
    - The Config Server allows services to fetch and apply configuration changes dynamically without needing to restart.
 
 3. **Environment-Specific Configurations:**
-   - You can maintain different configurations for different environments (e.g., dev, QA, prod) in one place, ensuring consistency and reducing errors.
+   - You can maintain different configurations for different environments (e.g., dev, QA, prod) in one place, 
+   ensuring consistency and reducing errors.
 
 #### How it Works:
 
@@ -70,7 +75,8 @@ A **Configuration Server** is a central place to manage external properties for 
    - Each service specifies its profile, and the Config Server delivers the corresponding configuration.
 
 4. **Spring Cloud Config Server:**
-   - **Spring Cloud Config Server** is a tool in the Spring ecosystem for managing external properties for applications. It supports several backend repositories like Git, SVN, or even local files.
+   - **Spring Cloud Config Server** is a tool in the Spring ecosystem for managing external properties for applications. 
+   It supports several backend repositories like Git, SVN, or even local files.
    - Developers can push configuration changes to the Git repository, and the Config Server automatically picks up the changes.
 
 5. **Config Client:**

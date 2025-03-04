@@ -11,16 +11,20 @@ Distributed computing often brings unexpected challenges, as highlighted by L. P
 - Transport cost is zero.
 - The network is homogeneous.
 
-When building applications with multiple microservices, it's crucial to ensure that the system remains functional even if one service fails. A failure could be due to various reasons like network issues, system errors, or bugs. While one service's failure might cause some degradation, the rest of the application should continue to operate normally.
+When building applications with multiple microservices, it's crucial to ensure that the system remains functional even if one service fails. 
+A failure could be due to various reasons like network issues, system errors, or bugs. While one service's failure might cause some degradation, 
+the rest of the application should continue to operate normally.
 
-One powerful feature of Istio that helps with this is **Fault Injection**. Fault Injection allows you to test how your application behaves under failure conditions. You can simulate scenarios such as:
+One powerful feature of Istio that helps with this is **Fault Injection**. Fault Injection allows you to test how your application behaves under failure conditions. 
+You can simulate scenarios such as:
 
 - **Service Outages**: Make a service entirely unavailable.
 - **Delayed Responses**: Simulate response delays to mimic network latency.
 - **Error Responses**: Return specific HTTP error codes like 500.
 - **Controlled Latency**: Configure how long a service should take to respond.
 
-These faults can be triggered based on specific criteria, such as matching a particular header. This targeted approach allows you to test how your application handles failures in a controlled manner.
+These faults can be triggered based on specific criteria, such as matching a particular header. 
+This targeted approach allows you to test how your application handles failures in a controlled manner.
 
 ### Example Configuration
 
@@ -72,7 +76,8 @@ spec:
 
 ### Chaos Engineering with Chaos Monkey
 
-**Chaos Engineering** is the practice of introducing random failures into a system to identify and fix weaknesses. A popular tool for this is **Chaos Monkey**, developed by Netflix. Chaos Monkey randomly disables parts of a system to ensure that it can tolerate failures and recover gracefully.
+**Chaos Engineering** is the practice of introducing random failures into a system to identify and fix weaknesses. 
+A popular tool for this is **Chaos Monkey**, developed by Netflix. Chaos Monkey randomly disables parts of a system to ensure that it can tolerate failures and recover gracefully.
 
 **Key Concepts of Chaos Engineering:**
 

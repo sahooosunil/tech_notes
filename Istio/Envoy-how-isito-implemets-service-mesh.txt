@@ -11,7 +11,8 @@ Envoy is a powerful tool used in Istio as part of its service mesh. It's a separ
    - Working with Envoy can be complex and requires a deep understanding of its configurations. This complexity can lead to a steep learning curve and significant time investment.
 
 3. **Kubernetes Integration with Istio:**
-   - Istio is designed to work seamlessly with Kubernetes. It understands Kubernetes concepts, and you can use familiar Kubernetes commands to manage Istio. This makes it easier for those already familiar with Kubernetes.
+   - Istio is designed to work seamlessly with Kubernetes. It understands Kubernetes concepts, and you can use familiar Kubernetes commands to manage Istio. 
+   This makes it easier for those already familiar with Kubernetes.
 
 4. **Abstraction Layer:**
    - Istio acts as an abstraction layer over Envoy. It simplifies the process by hiding the low-level details of Envoy, allowing you to focus on high-level configurations without dealing with the complexities of Envoy directly.

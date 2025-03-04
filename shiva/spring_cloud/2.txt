@@ -4,26 +4,31 @@ Microservices architecture introduces several challenges, especially compared to
 
 1. **Communication Overhead:**
    - In a monolithic application, one module can directly call another using internal method calls, which are fast and efficient.
-   - In microservices, communication happens over a network using remote calls (HTTP, gRPC, etc.). These are slower and can impact performance due to network latency and overhead.
+   - In microservices, communication happens over a network using remote calls (HTTP, gRPC, etc.). 
+   These are slower and can impact performance due to network latency and overhead.
 
 2. **Service Discovery and Dynamic Instances:**
-   - In microservices, the number of instances of a service can change dynamically (scaling up or down). For example, if Service S1 needs to call Service S2, and there are 10 instances of S2 running, S1 needs a mechanism to discover which instance to call.
+   - In microservices, the number of instances of a service can change dynamically (scaling up or down). 
+   For example, if Service S1 needs to call Service S2, and there are 10 instances of S2 running, S1 needs a mechanism to discover which instance to call.
    - This is where a **Discovery Server** (like Eureka, Consul, or Zookeeper) comes into play.
 
 ### Discovery Server
 
 - **Service Registry:**
-  - The discovery server maintains a registry of all services and their instances, typically stored as a map-like structure: `Map<ServiceName, List<Instances>>`.
+  - The discovery server maintains a registry of all services and their instances, 
+  typically stored as a map-like structure: `Map<ServiceName, List<Instances>>`.
   
 - **Service Registration:**
   - Each service instance registers itself with the discovery server when it starts, by making a POST call.
   
 - **Service Discovery:**
   - When Service S1 needs to call Service S2, it first makes a GET call to the discovery server to retrieve the list of available S2 instances.
-  - S1 then uses an algorithm (like round-robin or response time-based selection) to choose an instance and make the call. This process is known as **client-side load balancing**.
+  - S1 then uses an algorithm (like round-robin or response time-based selection) to choose an instance and make the call. 
+  This process is known as **client-side load balancing**.
 
 - **Instance Synchronization:**
-  - Each service instance runs a background thread that periodically fetches the registry from the discovery server and caches it locally (default interval is usually 30 seconds). This reduces the number of network calls when making inter-service communication, as S1 can use the cached list for future requests.
+  - Each service instance runs a background thread that periodically fetches the registry from the discovery server and caches it locally (default interval is usually 30 seconds). 
+  This reduces the number of network calls when making inter-service communication, as S1 can use the cached list for future requests.
 
 ### Handling Service Failures
 

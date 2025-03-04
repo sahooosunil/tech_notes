@@ -1,0 +1,230 @@
+To handle errors globally in React functional components, you can make use of **Error Boundaries** and **React Context** to catch and manage errors across the application. React's error boundary mechanism, however, is not directly available in functional components, but you can create a higher-order component (HOC) or a custom hook to handle it.
+
+Here’s a step-by-step approach to handling errors globally in React functional components:
+
+### 1. **Using Error Boundaries with Class Components**
+Error Boundaries are usually implemented using class components in React. They catch JavaScript errors anywhere in their child component tree, log those errors, and display a fallback UI instead of crashing the component tree.
+
+First, create an **ErrorBoundary** class component:
+
+```javascript
+import React, { Component } from "react";
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, errorInfo: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // Log the error to an error reporting service
+    console.error("Error occurred:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div>
+          <h1>Something went wrong.</h1>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+```
+
+Then, wrap your components with the **ErrorBoundary** component to catch errors:
+
+```javascript
+import React from "react";
+import ErrorBoundary from "./ErrorBoundary";  // Import your ErrorBoundary
+
+const MyComponent = () => {
+  // Some code that might throw an error
+  throw new Error("An error occurred");
+  return <div>Hello, World!</div>;
+};
+
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <MyComponent />
+    </ErrorBoundary>
+  );
+};
+
+export default App;
+```
+
+### 2. **Using Error Boundaries in Functional Components**
+Since error boundaries are class-based components, you can wrap your functional components in them for error handling. If you need error handling at a global level, you can wrap the entire app in the error boundary.
+
+### 3. **Custom Hook for Error Handling**
+In functional components, you can create a custom hook for error handling using `try-catch` blocks and React state to manage errors within components.
+
+Example:
+
+```javascript
+import { useState, useEffect } from "react";
+
+function useErrorHandler(fn) {
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    try {
+      fn(); // Call the function that may throw an error
+    } catch (err) {
+      setError(err); // Set the error if it occurs
+    }
+  }, [fn]);
+
+  return error;
+}
+```
+
+You can use this hook inside your functional components to handle errors:
+
+```javascript
+const MyComponent = () => {
+  const error = useErrorHandler(() => {
+    // Some code that might throw an error
+    throw new Error("An error occurred in MyComponent");
+  });
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return <div>MyComponent content here!</div>;
+};
+```
+
+### 4. **Using React Context for Global Error State**
+For global error handling, you can create a React Context to share the error state across the app.
+
+#### Creating a Context for Global Error State:
+
+```javascript
+import React, { createContext, useState, useContext } from "react";
+
+// Create a Context to manage global error state
+const ErrorContext = createContext();
+
+export const useErrorContext = () => useContext(ErrorContext);
+
+export const ErrorProvider = ({ children }) => {
+  const [error, setError] = useState(null);
+
+  const setGlobalError = (error) => {
+    setError(error);
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  return (
+    <ErrorContext.Provider value={{ error, setGlobalError, clearError }}>
+      {children}
+    </ErrorContext.Provider>
+  );
+};
+```
+
+#### Wrapping your App with the ErrorProvider:
+
+```javascript
+import React from "react";
+import { ErrorProvider } from "./ErrorContext";
+import MyComponent from "./MyComponent";
+
+const App = () => {
+  return (
+    <ErrorProvider>
+      <MyComponent />
+    </ErrorProvider>
+  );
+};
+
+export default App;
+```
+
+#### Using Error Context in a Component:
+
+```javascript
+import React, { useEffect } from "react";
+import { useErrorContext } from "./ErrorContext";
+
+const MyComponent = () => {
+  const { setGlobalError } = useErrorContext();
+
+  useEffect(() => {
+    try {
+      // Code that might throw an error
+      throw new Error("Something went wrong in MyComponent");
+    } catch (error) {
+      setGlobalError(error); // Set global error
+    }
+  }, [setGlobalError]);
+
+  return <div>MyComponent content here!</div>;
+};
+
+export default MyComponent;
+```
+
+#### Displaying the Error Globally:
+
+You can display the error globally by creating an `ErrorMessage` component that listens to the context:
+
+```javascript
+import React from "react";
+import { useErrorContext } from "./ErrorContext";
+
+const ErrorMessage = () => {
+  const { error, clearError } = useErrorContext();
+
+  if (!error) return null;
+
+  return (
+    <div>
+      <h1>Error: {error.message}</h1>
+      <button onClick={clearError}>Clear Error</button>
+    </div>
+  );
+};
+
+export default ErrorMessage;
+```
+
+Now you can include the `ErrorMessage` component in your app to globally handle and display errors.
+
+```javascript
+import React from "react";
+import ErrorMessage from "./ErrorMessage";
+import MyComponent from "./MyComponent";
+
+const App = () => {
+  return (
+    <div>
+      <ErrorMessage />
+      <MyComponent />
+    </div>
+  );
+};
+
+export default App;
+```
+
+### Conclusion:
+- Use **Error Boundaries** (class components) to catch and handle errors at a component level.
+- Use **React Context** to provide a global error state and manage error handling across the app.
+- Combine both methods to provide a full error-handling strategy for your React app.

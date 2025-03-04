@@ -18,3 +18,108 @@ ACID is a set of properties that ensure reliable processing of database transact
    - **Example:** After booking a ticket, the reservation remains even if the server crashes immediately after confirmation.  
 
 Would you like examples of how ACID properties are implemented in SQL databases like MySQL or PostgreSQL?
+-------------------------------------------------------------------------------------------------
+In Spring, ACID (Atomicity, Consistency, Isolation, Durability) properties are handled by **Spring Transactions**, which allow developers to manage transactions in a declarative manner using the `@Transactional` annotation. This annotation is a key feature of Spring's transaction management framework.
+
+Here's how each of the ACID properties is managed in Spring transactions, along with an example.
+
+### 1. **Atomicity**: 
+Atomicity ensures that a series of operations within a transaction are either **fully completed** or **not executed at all** (i.e., rolled back). In Spring, the `@Transactional` annotation ensures atomicity by rolling back all changes to the database in case of a failure.
+
+- **Example**: If you perform multiple database operations within a single method annotated with `@Transactional` and one of the operations fails, Spring will automatically roll back all operations within that transaction to maintain atomicity.
+
+### 2. **Consistency**: 
+Consistency ensures that a transaction brings the database from one valid state to another, adhering to the defined rules (e.g., constraints, triggers, etc.). In Spring, consistency is handled implicitly by the underlying transaction management system (like JDBC, JPA, etc.).
+
+- **Example**: If an operation violates any database constraints (like a foreign key constraint or a unique constraint), the transaction will be rolled back, ensuring the database remains in a consistent state.
+
+### 3. **Isolation**: 
+Isolation ensures that transactions are executed in such a way that one transaction's operations do not interfere with other concurrent transactions. Spring provides different isolation levels for controlling how transactions interact.
+
+- **Isolation levels** in Spring are:
+  - `DEFAULT`: The default isolation level provided by the underlying database.
+  - `READ_UNCOMMITTED`: Allows transactions to read uncommitted data.
+  - `READ_COMMITTED`: Guarantees that no dirty reads will occur (only committed data is read).
+  - `REPEATABLE_READ`: Prevents non-repeatable reads by ensuring that data cannot be modified between reads within a transaction.
+  - `SERIALIZABLE`: The highest level of isolation, preventing any other transaction from accessing the data until the current transaction is complete.
+
+  You can specify the isolation level using the `@Transactional` annotation.
+
+- **Example**:
+    ```java
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void updateAccountBalance(Long accountId, BigDecimal amount) {
+        // Perform updates to the account balance
+    }
+    ```
+
+### 4. **Durability**: 
+Durability ensures that once a transaction has been committed, the changes are permanent, even in the case of system failures. Spring relies on the underlying transaction manager (like JDBC, JPA, etc.) to guarantee durability.
+
+### Spring Transaction Example with ACID Properties
+
+Let’s go through a basic example of how Spring handles ACID properties using `@Transactional`:
+
+```java
+@Service
+public class BankService {
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Transactional
+    public void transferMoney(Long fromAccountId, Long toAccountId, BigDecimal amount) {
+        // Fetch accounts
+        Account fromAccount = accountRepository.findById(fromAccountId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid account ID"));
+
+        Account toAccount = accountRepository.findById(toAccountId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid account ID"));
+
+        // Check if the sender has enough balance
+        if (fromAccount.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException("Not enough funds");
+        }
+
+        // Debit from sender
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
+        accountRepository.save(fromAccount);
+
+        // Credit to receiver
+        toAccount.setBalance(toAccount.getBalance().add(amount));
+        accountRepository.save(toAccount);
+
+        // Note: If any exception occurs during the transaction, the changes will be rolled back
+    }
+}
+```
+
+### Key Points in the Example:
+1. **@Transactional**: The method is annotated with `@Transactional`, meaning that the entire method is wrapped in a single transaction. 
+   - If any exception is thrown (e.g., `InsufficientFundsException`), Spring will automatically roll back the transaction, ensuring **atomicity** and **consistency**.
+2. **Atomicity**: If the `fromAccount` is updated successfully but the `toAccount` fails (due to some exception), Spring will roll back the entire transaction, ensuring that no partial updates happen.
+3. **Consistency**: If the database has constraints (e.g., non-negative balance), any violation would cause an exception, rolling back the transaction to keep the database consistent.
+4. **Isolation**: By default, this transaction operates under the default isolation level of the underlying database (typically `READ_COMMITTED` for most databases).
+5. **Durability**: Once the transaction is successfully committed (no exceptions are thrown), the changes to the `fromAccount` and `toAccount` will be permanent and stored in the database.
+
+### Rolling Back Transactions
+Spring will automatically roll back a transaction if:
+- An unchecked exception (subclass of `RuntimeException`) is thrown.
+- The transaction is marked for rollback by explicitly calling `TransactionAspectSupport.currentTransactionStatus().setRollbackOnly()`.
+
+You can specify rollback rules explicitly, for example:
+```java
+@Transactional(rollbackFor = Exception.class)
+public void someMethod() throws Exception {
+    // Transaction will roll back for any Exception
+}
+```
+
+### Summary
+In Spring, ACID properties are handled by the `@Transactional` annotation, which provides:
+- **Atomicity** by rolling back changes if an exception occurs.
+- **Consistency** through the underlying database constraints.
+- **Isolation** by controlling how transactions interact with each other using different isolation levels.
+- **Durability** is managed by the underlying transaction system (JDBC, JPA, etc.), ensuring committed data is persistent.
+
+The `@Transactional` annotation simplifies handling these properties and ensures reliable and predictable transaction management in enterprise applications.

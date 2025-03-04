@@ -1,8 +1,12 @@
 ### Spring Cloud Config Server
 
-Imagine your application consists of 10 microservices, each with three different environments: `dev`, `qa`, and `prod`. Managing separate configuration files (YAML) for each service and environment can quickly become a tedious task. Additionally, if you need to change a configuration, rebuilding, repackaging, and redeploying the entire application is time-consuming and inefficient.
+Imagine your application consists of 10 microservices, each with three different environments: `dev`, `qa`, and `prod`. 
+Managing separate configuration files (YAML) for each service and environment can quickly become a tedious task. 
+Additionally, if you need to change a configuration, rebuilding, repackaging, and redeploying the entire application is time-consuming and inefficient.
 
-Spring Cloud Config Server simplifies this by centralizing the management of configuration files. It allows your microservices to fetch their configuration from a centralized source, such as Git, SVN, a database, or a vault, at runtime. This eliminates the need for manual updates and redeployments, making the configuration management process seamless and dynamic.
+Spring Cloud Config Server simplifies this by centralizing the management of configuration files. 
+It allows your microservices to fetch their configuration from a centralized source, such as Git, SVN, a database, or a vault, at runtime. 
+This eliminates the need for manual updates and redeployments, making the configuration management process seamless and dynamic.
 
 ### How It Works:
 - **Centralized Configuration**: Configurations are stored in a central repository (Git, SVN, database, or vault).
@@ -74,7 +78,8 @@ To configure a microservice to fetch its configuration from a Spring Cloud Confi
    ```
 
 2. **Configure `bootstrap.yml`**:
-   Create a `bootstrap.yml` file in your microservice's `src/main/resources` directory. This file is used to configure the Config Server URL and other related properties.
+   Create a `bootstrap.yml` file in your microservice's `src/main/resources` directory. 
+   This file is used to configure the Config Server URL and other related properties.
 
    ```yaml
    spring:

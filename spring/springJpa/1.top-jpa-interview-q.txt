@@ -304,7 +304,8 @@ spring.jpa.properties.hibernate.default_batch_fetch_size=10
 
 -------------------------------------------------------
 ### **What is SQL Injection?**
-**SQL Injection** is a security vulnerability where an attacker manipulates SQL queries by injecting **malicious SQL code** into user input fields. This can allow unauthorized access to **modify, delete, or steal** sensitive data from a database.
+**SQL Injection** is a security vulnerability where an attacker manipulates SQL queries by injecting **malicious SQL code** into user input fields. 
+This can allow unauthorized access to **modify, delete, or steal** sensitive data from a database.
 
 ### **Example of SQL Injection**
 #### ❌ **Vulnerable Code (Bad Practice)**

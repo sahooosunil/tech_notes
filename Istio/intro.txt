@@ -10,7 +10,8 @@ It works like a traffic manager, ensuring that messages between these parts are 
 
 ### Why is a Service Mesh Needed?
 
-In apps made of many small services, these services need to constantly communicate. Managing this communication can get tricky because:
+In apps made of many small services, these services need to constantly communicate.
+ Managing this communication can get tricky because:
 
 - **Traffic management:** We need to decide the best way for services to talk to each other.
 - **Security concerns:** We must ensure all communications are safe from hackers.
@@ -20,7 +21,8 @@ A service mesh makes all these tasks easier by handling them automatically.
 
 ### What is Istio?
 
-**Istio** is a special tool (service mesh) that helps manage communication between different services in an app. It acts like a middleman, ensuring smooth, safe, and efficient interactions.
+**Istio** is a special tool (service mesh) that helps manage communication between different services in an app. 
+It acts like a middleman, ensuring smooth, safe, and efficient interactions.
 
 ### Why Was Istio Created?
 

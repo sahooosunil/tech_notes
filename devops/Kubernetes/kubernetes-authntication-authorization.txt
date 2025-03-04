@@ -1,11 +1,13 @@
 ## **Kubernetes Authentication and Authorization Explained**  
 
-Kubernetes provides a **flexible security model** to control **who can access** the cluster and **what actions** they can perform. It has multiple **authentication** and **authorization** mechanisms.  
+Kubernetes provides a **flexible security model** to control **who can access** the cluster and **what actions** they can perform. 
+It has multiple **authentication** and **authorization** mechanisms.  
 
 ---
 
 # **1️⃣ Authentication in Kubernetes**  
-Kubernetes does **not** handle user authentication directly (it does not store user accounts or passwords). Instead, it delegates authentication to **external identity providers**.  
+Kubernetes does **not** handle user authentication directly (it does not store user accounts or passwords). 
+Instead, it delegates authentication to **external identity providers**.  
 
 🔹 **How Kubernetes Identifies Users?**  
 - **Service Accounts** (Managed inside Kubernetes)  

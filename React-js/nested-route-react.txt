@@ -1,4 +1,5 @@
-Certainly! Here’s an example of a **parent component** with a `/parent` route that contains multiple child routes, using **React Router v6**. The parent route will use the `<Outlet>` to render different child components based on the URL.
+Certainly! Here’s an example of a **parent component** with a `/parent` route that contains multiple child routes, 
+using **React Router v6**. The parent route will use the `<Outlet>` to render different child components based on the URL.
 
 ### Steps:
 1. Install React Router if you haven't already:

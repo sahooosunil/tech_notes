@@ -1,0 +1,195 @@
+When using Jenkins and ArgoCD in a CI/CD pipeline, where the image tags are based on build numbers, you can still implement a Blue-Green deployment strategy by managing the tags through your deployment configuration and ensuring that the traffic shifting (percentage of Blue vs. Green) is manual.
+
+Here’s a step-by-step process to implement this using Jenkins, ArgoCD, and Istio:
+
+### 1. **Image Tagging in Jenkins**
+Assume that Jenkins assigns a build number to the image tags (e.g., `my-app:build-123`, `my-app:build-124`, etc.). You’ll have two versions of your application:
+- The **Blue** version, which represents the old version of the application.
+- The **Green** version, which represents the newly built version.
+
+### 2. **Jenkins Pipeline for Deployment**
+In your Jenkins pipeline, after the build process, you’ll need to update your Kubernetes manifests to reflect the new image tag for the `green` version. This can be done dynamically during the pipeline execution.
+
+Here's an example of what this could look like in the pipeline:
+
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_TAG = "my-app:build-${BUILD_NUMBER}"
+        BLUE_DEPLOYMENT = "my-app-blue"
+        GREEN_DEPLOYMENT = "my-app-green"
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Build your docker image
+                    sh "docker build -t ${IMAGE_TAG} ."
+                    sh "docker push ${IMAGE_TAG}"
+                }
+            }
+        }
+        stage('Update Deployment Manifests') {
+            steps {
+                script {
+                    // Update the deployment manifests with the new image tag
+                    sh """
+                    sed -i 's|image: my-app:.*|image: ${IMAGE_TAG}|g' k8s/deployment-green.yaml
+                    kubectl apply -f k8s/deployment-green.yaml
+                    """
+                }
+            }
+        }
+        stage('Sync with ArgoCD') {
+            steps {
+                script {
+                    // Trigger ArgoCD to deploy the green version by syncing the updated manifest
+                    sh """
+                    argocd app sync my-app --revision ${BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+    }
+}
+```
+
+### 3. **Kubernetes Manifests (Blue/Green)**
+
+For each version (Blue and Green), the Kubernetes deployment manifest will be configured like this:
+
+- **Blue Version (`blue.yaml`)**: This is the currently deployed version (running in production).
+- **Green Version (`green.yaml`)**: This is the new version of the app that will be deployed once the pipeline is triggered.
+
+In the `green.yaml` file, the `image` will be updated with the new Jenkins build number.
+
+Example `green.yaml` for the green deployment:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: green
+    spec:
+      containers:
+        - name: my-app
+          image: my-app:build-123  # This will be replaced with the latest build number dynamically
+          ports:
+            - containerPort: 8080
+```
+
+### 4. **ArgoCD Sync (Manual Traffic Switching)**
+
+After Jenkins updates the `green.yaml` file and triggers ArgoCD, ArgoCD will sync the new version (green) into your cluster. However, **traffic switching** will still be handled manually through Istio’s traffic management (as per your request).
+
+1. **VirtualService Configuration**: As mentioned earlier, you'll have a VirtualService in Istio to control the traffic routing. Initially, all traffic is directed to the **blue** version.
+
+   Example `VirtualService` (for both blue and green):
+
+   ```yaml
+   apiVersion: networking.istio.io/v1alpha3
+   kind: VirtualService
+   metadata:
+     name: my-app
+   spec:
+     hosts:
+       - "my-app.example.com"
+     gateways:
+       - my-app-gateway
+     http:
+       - match:
+           - uri:
+               exact: "/"
+         route:
+           - destination:
+               host: my-app
+               subset: blue  # Initially set to blue
+             weight: 100
+   ```
+
+2. **Manual Traffic Shifting**: After the `green.yaml` is deployed and verified, you can manually update the `VirtualService` configuration in Istio to shift the traffic percentage from **blue** to **green**. For example:
+
+   - **50% Traffic to Green** (as you mentioned manual):
+     ```yaml
+     apiVersion: networking.istio.io/v1alpha3
+     kind: VirtualService
+     metadata:
+       name: my-app
+     spec:
+       hosts:
+         - "my-app.example.com"
+       gateways:
+         - my-app-gateway
+       http:
+         - match:
+             - uri:
+                 exact: "/"
+           route:
+             - destination:
+                 host: my-app
+                 subset: blue
+               weight: 50
+             - destination:
+                 host: my-app
+                 subset: green
+               weight: 50
+     ```
+
+   - **100% Traffic to Green** (final switch):
+     ```yaml
+     apiVersion: networking.istio.io/v1alpha3
+     kind: VirtualService
+     metadata:
+       name: my-app
+     spec:
+       hosts:
+         - "my-app.example.com"
+       gateways:
+         - my-app-gateway
+       http:
+         - match:
+             - uri:
+                 exact: "/"
+           route:
+             - destination:
+                 host: my-app
+                 subset: green
+               weight: 100
+     ```
+
+### 5. **Manual Traffic Shifting in ArgoCD (Optional)**
+If you want to manage this through ArgoCD, you can store the VirtualService and DestinationRule definitions as part of your GitOps repository. Once the Green deployment is verified, you can either manually modify the `VirtualService` or use ArgoCD to apply changes.
+
+In your Git repository:
+- Store the `VirtualService` and `DestinationRule` YAMLs.
+- Modify the weights in the `VirtualService` for manual traffic switching.
+
+### 6. **Rollback Strategy**
+If something goes wrong with the green version, you can quickly rollback by:
+- Changing the `VirtualService` to route traffic back to the **blue** version.
+- Use ArgoCD to roll back the deployment by syncing the previous revision.
+
+---
+
+### Summary
+1. **Jenkins** builds the application and tags the image with the build number.
+2. **Jenkins** updates the Kubernetes manifests (e.g., `green.yaml`) with the new image tag and triggers ArgoCD to deploy the new version.
+3. **ArgoCD** syncs the deployment.
+4. **Istio**'s VirtualService manages traffic routing.
+5. Traffic shifting (Blue to Green) is done **manually** by adjusting the weight percentages in the Istio `VirtualService`.
+
+By following this method, you can achieve Blue-Green deployments with manual control over the traffic shifting and have the flexibility to roll back or gradually release traffic to the new version.

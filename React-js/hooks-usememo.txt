@@ -66,10 +66,12 @@ export default ExpensiveFactorial;
 
 ### **Explanation**:
 
-1. **`calculateFactorial` Function**: This function calculates the factorial of a number `n` by multiplying all integers from 1 to `n`. This calculation can be expensive for larger numbers.
+1. **`calculateFactorial` Function**: This function calculates the factorial of a number `n` by multiplying all integers from 1 to `n`. 
+This calculation can be expensive for larger numbers.
    
 2. **`useMemo` Hook**:
-   - **`useMemo(() => calculateFactorial(number), [number])`**: The factorial calculation is wrapped in `useMemo`. This ensures that the factorial is recalculated **only when the `number` changes**. If `number` remains the same between renders, React will return the previously memoized value, skipping the recalculation.
+   - **`useMemo(() => calculateFactorial(number), [number])`**: The factorial calculation is wrapped in `useMemo`. 
+   This ensures that the factorial is recalculated **only when the `number` changes**. If `number` remains the same between renders, React will return the previously memoized value, skipping the recalculation.
 
 3. **Input Change Handler**: The input field allows the user to change the number. When the value changes, the `setNumber` function updates the state and triggers a re-render. However, the factorial calculation will only be recalculated if `number` has changed.
 

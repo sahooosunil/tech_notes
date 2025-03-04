@@ -1,0 +1,197 @@
+In the context of **Amazon EKS (Elastic Kubernetes Service)**, both **LoadBalancer Service** and **Ingress** provide ways to expose applications externally, but they serve different purposes and have distinct benefits.  
+
+### **1. LoadBalancer Service vs. Ingress in EKS**
+| Feature | **LoadBalancer Service** | **Ingress** |
+|---------|-------------------------|------------|
+| **Type** | Layer 4 (TCP/UDP) | Layer 7 (HTTP/HTTPS) |
+| **Implementation** | Creates an AWS **Elastic Load Balancer (ELB)** (either ALB or NLB) for each service | Uses an Ingress controller (e.g., AWS ALB Ingress Controller or NGINX) to route traffic |
+| **Cost** | Expensive (each service gets a separate AWS ELB) | More cost-effective (one ALB/NLB for multiple services) |
+| **Routing** | Directly maps external traffic to a single Kubernetes service | Can route traffic based on hostname, path, or other HTTP rules |
+| **TLS Termination** | Can terminate SSL, but needs setup per service | Centralized SSL/TLS termination with ACM integration |
+| **Advanced Features** | Simple, basic routing | Supports URL-based routing, authentication, WAF integration, and more |
+
+---
+
+### **2. Why Use Ingress When LoadBalancer Service Exists?**
+✅ **Cost Optimization:**  
+   - Each LoadBalancer Service creates a separate AWS **ELB**, which can be expensive.  
+   - Ingress allows multiple applications to share a single ALB/NLB, reducing costs.  
+
+✅ **Path-Based Routing:**  
+   - LoadBalancer Service cannot route traffic based on **URL paths** (e.g., `/api/v1`, `/web`).  
+   - Ingress can route different paths to different backend services (e.g., `example.com/api → service A`, `example.com/web → service B`).  
+
+✅ **Host-Based Routing (Virtual Hosts):**  
+   - Ingress allows traffic routing based on **hostnames** (e.g., `api.example.com → API service`, `web.example.com → UI service`).  
+   - LoadBalancer Service doesn’t support this directly.  
+
+✅ **TLS Termination & Security:**  
+   - Ingress supports **centralized SSL/TLS termination** via AWS ACM (AWS Certificate Manager).  
+   - Using separate LoadBalancer Services means you need to configure TLS for each service separately.  
+
+✅ **Integration with AWS ALB & WAF:**  
+   - AWS ALB Ingress Controller can integrate with **AWS Web Application Firewall (WAF)** for security policies.  
+   - LoadBalancer Service lacks deep HTTP-layer security controls.  
+
+---
+
+### **3. When to Use LoadBalancer Service vs. Ingress?**
+- **Use LoadBalancer Service** if:
+  - You need Layer 4 (TCP/UDP) traffic (e.g., databases, gRPC, non-HTTP apps).
+  - Each service requires a dedicated external IP.
+  - You’re using AWS NLB (for lower latency and direct pod routing).
+
+- **Use Ingress** if:
+  - You need Layer 7 (HTTP/HTTPS) routing.
+  - You have multiple services that can share a single ALB.
+  - You want path-based or host-based routing.
+  - You need centralized SSL termination with AWS ACM.
+
+---
+
+### **4. Example Scenario in EKS**
+If you deploy an app with **3 microservices** (`frontend`, `backend`, `auth`), using:
+- **LoadBalancer Service**: You’ll need **3 AWS ELBs**, which can be costly.
+- **Ingress**: You can use **1 ALB** with rules:
+  - `example.com` → `frontend-service`
+  - `example.com/api` → `backend-service`
+  - `example.com/auth` → `auth-service`
+
+---
+
+### **Conclusion**
+While **LoadBalancer Service** directly exposes services, **Ingress** provides **more efficient, cost-effective, and feature-rich** traffic management for HTTP/HTTPS workloads in **EKS**.  
+
+------------------------------------------------------------------------------------------------
+create one ingress serveice of type alb. 
+add below path based routing
+    - xyz.com for front end react js service
+    - xyz.com/api/auth-server for authorization server
+    - xyz.com/api/service1 for microservice 1
+    - xyz.com/api/service2 for microservice 2
+    - xyz.com/api/service3 for microservice 3
+enable jwt authentication at ingress. verify with the issuer is auth-server
+enable tls
+
+Here's an **AWS ALB Ingress configuration** for your **EKS cluster**, implementing:  
+
+✅ **Path-based routing**  
+✅ **JWT authentication (OIDC validation)**  
+✅ **TLS termination** using **AWS Certificate Manager (ACM)**  
+
+---
+
+### **Step 1: Install the AWS ALB Ingress Controller**
+If you haven’t installed the AWS ALB Ingress Controller in your EKS cluster, install it first:
+
+```bash
+kubectl apply -k github.com/aws/eks-charts/stable/aws-load-balancer-controller/crds
+helm repo add eks https://aws.github.io/eks-charts
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  --set clusterName=<YOUR_EKS_CLUSTER_NAME> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller \
+  -n kube-system
+```
+
+---
+
+### **Step 2: Create the Ingress YAML (`alb-ingress.yaml`)**
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alb-ingress
+  namespace: default
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/group.name: my-alb-group
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:123456789012:certificate/your-acm-cert-id
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+    # Enable JWT authentication
+    alb.ingress.kubernetes.io/auth-type: "oidc"
+    alb.ingress.kubernetes.io/auth-idp-oidc: '{"issuer":"https://xyz.com/api/auth-server","authorizationEndpoint":"https://xyz.com/api/auth-server/oauth2/authorize","tokenEndpoint":"https://xyz.com/api/auth-server/oauth2/token","userInfoEndpoint":"https://xyz.com/api/auth-server/oauth2/userinfo"}'
+    alb.ingress.kubernetes.io/auth-scope: "openid"
+    alb.ingress.kubernetes.io/auth-session-cookie: "AWSELBAuthSessionCookie"
+    alb.ingress.kubernetes.io/auth-session-timeout: "3600"
+  
+spec:
+  ingressClassName: alb
+  tls:
+  - hosts:
+      - xyz.com
+    secretName: tls-secret # Optional if using ACM
+  rules:
+  - host: xyz.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 80
+      - path: /api/auth-server
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-server
+            port:
+              number: 80
+      - path: /api/service1
+        pathType: Prefix
+        backend:
+          service:
+            name: service1
+            port:
+              number: 80
+      - path: /api/service2
+        pathType: Prefix
+        backend:
+          service:
+            name: service2
+            port:
+              number: 80
+      - path: /api/service3
+        pathType: Prefix
+        backend:
+          service:
+            name: service3
+            port:
+              number: 80
+```
+
+---
+
+### **Step 3: Apply the Ingress**
+```bash
+kubectl apply -f alb-ingress.yaml
+```
+
+---
+
+### **Step 4: Verify JWT Authentication**
+Try accessing any API endpoint in your browser or using `curl`:
+
+```bash
+curl -X GET "https://xyz.com/api/service1" -H "Authorization: Bearer <your-jwt-token>"
+```
+
+If the token is invalid or missing, ALB will return a **401 Unauthorized** response.
+
+---
+
+### **Summary**
+- This **Ingress ALB** handles routing for multiple services.
+- **JWT authentication** ensures requests are verified by the `auth-server`.
+- **TLS is enabled** using an **ACM certificate**.
+- This setup ensures a **secure, scalable, and cost-effective** ingress strategy for your EKS cluster.
+
+------------------------------------------------------
+how to generate certificate in aws for below?
+
+alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:123456789012:certificate/your-acm-cert-id

@@ -1,6 +1,7 @@
 ### Cascading Failure in Microservices
 
-**Cascading failure** happens when a failure in one part of a system leads to a chain reaction of failures in other parts. In microservices, this can quickly bring down the entire application because microservices are often interdependent.
+**Cascading failure** happens when a failure in one part of a system leads to a chain reaction of failures in other parts.
+In microservices, this can quickly bring down the entire application because microservices are often interdependent.
 
 #### How Cascading Failures Happen:
 
@@ -21,7 +22,8 @@ A common cause of cascading failure is delayed responses without proper timeout 
 ### How to Prevent Cascading Failures
 
 1. **Timeouts**: Always set timeouts for service calls. If a service doesn’t respond within the expected time, the call should fail quickly rather than hang.
-2. **Circuit Breakers**: A circuit breaker pattern stops calling a service if it detects many failures. This gives the failing service time to recover and prevents overwhelming it with more requests.
+2. **Circuit Breakers**: A circuit breaker pattern stops calling a service if it detects many failures. 
+This gives the failing service time to recover and prevents overwhelming it with more requests.
 3. **Fallback Mechanisms**: If a service call fails, have a fallback plan. For example, return cached data or a default response.
 4. **Load Shedding**: Reject some requests if the system is under heavy load to avoid total failure.
 5. **Retries with Backoff**: Retry failed requests but with delays (backoff) between retries to avoid overwhelming the service.
@@ -105,4 +107,5 @@ spec:
 3. **No Code Changes**: You don’t need to integrate or maintain circuit breaker logic in each microservice.
 4. **Automatic Recovery**: Istio handles the logic for opening, closing, and partially opening the circuit based on real-time performance data.
 
-By using Istio, you ensure that every microservice automatically benefits from fault tolerance without manual coding, making your system more resilient and easier to manage.
+By using Istio, you ensure that every microservice automatically benefits from fault tolerance without manual coding, 
+making your system more resilient and easier to manage.

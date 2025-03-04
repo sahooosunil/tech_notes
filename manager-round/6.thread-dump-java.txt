@@ -1,9 +1,10 @@
 ### **What is a Thread Dump in Java?**  
-A **thread dump** is a snapshot of all active threads in a Java application at a given point in time. It helps in analyzing performance issues, deadlocks, high CPU usage, and thread-related problems.
+A **thread dump** is a snapshot of all active threads in a Java application at a given point in time. 
+It helps in analyzing performance issues, deadlocks, high CPU usage, and thread-related problems.
 
 ---
 
-### **Why is a Thread Dump Useful?**
+### **Why is a Thread Dump Useful?**s
 1. **Detecting Deadlocks** – Identifies threads that are waiting indefinitely.  
 2. **High CPU Usage Analysis** – Helps find which threads are consuming excessive CPU.  
 3. **Blocked or Stuck Threads** – Reveals if threads are waiting on a lock.  

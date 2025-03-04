@@ -1,4 +1,5 @@
-OIDC stands for **OpenID Connect**. It's a way to **prove who you are** when you try to access a website or an application. Think of it like showing an ID card to get into a secure building.
+OIDC stands for **OpenID Connect**. It's a way to **prove who you are** when you try to access a website or an application. 
+Think of it like showing an ID card to get into a secure building.
 
 ---
 

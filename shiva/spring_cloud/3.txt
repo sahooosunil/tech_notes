@@ -1,6 +1,7 @@
 ### Bulkhead Design Pattern in Microservices
 
-The **Bulkhead Design Pattern** is inspired by the compartments in a ship, where a breach in one compartment doesn't flood the entire ship. In microservices, this pattern isolates different services or components to prevent a failure in one part from affecting the entire system.
+The **Bulkhead Design Pattern** is inspired by the compartments in a ship, where a breach in one compartment doesn't flood the entire ship. 
+In microservices, this pattern isolates different services or components to prevent a failure in one part from affecting the entire system.
 
 #### Key Concepts:
 
