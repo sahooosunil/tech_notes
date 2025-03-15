@@ -1,0 +1,123 @@
+jinja2
+handlers
+roles
+playbook execution strategies
+---------------------------------------------------------------------------------------------------------------------------------------
+Ansible Jinja2 Templates
+------------------------
+Jinja2 template is a powerful and very popular python module used for creating dynamic contents from an template file. The dynamic contents generated out of the template file can be written into a file or can be used aspart of an program itself.
+    
+Aspart of the programs sometimes we wanted to create configuration files or generate contents with dynamic values, so we can write an program to generate the whole configuration files with dynamic values embedded.
+
+for eg.. we want to create an apache2 site configuration file in an shellscript program to host an static website this can be done using below shellscript program.
+    
+hostSite.sh
+------------
+#!/bin/bash
+serverName=$1
+siteDirectory=$2
+
+function generateSiteConf() {    
+    echo "<VirtualHost> ServerName $serverName DocumentRoot $siteDirectory </VirtualHost>" > /etc/apache2/sites-available/siteDirectory.conf
+}
+
+In the above way of creating configuration files by writing programmatic logic in generating them dynamically has lot of problems:
+1. The programs becomes bulgier with lots of lines of code written, here most of the logic we have written is for generating the configuration file, rather than logic that makes difficult to understand
+2. each time there is a change in the configuration file to be generated, we need to modify the programming logic, it is error prone and difficult to change.
+
+
+
+
+apache site configuration
+
+site.conf.tmpl
+ 
+<VirtualHost *:80>
+  ServerName [SERVERNAME]
+  DocumentRoot /var/www/[SITEDIR]/
+</VirtualHost>
+
+
+ninestarts
+/etc/apache2/sites-available/
+    
+hostSite.sh
+#!/bin/bash
+serverName=$1
+siteDirectory=$2
+
+function generateSiteConf() {
+    cp site.conf.tmp /etc/apache2/sites-available/$siteDirectory.conf
+    sudo sed -i 's/[SERVERNAME]/'$serverName/'g' /etc/apache2/sites-available/$siteDirectory.conf
+    sudo sed -i 's/[SITEDIR]/'$siteDirectory/'g' /etc/apache2/sites-available/$siteDirectory.conf    
+}
+
+
+exchange-server-ssl.conf.tmpl
+<exchange-server>
+    <property name="mail.connection.host">[HOST]</property>
+    <property name="mail.connection.protocol">[PROTOCOL]</property>
+    <property name="mail.connection.port">[PORT]</property>
+    <property name="mail.connection.useSsl">[USE_SSL]</property>
+    if USE_SSL == 'TRUE'
+    THEN
+      <property name="mail.connection.sslPath">[SSL_PATH]</property>
+    FI
+    <property name="mail.connection.username">[USERNAME]</property>
+    <property name="mail.connection.password">[PASSWORD]</property>
+</exchange-server>
+
+jinja2 exchange-server.conf.tmpl placeholders.properties exchange-server.conf
+
+
+placeholders.properties
+HOST=192.168.10.11
+PROTOCOL=SMTP
+
+exchange-server.conf.tmpl
+<exchange-server>
+    <property name="mail.connection.host">[HOST]</property>
+    <property name="mail.connection.protocol">[PROTOCOL]</property>
+    <property name="mail.connection.port">[PORT]</property>
+    <property name="mail.connection.useSsl">false</property>
+    <property name="mail.connection.username">[USERNAME]</property>
+    <property name="mail.connection.password">[PASSWORD]</property>
+</exchange-server>
+
+email.tmpl
+Hi [USER],
+
+Your order has been placed successfully and the orderNo [ORDER_NO]. The estimated delivery date of your order is [EST_DELIVERY_DT].
+below are the items within your order
+     product1        quantity   price_per_unit
+     [PRODUCT_CONTENTS]
+    
+
+we want to generate the configuration files or content dynamically while the programs are executing based on template files
+1. based on conditions
+2. placeholders
+3. loop thru values
+
+jinja2 templates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

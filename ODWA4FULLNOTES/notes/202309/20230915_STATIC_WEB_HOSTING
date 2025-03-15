@@ -1,0 +1,98 @@
+How do we host an static web application?
+Web application is used for distributing/publishing information about a business/entity to the world. In order to publish the information about the organization/entity to the world, first we need write the information describing the business and their services
+
+We can write or document the information about the business and services they offer by writing in an Text files and distribute it to the people around the world. The information we document in the text format will not be effective and may not reach to wider set of audience, because people will not spend huge amount of time in reading/interpreting the information we have written.
+	
+instead if we can document/write the information about the business using fonts, colors, styles, images, audios and videos it reaches quickly to the people and makes an good impact on the customers. 
+	
+How to document the information in an formatted manner so that it reaches to the large group of audience easily?
+That is where HTML language has been introduced.	HTML stands for Hypertext Markup language, markup means something that is build out of tags is called "markup".
+	
+HTML language has defined several pre-defined tags using which we can format the text content with bold, italic, tabular, colors, underlines etc.The information we want to write should be enclosed within these tags provided by HTML Language.
+	
+<b>we offer personal to <i>high-end</i> computing machines to the customers</b>	<p style="color: red;">100% satisfaction guaranteed</p> otherwise money will be refunded.
+	
+when we write the information sourronded with tags, it makes the human/users difficult to interpret and understand rather than text representation. That is where there are specialized software applications are build which are called "Web Browsers". Web Browsers takes this HTML document/files as an input, parses the HTML tags written inside them and renders the text in an formatter manner based on these tags.
+	
+How to write an HTML document?
+every HTML document is nothing but a File written with HTML tags inside it, has fixed structure and should use pre-defined tags in writing the content as below
+
+home.htm(l)
+------------
+<!DOCTYPE HTML>
+<html>
+	<header>
+		<title>Home</title>
+	</header>
+	<body>
+		<h2>Home Page</h2>
+		<p>
+			We are the <b>hardware and computing services provider<b>. We provide hardware services for personal users and corporates as well. 			
+		</p>	
+	</body>
+</html>
+	
+There are 2 types of web applications are there
+1. static web applications
+Incase of static web applications, the application comprises of static resources only like HTML, images, icons, audios, videos etc and doesnt take any input from the enduser and always render the same content as an response when the user interacts.
+				
+Mostly these applications are used for publishing/sharing information about an business organization/entity to the people around the world.
+	
+2. dynamic web applications
+In case of dynamic web applications along with Web/HTML Pages to render the information to the users in formatted manner they are packaged with software programs build using an programming languages (java/.net/php/python etc) that takes enduser data as an input perform operations and returns an dynamic response to the user
+
+Now we are exploring how to host an static web application for an organization
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,166 @@
+If your **EKS pod is consuming high CPU or memory**, follow these **debugging steps** to identify and resolve the issue.
+
+---
+
+## **1️⃣ Check Pod Resource Usage in Real-Time**
+### **(a) Use `kubectl top`**
+Get CPU & memory usage of pods:
+```sh
+kubectl top pod --namespace=<your-namespace>
+```
+Get node-level resource usage:
+```sh
+kubectl top node
+```
+🔹 **Look for pods exceeding resource requests/limits.**  
+🔹 If a pod is **using more than requested** memory, it might be **OOMKilled**.
+
+---
+
+## **2️⃣ Check Pod Events for OOMKill or CPU Throttling**
+### **(a) Check pod status & events**
+```sh
+kubectl describe pod <pod-name> --namespace=<your-namespace>
+```
+🔹 Look for:
+- **"OOMKilled"** → Memory issue.
+- **"CPU throttling"** → CPU issue.
+- **CrashLoopBackOff** → Application restart due to failure.
+
+### **(b) Check logs for application errors**
+```sh
+kubectl logs <pod-name> --namespace=<your-namespace>
+```
+🔹 Look for **Out of Memory (OOM) errors** or **unexpected spikes**.
+
+---
+
+## **3️⃣ Check Container Resource Requests & Limits**
+### **(a) Get pod YAML**
+```sh
+kubectl get pod <pod-name> -o yaml --namespace=<your-namespace>
+```
+Look for:
+```yaml
+resources:
+  requests:
+    cpu: "500m"   # 0.5 vCPU
+    memory: "256Mi"  # 256MB
+  limits:
+    cpu: "1"   # 1 vCPU
+    memory: "512Mi"  # 512MB
+```
+🔹 If CPU **usage exceeds limits**, the pod **gets throttled**.  
+🔹 If memory **exceeds limits**, the pod **gets OOMKilled**.
+
+✅ **Solution:** Increase requests/limits based on actual usage.
+
+---
+
+## **4️⃣ Enable Metrics Server & Use Kubernetes Dashboard**
+### **(a) Install Metrics Server (if not installed)**
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+### **(b) Use Kubernetes Dashboard**
+- Install Kubernetes Dashboard:
+  ```sh
+  kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+  ```
+- Access it:
+  ```sh
+  kubectl proxy
+  ```
+- Open in browser:
+  ```
+  http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+  ```
+🔹 Use it to monitor **CPU/memory usage graphs**.
+
+---
+
+## **5️⃣ Check Node Pressure & Resource Limits**
+### **(a) Check node conditions**
+```sh
+kubectl describe node <node-name>
+```
+🔹 Look for:
+- **MemoryPressure**
+- **DiskPressure**
+- **PIDPressure**
+- **CPUPressure**
+
+### **(b) Check available resources**
+```sh
+kubectl top node
+```
+🔹 If nodes are overloaded, you may need to **scale the node group**.
+
+✅ **Solution:**  
+- Add **more nodes** to distribute load.
+- Upgrade to **larger instance types**.
+
+---
+
+## **6️⃣ Check Horizontal Pod Autoscaler (HPA)**
+If using **HPA**, check if it is **scaling pods properly**:
+```sh
+kubectl get hpa --namespace=<your-namespace>
+```
+🔹 If CPU/memory is high, but pods **aren’t scaling**, check HPA settings.
+
+✅ **Solution:** Tune HPA thresholds or increase `maxReplicas`.
+
+---
+
+## **7️⃣ Profile & Debug Application Performance**
+### **(a) Check process-level resource usage inside a pod**
+```sh
+kubectl exec -it <pod-name> --namespace=<your-namespace> -- top
+```
+🔹 Identify which **process** inside the pod is using **high CPU/memory**.
+
+### **(b) Use `strace` or `perf` inside the container**
+```sh
+kubectl exec -it <pod-name> --namespace=<your-namespace> -- sh
+```
+Run:
+```sh
+strace -c -p <PID>
+```
+or
+```sh
+perf top
+```
+🔹 Identify **system calls** causing high CPU/memory usage.
+
+✅ **Solution:** Optimize app logic, reduce loops, or fix memory leaks.
+
+---
+
+## **8️⃣ Capture Memory Heap Dumps (Java Apps)**
+If using **Java**, generate a heap dump:
+```sh
+kubectl exec -it <pod-name> --namespace=<your-namespace> -- jmap -dump:live,format=b,file=/tmp/dump.hprof <PID>
+```
+Then copy it for analysis:
+```sh
+kubectl cp <pod-name>:/tmp/dump.hprof ./dump.hprof
+```
+🔹 Use **Eclipse MAT** or **VisualVM** to analyze.
+
+✅ **Solution:** Fix memory leaks in application code.
+
+---
+
+## **✅ Summary of Fixes**
+| Issue | Solution |
+|-------|----------|
+| Pod **OOMKilled** | Increase `memory` limit or optimize app memory usage. |
+| Pod **CPU Throttling** | Increase `cpu` limits or optimize app performance. |
+| **High Node Utilization** | Scale nodes or upgrade instance types. |
+| **HPA Not Scaling** | Tune HPA thresholds or increase `maxReplicas`. |
+| **Application Memory Leak** | Capture heap dump & fix leaks. |
+| **High CPU Usage Inside Pod** | Profile with `top`, `strace`, `perf`. |
+
+Would you like a Terraform-based **autoscaler solution** for handling such issues? 🚀

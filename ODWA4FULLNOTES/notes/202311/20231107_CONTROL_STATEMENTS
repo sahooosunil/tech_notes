@@ -1,0 +1,123 @@
+#2. How to write conditional statements on registered variables?
+apache-tomcat = binary
+Let us write an playbook, that downloads the apache tomcat server and setup on the managed node. 
+
+download-tomcat-playbook.yml
+----------------------------
+---
+- name: download tomcat
+  hosts: all
+  tasks:
+    - name: find tomcat directory
+      find:
+        paths: /home/vagrant/
+        patterns: 'apache-tomcat-*'
+        use_regex: true
+        recurse: false
+      register: tomcatstatus
+    - name: download tomcat
+      get_url:
+        url: "{{tomcat_url}}"
+        dest: /home/vagrant/
+        mode: '0755'    
+      when: "{{tomcatstatus.matched | float == 0}}"        
+-------------------------------------------------------------------------------------------------------------------------------------- 2. loop control statements
+--------------------------
+Loop control statements are used for repeatedly executing an ansible task over a fixedset of items or occurrences
+
+2.1 loop over simple list of values
+we want to install bunch of software packages on the managed node, this can be done using loop over list of items as below
+1. tree
+2. curl
+3. net-tools
+4. jdk17
+5. vim
+6. git
+etc
+
+install-packages-playbook.yml
+---
+- name: install project packages
+  hosts: all
+  tasks:
+    - name: install packages
+      apt:
+        name: "{{item}}"
+        update_cache: yes
+        state: present
+      become: yes
+      loop:
+        - tree
+        - curl
+        - net-tools
+        - vim
+        - git
+        - openjdk-17-jdk
+...
+
+2.2 loop over hashes
+we want to create bunch of files on the managed nodes with specific permissions and settings
+~/categories.txt, mode: 0655
+~/kids.txt, mode: 0544
+~/bedtime-stories.txt, mode: 0600    
+    
+newfiles-playbook.yml
+---------------------
+---
+- name: loop through hashes
+  hosts: all
+  tasks: 
+    - name: create files with attributes
+      file:
+        path: "{{item.filepath}}"
+        mode: "{{item.mode}}"
+        owner: "{{item.owner}}"
+        group: "{{item.group}}"
+        state: touch
+      loop:
+        - {filepath: "~/categories/txt", mode: '0644', owner: 'vagrant', group: 'vagrant'}
+        - {filepath: "~/kids.txt", mode: '0544', owner: 'vagrant', group: 'vagrant'}
+        - {filepath: "~/bedtime-stories.txt", mode: '0600', owner: 'vagrant', group: 'vagrant'}
+...
+
+
+4 more types of loops are there
+ansible vault
+ansible roles
+handlers
+jinja2
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          

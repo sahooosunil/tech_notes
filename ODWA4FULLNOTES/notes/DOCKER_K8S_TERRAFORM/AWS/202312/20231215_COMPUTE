@@ -1,0 +1,179 @@
+3. compute domain
+all the computing resources required for running the software applications are provided aspart of the compute domain. There are 5 services are offered aspart of the compute domain
+1. elastic cloud compute (ec2)
+2. elastic loadbalancer
+  2.1 application loadbalancer
+  2.3 network loadbalancer
+  2.4 gateway loadbalancer
+3. elastic beanstalk
+4. auto-scaling group
+5. lambda
+
+let us explore 2 services
+1. elastic cloud compute (ec2)
+2. elastic loadbalancer
+  2.1 application loadbalancer
+--------------------------------------------------------------------------------------------------------------------------------------
+Elastic Loadbalancer
+Loadbalancer is used for distributing the traffic across the instances of the application that is running on multiple compute instances in the vpc network. There are 2 reasons for which we use loadbalancer
+
+1. For high availability of the application, if we are running only one instance of the application and due to some reasons if the application has been crashed, then there is a total loss of services takes place. So to ensure always our application is highly available all the time, it is recommended to run atleast 2 instances of the application distributed across the AZs of the region, so that if one application/AZ failed we have always the other to handle the user traffic.
+Now inorder to distribute the user traffic between the instances we need to use loadbalancer
+
+2. For scalability, to handle more number of user traffic towards the application we need to deploy our application on multiple instances/compute machines and loadbalance and distribute the traffic across these instances.
+  
+In addition to the above 2 reasons, it is always recommended to expose the applications through front-end as loadbalancer, rather than exposing the application directly to the enduser over the public network, so that it helps us in securing the application/infrastructure.
+  
+Run the software application within the private/hybrid subnet instances only , and expose them through loadbalancer. The loadbalancer can be either an
+1. software loadbalancers = incase of software loadbalancer, it is installed on an computer/machine and configured to route the requests or distribute the request across the instances of the application that is running. as the request should pass through all the layers of network in receiving and to distribute/forward the request to the application as well, the performance or throughput of processing the requests would be low in case of software loadbalancers.
+All the httpd servers can be configured to use as software loadbalancers: apache2, ngnix etc
+
+httpd servers can be configured to work as 
+1. static web servers 
+2. reverse proxies / loadbalancers  
+  
+2. hardware loadbalancers
+These are the special type of hardware devices equiped with loadbalancer software within them that routes or loadbalances the requests among the backend servers based on protocol and port no of the request. since these are physical/hardware devices the speed at which they handle the request/response is very high
+
+procuring any of these loadbalancers, installing them and configuring these loadbalancers is quite difficult and is very costly and it takes lot of time as well. The loadbalancer should be setup in such a way these are highly available and based on the network traffic these should be scalable enough in distributing/routing the requests. We need a dedicated team of people to monitor, manage and maintain these loadbalancers as well.
+  
+Instead of we hosting and managing these loadbalancers either as software/hardware, the aws cloud platform has provided Elastic Loadbalancers as a managed service.
+The AWS Cloudplatform provides 3 types of loadbalancers
+1. Application Loadbalancer
+The Application Loadbalancer is even called as "HTTP" loadbalancer, since it works based on http protocol. it helps in distributing the traffic across the instances of the http/web applications.
+  
+2. Network Loadbalancer (Hardware)
+Network loadbalancers are used for loadbalancing the network traffic based on protocol and portno of the application
+
+3. Gateway Loadbalancer
+Gateway Loadbalancers are used for loadbalanacing the traffic across the virtual appliances or devices
+
+
+1. Application loadbalancer
+Application Loadbalancer distributes the traffic across the multiple instances of the application running across the ec2 instances of the vpc based on http protocol. It is an region level service and hosted at vpc level.
+It can be used for loadbalancing the requests across the AZ instances of the vpc
+The application loadbalancer supports loadbalancing the requests based on routing rules:
+1. Path based routing
+2. query-based routing
+3. header
+etc
+
+How to deploy an application and expose over the application loadbalancers?
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,170 @@
+What are the different states in which a docker container could exist?
+There are 7 different states in which a docker container can exists
+1. CREATED = The container has been created out of the image, but it has not yet bean started
+2. RUNNING = docker container is up and running and ready for accessing
+3. PAUSED  = Kept temporarily under pause 
+4. EXITED  = The container has been completed execution successfully and stopped
+5. RESTARTING = container has been stopped and restarted
+6. REMOVED = container has been removed
+7. DEAD    = forceful termination of the container indicated DEAD
+--------------------------------------------------------------------------------------------------------------------------------
+5. HEALTHCHECK
+The running status of the container doesnt guarantee the containerized application is running inside the container or it is HEALTHY. There could be several reasons where the container might be reported as RUNNING,
+ but the underlying application that is running inside the container is un-healthy. like
+1. The war deployment might have failed during the startup
+2. The application might got crashed while running
+3. The tomcat server itself might have failed in starting up
+
+due to any of the above reasons the containerized application might have failed in running but still the container would be reported as RUNNING that results in DEAD containers and leads to unnecessary resource consumption even though the application is not available.
+	
+How to track and report the status of the containers based on the actual application running status in the container?
+In order to monitor the status of the application and report it, the docker has provided HEALTHCHECK directive that should be written inside the Dockerfile and will be included aspart of image and the container engine performs these checks periodically in reporting the application status.
+	
+java: war application
+1. deployed on tomcat server
+2. running as infinite container
+3. HEALTHCHECK directive
+
+Dockerfile
+------------
+FROM ubuntu:24.04
+ENV TOMCAT_HOME=/u01/middleware/apache-tomcat-9.0.86
+ENV PATH=$PATH:$TOMCAT_HOME/bin
+
+RUN apt update -y
+RUN apt install -y openjdk-11-jdk
+RUN apt install -y curl
+RUN mkdir -p /u01/middleware
+WORKDIR /u01/middleware
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.tar.gz .
+RUN tar -xzvf apache-tomcat-9.0.86.tar.gz
+RUN rm apache-tomcat-9.0.86.tar.gz
+
+COPY target/roadster.war apache-tomcat-9.0.86/webapps/
+COPY run.sh apache-tomcat-9.0.86/bin/
+RUN chmod u+x apache-tomcat-9.0.86/bin/run.sh
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl --fail http://localhost:8080/roadster/actuator/health/liveness || exit 1
+
+ENTRYPOINT [ "apache-tomcat-9.0.86/bin/run.sh" ]
+
+run.sh
+-------
+#!/bin/bash
+set -e
+nohup $TOMCAT_HOME/bin/startup.sh &
+tail -f /dev/null
+-------------------------------------------------------------------------------------------------------------------------------
+docker networking
+The docker supports networking, which allows the docker containers to talk to the host or host to docker or docker container to another docker container that is running on the same docker engine. By providing various different networking modes, the docker allows us to build applications, containerize them and run them in a network of clustered environment.
+	
+The docker networking works based on network drivers. We can build our own network driver and can plugin into the docker engine, so that we can customize the network options with which we want to run our containers on the docker engine.
+	
+The docker by default supports 5 networking modes
+1. bridge
+2. host
+3. overlay
+4. mcvlan
+5. none
+
+
+1. bridge network
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

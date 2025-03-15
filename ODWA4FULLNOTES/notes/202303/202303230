@@ -1,0 +1,176 @@
+How to compare the contents of 2 files in linux filesystem?
+There are 2 shell commands are available for file comparision
+1. cmp
+2. diff
+
+1. cmp
+cmp stands for compare, cmp compares the contents of 2 given files byte by byte and by default it shows only the first different within those 2 gives files
+
+1.1 cmp file1.txt file2.txt
+
+groceries.txt
+dal
+channa
+rice
+
+grocerieslist.txt
+dal
+channa
+groundnuts
+
+cmp groceries.txt grocerieslist.txt
+groceries.txt grocerieslist.txt: byte 12, line 3
+	
+1.2 -b option shows at what by the difference has been found in the file
+cmp -b groceries.txt grocerieslist.txt
+groceries.txt grocerieslist.txt: byte 12, line 3 r asciiCode g asciiCode
+
+1.3 -i = ignore the specified number of bytes staring from the top of the file in both files
+cmp -i 13 groceries.txt grocerieslist.txt
+groceries.txt grocerieslist.txt: byte 1, line 1
+	
+1.4 -i n1:n2 = ignore starting from the top of the file n1 & n2 number of bytes in both the files
+n1 = ignore n1 bytes from first file
+n2 = ignore n2 bytes from the second file
+and begin comparing the files
+
+cmp -i 5:6 groceries.txt grocerieslist.txt
+
+1.5 -l = list all the difference between both the files
+cmp -l groceries.txt grocerieslist.txt
+byte position file1byte file2byte
+-----------------------------------------------------------------------------------------------------------------------------------
+2. diff
+diff stands for difference and it is used for comparing the contents line by line in 2 given files. Along with comparing the contents of the files, it will display recommendations through special symbols indicating how to make the contents of these 2 given inputs files identical
+
+symbol:
+1. a = add
+2. d = delete
+3. c = change
+4. > = refers to the contents of the file2
+5. < = refers to the contents of the file1
+
+2.1 
+	
+team1.txt
+virat
+dhoni
+rohit
+rahul
+
+team2.txt
+virat
+dohni
+rahul
+
+diff team1.txt team2.txt
+3d2
+< rohit
+delete 3rd line in first line so that from 2nd line onwards both files contents becomes same
+
+1. line number in the first file
+2. operation
+3. line number of the second file 
+> = contents in the second file where it has to be added
+-----------------------------------------------------------------------------------------------------------------------------------
+2.2
+fruits.txt
+banana
+apple
+grapes
+papaya
+oranges
+
+freshfruits.txt
+banana
+apple
+kiwi
+grapes
+papaya
+oranges
+
+diff fruits.txt freshfruits.txt
+2a3
+> kiwi
+after the line2 in file1, add the contents of line 3 of the second file, > kiwi so that both files becomes identical
+
+2.3
+places.txt
+hyderabad
+banglore
+chennai
+pune
+
+popularplaces.txt
+hyderabad
+banglore
+chennai
+mumbai
+
+4c4
+
+< pune
+---
+> mumbai
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

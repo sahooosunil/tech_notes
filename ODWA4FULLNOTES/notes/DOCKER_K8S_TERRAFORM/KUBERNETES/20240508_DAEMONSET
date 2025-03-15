@@ -1,0 +1,109 @@
+4. DaemonSet
+A DaemonSet ensures that all (or some) of the Nodes of the cluster runs a copy of the Pod. There are certain usecases where we want a Pod application to be running on all the nodes of the cluster like
+1. Log aggregator or collector agent
+2. Monitoring agents = That collects the metrics information of the pod application
+etc
+
+such applications/pods should be scheduled across all the nodes of the cluster and running, this can be achieved through DaemonSet.
+	
+DaemonSet is an independent controller that runs as an reconcillation loop, ensures that each workernode on the cluster has a pod running always. No matter whether a node has adequate capacity to schedule the pods for running or not, always the DaemonSet will be given high precedence. Unless the DaemonSet runs the pod on the workernode, the workernode will not be made available for scheduling the pods/deployments on it.
+	
+everytime a new workernode is added to the cluster, the DaemonSet takes care of scheduling and running the pod on the new node, similarly when a node has been destoryed or removed, the process of garbaging collecting the DaemonSet pod will be done by the controller.
+	
+The typical eg.. of DaemonSet is ELK
+
+How to create an DaemonSet controller in scheduling a Pod on all the workernodes of the cluster?
+write DaemonSet spec file as below.
+	
+solr-daemonset.yml
+-------------------
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+	name: solrdaemonset
+spec:
+	selector:
+		matchLabels:
+			appName: solr
+	template:
+		metadata:
+			labels:
+				appName: solr
+		spec:
+			containers:
+				- name: solr
+					image: solr:9.6.8
+					ports:
+						- name: sorport
+							containerPort: 8983
+							protocol: TCP
+--------------------------------------------------------------------------------------------------------------------------------
+5. Job
+Job is used for performing an one-time operation on the kubernetes cluster. A job creates one or more pods and executes util the specified number of executions are successful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							
+						
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

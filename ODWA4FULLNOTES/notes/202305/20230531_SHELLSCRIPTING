@@ -1,0 +1,376 @@
+Control Statements
+------------------
+Control Statements are used for controlling the flow of execution of the shellscript program. By default the shellscript program executes from top to the bottom sequentially, but sometimes we wanted to change the flow of execution of the program like
+1. based on some condition we wanted to decide whether a block/group of instructions should be executed or not
+2. we may wanted to execute a bunch of instructions repeatitively over the n number of times
+this can be achieved through control statements.
+	
+There are 2 types of control statements are there
+1. Conditional control statements
+	1.1 if conditional control statement
+	1.2 if-else (or) if-elif-else control statement
+	1.3 case/esac
+	
+2. Loop control statements
+	2.1 while
+	2.2 for
+	2.3 until
+-----------------------------------------------------------------------------------------------------------------------------------
+#1. Conditional control statements
+Conditional control statements are used for controlling the flow of execution of the lines of code within a program based on some condition.
+lets say a given condition has been evaluated to true, then execute the block of code, otherwise skip it can be achieved through conditional control statements
+
+There are 3 types of conditional control statements are there
+1. if
+2. if-else (and) if-elif-else
+3. case
+	
+1.1 if condition
+if is an conditional control statement used for executing a block of code based on the outcome of an conditional evaluation.
+syntax:-
+
+statement1
+statement2
+if [ relationalexpression ]
+then
+	statement3
+	statement4
+	statement5
+fi
+statement6
+statement7
+
+if the above syntax, the statements from 3 to 5 are in if condition block which are executed only when the regularexpression given is evaluated to "true" otherwise those block of lines will be skipped execution
+
+wap to find biggest of 2 given numbers
+--------------------------------------
+
+bigNumber.sh
+-------------
+#!/bin/bash
+read -p "A : " A
+read -p "B : " B
+
+if [ $A -gt $B ]
+then
+	echo "A : $A is big"
+fi
+
+if [ $B -gt $A ]
+then	
+	echo "B : $B is big"
+fi
+
+if [ $A -eq $B ]
+then
+	echo "A : $A and B : $B are same"
+fi
+
+chmod u+x bigNumber.sh
+./bigNumber.sh
+A: 10
+B: 20
+B : 20 is big
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to read the accountNo from the user and check whether the given AccountNo is valid or not
+validate: 
+if the accountNo must and should be 12 characters in length
+
+validateAccountNo.sh
+--------------------
+#!/bin/bash
+
+read -p "account no: " ACCOUNT_NO
+LEN=`expr length $ACCOUNT_NO`
+
+if [ $LEN -eq 12 ]
+then
+	echo "AccountNo: $ACCOUNT_NO is valid"
+fi
+
+if [ $LEN -ne 12 ]
+then
+	echo "AccountNo: $ACCOUNT_NO is not valid"
+fi
+----------------------------------------------------------------------------------------------------------------------------------
+if-else control statement
+few times the outcome of the evaluation of an expression would be resulted in #2 states only, which is true/false, in  case of true if we want to execute few lines code and incase of false if we want to execute few other lines of code, we need to write #2 if conditions as below
+
+if [ expression == true ]
+then
+	statement1
+	statement2
+fi
+if [ expression == false ]
+then
+	statement3
+	statement4
+fi
+
+if we look at the above code, when the expression has been evaluated to true, then there is no need of again the same expression evaluated for false. if the first one fails the second one will become true.
+here we are writing unnecessarily #2 conditions and evaluating the expression twice even though there is only #2 possible outcomes, which are true/false
+	
+we can avoid writing #2 conditional statement by using if-else structure
+
+if [ expression = true ]
+then
+	statement1
+	statement2
+else
+	statement3
+	statement4
+fi
+
+wap to print whether a given number is even or odd?
+% = modulus 
+divisor divident  quotient
+2)       4        (2
+	       4		
+      	---
+         0 #remainder
+	      ---		
+			
+4/2 = 2 = quotient
+4%2 = 0 = remainder
+
+when a number is divisible by 2 and results an remainder of "0" then it is even number otherwise odd number
+
+evenorodd.sh
+------------
+#!/bin/bash
+read -p "Number: " N
+
+REM=$[N%2]
+
+if [ $REM -eq 0 ]
+then
+	echo "$N is even"
+else
+	echo "$N is odd"								 
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

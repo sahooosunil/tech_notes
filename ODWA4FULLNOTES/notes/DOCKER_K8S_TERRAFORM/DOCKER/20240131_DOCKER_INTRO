@@ -1,0 +1,62 @@
+docker
+------
+docker is an containerization technology that is used for packaging and running the applications isolated from other applications within the environment.
+	
+Let us explore/recap virtualization technology to better understand the containerization or docker
+
+Virtualization
+---------------
+Virtualization is a technic through which we can create multiple parallel isolated environments on a single computer/machine through the help of Hypervisor software.
+	
+Why do we need Virtualization?
+The I.T infrastructure cost in developing and delivering the software applications is quite high. To reduce the infrastructure cost	in delivering the software applications people use virtualization
+1. In an organization there can be multiple software applications being developed. Inorder to certify and deliver these applications we need to build and deploy them onto the test environments. For each application we need to setup an independent test environment which requires #2 dedicated physical server machines, so that the cost of developing, certifying for delivery the applications is going to be quite high
+
+instead of that we can make use of virtualization technology where we can setup #2 parallel isolated environments on one-single computer machine on which we can have these applications deployed and running for testing and certifying it. so that we can lower the infrastructure cost of delivering the application
+
+2. Enterprise software organizations can bake the software products into virtual machine images and can distribute to the customers around the world. Customers can quicly import these virtual machine disk images in creating the environment to explore the software being delivered without the need to going through the complex process of installing/configuring that software product on their physical machines.
+	
+3. A developer needs multiple workstation environments while working on different projects of various different technologies and operating system platforms. For having #2 independent environments for development he needs #2 physical server computers that increases the infra structure cost in developing the applications.
+Instead we can leverage the virtualization technology in settingup multiple virtual machine env on the same physical computer using which he can do parallel application development.
+	
+4. developers can setup development environment and server environment using virtualization on his workstation, so that he develops the application locally on the workstation, build, package deploy and run the code on the server env. So since the developer develops the application and tests on production like env, the application can work on any env eliminating the env problems.
+From the above we can understand, the I.T organizations can leverage virtualization technology in reducing the Infra cost in developing, delivering the software applications.
+
+What is Containerization?
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

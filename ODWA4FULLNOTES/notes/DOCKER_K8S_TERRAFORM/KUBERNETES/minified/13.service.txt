@@ -1,0 +1,325 @@
+**Kubernetes Service**
+A Service in Kubernetes provides network access to pods within a cluster. By default, a pod is only accessible within the node it runs on and has the following characteristics:
+1. Pods are not automatically recovered after a crash.
+2. Pods get ephemeral IP addresses, which change on restart.
+
+**Why Use a Service?**
+A Service ensures:
+1. Pods are accessible across the cluster with a stable IP.
+2. External exposure of the pod when needed.
+3. Load balancing across multiple pod replicas.
+
+A Service acts as both a service discovery mechanism and a load balancer. Kubernetes offers five types of services:
+1. **ClusterIP** (default)
+2. **NodePort**
+3. **LoadBalancer**
+4. **Ingress**
+5. **Headless**
+
+---
+### 1. ClusterIP (Default)
+ClusterIP is the default service type, providing an internal stable IP for communication between pods within the cluster. It is useful for exposing backend services (e.g., microservices, databases) to frontend applications inside the cluster.
+
+#### Example YAML:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: distributor-network-service
+spec:
+  selector:
+    appName: distributor-network
+    version: "1.0"
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+```
+- **port**: Service listens for incoming requests.
+- **targetPort**: Requests are forwarded to the container.
+
+[GitHub Repo](https://github.com/techsriman/k8sclusterip.git)
+
+---
+### 2. NodePort
+NodePort exposes a pod externally by opening a port (30000–32767) on each worker node. Requests to `worker-node-ip:NodePort` are forwarded to the service, which then routes traffic to the pod.
+
+#### Key Points:
+- Enables external access but depends on cluster topology.
+- Not recommended for production due to security risks.
+- Suitable for testing and development.
+
+---
+### 3. Ingress
+Ingress is an API object that manages external access to services via HTTP(S) routing. Unlike a service, Ingress does not perform discovery or load balancing but routes requests based on predefined rules.
+
+#### Installing an Ingress Controller:
+```sh
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+```
+Check status:
+```sh
+kubectl get pods --namespace=ingress-nginx
+kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
+```
+
+#### Example Ingress YAML:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: recreation-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hangout.com
+      http:
+        paths:
+          - path: /hangout
+            pathType: Prefix
+            backend:
+              service:
+                name: hangout-service
+                port:
+                  number: 8088
+    - host: sailor.com
+      http:
+        paths:
+          - path: /sailor
+            pathType: Prefix
+            backend:
+              service:
+                name: sailor-service
+                port:
+                  number: 9099
+```
+
+[GitHub Repo: Hangout](https://github.com/techsriman/hangout.git)  
+[GitHub Repo: Sailor](https://github.com/techsriman/sailor.git)
+
+------------------------------------------------------------------------------------------
+Setup Application lbr ingress service in your EKS cluster
+----------------------------------------------------------------
+
+Here's an example of setting up an **Ingress service of type Application Load Balancer (ALB)** in an **Amazon EKS cluster**. This setup will:  
+
+✅ Expose UI (`xyz.com/ui`) and backend (`xyz.com/api`) services.  
+✅ Route requests based on **query params, path params, and headers**.  
+✅ Use **AWS ALB Ingress Controller** to handle traffic.  
+
+---
+
+### **Step 1: Install AWS Load Balancer Controller in EKS**
+The **AWS Load Balancer Controller** is required to create an ALB for ingress.
+
+#### **1.1 Install IAM Policy for ALB Controller**
+```sh
+eksctl utils associate-iam-oidc-provider --region <AWS_REGION> --cluster <EKS_CLUSTER_NAME> --approve
+
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json
+
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam-policy.json
+```
+
+#### **1.2 Create IAM Role for the ALB Controller**
+```sh
+eksctl create iamserviceaccount \
+  --cluster <EKS_CLUSTER_NAME> \
+  --namespace kube-system \
+  --name aws-load-balancer-controller \
+  --attach-policy-arn arn:aws:iam::<AWS_ACCOUNT_ID>:policy/AWSLoadBalancerControllerIAMPolicy \
+  --approve
+```
+
+#### **1.3 Deploy ALB Ingress Controller**
+```sh
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
+  -n kube-system \
+  --set clusterName=<EKS_CLUSTER_NAME> \
+  --set serviceAccount.create=false \
+  --set serviceAccount.name=aws-load-balancer-controller
+```
+
+---
+
+### **Step 2: Deploy Sample Backend and UI Services**
+#### **2.1 Backend Deployment**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: myrepo/backend:latest
+          ports:
+            - containerPort: 8080
+```
+
+#### **2.2 Backend Service**
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: NodePort
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+```
+
+#### **2.3 UI Deployment**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+    spec:
+      containers:
+        - name: ui
+          image: myrepo/ui:latest
+          ports:
+            - containerPort: 3000
+```
+
+#### **2.4 UI Service**
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-service
+spec:
+  type: NodePort
+  selector:
+    app: ui
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+```
+
+---
+
+### **Step 3: Create an Ingress Resource for ALB**
+This **Ingress** resource will:
+- Route `xyz.com/ui` to the **UI service**.
+- Route `xyz.com/api/users` to the **backend service**.
+- Use **query params**, **path params**, and **headers** for routing.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-alb-ingress
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/group.name: my-alb-group
+    alb.ingress.kubernetes.io/actions.response: |
+      {"type":"fixed-response","fixedResponseConfig":{"statusCode":"200","contentType":"text/plain","messageBody":"Access Denied"}}
+spec:
+  ingressClassName: alb
+  rules:
+    - host: xyz.com
+      http:
+        paths:
+          - path: /ui
+            pathType: Prefix
+            backend:
+              service:
+                name: ui-service
+                port:
+                  number: 80
+          - path: /api/{resource}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80
+          - path: /api/items
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80
+          - path: /api/query
+            pathType: Exact
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 80
+          - path: /restricted
+            pathType: Prefix
+            backend:
+              service:
+                name: response
+                port:
+                  number: 80
+```
+
+---
+
+### **Step 4: Apply Ingress**
+```sh
+kubectl apply -f ingress.yaml
+```
+
+---
+
+### **Step 5: Test Your Setup**
+1. Get the ALB URL:
+   ```sh
+   kubectl get ingress my-alb-ingress
+   ```
+   Output:
+   ```
+   NAME             CLASS    HOSTS      ADDRESS                                  PORTS   AGE
+   my-alb-ingress   alb      xyz.com   a1b2c3d4e5f6g7h8-1234567890.us-east-1.elb.amazonaws.com   80      5m
+   ```
+
+2. **Test URLs**:
+   - UI: `http://xyz.com/ui`
+   - Backend API (Path Param): `http://xyz.com/api/users`
+   - Backend API (Query Param): `http://xyz.com/api/query?id=123`
+   - Restricted (Header-based Rule - returns 403): `http://xyz.com/restricted`
+
+---
+
+### **Key Features in This Setup**
+✅ **UI and Backend Mapping**  
+✅ **Path Params & Query Params**  
+✅ **Header-based Routing (using AWS ALB action)**  
+✅ **Security with Fixed Response for Restricted Routes**  
+✅ **Application Load Balancer in EKS**
+
+This setup ensures scalable, reliable, and secure service exposure in AWS EKS using ALB. Let me know if you need modifications! 🚀

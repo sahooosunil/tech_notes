@@ -1,0 +1,67 @@
+AWS Cloudplatform
+------------------
+What is a cloud platform?
+on-demand delivery of computing resources to the world is called "cloud computing" like
+  1. Networking
+  2. Computing Resources
+  3. Middleware Services
+  etc
+A cloud provider offers 3 types of services
+1. IaaS = Infrastructure as a Service
+2. PaaS = Platform as a Service
+3. SaaS = Software as a Service
+
+#1. IaaS
+Infrastructure as a Service is about infrastructure resources like computing machines, hardware, networking, routers, firewalls, internet lines etc that are required for hosting and running the software applications are delivered to the world aspart of IAAS Services by the Cloud Providers
+
+Before the cloud providers these IaaS services are offered by the hosting providers or datacenters. Instead of using hosting providers or data centers, there are plenty of advantages of using Cloud providers.
+  
+advantages:-
+  1. we can choose the shape of the machine asper the requirement in hosting the application, there is no restriction over the shapes, so we can pay for what we really wanted
+  2. The cloud providers offers 2 types of billing
+    2.1 Fixed = irrespective of the usage of the resources we procured from the cloud provider, until we release it we will charged at a fixed rate.
+    
+    2.2 Pay per usage = In pay per usage model, we will be charged based on the usage of the resource only.
+    For eg.. we have procured an machine from cloud provider and has setup the environment for usage. If we turn off the machine for sometime we will be charged only for the time of usage even though we have not released the resource.
+      
+    The pay per usage model brings lot of savings as well, for example a small-scale or an moderate business vendors that operates in a specific geographic location and has the target customers locally. Then they can take the advantage of pay-per usage model by running the computing resources in off-peak and on-peak hours. In case of on-peak hours like 8:00 am - 9:00 pm they can have 3/5 computing instances based on their need to run the application and in off-peak hours they can scale-in the resources to 1 for saving money.
+  3. on-demand delivery of resources = unlike the hosting providers or data centers, the cloud providers upon requesting the resources would provide them instantaneously, with no wait time and no long-term agreements or contracts in using them.
+  4. monitoring, tracking and security the access to these resources are taken care by cloud providers
+  5. backup and restore incase of crash will be handled by them. 99.9% of available of the resources are guaranteed.
+  6. The cloud providers aspart of providing the infrastructure resources, the minimal software packages like operating system, firmware softwares etc would be installed and provided, so that the resources that are provided are in a state of ready to be used.
+  7. Patching, licensing, upgradations of these resources are taken care by cloud providers
+  
+  
+  
+      
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+

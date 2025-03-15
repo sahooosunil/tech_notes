@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: recreation-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hangout.com
+      http:
+        paths:
+          - path: /hangout
+            pathType: Prefix
+            backend:
+              service:
+                name: hangout-service
+                port:
+                  number: 8088
+    - host: sailor.com
+      http:
+        paths:
+          - path: /sailor
+            pathType: Prefix
+            backend:
+              service:
+                name: sailor-service
+                port:
+                  number: 9099
+#status:
+#  loadBalancer:
+#    ingress:
+#      - hostname: localhost

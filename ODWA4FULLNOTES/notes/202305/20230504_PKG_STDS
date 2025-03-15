@@ -1,0 +1,103 @@
+What are the packaging standards and package managers provided aspart of linux operating system?
+Different distros of the linux operating system has provided different packaging standards and package manager utilities as below
+	
+debian distribution: .deb/.dkpg 
+                     dpkg/apt
+
+redhat distribution: .rpm
+                     yum 
+										 
+arch distribution: .pac
+                   pacman
+									 
+so depends on linux distro we are using we need to download the relevant software package and use appropriate package manager tool to install the software on the linux operating system.
+	
+What are the ways the software packages are distributed in linux operating system?
+The software packages are distributed in 3 ways
+1. repository based packaged software distribution
+2. direct downloadable packaged software distribution
+3. binary distribution
+-----------------------------------------------------------------------------------------------------------------------------------
+#1. Repository based packaged software distribution
+The software packages are distributed through the software repositories. 
+What are software package repositories?
+Linux is an opensource operating system, that is freely modifiable and distributable. There are lot of opensource software contributors are there who wants to promote linux operating system, these people build several software utilities and tools that can be installed on the linux operating system, so that endusers can sophisticatedly use the linux operating system.
+For eg.. there are different software tools like
+1. music players
+2. video players
+3. text editors
+4. paint/photo editors
+5. file manager
+etc
+
+But how does these opensource contributors will distribute their software packages to the world, how does the linux users around the world can discover and use these software packages build by these contributors
+
+To help in distributing and discovering the opensource software tools/packages the linux has introduced software package repositories, the opensource contributors can distribute their software utilities/tools by publishing them to these repositories. The endusers/linux users around the world can search/browse and download software packages, install them on their computers through these repositories easily
+
+since different distros has their own packaging standards and package manager tools for installing and configuring the software packages, the opensource software contributors has to ship their software packages each per distro seperately, hence we have multiples copies of the same software packaged/shipped separately per distro
+
+So each linux distro vendor has comeup with their own software package repositories allowing the opensource contributors to publish the software tools/packages compatible on their distros into their own repositories.
+	
+Not all the sofware packages being produced/manufactured are free available, there are commercial software manufacturing vendors are there, producing the software packages through licensing, these packages will not be distributed by publishing into distro repositories, rather these enterprise software manufacturing vendors maintains their own repositories through which they distribute the software
+So, From the above we can understand there are 2 types of repositories are available
+1. distro repositories
+2. software vendor repositories
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

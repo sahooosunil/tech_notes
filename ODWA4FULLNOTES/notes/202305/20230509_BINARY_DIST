@@ -1,0 +1,158 @@
+What is direct downloadable packaged software distribution?
+The packaged software is distributed by the vendor through their official websites through direct downloadable link. There could be few reasons why the vendors might directly distribute the software packages directly
+1. to make the software quickly available before being approved and published through distro repositories
+2. the software by itself be very popular and doesnt really need to be distributed through repository for marketing it
+3. to support offline installation
+
+incase of ubuntu we need to download .deb packaged software to be installable on the operating system.
+The ubuntu has provided dpkg tool for installing the .deb packaged software file
+
+1. sudo dpkg -i file.deb
+2. sudo dpkg -l 
+3. sudo dpkg -l packageName
+4. sudo dpkg -s packageName
+5. sudo dpkg -r packageName 
+6. sudo dpkg -p packageName
+7. sudo dpkg -c file.deb = to show the contents of the software package
+8. sudo dpkg --unpack file.deb
+
+dpkg will not resolves the dependencies and installs them during the time of installing an software package, the user has to manually identify the dependencies and install them before installing an software package
+
+we can take the help of apt for installing an packaged software from (.deb) file along with dependencies using the below command
+sudo apt install -f pathTo.deb 
+-----------------------------------------------------------------------------------------------------------------------------------
+How many ways the software packages are distributed in linux operating system?
+There are 3 ways in which the packages are distributed
+1. repository based packaged software distribution
+	1.1 linux disto repositories (marketplace)
+		1.1.1 types of repositories
+		1.1.2 categories in repositories (Main, Universe, Restricted, Multiverse)
+	
+	1.2 how does the repository information is stored in ubuntu, how to add/remove new repositories or existing repositories in ubuntu
+		- /etc/apt/sources.list (or) /etc/apt/sources.list.d/
+		- manually or using sudo apt-add-repository repositoryAddress
+		
+	1.3 secured repository communication through gpg keys
+	1.4 apt tool to manage the software packages
+	1.5 apt-get/apt-cache vs apt tool
+
+2. direct downloadable software packages
+	2.1 dpkg
+	2.2 apt install -f
+	
+3. ppa repositories
+-----------------------------------------------------------------------------------------------------------------------------------
+3. ppa repositories
+ppa stands for personal package archives. The sofware vendors or individual can deliver their early versions or preview releases or beta to the world directly before those are published/approved in distro repositories through ppa repositories
+
+The ubuntu has provided an launchpad "https://launchpad.net/ubuntu". here people can register and create their own repository and publish their software bundles/packages to the world.
+	
+How to install the software packages from the ppa repository of the ubuntu?
+1. we need to add the ppa repository into the /etc/apt/sources.list file as a ppa repository, using the below command
+sudo add-apt-repository ppa:repositoryName
+
+sudo add-apt-repository ppa:ansible/ansible
+
+2. refresh the repository cache
+sudo apt update
+
+3. then we can install the ppa package by looking at its name
+	sudo apt search packageName
+	sudo apt install packageName
+-----------------------------------------------------------------------------------------------------------------------------------
+4. binary distribution
+before understanding the binary distribution, first we need to learn the environment variables in an operating system, and how to export/create and manage environment variables in linux operating system
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

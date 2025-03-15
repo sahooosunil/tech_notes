@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: coronapod
+  labels:
+    appName: corona
+    version: "1.0"
+spec:
+  containers:
+    - name: corona
+      image: techsriman/corona:1.0
+      ports:
+        - name: http
+          containerPort: 8081
+          protocol: TCP
+      env:
+        - name: guidelines.oxygenLevels
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: oxygenLevel
+        - name: guidelines.liters
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: liters
+        - name: guidelines.quarantine
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: quarantine
+        - name: guidelines.temparatureLevels     
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: temparatureLevels
+      volumeMounts:
+        - name: healthinspectorvolume   
+          mountPath: /config
+          readOnly: true
+  volumes:
+    - name: healthinspectorvolume
+      configMap:
+        name: healthinspectorsconfigmap
+        items:
+          - key: district-healthinspectors.properties                   
+            path: "district-healthinspectors.properties"
+
+...

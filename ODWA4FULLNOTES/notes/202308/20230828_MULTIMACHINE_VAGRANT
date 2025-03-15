@@ -1,0 +1,188 @@
+Multi-Machine Vagrant
+----------------------
+When we are working on multi-tier application deployments, we need to run database server on one vagrant machine and java application on another vagrant machine, to create these 2 vagrant machines we need to write 2 Vagrant configuration files.
+    
+The problem in writing multiple vagrant configuration files are:
+1. upon the database server machine has been booted, then only java server should be started, this has to be managed by the developer/devops engineer manually
+2. more machines means more configuration files, which would duplicate the configuration and manage them individually
+3. all these machines are used aspart of one project, and they would exists together
+
+so instead of writing multiple vagrant configuration files for managing them, we can define multiple machine configurations in one-single Vagrantfile using multi-machine vagrant feature.
+    
+Vagrantfile
+------------
+Vagrant.configure(2) do | config |
+	#global configurations we can write, for eg we want to execute an provisioner across all the machines during startup 
+	config.vm.provision "shell", path: "pathToFile" #global provisioner
+	
+	config.vm.define "databaseserver" do | db |
+		db.vm.box = "ubuntu/jammy64"
+		db.vm.network "private_network", ip: "192.168.10.11", virtuaxbox_intnet: "mynetwork"
+	end
+	
+	config.vm.define "javaserver" do | jserver |
+		jserver.vm.box = "ubuntu/jammy64"
+		jserver.vm.network "private_network", ip: "192.168.10.12", virtualbox_intnet: "mynetwork"
+	end
+end    
+
+vagrant up = will bring up all the machines defined in the vagrant configuration file, in the order of declaration
+vagrant up machineName = only the specific machine will be booted
+
+vagrant halt = stop all the machines
+vagrant halt machineName = only the specified machine will be stopped
+--------------------------------------------------------------------------------------------------------------------------------------
+How to create our own vagrant boxfile?
+1. create an virtual machine using oracle virtualbox 
+	1.1 disable audio
+	1.2 disable usb
+	1.3 increase ram/cpu
+	1.4 configure nat network with port forwarding host: 2222, guest: 22
+2. start the virtual machine, by installing the iso image of the operating system we want
+	1. during the installation it prompts for creating an linux user, create the user as vagrant/vagrant
+3. install guest editions
+4. upon booting up the machine install openssh server
+5. associate insecure vagrant public key to the vagrant user under ~/.ssh/authorizedKeys
+https://github.com/hashicorp/vagrant/blob/main/keys/vagrant.pub
+6. configure passwordless sudoers access for vagrant user
+7. install the required softwares/configuration to be packaged aspart of boxfile
+8. shutdown the machine and package it as vagrant boxfile
+	
+vagrant package --base "virtualmachine"
+	
+What are the contents of the vagrantbox file ?
+by default vagrant packages and compresses the virtual machine disk image file into package.box file when we run vagrant package --box "machineName"	
+	
+if we want to generate the boxfile with different name we can use --output filename switch as below
+vagrant package --box "virtualmachineName" --output file.box
+
+The vagrant boxfile contains 
+package.box
+|-vdi
+|-Vagrantfile (all the current virtual machine configurations will be exported as Vagrantfile)
+|-metadata.json
+
+vagrant box list = shows the list of boxfiles that are available on the machine
+vagrant box remove boxfilename = removes the boxfile from local machine
+vagrant box add boxname package.box = adds the boxfile into the local cache
+
+
+Sept 2023
+1. apache2 server = static web hosting (manually)
+2. vagrant + shell provisioner = how to do touchless automation
+-------------------------------------------------------------------
+1. java language basics
+2. database server
+3. java web application deployment (tomcat server)
+	
+4. database server installation automation
+------------------------------------------------------------------------
+ansible
+aws basics
+------------------------------------------------------------------------
+
+october
+terrform
+docker
+
+november
+----------
+rest of the course
+
+kubernetes
+jenkins
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,67 @@
+Linux FileSystem directories
+-----------------------------
+Linux File Systems are hierarchial and always starts with an "/" (root). During the install of the linux operating system it creates bunch of standard directories to organize the operating system and user files on the harddisk of the computer.
+
+/
+1.|-bin     = linux core commands resides under bin directory like ls, mv, mkdir etc
+2.|-boot    = boot loader and boot files are located here
+3.|-dev     = all the physical drives like harddisk, pendrive, usbs, dvd drives are mounted here
+4.|-etc     = configuration files of the installed software packages are placed here
+5.|-home    = for each user of the linux operating, the linux creates an sub-directory under the "/home" allowing the user to store personal files/folders inside it
+6.|-lib     = libraries of the installed software packages are placed here, since the libaries can be shared commonly across the packages
+7.|-media   = all the mutli-media devices like music players (ipod), cameras or dvds are mounted and made it accessible from here
+8.|-mnt     = here the network drives or network storage devices are mounted here, in few distros we may find usb or dvd mounted here without media
+9.|-opt     = all the optional software packages are installed and placed under opt directory
+10.|-proc    = everything in linux is a file, the /proc directory holds the information about all the running processing/programs on the linux operating system.
+11.|-root    = the home directory for the root user of the linux operating system
+12.|-sbin    = the root user binaries or commands are placed under this directory
+13.|-tmp     = temporary files
+14.|-usr     = utilities and files shared between users of linux are placed here
+15.|-var     = (var stands for variable large files). contains system logs and other variable data
+-----------------------------------------------------------------------------------------------------------------------------------
+Linux operating installation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

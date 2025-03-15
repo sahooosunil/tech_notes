@@ -1,0 +1,243 @@
+How many types of environment variables are there?
+There are 2 types of environment variables are there
+1. System Variables
+These are the pre-defined variables that are created by the linux operating system for special purpose of usage.
+
+2. User-Defined Variables
+These are the variables created by the user of the linux operating system, so that those can be accessed/used across all the programs that are running on the machine
+
+1. System Variables
+PATH is the pre-defined or System Variables that is configured/created by the linux operating system. PATH variable is populated with the directory locations seperated by ":" and is used by the linux operating system to locate the program files while running/launching them
+
+The PATH variables is configured with pre-defined directories of the Linux FileSystem by default
+	1. /bin
+	2. /sbin
+	3. /usr/bin
+	4. /usr/sbin
+	5. /usr/local/bin
+	6. /usr/local/sbin
+	
+How to configure or set the PATH variable pointing to our own directory location of the program to execute?
+export PATH=$PATH:directoryLocation. Always dont override the PATH variable, append our path to the existing path variable value.
+---------------------------------------------------------------------------------------------------------------------------------	
+How to export or create an environment variable permanently on the linux operating system?
+The linux has introduced profiles. Profiles are the different configurations or settings using which we want to use the machine. For eg.. in a mobile we configure different profiles like office, driving, donot disturb etc with different settings like wallpaper, ringtones etc
+
+Similarly we want to launch the bash terminal with various different configurations or settings or environment variables that can be accomplished through profiles
+
+There are multiple ways we can login/launch the linux operating system and the bash terminal as 
+1. gui/non-gui login
+2. remote login
+etc
+
+based on the way we launched the terminal, we want to configure or apply different settings/configurations to the terminal, so to handle this the linux has provided bunch of configuration files through which we can enable the settings
+
+1. /etc/profile = The root or super user of the linux operating system can configure the settings here and will applied to all the linux users of the computer and requires an restart if there is a change
+2. ~/.bash_profile = the settings/configurations placed here will be applied only for interactive shells only and executed only for the user under which we have created
+3. ~/.profile = in the absence of ~/.bash_profile then this file will be applied
+4. ~/.bash_login = will be applied for interactive login shells, only when we dont have ~/.bash_profile
+5. ~/.bashrc = non-interactive terminals the bashrc settings are applied or executed
+
+interactive shells:
+while launching the shell, the user will be prompted for entering the username/password to grab the access to the machine, which is called "interactive shell"
+	
+non-interactive shell:
+within an existing shell we launch a new shell which is called non-interactive shell
+
+
+~/routines
+	|-daily
+		|-quickbytes
+			|-greet.sh
+			
+How to run the above shell program?
+1. goto the location of the program directory or use the absolute path of the program file location to launch the program
+2. export the PATH variable pointing to the directory location of the greet.sh, so that we can launch the program quickly
+
+export PATH=$PATH:~/routines/daily/quickbytes/
+greet.sh
+
+The path variables we have exported above is temporary, so how to make it permanent?
+we need to configure the PATH variable as part of the BASH Profiles, since we are launching the terminal non-interactively we need to export the PATH in ~/.bashrc
+
+vim ~/.bashrc
+export PATH=$PATH:~/routines/daily/quickbytes/
+	
+everytime when we close the terminal and reopen the ~/.bashrc will be executed and the env variables or configurations or settings we defined will be re-created thus making them permanent
+-----------------------------------------------------------------------------------------------------------------------------------
+#4. binary distribution software
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

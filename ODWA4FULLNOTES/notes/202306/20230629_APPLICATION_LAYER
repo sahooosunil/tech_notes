@@ -1,0 +1,16 @@
+OSI Model Protocol
+OSI stands for open system inter-connection standard, which is a suite of protocols, that allows any 2 computers/programs to communicate with each other independent of hardware platforms or the operating systems on which those machines/programs are running on.
+	
+There are 7 Layers 
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+1. Application Layer
+Application Layer defines set of rules that helps the network applications in exchanging the data over the network in understandable format.
+	
+	

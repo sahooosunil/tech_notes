@@ -1,0 +1,144 @@
+How to customize the vagrant machine based on the provider?
+Vagrant supports provisioning the virtual machines across various different hypervisor providers like
+1. oracle virtualbox
+2. hyperv
+3. vm ware desktop/fusion/enterprise
+etc
+
+each hypervisor provider might provider features or configurations which might different from another. so if we write provider specific configurations in Vagrantfile to provisioning the virtual machine, then we might need to create multiple Vagrantfiles per each provider, this approach has lot of problems as discussed below:
+
+1. across the vagrant configuration files of each provider, most of the configurations would be same, thus endup in duplicating the configurations files across all the providers
+2. we need to spend lot of time in writing these configurations files even though the configuration is same with little differences across the provider.
+3. maintaining these configuration files becomes very difficult.
+    
+to overcome these problems in adding provider specific configurations in vagrant files easily vagrant has introduced provider customizations. Using provider customizations we can write multiple provider configurations in onesingle Vagrantfile, using provider blocks, so that during the time of provisioning the virtual machine, vagrant picks the appropriate provider blocks in provisioning the virtual machine. So that the same Vagrantfile is portable across all the providers.
+    
+In case of oracle virtualbox it allows the below customations to be applied while provisioning the virtual machine:
+1. cpu
+2. gui (headless (background) or interactive mode)
+3. ram
+4. virtual machine name
+5. modify cpu cap execution
+
+if the above configurations are written directly in Vagrantfile without using provider blocks, then the Vagrantfile becomes non-portable accros the hypervisor providers.
+    
+Vagrantfile
+------------
+Vagrant.configure(2) do | config |
+    #global configuration, that is applied for all the providers
+    config.vm.box = "ubuntu/jammy64"
+    config.vm.network "public_network", ip: "192.168.0.10"
+    
+    #provider block
+    config.vm.provider "virtualbox" do | vb |
+        vb.cpus=4
+        vb.memory=2048
+        vb.gui=true #interactive terminal
+        vb.name="dbserver"
+        vb.customize ["modifyvm", :id, "--cpu-execution-cap", "50"]
+        vb.customize ["modifyvm", :id, "--vram", "512"]
+    end
+end
+
+VBoxManage = is an command-line interface tool provider by oracle virtualbox for managing/configuring the virtual machine properties.
+VBoxManage modifyvm machine1 --cpu-execution-cap=50
+        
+we can execute all the VBoxManage commands through vagrant using vb.customize ["command", :id, "options", "value"]    
+--------------------------------------------------------------------------------------------------------------------------------------
+Vagrant provisioners
+---------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+

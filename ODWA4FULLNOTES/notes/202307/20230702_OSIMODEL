@@ -1,0 +1,88 @@
+OSI Model protocol comprises of 7 Layers
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+1. Application Layer
+The Appliation Layer comprises of Application Protocol, that defines bunch of rules/guidelines for the network applications enabling them to exchange/communicate with each other over the network. The Application protocoles defines messaging standards and semantics that should followed by the network applications to allow them to exchange the data in an understandable manner.
+	
+There are several application protocols are available for different types of applications like
+1. HTTP/HTTPS
+2. SMTP/POP3/IMAP
+3. FTP
+etc
+
+2. Presentation Layer
+Presentation Layer takes the data as an input from Application Layer and passes the data to the lower layers of the OSI Model in transmittable format. There are 3 responsibilities performed by the Presentation Layer
+1. Data Conversion 
+coverts the character representation data into bits/bytes format based on charset encoding standard specified by the application
+
+2. Data Compression/De-compression
+reduces the size of the data by applying bit compression technics so that it can be transmitted over the network very quickly. upon receiving the data, at the receiver end, applies decompression technic for building back the original form of data
+
+3. Data Encryption/Decryption
+Data Encryption is a technic through which the data will transformed into another format that no one steal/understand the data unless they know the encryption key that is used for encrypting the data to decrypt it.
+So while transmitting the data over the network, there is a chance where an intruder/hacker can chip into the communication channel and might steal the data, to ensure even it has been stolen, it would not be understood by them, we need to encrypt and transmit the data over the network
+
+
+3. Session Layer
+Session Layer takes care of End-to-End exchange of the data between the Software applications. It performs 2 major responsibilities
+1. Authentication/Authorization
+2. Session Management
+
+1. Authentication/Authorization
+Authentication is mechanism through which the server-side application verify the identity of the user inorder to grant access to the application/resources.
+Authorization = is a mechanism through which the users will be granted/permitted to access the functionality of the application based on their roles
+
+The Session Layer keeps track of the authentication/authorization information of the client applications/users , so that the server can authorize the users to access the resources of the application
+
+2. Session Management
+The Session Layer is responsible for keeping track of the number of packets being send by the client application and the no of packets received by the server application.
+In addition the session layer at the receiver side will takes care of reordering the data packets that are received to construct the data/information back
+
+The above 3 layers that we have discussed are meant for transmission of data between the applications, but the rest of the layers from Transport layer talks about how to move the data over the network channel.
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

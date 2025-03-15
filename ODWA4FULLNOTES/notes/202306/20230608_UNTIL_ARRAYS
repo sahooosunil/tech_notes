@@ -1,0 +1,164 @@
+until loop
+----------
+until is also an loop control statement used for executing repeatedly a block of code, but it is reverse of the while loop. In case of until loop, until the condition is false, the loop will iterate once the condition becomes true the loop breaks and continues to execute next set of statements within the program after the loop
+
+syntax:-
+until [ condition ]	
+do
+	statements
+done
+here if the condition is false, the control enters into the loop and executes the statements, once the condition becomes true it breaks the loop
+
+wap to read the numbers interactively from the user and add them until the user enters the number as -1
+sumGivenNumbers.sh
+------------------
+#!/bin/bash
+SUM=0
+N=0
+until [ $N -eq -1 ]	
+do
+	SUM=$[SUM+N]
+	read -p "Enter Number: " N	
+done
+echo "Sum : $SUM"	
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to print the Numbers from N to 1 in reverse order
+N=7
+7 6 5 4 3 2 1
+	
+reverseNumbers.sh
+#!/bin/bash
+read -p "N :" N
+until [ $N -eq 0 ]
+do
+	echo $N
+	N=$[N-1]
+done
+----------------------------------------------------------------------------------------------------------------------------------Arrays
+-------
+Arrays are used for storing bunch of (similar dataType values) identical values sequential or in contigous memory locations in the memory
+
+#!/bin/bash
+GST=15
+PROD1=300
+PROD2=350
+PROD3=500
+	
+TAX_AMT=$(echo "($PROD1 * 15)/100" | bc)	
+TOTAL_AMT=$(echo "$PROD1 + $TAX_AMT" | bc)	
+echo "Product1 after Tax : $TOTAL_AMT"	
+	
+TAX_AMT=$(echo "($PROD2 * 15)/100" | bc)	
+TOTAL_AMT=$(echo "$PROD2 + $TAX_AMT" | bc)
+echo "Product2 after Tax: $TOTAL_AMT"
+	
+TAX_AMT=$(echo "($PROD3 * 15)/100" | bc)	
+TOTAL_AMT=$(echo "$PROD3 + $TAX_AMT" | bc)
+echo "Product3 after Tax: $TOTAL_AMT"
+
+Here we have same dataType values on whom we want to apply same logic in computing the outcome, by keeping the values in different values we need to duplicate the same logic to get it applied on different values kept in different variables
+
+instead store them in an array and apply the same logic on the array elements by iterating through the values easily
+
+PRODUCT_PRICES=(300, 350, 500)
+here we created/declared an variable of Array type with #3 values stored inside it in contigous memory location respectively as 300, 350, 500
+	
+each of these values can be accessed using index positions where the index starts from 0 to N depends on number of values we stored.
+	
+if we look at here 300, 250, 500 all of them are product prices, rather than keeping them in #3 different variables, if we can store them in any array we can iterate through these values based on index position and apply similar processing logic on all the values without the need of duplicating the code.
+	
+how to access the values from the array using index?
+ARRAY[index]
+for eg.. PRODUCT_PRICES[0] = gives 300
+	       PRODUCT_PRICES[1] = gives 350 etc
+				 
+				 
+Now the above program we have written using #3 variables can be modified and made easy using arrays  as below
+
+productsAfterTaxes.sh
+----------------------
+#!/bin/bash
+PRODUCT_PRICES=(300 350 500)
+	
+for PRODUCT_PRICE in $PRODUCT_PRICES
+do
+	TAX_AMT=$(echo "($PRODUCT_PRICE * 15)/100" | bc)	
+	TOTAL_AMT=$(echo "$PRODUCT_PRICE + $TAX_AMT" | bc)
+	echo "Product Price after Tax: $TOTAL_AMT"
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

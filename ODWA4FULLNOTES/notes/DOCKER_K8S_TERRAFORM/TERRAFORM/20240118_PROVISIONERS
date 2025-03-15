@@ -1,0 +1,129 @@
+Terraform Provisioners
+----------------------
+Terraform is an iac automation tool used for provisioning the cloud infrastructure, upon provisioning the infrastructure we need platform software packages to be installed and configured inorder to deploy the software applications on that infrastructure, since terraform is an iac tool, it doesnt support installing/configuring the software packages
+
+How to install and configure the software packages ontop of the infrastructure that is provisioned by the Terraform?
+There are 2 options are available
+1. use software configuration management tools like shellscripting, ansible, puppet, chef or saltstack etc for installing and configuring the software packages and configure them ontop of the infrastructure
+2. create custom cloud provider images (ami), so that those can be quickly reused in creating the repeatable infrastructure
+
+
+#2. create custom cloud provider images (ami) 
+We can provision an ec2 instance or a similar compute instances on the cloud provider platform, manually install the software packages and configure them. once the required environment has been setup export the ec2 instance ebs volume  (storage volume) of the compute instance into an cloud provider image file so that we can reuse the image in recreating the infrastructure.
+  
+There are lot of problems with this approach:
+1. manually setting up the environment by installing and configuring the software packages takes lot of time and error prone.
+2. the existing compute instances cannot be migratable or upgradable to an new images for uptaking the latest version of software packages.
+3. each time there is a change in the platform software stack like new releases or patches, we need to recreate the cloud compute images which is an painful job
+
+
+#1. use software configuration management tools for creating the environment
+The devops engineer needs to write software configuration managmement scripts using tools like ansible, puppet, shellscript, chef or saltstack etc for installing and configuring the software packages on the infrastructure
+
+upon provisioning the infrastructure, the devops engineer has to manually run the software configuration management scripts ontop of that infrastructure to setup the environment needed for deploying and running the software applications. this approach of running the 
+scripts manually brings lot of drawbacks or challenges:
+
+1. There could be several infra resources that needs to be provisioned, installed and configured for an project. The devops engineer has to identify which software configuration managmeent scripts needs to be applied on which resources of the project inorder to setup the environment, he should memorize
+
+2. Aspart of the software package installation and configuration process, we might need to execute multiple software configuration management scripts, deriving them and identifying their dependency order inorder apply is very difficult
+
+3. The devops engineer has to know the technology of the software configuration management script being implemented and how to execute  on the end resource unless otherwise he will not be able to setup the env
+
+4. since the software configuration management scripts has to be applied manually upon provisioning the infrastructure, there is always a chance where he/she might endup in running the scripts on wrong infra resources that might leads to failures or un-expected behavior
+
+From the above we can understand even though we have 2 automation tools for infrastructure provisioning and software configuration management, bring them together is still an manual process which could lead to the above problems. so is there a way we can integrate these 2 tools together so that upon provisioning the infrastructure, the software configuration managment tools are applied automatically?
+Yes that is where terraform has introduced provisioners.
+  
+These software configuration scripts needs to be configured as provisioners in the Terraform file, so that terraform engine takes of executing these scripts upon provisioning the infrastructure automatically.
+There are 3 types of provisioners are there supported by Terraform
+1. file provisioner
+2. local-exec provisioner
+3. remote-exec provisioner
+
+
+1. file provisioner
+File provisioner is used for copying the files from terraform workstation or controlnode to the remote resource that is provisioned
+
+2. local-exec provisioner
+runs the software configuration management scripts locally on the terraform control node itself.
+  
+3. remote-exec provisioner
+runs the software configuration management scripts by copying them on to the remote resource and executes them locally to the resource itself.
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

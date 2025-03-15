@@ -1,0 +1,55 @@
+How many stages in which an SSH Connection will be established between the client and the server?
+There are 2 stages in which the SSH Connection would be established between client and server
+1. Session establishment to compute the shared session key that would be used for encrypting and exchanging the data
+2. Authentication to grant the access to the shell of the remote machine
+
+
+1. Session Establishment
+The client sends the request to the server to initiate the session, upon the server accepts the request, the below operations would takes place in computing an shared session key by both the parties
+1. both parties agrees upon an large prime number which is shared key (seed value)
+2. both parties agrees upon an encryption algorithm to be used for encrypting the data
+3. each of them generates their own prime number which is kept secret as a private key
+4. each party generates independently their own public key with a combination of shared key, private key and algorithm
+5. exchange their public keys with each other
+6. upon exchanging the public key, compute a session key the public key of others with their private key and shared key with algorithm that results in the same session key by both the parties
+7. use the computed session key for encrypting/decrypting the data during the communication
+
+2. authentication
+upon generating the session key, the server challenges the client to authenticate himself to gain access to the remote computer.
+The client has to send the username/password of the user onbehalf of whom he wanted to access the remote server by encrypting them using the session key and sends across the network to the server. The server validates the credentials and grants access to the client if those are valid.
+This process of authenticating the user in granting the access to the remote server is called "passwordAuthentication".
+	
+There are problems with password authentication in granting the access to the remote server:
+1. exchanging the credentials over the network is an security threat, even though those are encrypted and being exchanged
+2. granting the access to the remote machine based on username/password, gains permanent access to the remote machine, we cannot revoke the access to the machine easily
+To overcome this problem assymetric key-based authentication mechanism has been introduced.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

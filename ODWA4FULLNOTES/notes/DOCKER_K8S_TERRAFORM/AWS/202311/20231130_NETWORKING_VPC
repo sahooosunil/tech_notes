@@ -1,0 +1,87 @@
+Network domain
+---------------
+1. VPC Network
+VPC stands for Virtual Private Cloud Network, it is an isolated network created by an aws account user. The resources within a vpc is isolated from other resources of another vpc.
+In-short:- A vpc is an isolated network of resources.
+  
+1. A VPC is created per user account, for a region and has all the availability zones of the region aspart of it.
+2. by default all the resources witin the vpc can communicate with each other
+3. per aws user account, per region at max we can create 5 vpcs (softlimit)
+4. by default a resource in one vpc cannot communicate with a resource in another vpc, even though both vpcs belongs to the same aws user account. If we want resources across the vpcs to communicate with each other we need to use vpc peering technic
+5. per each aws account, per each region, one default vpc is created by aws 
+
+What is the purpose of vpc?
+There are lot of reasons or usages of vpc
+if we want to create an isolated network of resources:
+1. per business or department level then we can use vpc
+within an organization there can be several departments like hr, finance and sales etc. The resources are scattered and spread across the departments. Inorder to isolate the resources of one department or a group from other department we can create vpc per department.
+  
+2. per projects
+to keep resources across the projects isolated from each other we can create vpcs per project
+
+3. per environment
+per each environment in which we deploy our application, to ensure the resources across the environments will not access each other we can create separate vpc per environment like
+1. devvpc
+2. testvpc
+3. preprodvpc
+4. prodvpc
+
+
+How to create a VPC?
+To create an vpc network we need to specify #2 things
+1. vpc network name = just a name to identify the network among other networks.
+2. cidr notation indicating the network address and host bits of that network
+192.168.0.0/16 = means 16 bits or 2 octets are network bits, so all the resources that are created within this vpc network should have same network address as "192.168" and the host address can be generated uniquely for each resources within the network
+
+so if we create #2 ec2 instances in above vpc network, they might have ip address as 
+192.168.10.1
+192.168.11.2
+  
+2. Subnet
+VPC is an large isolated network, that spans across the AZs of the region. if we create resources at the vpc level, all the resources of the vpc are applied with same access restrictions and security. But we wanted different groups of resources to have different access restrictions and security to be applied. if we keep all the resources within one network, we cannot achieve this
+  
+So aws platform has provided subnets. Subnets are the small networks that are created within an vpc network. Based on the groups of resources we have we can create several subnets and apply traffic restrictions/security at the subnet level.
+For eg.. we can create a database subnet, in which we can place database resources and enforce traffic restrictions on all the databases resources by applying security/restrictions on database subnet.
+  
+1. A subnet is a small network within the vpc network that is scoped and created within the availability zone of the vpc.
+2. it is recommended to create atleast 2 subnets across the AZs of the vpc, to ensure high availability of the resources
+3. within the vpc we can create at max 200 subnets (softlimit)
+  
+  
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

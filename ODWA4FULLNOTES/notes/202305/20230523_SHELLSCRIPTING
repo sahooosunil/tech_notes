@@ -1,0 +1,74 @@
+Shellscripting
+---------------
+
+What is shellscripting, what is the purpose of it?
+If we wanted to perform a bunch of shell commands repeatedly over the period of time for accomplishing a job, the linux user or the devops engineer has to enter these commands/instructions repeatedly on the bash terminal (TTY) in carrying out the activities. If the devops engineer or linux user is manually executing these commands on the bash terminal repeatedly then we have several 
+problems:
+1. it is time consuming in manually entering the bash commands on the terminal to carryout the operation
+2. there is a high chance the ops engineer/linux user might type something incorrectly which might fail in running the commands or perform wrong operation which might lead to errorneous operation
+3. since there are bunch of commands that has to be executed in a specific sequence order one after the another, the linux user has to be available in-person on the machine and execute the commands interactively which is going to waste lot of time
+
+Instead of manually typing and running these commands interactively and repeatedly we can make use of shellscripting that takes the job of automating the repeatitive activities that has to be conducted over the period of time
+
+Shellscripting:
+A shellscripting is a file in which bunch of shell commands are written that can be passed as an input to the underlying the bash interpreter that takes care of reading the shell commands written in the file sequentially from top to the bottom and executes on the underlying operating system machine is called "shellscripting". Through which we can accomplish touch-less automation
+-----------------------------------------------------------------------------------------------------------------------------------
+
+How to write a shellscript program?
+shellscript is a file in which we write bunch of shell commands written in a sequence order, that can be passed as an input to the shell interpreter to execute them, so from this we can understand it is a file on the Filesystem of the computer
+
+1. we need to create a file on the Filesystem, the name of the file should be written appropriately based on the operation we want to perform using the shellscript program.
+it is a good practice to always write the shellscript program ending with an extension as ".sh".
+	
+touch print.sh
+
+2. every shellscript file should be written with a starting line called "shebang"
+	
+print.sh
+--------
+#!/bin/bash
+shebang is an instruction we are writing to the shellinterpreter asking to use a specific shell interpreter in executing the instructions written in the file.
+	
+In the above print.sh program, the shebang we wrote indicates all the instructions written in the shellprogram file should be executed with bash interpreter
+
+Followed by shebang we can write shellcommands we want to execute.
+print.sh
+--------
+#!/bin/bash
+echo "Good morning! great start to shellscripting!"
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

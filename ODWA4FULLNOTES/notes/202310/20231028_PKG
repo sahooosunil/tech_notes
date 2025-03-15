@@ -1,0 +1,169 @@
+
+1. apt module
+
+apt:
+  name: packageName
+  state: [present|latest|absent]
+	update_cache: yes|no
+autoremove: yes|no
+purge: true/false
+autoclean: yes|no
+deb: debfile
+--------------------------------------------------------------------------------------------------------------------------------------
+System Category
+---------------
+The operating system related modules are provided aspart of the System Modules.
+	
+#1. user module
+adding/modifying and removing the linux users can be done through user module
+
+1.1 add new user with uid and gid
+- name: taskName
+  user:
+    name: username
+		uid: id
+		gid: id
+		
+1.2 add a user with default shell
+- name: taskName
+  user:
+    name: username
+		uid: id
+		gid: id
+		shell: /bin/bash
+		
+1.3 add a user with home directory
+- name: taskName
+  user:
+    name: username
+		create_home: yes|no
+		password: login_password
+		generate_ssh_key: true|false
+		remove: yes (removes an existing user)	
+
+
+Requirement:
+1. we need to create a new linux user, bob with default shell, home directory and password
+2. configure the user as sudoer with passwordless sudo access
+
+
+1.
+sudo useradd -m -s /bin/bash bob
+sudo passwd bob
+
+2. to configure the user as sudoer we need to add him into /etc/sudoers file as below
+bob ALL=(ALL) NOPASSWD:ALL
+
+How can we accomplish the above using playbook?
+
+			
+adduser-playbook.yml
+---------------------
+---
+- name: add user as sudoer play
+  hosts: all
+	tasks:
+    - name: create user jim
+		  user:
+        name: jim
+				create_home: yes
+				shell: /bin/bash
+				password: welcome1
+			become: yes
+		- name: promote user as passwordless sudoer
+		  lineinfile:
+        path: /etc/sudoers
+				line: 'jim ALL=(ALL) NOPASSWD:ALL'
+				insertafter: '^root.*'	
+				validate: '/usr/sbin/visudo -csf %s'	
+			become: yes		
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,261 @@
+Image building directivies:
+1. FROM
+2. ARG
+3. ENV
+4. COPY
+5. RUN
+6. WORKDIR
+7. LABEL
+8. ADD
+
+Container directives:
+1. CMD
+2. ENTRYPOINT
+3. VOLUME
+4. EXPOSE
+5. HEALTHCHECK
+--------------------------------------------------------------------------------------------------------------------------------
+1. FROM directive
+When we are building the docker image for packaging our application, we need to create our images extending from one of the base images. 
+The docker team has provided several base images aspart of dockerhub repository,
+ we can use the images from docker official or verified or Sponsored OSS category images as base images so that our images will have required bins/libs needed for communicating with underlying docker engine of the docker host
+
+How do we ask docker engine to create our own image extending from one of the base images?
+FROM is a directive using which we can specify/ask docker engine to create an image out of a base image.
+	
+syntax:-
+FROM --platform=platformName image:tag
+
+How do we choose the based images operating system platform while packaging the applications into docker image?
+The base image operating system platform will be choose based on the type of the application we are running,
+ it doesnt depends on the docker engine host operating system platform.
+	
+Hardware platforms
+------------------
+The docker images differ from different hardware architectures/platforms. For example an image build on intel x86 platform doesnt work on amd64 host platform.
+ So we need to choose the base image portable or compatible with the hardware platforms on which we want to run our application.
+	
+If we want to distribute our application to run on windows operating system on intel 64-bit computer then we need to choose a base image that is portable on windows x64 processor
+
+A docker image can be build to work on different hardware platforms as well. For eg.. ubuntu team has published several versions of the ubuntu base image to be portable across different hardware platforms as below.
+	
+Supported architectures: (more info):
+amd64, arm32v7, arm64v8, ppc64le, s390x
+
+If we want to package and distribute our software product as docker image on different hardware platforms we need to package our application with different base images
+	1. windows x86 base 
+	2. windows x64 base
+	3. arm base
+	4. amd64 base 
+so build our application into #4 images of different base image hardware platforms and publish into docker container repository so that within one repository the container registry keeps four images tagging with different hardware platforms.
+	
+--platform is optional, while creating our own image from the base image using FROM directive, if we dont specify the hardware platform of the base image to be used using --platform switch, then docker engine pull the base image based on docker host machine hardware platform. if we are running docker image build on intel 64-bit processor hardware platform with base image as 
+
+FROM ubuntu:24.04
+without specifying the platform, then the docker engine looks for ubuntu:24.04 of intel 64-bit compatible image. If we want to explicitly specify the base image hardware platform then we need to use --platform= the platform of the base image to be used.
+	
+
+~/baseimage:/>
+  |-Dockerfile
+	
+Dockerfile
+----------
+FROM ubuntu:24.04
+CMD ["echo", "eureka! running docker container out of an docker image"]	
+
+CMD = is used for specifying the default command to be executed upon creating the container.
+
+now build the docker image out of the above Dockerfile, by going into the ~/baseimage directory, and run the below command
+docker image build -t baseimage:1.0 .
+	
+upon building the image we can check for the image exists in local cache of docker host or not by using
+docker image ls
+
+To run the container out of the above image we can run
+docker container run baseimage:1.0
+--------------------------------------------------------------------------------------------------------------------------------
+#2. ENV directive
+ENV is an directive used for defining or passing environment variables while building the image, so that these variables will be available while running the container.
+	
+For eg.. while creating the image, we install software packages and libraries like jdk, tomcat, maven under a specific directory location in the image as these are binary distributions.
+ since we know the location of the packages where those were installed in the image we can configure ENV variables pointing those directory locations at the time of building the image itself using ENV directive
+
+so that the container would be created out of those images bits along with ENV variables created out of the image, 
+so that we can access the software packages directly inside the image.
+	
+syntax:-
+ENV variableName=value
+
+
+~/envimage:/>
+  |-Dockerfile
+	
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENV APP_NAME=netbanking
+ENV APP_VERSION=1.0
+CMD ["/bin/bash", "-c", "echo APP_NAME: $APP_NAME"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

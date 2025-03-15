@@ -1,0 +1,249 @@
+Ansible Roles
+--------------
+Ansible roles are the way through which we can package and distributed ansible playbook automations in an standardized directory, so that it can be re-used across in building the automations.
+
+The ansible has defined 8 standard directories into which the automation needs to be implemented, so that people upon distributing can discover and use them.
+    
+ansible_role (root directory)    
+|-default
+    |-main.yml   
+|-tasks
+    |-main.yml
+|-handlers
+    |-main.yml
+|-vars
+    |-main.yml
+|-files
+|-templates
+|-meta
+    |-main.yml
+|-tests
+    |-main.yml
+
+other than files and templates in rest of the directories a default main.yml will be there.
+    
+1. default/main.yml = all the variables with default values are defined/configured that can be used across in tasks/handlers
+2. files = all the static files that needs to be used aspart of the automation should be placed under files directory
+3. templates = all the template files like jinja2 templates can be placed here
+4. tasks/main.yml = all the tasks that we wanted to execute aspart of the automation should be defined in tasks/main.yml
+
+In case we have several tasks needs to be carried in achieving the desired state of the system like
+1. installing tomcat server
+2. installing jdk
+3. installing and configuring apache2 as an frontend or proxy
+etc
+
+then having them all under the tasks/main.yml becomes huge, difficult to understand and maintain. So we can break them into multiple .yml files like
+
+tasks/
+|-install-jdk.yml
+|-install-apache2-proxy.yml
+|-install-tomcatserver.yml
+
+then import all these tasks into tasks/main.yml as shown below
+main.yml
+import_tasks: install-jdk.yml
+import_tasks: install-apache2-proxy.yml
+import_tasks: install-tomcatserver.yml
+
+
+5. handlers/main.yml = all the hanlders that are part of the role, that has to be executed when notified by a tasks should be placed under handlers/main.yml
+
+6. meta/main.yml = The meta information about the role like author, licensing, maintainers, version etc are defined in meta/main.yml directory
+
+7. vars/main.yml = all the variables being used aspart of the role should be declared here
+
+8. tests/main.yml = all the tests that has to be performed in testing the role should be placed here
+
+How to create an role?
+----------------------    
+To help us in quickly creating the roles ansible has provided ansible-galaxy CLI tool using which we can quickly create role with standard directories and default files.
+
+create an role directory and run the below command to initialize the layout of the role.    
+ansible-galaxy init roleName
+
+How to use an role within the playbook?
+In order to use the roles, we need to place the roles inside any one of 3 standard directories so that those can be used inside the playbook
+1. within the playbook directory we need to create an directory called roles/ in which we need to the place the roles to be used aspart of the playbook
+2. /etc/ansible/roles/ directory under which we can place all the roles globally so that those can be used within any playbooks
+3. we can define a property roles_path in ansible.cfg file pointing to the directory location where want to place roles under
+
+once we place the roles in any one of the directories defined above we can reuse these roles within the playbook as below
+
+playbook.yml
+------------
+---
+- name: play
+  hosts: all
+  roles:
+    - roleName
+...
+-------------------------------------------------------------------------------------
+Let us host an static web application by installing apache2 server on the managed nodes using roles.
+
+#1.        
+The static web application as below:        
+ninestars/ [static web application] [files]
+ |-html
+ |-css
+ |-js
+ |-images
+ 
+#2. we need to install apache2 server [tasks: apt]
+#3. copy the project directory "ninestars" into /var/www/ directory [task: copy]
+#4. create apache2 site configuration file under /etc/apache2/sites-available/
+    |-jinja2 template (templates directory)
+    |-template
+we need 2 variables: sitedir and servername = vars/main.yml
+
+#5. enable site and reload apache2 server
+  |-handlers
+  
+apache2site (role)
+|-default
+    |-main.yml
+|-files
+  |-ninestars/
+|-templates
+  |-apachesiteconf.j2
+|-tasks
+  |-main.yml (apt, copy, template)
+|-handlers
+  |-main.yml (service, shell)
+|-vars
+  |-main.yml (#2 variables)
+|-meta
+  |-main.yml
+|-tests
+  |-main.yml
+  
+token: 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  
+    
+    
+ 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

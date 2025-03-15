@@ -1,0 +1,53 @@
+**Kubernetes Namespaces**
+--------------------
+Namespaces provide logical separation for objects/resources in a Kubernetes cluster. 
+Since a cluster is shared across multiple teams and projects, namespaces help isolate resources, ensuring security and controlled access.
+
+A Kubernetes administrator can:
+- Create multiple users and groups.
+- Assign users/groups to specific namespaces.
+- Grant access to manage only the resources within their assigned namespace.
+
+This ensures different teams cannot view or manage resources belonging to others, improving security and organization.
+
+### Default Namespaces in Kubernetes
+Upon installation, Kubernetes creates four default namespaces:
+
+1. **default** – All objects are placed here unless specified otherwise. Accessible by all users and usually empty initially.
+2. **kube-system** – Contains Kubernetes system components like API server, controller manager, and scheduler.
+3. **kube-public** – Publicly accessible without authentication. Usually empty unless explicitly used.
+4. **kube-node-lease** – Manages lease objects that help track node heartbeats.
+
+### Common Namespace Commands
+1. **View all namespaces:**  
+   ```sh
+   kubectl get namespaces  # or shorthand: kubectl get ns
+   ```
+
+2. **Create a namespace:**  
+   ```sh
+   kubectl create namespace <namespacename>
+   ```
+
+3. **Delete a namespace:**  
+   ```sh
+   kubectl delete ns <namespacename>
+   ```
+
+4. **View all pods in the default namespace:**  
+   ```sh
+   kubectl get pods
+   ```
+
+5. **View pods in a specific namespace:**  
+   ```sh
+   kubectl get pods -n <namespacename>
+   ```
+
+6. **View all pods across all namespaces:**  
+   ```sh
+   kubectl get pods -A
+   ```
+
+Using namespaces effectively helps in organizing and securing resources in a shared Kubernetes environment.
+

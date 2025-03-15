@@ -1,0 +1,187 @@
+How many types of repositories are there?
+There are 2 types of repositories are there
+1. distro repositories
+2. software vendor repositories
+
+How does an small to moderate software manufacturing vendors or individuals distribute their commercial software packages to the world?
+The distribute the commercial software packages also through distro repositories, to help us in differentiating the packages in the repositories, the categories are introduced in repositories
+There are 4 categories of software packages are published into an repository
+1. Main        = canonical / opensource software packages that are verified by the distro vendors are published under Main category
+2. Universe    = community maintained software packages are distributed 
+3. Restricted  = proprietary vendor software packages like device drivers, etc are distributed through restricted
+4. Multiverse  = licensed / legal restricted software packages are distributed
+
+How to install the software package in ubuntu operating system?
+ubuntu has provided 2 tools for installing the software packages on the operating system.
+1. apt  = advanced packaging tool, which is a package manager that helps us in browsing, searching, downloading and installing the software packages from ubuntu repository directly. apt internally uses the dpkg installer for installing the downloaded software package.
+while using apt, apt takes care of identifying the dependent sofware packages/libraries required while installing an software package and ensures the dependencies are downloaded and installed automatically before installing the requested package
+
+2. dpkg = debain packaging tool, which is an installer. unlike apt, the dpkg will not download the software package from the repository and even will not resolve or install the dependent software libraries or packages
+
+if we have downloaded an .deb packaged software, it can be quickly installed by trigerring the dpkg tool
+-----------------------------------------------------------------------------------------------------------------------------------
+How to install a software package using apt?
+apt is an package manager, that takes of browsing, downloading and installing the software packages from the remote/distro/ubuntu repositories. 
+
+How does the apt tool knows the location/information about the software package repositories, so that it can search, browse and download the packages to install?
+The information/location of the software package repositories are stored in linux operating system under /etc/apt/sources.list file. If we want we can add repository locations/information into the sources.list file or  there is an directory /etc/sources.list.d/ directory into which we can create 1 file per one repository we want to add, by writing the information/address of the remote repository inside it
+
+by adding a new file per repository under /etc/apt/sources.list.d/ directory makes it easily manageable, we can quickly modify or remove individual repository than modifying the sources.list file
+
+The syntax of adding a new repository infomration into the sources.list or sources.list.d/ directory is in below format
+deb repositoryURL version category
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ jammy main
+
+How to add the repository information into the sources.list file?
+There are 2 ways of adding the repositories into the sources.list are there
+1. manually add the repository by editing the /etc/apt/sources.list or create a new file under /etc/apt/sources.list.d directory
+2. use a tool called apt-add-repository tool
+
+1. manually add the repository information into /etc/apt/sources.list
+we can use any of the text editors like vim or nano for adding the repository information into the /etc/apt/sources.list in the above specified format, but we should be careful about the format/syntax while adding it
+
+2. use apt-add-repository tool
+there is always a chance of comitting an mistake syntactically while adding the repository manually into the /etc/apt/sources.list file, instead ubuntu has provided an tool called apt-add-repository. it takes the repository url as an input and adds the entries into the sources.list automatically
+
+securing the repository communications
+In order to ensure the communication between the client (apt) and the repository are secured, the communication is encrypted end-to-end between the 2 parties using the gpg keys (GNU Privary Gaurd) an implementation of public key cryptography which is used for more standard operations of encryption keys (encrypt/decrypt)
+every repository vendor provides an public signing key that should be used for communicating with a repository. before communicating with an repository we need to download the gpg key and into the repository store of the operating system, so that apt tool uses these gpg keys in communicating with the repository
+
+1. How to download the gpgkey from an vendor
+wget gpgkey url
+
+2. how to add the key into the keystore of the operating system?
+sudo apt-key add keyfile (downloaded above)
+
+upon adding the new repository into the source.list file we need to update the local repository index cache using sudo apt update -y 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

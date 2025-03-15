@@ -1,0 +1,204 @@
+3. Package Management category
+The Ansible has provided several modules under package management category that can be used for installing and upgrading the software packages across the distros
+For each linux distro there is a separate package manager provided by the distro vendors like
+	  debain = apt
+	  redhat = yum
+		arch   = pacman
+		
+So to help us in installing, upgrading or removing the software packages across the distros of the linux operating system ansible has provided several package manager modules specific to the distros as below
+	1. debain = apt module
+	2. redhat = yum module
+	3. arch   = pacman module
+	4. mac    = homebrew module
+	
+We can use distro specific package manager module in our playbooks for installing, upgrading or removing the software packages but the problem is	the playbooks becomes distro specific and will not be portable across the distros of the linux operating system. But the advantage is we can use full capabilities or features of the specific distro package manager.
+	
+To overcome the problem with distro specific package manager modules, ansible has provided an generic package manager module called "package", that can be used for installing/upgrading the software packages on any linux distros.
+	
+1. apt module
+apt module has all the options related to installing, upgrading or removing the software packages equalTo the apt tool of the debain distro.
+	
+#1. install a specific software package
+- name: taskName
+  apt:
+    name: packageName
+		state: [present/latest/absent]
+		update_cache: yes | no
+
+1. present = the specified software package is installed and made available on the managed nodes of the cluster (it doesnt look for whether it is latest or not)
+2. latest = ensure the latest version of the specified software package is installed on the fleet servers. if we have older version being installed, then it will upgrade
+3. absent = if present it will remove/uninstall
+
+update_cache = yes/no = reload / refresh the cache from ubuntu repository
+autoremove = yes/no = if the packages are not being used, it will remove it
+autoclean: yes/no = removes the local repository cached packaged files which are no longer needed
+deb: install the software package from local .deb file
+purge: true/false = cleanup the configuration files along with software packaged bits, and it should be used along with state: absent
+
+#2. how to uninstall the software package?
+- name: taskName
+  apt:
+    name: packageName
+		state: absent
+		purge: yes
+
+#3. how to install the latest version of the software package?
+- name: taskName
+  apt:
+    name: packageName
+		state: latest
+		update_cache: yes
+		
+#4. remove unwanted packages on the system?
+- name: taskName
+  apt:
+   autoremove: true
+		 
+#5. remove unwanted packages on the local cache?
+- name: taskName
+  apt:
+    autoclean: true
+			
+#6. How to install multiple software packages?
+- name: taskName
+  apt:
+    name:
+      - package1
+			- package2
+			- package3
+		update_cache: yes
+--------------------------------------------------------------------------------------------------------------------------------------
+Instead of using distro specific package manager module we can use generic package management module "package" as below.
+			
+syntax:
+- name: taskName
+  package:
+    name: packageName
+		state: [present|latest|absent]
+		use: auto
+		
+The package module underlying goes to the distro specific package manager in installing, upgrading or removing the software packages here use: "auto" indicates pick automatically the distro specific package manager.
+	
+
+	
+The control node server by default ssh onto the managed nodes using the user with which we are running the ansible or ansible-playbook command on the control node server. incase if we want to change the user through which the control node server to be ssh onto managed nodes we can specify ansible_user in host configuration file for each managed node
+
+while running any of the modules on the managed nodes, the ansible control node server executes them onbehalf of the ssh user through which it ssh onto the machine without using sudoer permission.
+
+but while running few superuser modules like
+	1. package managers
+	2. user management modules
+	3. system modules
+	4. service modules
+we need sudoer permission to execute them on the managed nodes
+
+So to let the control node server run such modules with sudoer permission we need to configure at task level become: yes 
+
+when we specify becomes: yes, the ansible control node server grabs sudo access on the managed nodes to run the modules, which requires password to be entered interactively on each managed node. To ensure the touch-less automation on each managed node the ansible ssh user should be configured with passwordless sudoers access.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	

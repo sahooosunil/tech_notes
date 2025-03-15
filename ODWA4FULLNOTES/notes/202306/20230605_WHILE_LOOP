@@ -1,0 +1,268 @@
+wap to find the sum of 1 to N numbers?
+for eg.. N=3
+1 + 2 + 3 = 6
+	
+sumOfNNumbers.sh
+-----------------
+#!/bin/bash
+read -p "N : " N
+I=1
+SUM=0
+while [ $I -le $N ]	
+do
+	SUM=$[SUM+I]
+	I=$[I+1]
+done
+echo "SUM : $SUM"
+-----------------------------------------------------------------------------------------------------------------------------------
+write a program to find whether the given number is prime or not?
+prime = a number should be divisible by 1 or by itself, and should not be divisible by any other number, then it is called "prime" number
+N=9
+9/2 = 1
+9/3 = 0 (divisible) (not a prime) 
+break =  is an instruction to stop the loop in-between
+
+N=7
+7/2 = 1
+7/3 = 1
+7/4 = 3
+7/5 = 2
+7/6 = 1
+since 7 is not divisible by any other number it is called "prime" number
+taken an counter variable from 2 to N-1 and divide N with counter, if the remainder is zero = break the loop and print it as not a prime. otherwise it is an prime number
+
+prime.sh
+--------
+#!/bin/bash
+read -p "Enter a number" N
+I=2
+
+while [ $I -le N-1 ]
+do
+	REM=$[N%I]
+	if [ $REM -eq 0 ]
+		echo "$N is not prime"
+		exit 0 #stops the program for execution
+	fi	
+	I=$[I+1]
+done
+echo "$N is an prime number"
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to print the below "*" pattern up to N
+Nested Loops
+N=4
+*
+* *
+* * *
+* * * * 
+			
+printStars.sh
+-------------
+#!/bin/bash
+read -p "N : " N
+I=1
+			
+while [ $I -le $N ]
+do
+	J=1
+	
+	while [ $J -le $I ]
+	do
+		printf " * "
+		J=$[J+1]
+	done
+	
+	I=$[I+1]
+	echo ""
+done
+-----------------------------------------------------------------------------------------------------------------------------------
+write a program to sum all the numbers in a given number and print it?
+N=765
+7 + 6 + 5 = 18
+N=128
+1 + 2 + 8 = 11
+		
+SUM=0		
+N=734		
+REM=N%10 (4)
+		
+SUM=SUM+REM	(4)
+		
+N=N/10 (73)		
+------------------
+N=73
+REM=N%10 (3)
+SUM=SUM+REM (7)
+N=N/10 (7)		
+-------------------
+N=7
+REM=N%10 = 7
+SUM=SUM+REM (14)
+N=N/10 = 0
+---------------------
+stop
+
+sumofdigits.sh
+--------------
+#!/bin/bash
+read -p "N : " N
+SUM=0
+		
+while [ $N -gt 0 ]		
+do
+	REM=$[N%10]
+	SUM=$[SUM+REM]
+	N=$[N/10]
+done
+echo "SUM : $SUM"
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to find whether a given number is palindrome or not?
+palindrome: reverse of the number is same 
+
+121 = 121(reverse) =  (palindrome)
+132 = 231 (reverse) = not a palindrome
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	

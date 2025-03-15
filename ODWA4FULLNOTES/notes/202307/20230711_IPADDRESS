@@ -1,0 +1,45 @@
+ip address
+-----------
+Every computer that is connected to an network requires an unique identification for accessing the computer over the network. For every computer there will not be any ip address, whenever a computer has been connected to an network, then to have that computer identified over a group of computers within the network, the ip address will assigned/allocated to that computer.
+	
+an ip address even can be called as logical address of the computer, since it is computed and assigned to it and is not permanent. unlike the ip address every computer even has an mac address, it is the address that is assigned to the network interface card that is attached to that computer by the manufacturer itself and is permanent and will not change over the course of time.
+	
+From the above we can understand 
+1. always a computer that has an network interface card/network adapter has mac address irrespective of whether it is connected to the network or not and is permanent in nature
+2. where as an ip address is an logical address that is computed upon the computer has been connected to the network and would change over the time.
+	
+So for computer to send/recieve the data over the network we need both these addresses.
+1. ip address = is used for routing the data packets across the network of computers. ip address are used by Routers to route the data packet to the right network of computer.
+	
+2. mac address = is used for delivering the data packet to a specific computer within the network. mac addresses are used by network switches
+
+How does a computer gets an ip address?
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

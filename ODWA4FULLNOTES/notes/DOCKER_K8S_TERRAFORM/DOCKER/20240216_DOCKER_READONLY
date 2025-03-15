@@ -1,0 +1,20 @@
+Why docker images are layered and stacable?
+By creating the docker images as layered and stackable, we can minimize the storage size/footprint of the docker images as we can reuse the layers across the images that we build, so that we can quickly push and distribute the docker images across the environments.
+	
+	
+Why docker images are read-only?	
+By keeping docker images read-only, with minimal storage capacity, we can run several instances of the software application on containers and can achieve scalability easily.
+	
+
+2.5gh
+12 gb ram
+100 gb
+----------- 
+virtual machine: 2x    (operating system: 12 gb, 1 cpu, 6gb) = 2 instances of the applications on #2 machines. because the only way of achieving isolation in running the application here is by running applications in separate virtual machines.
+
+docker containers: 10x (operationg system: 0gb, 0 cpu, 0 ram) (application: 300mb, 0.25 cpu, 1gb)
+
+
+	#2 computers = HA = 1 instance #m1, 1 instance #m2
+	                    1 instance #m2
+											

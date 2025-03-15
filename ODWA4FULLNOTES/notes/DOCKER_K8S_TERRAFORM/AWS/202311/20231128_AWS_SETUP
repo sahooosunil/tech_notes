@@ -1,0 +1,71 @@
+AWS Cloudplatform Architecture
+-------------------------------
+AWS Architecture refers to how does the cloud platform has been spread across in offerring the cloud/computing services to the world.
+  
+1. AWS Region
+AWS Region is an geographical location within a country from where aws is offering cloud services to the world. AWS Region is not an country, rather within a country they can be multiple aws regions can be there. For eg.. United States country we have #5 regions. AWS Cloudplatform has been spread across 32+ regions around the world.
+  
+There are 3 reasons why aws has comeup with regions:
+1. to avoid network latency in accessing the services
+2. based on governance and privacy aspects
+3. cost factor
+
+2. Availability Zone
+Availability Zones are the datacenters within the AWS region from where it is offering the services. Per each AWS Region, the aws has provided atleast #2 availability zones for high availability. These AZs are choose based on various factors like
+1. power availability
+2. climatic conditions
+3. cyclones/tornados
+etc
+so the chances of multiple AZs to be failed at the same time is almost zero.
+  
+3. Edge Locations
+Edge Locations are the mini-datacenters co-located around the AWS regions in offerring shared/global services to the customers are the world.
+1. Cloud Front
+2. Route53
+etc
+
+The reason for providing edge location is to reduce the network latency in distributing the services
+--------------------------------------------------------------------------------------------------------------------------------------
+How to setup an AWS Cloud account and how to access the aws cloud services?
+-------------------------------------------------------------------------------------------------------------------------------------
+Scope of AWS Services
+There are lot of services offered by the aws cloud platform, these services are categorized and scoped based on their availability and accessibility into 3 scopes/categories
+1. Global
+2. Regional
+3. Availability Zone
+
+
+1. Global Scope
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

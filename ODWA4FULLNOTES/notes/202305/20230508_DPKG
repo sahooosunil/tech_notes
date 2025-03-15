@@ -1,0 +1,103 @@
+What are the commands that are available in apt package manager for managing the software packages on the ubuntu operating system?
+1. sudo apt update -y
+2. sudo apt list --upgradable = shows the list of software packages available for upgrade
+3. sudo apt install packagename
+4. sudo apt upgrade
+5. sudo apt upgrade packageName
+6. sudo apt remove packageName
+7. sudo apt purge packageName
+8. sudo apt search packageName
+9. sudo apt autoremove
+
+How does the software packages are distributed aspart of the linux operating system?
+There are 3 ways the software packages are distributed in linux operating system
+1. repository based packaged software distribution
+2. direct downloadable packaged software distribution
+3. binary distribution
+
+#2. direct downloadable packaged software distribution
+There are few software vendors upon building the software packages, they themself will distribute the software packages directly from their official websites may be along with distro repositories. The reason could be several
+1. the vendor or the software package byitself is very popular and is being used by many people around the world, can be made available for download quickly
+2. the time to publish the software package through distro repository might take some time, due to verification/validation done by the distros, so to make the software package early reachable they might distribute directly along with repository 
+3. if the software package is made available to be directly downloadable, then it can copied and install on any machine even if it offline
+
+To install the above direct downloaded packaged software ubuntu has provided dpkg and apt tool. 
+when we use dpkg for installing the downloaded software package, the dpkg doesnt resolves the dependent software libraries and will fail installing the software package. So we need to install the dependent packages/libraries before installing an software package
+	
+but apt is an intelligent tool that can identify the dependent packages, downloads and installes them automatically before installing the requested package
+	
+
+What are the options available for installing the .deb file using dpkg?
+1. sudo dpkg -i file.deb = install the supplied software package
+2. sudo dpkg -l = lists all the packages that are already installed on the machine
+3. sudo dpkg -s packageName = shows the details of the software package specified along with its status indicating whether it is installed or not
+4. sudo dpkg -c file.deb = shows the contents of the software package provided
+5. sudo dpkg --unpack file.deb = unpacks the software package
+	
+6. sudo apt --fix-broken install = if there are broken installations because of dependent softwares are not available, then we can fix it by running this command
+7. sudo dpkg -r packageName = will uninstall the package from the machine
+8. sudo dpkg -p packageName = it works similar to remove only but even purges the configuration files (similar to apt purge)	
+9. sudo dkpg -l packageName = shows all the sofware packages availble with the given name along with their installed status
+
+
+instead of using dpkg for installing an downloaded .deb packaged file we can use apt as well, that will install the given package along with dependents by resolving them automatically using the below command
+sudo apt install --file location.deb
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

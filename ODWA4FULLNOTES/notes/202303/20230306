@@ -1,0 +1,27 @@
+High-level programming languages
+High level programming languages are meant for making the programs operating system portable. In addition, the languages provides instructionset that can be expressed in simple english like language. The syntaxes are very user friendly and anyone can read the programs and understand it easily.
+	
+The developer has to write the programs using high-level language instructionset only, upon writing the programs, compile them using the high-level language provided tool called "compiler"
+The High-level language provider provides per operating system one compiler tool, for eg.. we have java windows compiler, java linux compiler, java mac compiler.
+depends on the operating system on which we are working we need to download or install appropriate language compiler tool on the machine.
+	
+Now the developer has to compile the program using the operating system complier to generate the operating system executable code, so that programmer/user can take the executable code and run on the underlying operating system.
+	
+The programmer once written the program can compile using different operating system compilers provided by the language in running the program across the operating systems hence it is called "WORA" (write once run anywhere)	
+	
+after writing the program (sourcecode) 	
+
+windows
+#3000 instructionset
+
+programs using operating system instructionset = 
+	
+	
+linux
+#4500 instructions
+program using $4500
+
+
+high level programming language = bounded to make his instructions compatible with multiple os language instructionset
+#2000  = instructions (ensuring these instructions are compatible with all the operating system he supports)
+	

@@ -1,0 +1,14 @@
+Protocol
+What is a protocol, what is the purpose of it?
+Protocols are nothing but set of rules/guidelines that should be followed by all the computers/programs that are connected over the network to ensure the communication/exchange of data between them is effective. Protocols guarantes several aspects of communication as below
+1. The data that is send by an sender always will be received by the intended receiver only
+2. Even though the physical tranmission channel is shared across several group of computers, protocol gives an illusion that everyone who is connected to that network has their own dedicated channel in which the transmission is taking place
+3. protocol ensures no 2 people data will be bomborded or collided over the tranmission that results in loss of data
+4. end-to-end guaranteed delivery of the data is taken care by the protocol
+
+From the above we can understand, we need guilines/rules (protocols) to ensure any 2 programs to effectively communicate with each other over the network
+
+There are 2 types of protocols are there
+1. Application protocols
+2. Transport protocols
+

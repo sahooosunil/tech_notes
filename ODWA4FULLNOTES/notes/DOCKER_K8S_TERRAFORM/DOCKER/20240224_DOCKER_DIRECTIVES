@@ -1,0 +1,203 @@
+How to build our own docker image, by packaging our application and run out of a container?
+Inorder to package our application, dependent software packages/libraries and instructions in running the application into an image we need to write Dockerfile with image building instructions written aspart of them.
+	
+The instructions that we write in packaging the application/software packages libraries inside the Dockerfile are called "docker directives". using these directives we accomplish 2 things
+
+#1. all the immutable content that seems to be common across all the containers of our image/application should be packaged inside the docker image like
+1.1 bins/libs
+1.2 dependent software packages & libraries
+1.3 software application binary
+etc
+To package these immutable contents inside the image, we will write instructions in the Dockerfile, which are being executed by the docker engine during the time of building the image, since these directives/instructions are executed during the time of building the image, these instructions are called "image building instructions or image building directives"
+	
+#2. Along with immutable content, we write docker instructions or directives inside the Dockerfile for running the software application that is packages inside the image out of a container, these instructions that would be executed at the time of creating the container are called "container directivies"
+	
+so the docker directives can be classified into @2 types
+1. image building directives
+2. container directives
+
+What are the image building directives?
+1. FROM
+2. ARG
+3. RUN
+4. ADD
+5. WORKDIR
+6. COPY
+7. LABEL
+8. ENV
+
+What are the container directives?
+1. CMD
+2. EXPOSE
+3. VOLUME
+4. ENTRYPOINT
+5. HEALTHCHECK
+-------------------------------------------------------------------------------------------------------------------------------
+What is docker build context?
+
+To build an docker image for a project, we need to write the docker file with name "Dockerfile" without extension. The directory in which we wrote the Dockerfile is called "docker project directory"	or "docker context". In this Dockerfile we write image building instructions and container instructions and pass it as an input to the docker engine asking to build the docker image.
+	
+Inorder to build the docker image out of the Dockerfile, we need to be in the Dockerfile directory and run docker cli commands.  upon running the docker cli asking to build the docker image, the docker cli takes the contents of the current directory including the sub-directories (where the Dockerfile) and transfers them to the Docker engine making these files/directories available for Docker engine inorder to build the docker image.
+	
+The directory in which we wrote the Dockerfile is called "build context", since all the contents of the project needs to be made available for the docker engine inorder to package the artifacts into the image based on image building instructions, the dockercli transfers all of the contents of the directory to docker engine.
+	
+So it is always recommended to write Dockerfile in a dedicated directory of the project. avoid writing the Dockerfile in global directories like $USER_HOME or "/" ROOT directories etc, because the entire directory contents along with sub-directories would be transfered to the docker engine that takes lot of time and delays the image building process
+
+d:\work\
+|-airtelcare2
+  |-src
+		|-main
+			|-java
+			|-resources
+	|-target
+		|-classes
+		|-*.war
+|-pom.xml
+|-Dockerfile
+
+
+1. Can we write Dockerfile with a different name other than default filename?
+2. Can we run docker image building cli command from different directory other than the Dockerfile directory?
+	
+	
+1. Can we write Dockerfile with a different name, than the default?
+Yes we can change the default name of the Dockerfile to any other name, but we need to specify the filename while running the docker image build cli command as below
+
+airtelcare2
+|-src
+	|-main
+		|-java
+		|-resources
+|-pom.xml
+|-AirtelCare2Dockerfile
+
+docker image build -t image:tag -f ./AirtelCare2Dockerfile
+-f stands for filename
+
+2. Can we run docker image building cli command from different directory other than the Dockerfile directory?
+Yes we can run the docker cli command other than the Dockerfile directory to build the image, but we need to pass the absolute path pointing to the directory where the Dockerfile exists using below command
+
+for eg.. if the project is in d:\> drive and we are running the docker image build command from e:\> then we need to pass the absolute path as below
+
+e:/> docker image build -t imageName:tag -f d:\airtelcare2\Dockerfile
+
+by default if we are running the cli within the same directory of the Dockerfile then we can use "."
+docker image build -t image:tag .
+"." refers to current directory where the Dockerfile can be located.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

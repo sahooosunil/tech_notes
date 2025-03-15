@@ -1,0 +1,207 @@
+Service
+Service is adding an network to the pods of the kubernetes cluster. By default a Pod is accessible within the Node on which it has been created and has few characteristics
+1. Pods will not be recovered upon crash
+2. A Pod is assigned with an emphermal ip address so that on crash and recover the ip address would be changed
+
+But we want the pod
+1. to be accessible to other pods on the cluster without worrying about the change of ip address
+2. pod to be exposed to the external world
+3. the traffic should be loadbalanced across the instances/replicas of the pod on the cluster
+
+We can achieve all of these things by using Service. A Service acts as an discovery engine and loadbalancer in identifying the pods and loadbalancing, routing the requests across the replicas of the pod. There are 5 types of Services are there 
+1. ClusterIP
+2. NodePort
+3. Loadbalancer
+4. Ingress
+5. Headless
+
+1. ClusterIP
+By default when we create an service without specifying the Type, the kubernetes control plane creates ClusterIP service. If we want our Pod to be exposed within the cluster and make it accessible over fixed ip address and loadbalance the traffic across the Pod replicas then we need to use ClusterIP Service
+
+The ClusterIP Service is assigned with an Ip address within the Cluster Network Range. Using this ClusterIP service the other pods on the cluster can access the Pod.
+	
+We use ClusterIP Service if we want to expose backend applications like Microservices to the frontend applications (Angular/React/NodeJS etc)	or database server pods to be accessible to the Java/Backend applications within the Cluster we use ClusterIP Service
+
+git: https://github.com/techsriman/k8sclusterip.git
+
+
+distributor-network-service.yml
+--------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+	name: distributor-network-service
+spec:
+	selector:
+		matchLabels:
+			appName: distributor-network
+			version: "1.0"
+	type: ClusterIP
+	ports:
+		- port: 8080
+			targetPort: 8080
+
+port = is the port on which the service will listens for the incoming request
+targetPort = is the container port to whom it forwards the request to
+-------------------------------------------------------------------------------------------------------------------------------
+NodePort
+NodePort service acts as an external entrypoint for incoming requests of your application. It exposes the Pod application that is running on a WorkerNode directly to the external network. NodePort opens an port on the WorkerNode, all the traffic that is recieved on the NodePort of the WorkerNode will be forwarded to the ServicePort, there by which it is forwarded to the relevant pod application that is running on a specific port.
+	
+When we create an NodePort service, the kubernetes control plane creates the NodePort service across all the WorkerNodes of the Cluster and opens a port on each Node. The traffic that is send to the workernode on the NodePort will be forwarded to Service Port, and the Service will forward the request to the pod application that is running on the Target port.
+	
+The NodePort service can use any of the port nos within the range of 30000 - 32767. 
+	
+Usually the Service is used for #2 things:
+1. making the pod accessible across the cluster to other pods
+2. loadbalancing
+
+But incase of NodePort, it recieves the request on the specific workernode ip address only and distributes or loadbalance the traffic between the pod instances that are running within the worker node only.
+	
+Note:
+The NodePort does not exposes your pod applications to the external world directly, it completely depends on the topology of the cluster.
+	
+If we have an Kubernetes Cluster, along with workernodes setup on public network, then a NodePort service will exposes the pod application that is running on a specific workernode to the external world by using workernodeip:nodeport 	directly (because the workernode has public ip address).
+	
+Incase if the Cluster has been setup on an vpc network or intra-network/private network where the workernodes are not assigned with any public ip address, then the pod applications becomes accessible within the cluster network.
+	
+It is not adviced to use NodePort service to expose the pod applications to the external world, because it opens a Port on the WorkerNode and exposes it to access directly which is an security breach. Usually the NodePort service is used for directly access the Pod application that is running on a specific WorkerNode in development or testing environments.
+--------------------------------------------------------------------------------------------------------------------------------
+3. Ingress
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

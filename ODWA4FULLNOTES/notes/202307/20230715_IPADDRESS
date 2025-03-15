@@ -1,0 +1,13 @@
+ip address
+ip address is an logical address that is assigned to the network adapter of a computer, upon connecting it to an network.
+There are 2 ip addressing schema are available
+1. ipv4 addressing = it is of 32-bit length 
+2. ipv6 addressing = it is of 128-bit length
+
+1. ipv4 addressing
+ipv4 address is of 32-bit length with which we can connect 4.1 billion computers on to the network. ip address is an hierarchial addressing model using which we can group the computers into different groups of networks, so that we can easily manage and restrict network traffic to the group of computers of one network from another network
+
+The 32-bit length ipv4 address has been broken down into 4 equal octets of 8 bit in length per octet. Within 8 bits we can represent the maximum number as 255 so per each octet we can write a number between 0 - 255. So the ip address for any computer can range between 0.0.0.0 to 255.255.255.255
+	
+	
+	

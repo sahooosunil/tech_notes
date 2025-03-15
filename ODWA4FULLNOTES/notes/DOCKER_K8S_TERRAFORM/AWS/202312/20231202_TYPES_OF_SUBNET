@@ -1,0 +1,108 @@
+What is a VPC Network?
+VPC stands for virtual private cloud network and it is an isolated network of resources that is created for an aws user account at region level, it spans across all the AZs of the region
+
+1. isolated network
+2. region level
+3. spans across all the availability zones of the region
+
+What is a subnet?
+vpc is an larger network that is at the region level. The vpc network has been broken down into smaller networks by creating subnets. 
+  
+1. The subnet is always created within an vpc network
+2. it is scoped at the AZ zone of the vpc region
+3. within vpc we can create at max 200 subnets (softlimit)
+  
+reasons:  
+There are 2 main reasons why subnet is used for:
+1. by distributing the resources into multiple subnets of a vpc, we can enforce different traffic restrictions on the group of resources using subnet
+2. using the subnet we can distribute resources across the availability zones of the region
+--------------------------------------------------------------------------------------------------------------------------------------
+How many types of subnets are there?
+There are 3 types of subnets are there
+1. private subnet
+2. public subnet
+3. hybrid subnet
+
+1. private subnet
+every subnet that we create within a vpc by default is an private subnet only. The resources within the private subnet cannot access internet/external network since it is not connected, which means "outbound" traffic towards the public network is not allowed similarly resources from external network cannot access the resources which are in private subnet (inbound access)
+in-short: both inbound-outbound network access to the private subnet resources is not allowed.
+All the resources within the vpc network can communicate with each other across the subnets, no matter even those are part of private subnet.
+Any private subnet resources  can communicate with all the other resources of the same vpc.
+  
+  
+2. public subnet
+A public subnet is always attached to the internet. The resources within the public subnet are accessible from anywhere, it could be within the vpc or from external network as well. Similarly the resources of the public subnet can access the external network aswell.
+  
+Both in-bound/out-bound network access to the external network/internet is allowed   
+
+If we want the resources to be exposed to the clients or endusers then we need to create public network and assoicate resources with that public subnet
+
+How to setup a public subnet?
+By default when we create an subnet within the vpc, it is an private subnet, inorder to make an subnet as an public subnet we need to do below things:
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

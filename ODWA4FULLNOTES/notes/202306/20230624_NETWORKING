@@ -1,0 +1,164 @@
+Networking
+----------
+What is computer networking, what is the purpose of it?
+Computer Networking is a technic through which we can inter-connect #2 different computers together, so that they can communicate with each other by exchanging the data between them.
+	
+How can we inter-connect the computers?
+For the computers to inter-connect with each other, we need to have an wire established between them to exchange the data. But in order to connect the computers over a network cable
+1. The Computers need to have Network Interface Card (Network Adapter) to be installed on the machine
+2. along with that the wire should be attached with RJ45 Network socket so that it can be plugged-in to the Network interface card of both the computers
+	
+Network Interface Card:
+The Network Interface Card is also called as "Network Adapter", which is an hardware device that is mounted onto the motherboard of the computer, using which the physical bits of data will be transmitted interms of signals over the network
+
+In the modern computers, these network interface cards are built into the motherboard of the computer directly, incase if we need additional network ports, then we need to install the external network interface card
+	
+For any given computer, we need atleast one network interface card, inorder to make it connect to another computer. But it can have as many number as we want depends on how many number of machines it wants to inter-connect
+
+How does the data will be transmitted between the computers over the network?
+Computers will not exchange the data, rather the programs that are running ontop of the computer wants to exchange the data with other programs that are running on another computer. Whenever a computer transmits the data over the network, by default the data will send to all the other computers that the computer is connected with. To let the computer send the data to a specific computer that is on the network, each computer requires an unique identification or identity, so that other computers can send the data to that specific computer using that identity of that computer
+
+So from the above we can understand for each computer on the network we need an identification address inorder to access/transmit the data to a specific computer.
+	
+Identification for a computer on the network:
+For each computer that is connected to the network, it has #2 unique identifications
+1. ip address
+The ip address is an 32-bit logical network address assigned to an computer when it is connected over the network. For a computer they can be any number of ip addresses, depends on the number of networks it is connected to (per one nic card, one ip address).
+The network administrator has to manually assign the ip address for a computer, upon connecting the computer to the network.
+	
+In large network of computers, assigning the ip address manually is an tedious task, so the network administrator uses dhcp server for generating and assigning the ip addresses to the computers automatically
+DHCP = Dynamic Host Configuration Protocol
+
+The ip address is also called as logical address attached to the computer, and it is also called as "dynamic address", because it is assigned when the computer has been connected to the network. An ip address of computer is not fixed/static and will be refreshed/renewed with an new ip when ever the machine has been restarted, due to this it is also called as "dynamic address".
+	
+2. mac address
+mac address stands for media access control address which is also called as "physical address" of a computer. The network interface card manufacturer will attach the mac address uniquely to each nic card during manufacturing which is static in nature and cannot be changed.
+	
+For any given computer to communicate with another computer, we need to use ip address for exchanging the data, mac address will not be used.
+The number of ip addresses and mac addresses of a computer is depends on number of nic cards attached/plugged-in to the computer.
+----------------------------------------------------------------------------------------------------------------------------------
+What is an port no, why do we need it?
+Every computer that is attached to the network will be assigned with an unique ip address through which we can identify the computer on that network. No two computers on the network will communicate with each other directly, rather the programs that are running ontop of the operating system of the computer will communicate with each other
+
+having the ip address for a computer will not be sufficient for the programs to communicate or exchange the data between them over the network. Because when a sender program send the data over the network by specifying the ip address of the another computer, on the receiver computer they can be multiple programs running ontop of the operating system, so identifying the program to whom we wanted to send the data or communicate will not be possible only with "ip address"
+
+So each program that is running on an computer inorder to receive the data from another program over the network requires an identification number which is called "portno". The operating system of the computer on which the program is running will assign the portno to a program which is an integer number and is unique among all the other programs of that computer.
+	
+Here we can classify the programs into #2 types
+1. Server program
+2. Client program
+
+
+2. Client Program
+The client program is the one who is the initiator of the communication, requesting some information or functionality from another program.
+	
+1. Server Program
+Server program is the one who will listens for an request over the network on a specific port. Upon a client program sends the request using the ipaddress:portno of the program the program receives the request, perform operation using the data that is send by the client program and sends the response back to the client program on the same communication channel that is established. Since the program is serving the data/functionality requested by the client program, it is called "Server program"
+	
+Every program that is running on a computer doesnt require a portno, only the network programs that wishes to be communicated by the other programs over the network (Server Programs) only requires the portno to identify themself on the computer and recieve the data over the network
+
+The program byitself has to goto the underlying operating system asking to grant a specific portno, the operating system ensures that no 2 programs are using the same portno to uniquely identify it, and assigns the unique integer port no requested by the program to it.
+	
+	
+From the above we can understand if a program wants to communicate with another program over the network, it requires along with ip address,the port no of the other program as well.
+	
+ipaddress = uniquely identifying the computer over the network
+portno = uniquely identifying a program that is running on a computer to whom we want to communicate with
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

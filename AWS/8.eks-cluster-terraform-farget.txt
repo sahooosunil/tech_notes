@@ -1,0 +1,150 @@
+Sure! Below is your modified **Terraform script** that provisions an **AWS EKS cluster with Fargate** instead of a node group.
+
+---
+
+### **Modified Terraform Script with AWS Fargate**
+```hcl
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name   = "eks-vpc"
+  cidr   = "10.0.0.0/16"
+
+  azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway    = true
+  enable_dns_hostnames  = true
+}
+
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "my-cluster"
+  cluster_version = "1.27"
+  subnet_ids      = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+
+  enable_fargate = true
+
+  fargate_profiles = {
+    default = {
+      name = "default"
+      selectors = [
+        {
+          namespace = "default"
+        }
+      ]
+      subnet_ids = module.vpc.private_subnets
+    }
+  }
+}
+```
+
+---
+
+### **What Changed?**
+1. ✅ **Removed `node_groups`** and enabled `enable_fargate = true`.  
+2. ✅ **Added `fargate_profiles`** to run workloads in the "default" namespace on Fargate.  
+3. ✅ **Fargate pods will run in private subnets** (secure and no direct internet access).  
+
+---
+
+### **How to Deploy?**
+```sh
+terraform init
+terraform apply -auto-approve
+```
+
+---
+
+### **Verify Fargate is Enabled**
+Check if your Fargate profile is created:
+```sh
+aws eks list-fargate-profiles --cluster-name my-cluster
+```
+
+Check running Fargate pods:
+```sh
+kubectl get pods -A
+```
+
+Now, your **EKS cluster runs workloads on AWS Fargate!** 🚀
+----------------------------------------------------------------------
+
+### **How AWS Fargate Works in EKS**  
+AWS **Fargate** is a **serverless compute engine** for containers, meaning you don't have to manage EC2 instances for your EKS workloads. Instead, Fargate **automatically provisions and scales resources** for your pods.
+
+---
+
+### **1️⃣ Where Does Fargate Run? (Availability Zones)**
+- **Fargate runs in the same AWS region as your EKS cluster.**
+- It **automatically spreads** workloads across **multiple Availability Zones (AZs)** for **high availability**.
+- You **don’t control the AZ** selection; AWS does it dynamically for you.
+
+---
+
+### **2️⃣ How Many Machines Are There?**
+- **No fixed number of machines!** Fargate **dynamically provisions** the required compute resources for each pod.
+- When a **pod is scheduled**, AWS **assigns an isolated virtual compute unit** (Fargate task) to run the pod.
+- **No EC2 instances**, no node groups—you only define **Fargate Profiles** to match workloads.
+
+---
+
+### **3️⃣ What Instance Type Does Fargate Use?**
+- **No fixed instance types like EC2.**  
+- Instead, AWS **provisions the required CPU & Memory** dynamically per pod.
+- Fargate **encapsulates each pod in a dedicated mini VM (Firecracker-based microVM)** for security.
+
+---
+
+### **4️⃣ How Much Memory and CPU?**
+- You **define CPU and memory limits in your pod spec** (`resources.requests & resources.limits`).
+- AWS Fargate supports **specific CPU & memory combinations**:
+  
+  | CPU (vCPU) | Memory (GB) |
+  |------------|------------|
+  | 0.25       | 0.5, 1, 2  |
+  | 0.5        | 1, 2, 3, 4 |
+  | 1          | 2, 3, 4, 5, 6, 7, 8 |
+  | 2          | 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 |
+  | 4          | 8 – 30 (in 1 GB increments) |
+  | 8          | 16 – 60 (in 4 GB increments) |
+
+- Example pod request:
+```yaml
+resources:
+  requests:
+    cpu: "2"
+    memory: "4Gi"
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+```
+
+---
+
+### **5️⃣ How Does Fargate Handle Scaling?**
+- Fargate **automatically scales** pods **up or down** based on Kubernetes **Horizontal Pod Autoscaler (HPA)**.
+- **No need to manually manage EC2 instances**; Fargate launches just enough capacity **per pod**.
+
+---
+
+### **6️⃣ When to Use Fargate Instead of EC2 Node Groups?**
+| **Feature**       | **Fargate**                                      | **EC2 Node Groups**                               |
+|------------------|-------------------------------------------------|-------------------------------------------------|
+| **Management**   | Fully managed by AWS (no servers to manage)     | You manage EC2 nodes (upgrades, scaling, etc.) |
+| **Scaling**     | Automatic pod-based scaling                      | Must scale nodes manually or via autoscaler    |
+| **Security**    | Each pod runs in an isolated microVM             | Pods share EC2 instance resources              |
+| **Cost**       | Pay per pod CPU/memory usage                      | Pay for full EC2 instances                     |
+| **Workloads**  | Best for microservices & batch jobs               | Best for stateful apps & high-performance apps |
+
+---
+
+### **📌 Summary**
+- **Fargate is serverless**—no EC2 instances to manage.
+- **AWS dynamically provisions CPU & memory per pod** (no fixed machines).
+- **Runs across multiple AZs** automatically.
+- **Good for lightweight workloads**, bad for heavy, long-running workloads.
+- **No control over instance types, AZ selection, or node scaling**—AWS handles it.
+
+Let me know if you need further clarification! 🚀

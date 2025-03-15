@@ -1,0 +1,308 @@
+ppa repository
+ppa stands for personal package archives, ppa repositories are used for distributing the beta or early release or preview releases of the software application to the world, without waiting for approvals to publish into the distro repositories.
+	
+The ubuntu has provided an ubuntu launchpad, in which people can register and create their own repositories inside the launchpad to publish and distribute their early releases of the software packages directly
+
+How to install the software packages from the launchpad repositories?
+1. we need to add the relevant ppa repository into the ubuntu operating system repositories under /etc/apt/sources.list or /etc/apt/sources.list.d by using the below command
+
+sudo add-apt-repository ppa:repositoryName/release
+
+2. upon adding the ppa repository we need to update the local cache
+sudo apt update -y
+
+3. we can search for the package and install on the machine using
+	sudo apt search packageName
+	sudo apt install -y package
+-----------------------------------------------------------------------------------------------------------------------------------
+How many ways the software packages are distributed aspart of the linux operating system?
+There are 4 ways
+1. repository based packaged software distribution
+2. direct downloadable packages software distribution
+3. packaged software through ppa repositories
+4. binary distribution
+
+4. binary distribution
+to understand how to install and use an binary distribution software, we need to learn environment variables
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Environment Variables
+---------------------
+What are variables?
+variables are placeholders in which we can store the values or a label attached to an value, so that we can refer the value within the program by referring the variable name or label we have assigned to it
+
+Why to use variables?
+	
+calc.sh
+--------------
+#!/bin/bash
+SUM=$[ 10 + 20 ]
+SUB=$[ 20 - 10 ]
+MUL=$[ 10 * 20 ]
+DIV=$[ 20 / 10]
+	
+echo "SUM: $SUM"
+echo "SUB : $SUB"
+echo "MUL : $MUL"
+echo "DIV : $DIV"
+
+sudo chmod u+x calc.sh
+./calc.sh
+
+
+now change the above program to perform operations on 50, 60 respectively rather than 10, 20. in this case we need to rewrite the whole program. 
+here the programming logic in performing the calculations are same, but the values on which we want to perform the logic has been changed, since we refer the values (literals) all over the program, a change in the value needs to be modified everywhere
+
+dis-advantage of using literals (constant):
+1. the values gets duplicated all over the places within the program, if a change is required in the values we need to modify all the places within the program whereever it appears
+2. there is a chance of modifying or reflecting the changes incorrectly, due to which the program calculates wrongly
+
+to overcome the above problem variables are introduced, instead of using literal values directly assign the value to an named/labeled variable
+
+calc.sh
+--------
+#!/bin/bash
+A=50
+B=60
+SUM=$[ A + B ]	
+SUB=$[ B - A ]
+MUL=$[ A * B ]
+DIV=$[ B / A ]
+echo "SUM : $SUM"
+echo "SUB : $SUB"
+echo "MUL : $MUL"
+echo "DIV : $DIV"
+	
+chmod u+x calc.sh
+./calc.sh
+
+scope of variables:
+when we define an variable within an program, the variables is visible/accessible within the same program only and will not be available in another program.
+	
+app1.sh
+#!/bin/bash
+A=10
+echo "A : $A"
+	
+The variable will be created while running the program and will be destroyed upon terminating/completing the execution of the program. This variable will not be available/accessible or visible to another program of the same machine
+
+app2.sh
+#!/bin/bash
+echo "A : $A"
+
+	
+How to define/create an variable, that is globally accessible across all the programs on that computer?
+That is where we need to define/create the variable globally at operating system level. These variables that we create at operating system environment level are called "ENVIRONMENT VARIABLES"
+These variables are accessible across all the programs that are running ontop of the operating system of the computer irrespective of the language of the program
+1. java programs
+2. shell programs
+3. .net program
+4. python program
+
+There are #2 types of environment variables are there
+1. System Variables = These are the pre-defined/built-in variables that are created by the operating system byitself for serving special purpose
+
+2. User-Defined Variables = These are the variables created by the user/programmer of the computer, so that the variables can be accessed globally across all the programs that are running on that computer
+
+#2. User-Defined Variables
+The User-Defined variables are created by the user of the computer, to use the variable value across all the programs running on that computer.
+How to declare/create an environment variable?
+1. open the terminal window (bash)
+2. create the variable using the below command
+export VARIABLENAME=VALUE
+setenv VARIABLE VALUE (sh)
+	
+for eg.. let us create an variable LOCATION=hyderabad and access it in all the programs
+export LOCATION=HYDERABAD
+
+app1.sh
+#!/bin/bash
+echo "Location being used is : $LOCATION"
+	
+app2.sh
+#!/bin/bash
+echo "Location being used is : $LOCATION"
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,11 @@
+---
+- name: generic package play
+  hosts: all
+  tasks:
+    - name: install net-tools
+      package:
+        name: net-tools
+        state: present
+        use: auto
+      become: yes
+...

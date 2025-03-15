@@ -1,0 +1,215 @@
+1. passing non-interactive inputs to the shellscript program
+2. arithematic expression
+3. command substitution
+
+1. passing non-interactive inputs to the shellscript program
+How to pass the non-interactive inputs?
+while launching the program itself we need to pass the input values separated by space
+./program arg1 arg2 arg3
+
+program
+-------
+#!/bin/bash
+$1....$n
+$0 = givens the command we used in launching the program
+$# = no of args
+$@ or $*
+
+2. arithematic expression
+#!/bin/bash
+A=10
+B=20
+
+1. using expr keyword
+SUM=`expr $A + $B`
+
+2. $(())
+SUM=$((A + B))
+	
+3. #[]
+SUM=$[A + B]
+
+3. Command Substitution
+command substitution is used for gathering the output of a shell command within a shellscript program into an variable rather than writing onto the CONSOLE 
+
+VAR=$(COMMAND)
+----------------------------------------------------------------------------------------------------------------------------------
+printf
+printf stands for print formatted output.
+There are 2 ways we can write data onto the STDOUT or TTY in a linux program
+1. echo = echo is an instruction used for writing the data as an output to the STDOUT or Console and for each output it appends a newline at the end
+
+echo "Good evening!"
+The above statement prints Good evening! onto the console along with a new line at the end leaving the cursor to the next line
+if we want to suppress the newline being printed at the end, we can use -n option
+echo -n "Good evening!" = -n means no new line
+
+2. printf = printf is similar to the printf we have in c language that allows us to format the output while printing. Unlike echo, the printf will not print newline at the end of the line
+
+printf "Good evening!" = will prints the message on the line without writing a new line at the end.
+	
+There are few escape characters that are supported by printf
+\ is an escape character or also called as escape sequence. when we print any character in printf it will be printed directly. for eg..
+	printf "n"
+prints a n character onto the console. but if we prepend to any character \, then printf will interpreter that character sequence \n specially and will not print \n to the console rather it prints new line
+
+so there are few predefined escape sequences are there used for formatting the output as below
+1. \n = prints a newline to the console
+2. \t = prints an tab
+3. \r = carriage return (generates an enter key)
+4. \b = backspace
+5. \\ = prints "\" on to the console
+The above escape characters are not supported by echo instruction
+
+In addition to the escape sequences, the printf supports format specifiers to format the output being written onto the console
+%d = integer numbers
+%f = floating numbers
+%c = single character
+%s = string
+%x = small letters hexadecimal
+%X = capital letters hexadecimal numbers
+
+#!/bin/bash
+A=10
+B=20
+echo "A: $A, B: $B"	
+printf "A : %d, B : %d" $A $B
+	
+F=10.39
+printf "F : %f" $F
+	
+A=24
+B=2304
+	
+echo "A : $A"	
+echo "B : $B"	
+	
+A : 24	
+B : 2304
+	
+
+A :   24	
+B : 2304	
+	
+printf "A : %4d\nB : %4d\n" $A $B 
+	
+A :   24
+B : 2304
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

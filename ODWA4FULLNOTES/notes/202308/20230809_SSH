@@ -1,0 +1,268 @@
+1. client send the request to the SSH Server asking for establishing the connection. server accepts the request and initiates for session establishment
+2. aspart of the session initiation, both the parties mutual coordinates in performing series of operations in computing an shared session key. The shared session key that is computed would be used by both the parties in encrypting/decrypting the data in exchanging the data over the network.
+	
+3. The server challenges the client to authenticate himself in granting the access to the remote server. Instead of using passwordAuthentication we can go use key-based authentication mechanism.
+	
+Asymetric Key is used for performing the key-based authentication. In Asymmetric key we have 2 keys. one is public key and another one is private key. The data that is encrypted using public key can be decryptable by using only the corresponding private key
+
+How does key-based authentication works?
+Setup:
+1. The administrator of the linux machine has to create an user account, onbehalf of who he wanted the users to SSH to the server in performing the operations.
+	
+2. The administrator has to generate an asymmetric key (public/private key).
+3. The public key has to be added to the server as authorized_keys of the user onbehalf of whom we want to grant access
+4. distribute the public/private key to user whom we wanted to access the remote server over network
+
+
+How does key-based authentication works?
+1. Upon computing the shared session key by both the parties
+2. The server challenges the client to authenticate himself
+3. The client will send the username/public_key to the server asking him to authorize to access the machine onbehalf of that user.
+4. The server checks whether the public key is within the authorized_keys of the user or not, if not found rejects the connection
+5. if found the server generates an random text, encrypts with public key and sends back to client challenging him to prove the client poses the private key 
+6. upon receving the encrypted random text, the client decrypts the random text using private key. and again encrypts it using the shared session key along with attaching the MD5 hash to it, it sends it back to the server to prove its identity
+7. The server upon receiving the token, it decrypts using shared session key and compares with original random text, if it matches authentication is success and grants access to the server otherwise rejects the connection
+-----------------------------------------------------------------------------------------------------------------------------------
+How to setup SSH access to the linux machine?
+	
+#1. Setup the networking for virtual machine
+To setup the SSH Access, first we need to setup the virtual machines with appropriate network mode, so that we can have these machines access over the network in order ssh. The possible network modes we can configure to let the virtual machines or host to ssh are:
+1. bridge network = open for all
+2. host-only network adapter = both the virtual machines should be configured to use same host-only network adapter, so that virtual machines and host computer can communicate with each other. but will not have external network access
+
+3. internal network = but only lets the virtual machines communicate, host cannot communicate with vms
+4. nat network = virtual machines only communicate, but not the host
+
+Let us setup the bridge network, so that we can experiment all the possibilities of ssh from vm and host as well.
+	
+2. Install SSH Server on the server computer
+In Linux there is an openssh server that is freely distributed as an packaged distributed software which can be installed through apt as below.
+sudo apt update -y
+sudo apt install openssh-server (by default it is configured as an systemd init service)
+	
+sudo systemctl status ssh = to check the status of the server
+
+3. upon installing the openssh server, it creates an ssh server configuration file under /etc/ssh/sshd_config, it holds configuration settings of the ssh server
+Few of the configuration settings available in this file are:
+1. portno, the default portno on which the ssh server runs is 22, if we want we can change the port no in this configuration file
+port=22
+	
+2. The default authentication mechanism in authenticating the user, in granting the access to the remote server is "passwordAuthentication". if we want we need to disable this option explicitly by changing the configuration file
+passwordAuthentication Yes
+
+upon changing any of the settings in this configuration file, we need to restart the ssh server to take the changes effected.
+	
+sudo systemctl restart ssh
+-----------------------------------------------------------------------------------------------------------------------------------
+How do we need to SSH into the remote machine from another linux machine?
+1. by default in the ubuntu the SSH client software is pre-installed, we can run the below command inorder to SSH into the remote machine
+ssh username@ip
+
+since by default passwordAuthentication is enabled, and we have not provided any public key while ssh from the client, the server challenges for password of the user onbehalf of whom we are trying to ssh.	
+upon providing the password, we gain access to the shell of the remote computer.	
+
+
+it is not recommended to allow ssh onto the remote machine through password authentication, its a good practise to enable key-based authentication only
+
+How to configure key-based authentication in allowing the users to authenticate and access the shell of the remote machine?
+Server:
+1. Never configure ssh access for the root user/primary user.
+always add an additional user onto the remote server onbehalf of whom we wanted to grant access to the clients. in addition make the user as an sudoer incase if we wish the clients/users to perform administration operations on the server
+
+note: since we dont allow the users to authenticate based on username/password, for grabing the sudoers access the user dont know password of the remote user, so we need to enable passwordless sudoers access
+
+Client:
+2. generate the public/private keys to configure key-based authentication
+in ubuntu/linux operating system there is an utility called "ssh-keygen" using which we can generate public/private keys. its an default package that is installed aspart of the ubuntu distro
+	
+The administrator has to generate these keys and configure to access. he can generate this key either on client-side and copy public key onto the server or generate on the server and copy the public/private keys to the client machine.
+	
+server = only requires public key
+client = public/private key
+
+so let us generate the keys on client machine and copy the public key onto the server for ssh enablement
+
+
+3. generating the keys
+goto the linux terminal on the client machine and run the below command.
+	
+sriman@ubuntu:$ ssh-keygen
+upon running the above command it prompts for filename using which the public/private key should be generated. if we didnt provide any name by pressing enter, it generates the default filename as id_rsa.pub & id_pub.pem
+the ssh-keygen utility places these pub/private key files under current user ~/.ssh directory
+
+4. to protect these keys from other users of the linux machine we need to mandatorily change the permissions of the key files to 400
+chmod 600 ~/.ssh/id_rsa.*
+
+Administrator
+Server:
+Configure the public key on the server onbehalf of which user we wanted to grant ssh access
+1. copy the public key generated on the client machine onto the server machine
+This can be done in #2 ways
+	a) either copy & paste manually from client machine to the server
+	
+	but for ssh-copyid or scp we should still have passwordAuthentication enabled on remote server
+	b) we can use ssh-copy-id tool
+	c) we can scp the public key onto the remote machine
+	
+	
+c. how to scp public key onto the server machine
+scp sourcefile username@ipserver:/locationremoteserver
+
+b) ssh-copy-id tool automatically adds the public key into the autorized_keys of the user wec specified.
+	ssh-copy-id -i keyfileToCopy user@serverip
+	
+
+3. upon copying the public key file onto the server machine, we need to add the public key into the authorized_keys of the user for whom we want to allow ssh
+we need to copy paste the public_key into server machine user under ~/.ssh/authorized_keys file 
+
+client:
+now the client inorder to ssh into the remote machine using keys he has to use below command
+ssh -i ~/.ssh/id_rsa.pub mike@192.168.0.183
+-----------------------------------------------------------------------------------------------------------------------------------
+How to ssh into the linux machine from windows client?
+	
+In windows operating system we dont have SSH Client available directly. There are few tools we need to use for ssh into the linux machine from windows.	
+	1. gitbash 
+	2. putty
+	3. winscp
+	4. Powershell/Windows Terminal
+	
+1. gitbash and Powershell both are same comes with bash shell inside them, so we can use ssh client and can ssh into linux machine.
+	1.1 ssh client utility
+	1.2 ssh-keygen
+	1.3 ssh-copy-id
+	
+2. putty/winscp tool for ssh into the remote machine. we need the keys to be in .pub/.ppk format to ssh into the remote machine.
+How to generate the .pub/.ppk in windows for ssh using putty
+There is an tool called puttygen using which we can generate the pub/ppk files
+1. one the .pub/.ppk are generated place them in windows c:\Users\username\.ssh\ directory
+2. then copy the public key into the server authorized_keys file
+while copy the public key we should do the below things:
+	- prepend to the key ssh-rsa
+	- ensure the entire key text is written in one-single line
+	
+	
+	
+	
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

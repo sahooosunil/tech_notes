@@ -1,0 +1,54 @@
+What is a FileSystem?
+FileSystem is an mechanism or a technic used by the operating system in storing, organizing and managing the data on the harddisk of the computer. different operating system vendors comes up with their own standards or mechanisms (FileSystems technics) in storing and organizing the data on the harddisk of the computer
+
+For eg.. windows operating system has introduced 2 FileSystem Technics
+1. FAT = File Allocation Table (very old technic)
+	 FAT32 = 4GB is the max file size we can create
+	 
+2. NTFS = New Technology File System
+
+Linux operating system also has their own FileSystem technics in storing, organizing and managing the data on the harddisk of the computer.
+Linux FileSystem Technics:
+1. EXT    = old File system technic and no longer used due to limitations
+2. EXT2   = allows storing 2 terabytes of data
+3. EXT3   = came from EXT2 but with upgrades and backward compatibilities. there is an problem with EXT3 FileSystem, it doesnt support recovery of disk snapshots, so servers dont use this filesystem.
+4. EXT4   = faster and allows large files with significant speed and it is the default filesystem in linux operating systems upon installing.
+5. JFS    = old filesystem made by IBM. it works very well with samll and big files, but failed and files are corrupted after long time of usage.
+6. XFS    = old filesystem works slowly with small files
+7. BTRFS  = made by Oracle. it is not stable as Ext in some distros, but it has good performance and no longer used in the market
+
+Linux operating system using hierarchial FileSystem technic in storing and organizing the data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

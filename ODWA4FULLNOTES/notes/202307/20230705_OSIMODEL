@@ -1,0 +1,108 @@
+OSI Model Layer
+---------------
+OSI stands for open system inter-connection standard, is an protocol used for enabling the computers/applications to communicate with each other over the network irrespective of hardware platform/operating system on which those are working on. There are 7 layers exists
+
+1. Application Layer
+Contains Application protocols, the defines messaging structure and semantics using which applications will communicate with each other over the network in an understandable format
+
+2. Presentation Layer
+presents the data to the lower layers of OSI in an transmittable format
+1. Data Conversion
+2. Data Compression/Decompression
+3. Data Encryption/Decryption
+
+3. Session Layer
+end to end exchange of the data between the applications is taken care by Session Layer
+1. Authentication & Authorization
+2. Session Management
+
+4. Transport Layer
+Prepares the data to be transmittable over the network
+1. Data Segmentation
+2. Flow Control
+3. Error Control
+
+5. Network Layer
+Network layer takes care of transmitting the data from one computer of one network to another computer of an different network. There are 3 responsibilities the network layer performs
+1. Logical Addressing = takes the data segment from transport layer and attaches the sender & receiver computers ip addresses to it which is called data packet or ip packet. This process of adding ip address to the segment is called logical addressing
+
+2. Routing 
+Routing the is process of moving the data packet from the source computer that is part of one network to the destination computer that is part of different network. For this the network layer takes the destination computer ip address
+1. From that it computes the network address and host address based on subnet mask
+2. Then using the network address it routes the data packet to the corresponding network 
+3. once the packet reaches to right network, it would be passed to destination machine based on the host address
+
+
+3. Path Determination
+There could be several paths available in routing an data packet from source computer to the destination computer. Path determination is a technic of identifying multiple paths through which the data packet can be routed to the destination computer and computing the best path based on various different technics like "shortest-path" or "network traffic" etc is called "Path Determination"
+	
+6. Datalink Layer
+Is responsible for transferring the data between the computers within the network.
+1. Physical Addressing
+2. Medial Access control
+3. Error Control
+	3.1 Collision Detection/Control
+	3.2 Fault detection
+
+7. Physical Layer
+The physical layer takes the bits of data converts into relevant format based on the transmission media so that it can be transferred from source to destination computer
+-----------------------------------------------------------------------------------------------------------------------------------
+
+1. How does the computers are connected to the network?
+	1. Network interface card
+	2. RJ45 Socket
+	3. Addressing Models
+		3.1 ip addressing
+		3.2 Mac Addressing
+
+2. What is protocol, why do we need to use it?
+3. What is OSI Model Layer protocol?
+	3.1 Application Protocol
+		- HTTP (detail)
+		- FTP
+		- SMTP/POP3/IMAP
+	3.2 Transport Protocol
+--------------------------------------------------------------
+4. Network topologies
+5. Network devices
+6. Ipaddressing and Subnetmask
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

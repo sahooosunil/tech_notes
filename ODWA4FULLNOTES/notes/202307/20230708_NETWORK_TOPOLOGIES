@@ -1,0 +1,157 @@
+Network Topology
+Network topologies refers to how the computers are inter-connected with each other within an network. There are 5 topologies are available
+1. Bus 
+2. Ring
+3. Star
+4. Mesh
+5. Hybrid
+
+#4. Mesh Topology
+In Mesh Topology each computer is connected with n-1 computers on the networking forming an Mesh. The Mesh topology is considered as the robust network since we have multiple paths over which we can reach the other computer on the network. The Mesh toplogy is not used for inter-connecting the computers within an LAN network, rather it is used for inter-connecting the Network of Networks in an WAN Network environment.
+	
+advantages:-
+	1. Its a robust network, if one channel within the network is broken, there are always other routes through which we can reach to any other computer on the network,which means the network will never goes down, thus being called as "Robust Network"
+	2. huge network traffic can be handled by this network
+	3. minimal or no chances of data collision arises since each computer has an dedicated channel of communication with other computer on the network.
+dis-advantages:-
+	1. To setup this network, requires lot of hardware resources like network cards and cables, so the cost of setting up this network is very high and time required for setting up this network is huge
+	2. it is complex to setup this network
+	3. not suitable for inter-connecting small group of computers
+	4. troubleshooting and diagnosing the failures / problems is very difficult
+	
+#5. Hybrid Toplogy
+The term Hybird itself indicates we formed the network by inter-connecting multiple different topology networks together which is called "Hybrid Toplogy". The eg. of hybrid topology is internet
+-----------------------------------------------------------------------------------------------------------------------------------
+Network devices
+There are several types of devices are being used for inter-connecting the computers in a network, let us explore what are the network devices are available for forming an network
+1. Repeater/extender
+2. Hub
+3. Switch
+4. Bridge
+5. Router
+6. Firewall
+7. Modem
+
+#1. Repeater/Extender
+The Repeater is an network device used for amplyfing/regenerating the signals over the channel to send the data to the destination computer. When the distance between the sender and receiver computer is more, the data packets that are being send by the sender might get weak over the transmission channel and might lost at the receiver end. 
+	
+So to over the above problem, we need to setup/install a repeater between the source and destination computer, possibly somewhere else between/middle of the sender and receiver. so that the repeater receives the signals, amplifies/regenerates them and forwards to the destination computer.
+	
+The Repeater can be an wired or wireless aswell. Incase of Wireless it is called "Wifi Extender".
+	
+	
+#2. Hub
+Hub is an network device used for interconnecting the computers on a network, using the hub we can setup a star topology network. The hub operates at physical layer of the OSI Model Layer protocol, so it sees the data being transmitted as bits of data only.
+	
+When a sender sends the data to another device on the network, that data reaches to the hub, the hub copies the signals/data it has received to all the other ports of the hub forwarding/distributing the data to all the computers that are connected to the hub.
+Since the hub distributes the data to all computers connected to it, the bandwidth consumption of the network is very high and results in poor performance
+
+There are 2 types of hub devices are there
+1. Passive Hub = The Passive hubs doesnt require power supply to operating, they simply receives the data on a port and copies to all the other ports to which the computers are plugged-in distributing the data.
+2. Active Hub = These are plugged into power supply and upon receiving the signals, these hubs will amplifies/regenerates the signals and copies to all the ports/computers that are connected.
+	
+#3. Switch
+Switch is an intelligent hub device that works at datalink layer of the OSI Model Layer protocol and is used for transmitting the data between the computers connected within a network.
+The switch will maintain an internal datastructure called "mac address table" in which the port and the mac address computer connected that switch is stored.
+During the time of booting up the switch, the switch will collects all the computers that connected to its ports and their relevant mac address and collects them and stores them within the switch.
+	
+When a computer within the network sends the data to another computers of the same network, the data will be recieved by the switch, The switch will looks up for the destination computer mac address from the dataframe it has received and goes to the mac address table to identify that machine is plugged into which port of the switch and copies the dataframe only to the port to which the machine has been plugged in, thus forwarding the data to the specific computer rather than sending the data to all 
+So switch is considered as more efficient device in routing the data in a network and supports high-speed data transfers and consumes less band-width.
+	
+#4 Bridge
+Bridge is a device used for interconnecting 2 different networks. Bridge also works at physical layer only. The Bridge device has only 2 ports so that we can connect 2 different hub networks only using Bridge. Whenever the data comes to one port of the bridge, it copies the data to the other port forwarding the data to the other network of computers.
+	
+Bridge is a device used in-conjuction with Hub and always the data flows from 1 end of the network to the other end no matter where the destination computer is.
+	
+Now Hub and Bridges are no more being used in the market for establishing network, since those operate at Physical Layer.
+
+drawbacks:-
+	1. only 2 networks can be interconnected
+	2. huge bandwidth consumpsion acrossthe networks and slows down the network performance heavily
+	3. not recommended for interconnecting large computer networks
+	4. less secured
+	5. no control on the traffic patterns
+
+#5. Routers
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

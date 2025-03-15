@@ -1,0 +1,164 @@
+ansible facts or ansible magic variables
+----------------------------------------
+during the execution of the playbook, the control nodeserver will by default executes an task/module before executing any of the tasks/modules of playbook called "gather_facts".
+	
+The gather_facts is an python module, that will captures the information about managed node like hardware configuration, operating system env and networking, returns it as an json to the control nodeserver. 	The control nodeserver caches this information temporarily and passes it as an input to the playbook while it is executing on the corresponding managed node of the cluster.
+	
+Within the playbook tasks/modules we can refer the gather_facts json as variables/properties, to perform conditional checks in applying the automation.	
+	
+gather_facts: module
+
+we can run the gather_facts module using ansible adhoc command as below
+ansible -i inventoryFile group -m module
+
+ansible -i hosts.yml all -m gather_facts
+The above gather_facts module returns json output containing the information of each managed node of the cluster with hardware, network interfaces, ip addresses and operating system related information
+
+we can use this json info within the playbook modules by using 1 of the 2 syntaxes as variables
+
+1. {{ansible_default_ipv4.address}}
+2. {{ansible_default_ipv4[address]}}
+
+here ansible_facts is not mandatory to be used as prefix while referring the variables
+
+ansible_devices.sdb.size
+ansible_devices[sdb[size]]
+
+
+write a playbook to print the hdd size of the managed node servers:
+hdsize-playbook.yml
+
+---
+- name: hdd size play
+  hosts: all
+	tasks:
+    - name: hddsize
+		  debug:
+        msg: "{{ansible_devices.sda.size}}"
+...	
+
+how to turn-off the gather_facts module while executing the playbook
+within the playbook after the hosts declaration we need to write gather_facts: no, so that the control nodeserver would stop running the gather_facts module on each managed node, thus improves the performance while executing the playbooks
+--------------------------------------------------------------------------------------------------------------------------------------
+1. changed_when and failed_when
+
+The Ansible control nodeserver upon executing an module on the managednode, it gathers the outcome of execution and reports the status of the module execution as one of the below statuses per each module
+1. changed
+2. failed
+3. ok
+4. nreachable
+5. skipped
+6. ignored
+7. retry
+
+The ansible controlnode server derives or determins the module has affected/changed the state of the managed node or not by looking at the exitcode of the module execution.
+If the exitcode of the module execution resulted as "0"	 then ansible controlnode server reports the status of the module execute as "changed" and anything that is other than "0" will mark the module as "failed"
+	
+sometimes we dont want to mark the status of an module to be reported as changed/failed based on exitcode, rather we want to evaluate a condition based on the outcome of the execution to determine whether it has changed / failed. this can be done by using changed_when and failed_when conditions
+
+For eg..
+when we execute a shell or command module, upon executing the shell command we passed as an input, it always returns the existcode as "0", indicating the success of the command execution, so that ansible marks the task as "changed". If the shell-command we supplied returns an non-zero exit code, then ansible controlnode server marks the tasks as "failed", this is the default behaviour for any modules.
+	
+we want to change the above behavior of reporting the status of the module execution, this can be done using changed_when and failed_when.
+	
+Let us consider an example to understand this.
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

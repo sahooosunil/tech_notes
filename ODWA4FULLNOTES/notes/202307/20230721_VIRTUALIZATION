@@ -1,0 +1,77 @@
+What is virtualization, why do we need to use it?
+Virtualization is a technic or mechanism through which we can run more than one operating system environments on a physical computer machine, which are isolated from each other and runs in parallel.
+	
+What are the reasons for running multiple parallel isolated environments on one physical machine?
+1. developers while working on multiple projects requires different environments to be setup inorder to work on the projects, so inorder to have multiple different environments to be available for different projects, we need multiple computers.
+	
+but most of the time a project will not consume all the system resources of the computer assigned to the developer, there will be surplus/plenty of resources available on that machine and are being wasted. In such case rather than having #2 computers to work on #2 projects with different environments, we can use virtualization in setting up multiple parallel, isolated environments on one-single computer, so that developer can work in parallel on multiple projects using the same computer
+
+Thus reduces the hardware/infrastructure cost in working on multiple projects.
+	
+2. the qa engineers will test the application and certify the application on qa environment. The qa environments are dedicated for a project and kept idle for most of the time due to the complexities and challenges in setting up the environment in running the project on the computer.
+So if we have #30 projects being developed in an organization, at minimum of #30 server grade machines are required for having dedicated qa environment. But not all the projects will not be in qa phase at same time, even then also we need #30 dedicated computers due to the complexity and time required in setting up the project environments on the physical machine.
+	
+Instead we can leverage the virtualization technic in creating multiple virtual machine environments for different projects and can quickly swap out/in different project environments on the same physical server machine quickly and can reuse the same computer for testing multiple different projects.
+With this we can have minpool of computers for eg.. 5/6 should be sufficient for faciliting the testing/release of 30 projects in an organization.
+	
+3. Most of the time a software application will not use all of the system resources while running on a physical machine, but we may not be able to utilize the system resources in running multiple software applications on the same physical machine due to different softwares requires different env. if we can make use of virtualization we can setup multiple parallel isolated env on the same computer and can run multiple different softwares on that machine and can utilize the hardware resources of the machine efficiently
+
+From the above we can understand virtualization benefits in many ways:
+1. it helps in lowering the IT infrastructure cost in an organization for development and delivery of the software applications
+2. we can sophisticatedly run multiple environments in reusing the hardware resources of the physical machine efficiently
+-----------------------------------------------------------------------------------------------------------------------------------
+
+How does virtualization works?
+The virtualization works ontop of hypervisor technology, the hypervisor takes care of partitioning and distributing the physical resources of the machine across the operating system environments that are running on that computer. The hypervisor can be either a hardware or a software component
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

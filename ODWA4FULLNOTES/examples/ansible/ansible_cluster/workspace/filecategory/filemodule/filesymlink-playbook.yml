@@ -1,0 +1,10 @@
+---
+- name: symlink play
+  hosts: all
+  tasks:
+    - name: create symlink
+      file:
+        src: /home/vagrant/library/music/melodies/90/retro.txt
+        dest: /home/vagrant/old_melodies.txt
+        state: link
+...

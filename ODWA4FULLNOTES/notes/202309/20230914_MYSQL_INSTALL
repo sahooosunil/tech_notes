@@ -1,0 +1,137 @@
+How to install mysql server database on ubuntu operating system?
+1. mysql server is an packaged distribution that is distributed aspart of the ubuntu repositories, so we can use apt tool for installing the mysql server
+
+sudo apt update -y
+sudo apt install -y mysql-server-8.0
+	
+1.1 along with installing the mysql server the client utilities also will be installed on the machine
+1.2 mysql server will be configured as an initd service by the package manager
+1.3 by default mysql server will be installed with default user as "root", which is administrator and with no password configured for it.
+	
+2. change the password of the root user by connecting to the mysql server instance locally as below
+sudo mysql -uroot
+alter user 'root'@'localhost' identified with mysql_native_password by 'newpassword';
+
+3. secure mysql server installation
+run the mysql_secure_installation utility that is shipped aspart of mysql server install itself in securing the mysql server instance. when we run mysql_secure_installation utility it prompts for questions based on which it configures the mysql server instance
+
+sudo mysql_secure_installation
+The above utility prompts questions for configuring mysql server as below:
+1. Do you want to enforce password validation: No
+2. Enter password for root user: root
+		re-enter password : root
+3. Remove Anonymous users: Yes
+4. Remove test databases: Yes
+5. Allow Remote Access for root Disabled: Yes
+6. Reload Priviliges tables: Yes
+
+
+by default mysql server will not be accessible over the network remotely, due to security reasons. But always we wanted any applications to connect and access the data from mysql server database remotely only. For this we need to configure an user in the mysql server granting remote access to an schema/database of the mysql server. This can be done as below.
+	
+	
+
+There are 2 things we need to do for grant remote access
+1. mysql server is installed and configured to listen for bind-address: localhost only. so the database cannot accept any request for connecting to it from remote computer. this has be changed by modifiying the configuration in below file
+
+/etc/mysql/mysql.conf.d/mysqld.conf file
+search for a property bind-address and modify it to listen for all the requests as "0.0.0.0"
+	
+sudo systemctl restart mysql
+
+
+2. the root user cannot be granted remote access. So for each application to access the mysql server database remotely we need to create an mysql server user and grant permission for accessing the schema remotely. this can be done by using below sql query
+
+2.1 connect to the mysql server datbaase using client-utility
+mysql -uroot -ppassword
+
+2.2 create an new user, so that application can use this user for connecting to the database
+
+create user 'username'@'%' identified by 'password';
+user@location = allowed to login from which location
+     % = any location
+		 
+grant all privileges on *.*	to 'username'@'%';
+                         schema.table    user@location = access from any location
+--------------------------------------------------------------------------------------------------------------------------------------
+1. how to see all the databases/schemas on the mysql server?
+show databases;
+
+2. to switch to an specific database
+use databasename;
+
+3. create a new database
+create database databasename;
+
+4. create a table
+create table emp(emp_no primary key, first_nm varchar(20), last_nm varchar(20), age integer, gender varchar(10));
+
+
+5. how to see the table structure
+desc tabename;
+
+6. how to insert the data into the above table we created?
+insert into emp values(1, 'alex', 'J', 23, 'Male');
+
+7. how to see the records in the table
+select * from tablename;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+												 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,206 @@
+What is Systemd init System, why do we need it?
+Systemd init System is an software package distributed aspart of the major linux distros, using which we can manage in running software programs, tools or utilities as services within the ubuntu operating system. These services would be kicked off right from the bootup of the operating system until the machine has been shutted down
+
+
+How many ways we can register a program as an initd service?
+There are 2 ways the programs are registered as services in initd system
+1. administrator has to manually register the programs/tools that has to be executed during the bootup of the operating system.
+2. through packaged installations
+
+How to register a program within systemd init system?
+The programs that are managed through the systemd init system is considered as an Service Unit. The user/administrator has to write service unit definition file describing the details of the program that has to be managed by initd system. The initd system has provided standard structure/format in writing the service definition file that should be followed in describing the information about our program to be managed by initd system.
+To let the initd system to pick the service definition file and register it as service, we need to place the definition file within the standard (pre-defined) directory location. There are 2 directory locations in which the service definition files will be read by the initd system
+
+1. /usr/lib/systemd/system = all the packaged software service unit files are placed under this directory by the package managers during the installation.
+2. /etc/systemd/system = the administrator has to keep the service definition file in this directory to manually register the program as service
+
+
+How to write the service unit/definition file?
+The service unit or definition file should be written with an filename followed by ".service" as an extension. For eg.. if we want to register a tomcat server as an service in initd system, we should write the service unit filename as "tomcat.service" in which we need to describe the information about the program and place under /etc/systemd/system directory
+
+The initd system has defined standard unit sections and directives allowing us to define information about the program to be registered as service. There are 3 standard sections in which we need to write pre-defined directives describing the program. The Unit Sections has to be written in [SECTIONNAME] to identify them in definition file. The directives are standard key/value pairs provided by the initd system itself 
+
+There are 3 unit sections are there 
+1. Unit
+2. Service
+3. Install
+
+tomcat.service
+[Unit]
+key=value
+key=value
+
+[Service]
+Key=Value
+key=value
+
+[Install]
+key=value
+key=value
+
+1. Unit Section
+In the Unit section we need to describe the basic information about the program and the hard/soft dependencies it has in order to run/manage the program should be placed here
+
+[Unit]
+
+Description="documentation or description information about the service should be written here"
+After=We may wanted our service to be dependent on another service, unless the dependent service has been started we dont want our service to be started. For eg.. the program we are trying to register is an network program that is dependent on network service, we can express such dependency using After directive as below
+
+After=Network.service
+The service dependency we expressed here is called "hard dependency", which means if the dependent service we specified has failed, then our service will not be started/executed
+
+Requires=What are all the other services must and should be installed and available mandatorily to have our service registered.
+	
+Wants=is used for expressing the soft dependencies between the services. run the service after these services has been started. but the dependent service we expressed has been failed or not available also ignore it and run the service.
+	
+For eg.. we developed an network program, and we wanted to register it as an service with hard and soft dependencies as below
+
+[Unit]
+After=Network.service, Disk.service
+Wants=ufw.service (firewall)
+	
+	
+2. Service section
+In the Service section we need to describe the information about the program to start/stop/restart the program
+[Service]
+ExecPreStart=The commands that should be executed before the actual service program to be launched or executed
+ExecStart=Command to run the service program
+ExecStartPost=Command to run after the service program has been started
+Restart=always, none, once
+ExecStop=Command to stop the service program
+Type=Type indicates the type of the service
+
+There are 5 different service types are there
+1. simple = Simple service means the program can be launched directly by running the ExecStart
+2. forking= The ExecStart command launches another process from the current process and the initd system should manage the launched process as service
+3. dbus   = The service is registered as daemon process with name
+4. oneshot=run the service only once and upon completion dont restart
+5. notify=our service notifies other service to started
+
+3. Install Section
+Install section specifies when does the service should be launched. 
+[Install]	
+WantedBy=multi-user.target
+
+multi-user.target = inidicates the service should be installed and started immediately after the runLevel=3 which means once the console has been up 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

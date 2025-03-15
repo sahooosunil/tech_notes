@@ -1,0 +1,137 @@
+What are the benefits/advantages of using iac automation tools for provisioning and managing the infrastructure?
+1. Higher-rate of delivery
+2. Self-Service
+3. documentation
+4. versioning
+5. speed and safety
+6. validation
+7. reusability
+8. collaboration and sharing
+---------------------------------------------------------------------------------------------------------------------------------------
+How the software configuration management tools are different from iac automation tools?
+software configuration management tools vs iac automation tools
+There are lot of software configuration management tools are available like chef, puppet, ansible, salt stack etc, using which we can install and configure software packages on the fleet servers. Within these tools, few of them supports provisioning and managing the infrastructure as well.
+  
+similarly we have lot of iac automation tools are there that supports provisioning and managing the infrastructure, within them few of the iac tools supports software configuration management.
+  
+From this above discussion, we can understand there is very thin line between these 2 types of tools and looks like both can be used inter-chageably. so what is the difference between software configuration management tools and infrastructure automation tools which one should be used for what purpose?
+  
+software configuration management                  infrastructure automation
+tools                                              tools
+------------------------------------               ------------------------------------------------------------
+puppet, chef, ansible, saltstack                   terraform, cloud formation, openstack heat, hashicorp packer
+
+
+if we are using server templating tools like docker, packer etc most of the software configuration management requirements are handled by these tools itself, so we dont need software configuration management tools like ansible/puppet/saltstack etc. But to provision the infrastructure we still need iac tools
+
+If we are running our application without using server templating tools, then to install and configure the software packages on the underlying infrastructure we need software configuration management tools
+
+
+1. mutable vs immutable infrastructure
+mutable = something that can be changeable
+immutable = cannot be changed
+
+The software configuration management tools supports mutable infrastructure where as iac tools supports immutable infrastructure management.
+
+In case of software configuration management tools, any change being applied on the existing infra will modify the current state of the infra, whereas incase of iac tools, it destroys the existing infra and creates new from the scratch.
+  
+so that by using software configuration management tools there is no gurantee we can produce repeatable infrastructure across the envs, where as incase of iac as always they destroy and recreate from the scratch, there is a guarantee of reproducing the infra across
+
+
+2. procedural vs declarative programming
+incase of software configuration management tools, they work based on procedural programming style, which means we need to write programming instructions in achieving the desired state of the system.
+  
+For eg.. if want to have an tomcat server setup on the infrastructure, we need to write programming logic to build the desired state of the system like
+1. download the apache tomcat server binary
+2. unzip/extract it
+3. configure it as a service by writing service unit file
+
+all these steps in installing/configuring the tomcat server should be written by the devops engineer
+
+where as the iac automation tools works based on declarative programming methodology. which means we only specify what we wanted, whereas we dont write logic for achieving or building the final stateof the system. 
+For eg.. if we want an ec2 instance to be provisioned, we just tell the configuration related to how does the instance should look like. but we never need to write programming logic for provisioning or creating the resource.
+  
+here we specify what we want, we never write the code in accomplishing it, the iac automation tools takes care of applying the necessary logic in building the desired state of the system based on the declarations we coded.
+------------------------------------------------------------------------------------------------------------------------------------
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

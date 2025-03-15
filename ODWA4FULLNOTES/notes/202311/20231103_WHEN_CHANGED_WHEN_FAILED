@@ -1,0 +1,225 @@
+Changed_When and Failed_When
+----------------------------
+Ansible controlnode server reports the status of an module executions in one of the 7 statuses as below
+1. changed
+2. failed
+3. ok
+4. ignored
+5. unreachable
+6. rescued
+7. skipped
+
+The ansible controlnode server determines the module has affected the state of the managednode or not based on the exitcode of the module execution. if the exitcode returned out of the module execution is "0", the ansible controlnode server reports the status as changed, anything other than "0" will be marked as failed.
+    
+sometimes we dont want to mark the status of an task/module to be reported as changed or failed based on exitcode, rather we want to evaluate the condition based on which we want to mark it as changed or failed, this can be done by using changed_when and failed_when
+
+For eg..
+We want to install an software package like mysql server 8 or apache tomcat 10, but before installing any of these packages we want to check whether the managednode qualifies for minimal system requirements in running those softwares. If the system (managednode) doesnt qualifies for the minimal requirement we wanted to fail the playbook execution
+
+Let us understand how can we implement it using failed_when in a playbook:
+software package: mysql-server-8.0
+minimal system requirement:
+    storage: 2097152
+        
+to find the storage memory available on the harddisk of the computer we need to use df (disk filesystem)        
+df /dev/sda1
+
+Filesystem     1K-blocks    Used Available Use% Mounted on
+/dev/sda1       40581564 2809472  37755708   7% /
+
+from the above output we want to extract available memory, this can be done using below command
+df /dev/sda1 | grep -v Filesystem | awk '{print $4}'
+
+To execute the above linux command we need to use shell module in ansible. Upon executing an shell command successfully always it returns the exitcode as "0", which means it has changed the state of the managednode
+
+But our requirement is upon executing the above shell command we wanted to evaluate a condition as is the availableStorage space is >= 2097152 (2gb) or not. If the available space is less than 2gb we want to mark the module as failed and stop the playbook execution, this can be done by using failed_when as below
+
+failed_when:
+
+installmysql-playbook.yml
+-------------------------
+---
+- name: demonstrated failed_when play
+  hosts: all
+  tasks:
+    - name: check diskspace
+      shell: "df /dev/sda1 | grep -v Filesystem | awk '{print $4}'"
+      register: diskspace
+      failed_when: "diskspace.stdout | float < 2097152"
+    - name: install mysql server
+      apt:
+        name: mysql-server-8.0
+        state: present
+        update_cache: yes
+      become: yes            
+...
+
+in the above playbook within the check diskspace task after executing the shell module, by default ansible controlnode server would mark the module as changed. But we wanted to evaluate the condition based on the outcome of the condition we want to mark the module as either changed or failed.
+          
+So we collected the output of the shell module into an variable called "diskspace" through the help register variable. Then we are evaluating the condition using failed_when to mark the module as failed if the condition evaluates to true.
+    
+    
+changed_when:
+-------------
+~/apache_tomcat-10.0.1
+ |-bin
+   |-startup.sh
+   |-shutdown.sh
+   |-catalina.sh
+ |-lib
+ |-webapps
+ 
+ 
+starttomcat-playbook.yml
+-------------------------
+---
+- name: changed_when play
+  hosts: all
+  tasks:
+    - name: start tomcat10
+      shell: "~/apache-tomcat-10.1.15/bin/catalina.sh run 2>&1 | grep java.net.BindException"          
+      register: tomcatstatus
+      changed_when: "'Address already in use' not in tomcatstatus.stdout"
+...
+          
+ansible-playbook -i hosts starttomcat-playbook.yml
+ansible-playbook -i hosts starttomcat-playbook.yml
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Control Statements
+When we pass the playbook as an input to the ansible controlnode server, it executes the modules/tasks of the playbook sequentially from top to the bottom. But sometimes we wanted to control the flow of execution of these modules like we might want to skip executing the modules or might want to repeatedly execute the module repeatedly for several times, this can be done by using control statements provided by ansible
+
+There are 2 types of control statements are there
+1. when
+2. loop
+
+1. when condition
+------------------
+based on the conditional evaluation we want to execute a task/module of a playbook then we can use when conditional statement as below at task level.
+
+For eg.. we want to download and install vscode editor on the linux platform by using the playbook. 
+
+installvscode_playbook.yml
+---------------------------
+- name: install vscode on linux play
+  hosts: all
+  tasks:
+    - name: download vscode for debain
+      get_url:
+        url: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+        dest: /tmp
+      when: ansible_facts.ansible_os_family == "Debain"
+    - name: dowload vscode for redhat
+      get_url:
+        url: https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64
+        dest: /tmp
+      when: ansible_facts.ansible_os_family == "Redhat"
+    - name: install vscode on debain
+      apt:
+        deb: /tmp/code_1.84.0-1698839401_amd64.deb
+        state: present
+      become: yes
+      when: ansible_facts.ansible_os_family == "Debain"
+    - name: install vscode on Redhat
+      yum:
+        name: /tmp/code-1.84.0-1698839485.el7.x86_64.rpm
+        state: present
+      become: yes    
+      when: ansible_facts.ansible_os_family == "Redhat"  
+      
+        
+      
+      
+
+5:30 pm - 6:30 pm = tools
+6:30 pm - 7:30 pm = aws (linux)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,102 @@
+**Kubernetes (K8s)**
+
+Kubernetes is a container orchestration tool that manages the deployment, scheduling, scaling, and monitoring of containerized applications across a cluster of computers.
+
+### Why Do We Need Kubernetes?
+
+Running containerized applications on multiple machines comes with several challenges:
+
+1. **Deployment Complexity** - Distributing applications across different machines is difficult.
+2. **Tracking Containers** - Keeping track of which container is running on which machine is a challenge.
+3. **Upgrades & Patching** - Manually identifying nodes, stopping containers, and rolling out updates without downtime requires effort.
+4. **Monitoring & Recovery** - Restarting crashed containers is a continuous task.
+5. **Resource Management** - If a node runs out of resources, containers need to be moved to another node.
+6. **Scaling** - Managing scaling based on workload is difficult manually.
+
+Kubernetes automates these tasks, making containerized application management efficient.
+
+### Key Components of Kubernetes
+
+1. **Master Node (Control Plane)**
+2. **Worker Nodes**
+3. **Kubectl (CLI Tool)**
+4. **etcd (Key-Value Store)**
+
+#### 1. Master Node (Control Plane)
+
+The control plane manages the cluster, schedules workloads, and monitors cluster health. It consists of:
+
+- **API Server** - Provides an interface (REST API) to communicate with Kubernetes.
+- **Scheduler** - Assigns pods to worker nodes based on resource availability.
+- **Controller Manager** - Ensures the cluster runs as expected with different controllers:
+  - **ReplicaSet Controller** - Maintains the desired number of pod replicas.
+  - **DaemonSet Controller** - Ensures a pod runs on all nodes.
+  - **Service Controller** - Groups pods and provides load balancing.
+  - **Deployment Controller** - Manages updates and rollouts.
+  - **Job Controller** - Handles one-time tasks.
+
+#### 2. Worker Node
+
+Worker nodes execute applications in containers. Each worker node has:
+
+- **Container Runtime** (e.g., Docker) - Runs the containers.
+- **Kubelet** - Communicates with the control plane and manages pods.
+- **Kube-proxy** - Handles networking for communication between pods and external services.
+
+#### 3. Kubectl (CLI Tool)
+
+A command-line tool to interact with the Kubernetes cluster and perform administrative tasks.
+
+#### 4. etcd
+
+A key-value store that keeps configuration data, cluster state, and metadata.
+
+---
+
+## Setting Up a Kubernetes Cluster
+
+Kubernetes can be set up in various ways:
+
+1. **On-Premises** - Using physical servers.
+2. **Virtual Machines** - Running on VMs.
+3. **Minikube** - A lightweight Kubernetes for local testing.
+4. **AWS EKS** - A managed Kubernetes service on AWS.
+5. **Docker Desktop** - Runs Kubernetes on a local machine.
+
+### AWS EKS (Elastic Kubernetes Service)
+
+AWS provides EKS as a managed Kubernetes service, handling:
+
+- Cluster provisioning.
+- Worker node setup.
+- Network configuration.
+- Auto-scaling and high availability.
+
+#### **Benefits of AWS EKS**
+
+1. **Easy Setup** - No manual cluster setup required.
+2. **High Availability** - AWS automatically distributes nodes across availability zones.
+3. **Automated Monitoring & Recovery** - Replaces crashed nodes automatically.
+4. **Scalability** - Scales cluster size based on demand.
+
+#### **Ways to Set Up an EKS Cluster**
+
+1. **AWS Console** - Create a cluster manually through the UI.
+2. **eksctl** - A CLI tool to set up EKS clusters quickly.
+3. **Infrastructure as Code (IaC)** - Use Terraform, CloudFormation, or Ansible.
+
+### **EKS Cluster Networking Setup**
+
+1. **Create a VPC** - Defines network boundaries.
+2. **Set Up Subnets** - Public subnets for control plane, private subnets for worker nodes.
+3. **Attach an Internet Gateway** - Enables external access.
+4. **Configure Route Tables** - Routes traffic correctly.
+
+### **Provisioning an EKS Cluster (Control Plane & Worker Nodes)**
+
+1. **Create an IAM Role** - Grants permissions for cluster management.
+2. **Create the EKS Cluster** - Choose network settings and attach the IAM role.
+3. **Add Worker Nodes** - Configure and attach worker nodes to the cluster.
+
+This provides a highly available, scalable, and automated Kubernetes environment for managing containerized applications.
+

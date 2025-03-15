@@ -1,0 +1,11 @@
+---
+- name: logged-in user play
+  hosts: all
+  tasks:
+    - name: get logged-in user
+      shell: whoami
+      register: loggedInUser
+    - name: print logged-in user
+      debug:
+        msg: "logged in user: {{loggedInUser.stdout}}"
+...

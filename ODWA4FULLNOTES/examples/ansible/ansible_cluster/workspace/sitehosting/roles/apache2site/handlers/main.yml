@@ -1,0 +1,11 @@
+---
+# handlers file for apache2site
+- name: enableSite
+  shell: a2ensite "{{site_dir}}"
+  become: yes
+- name: reloadApache2
+  service:
+    name: apache2
+    state: reloaded
+  become: yes
+

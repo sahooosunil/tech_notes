@@ -1,0 +1,108 @@
+Cloud Platform
+on-demand delivery of computing services/resources to the world is called "cloud computing". A cloud provider offers 3 types of services.
+1. IaaS [Infrastructure as a Service]
+2. PaaS [Platform as a Service]
+3. SaaS [Software as a Service]
+
+1. IaaS
+Infrastructure as a Service is about providing infrastructure resources like Computing resources, Networking, Internet Lines etc in hosting and running the software applications to the world by the cloud provider. There are lot of advantages are there in using IaaS services from cloud provider
+
+advantages:
+1. we can choose the shape of the machine asper our choice or requirement and only need to pay for what we want
+2. The cloud providers offers to types of billing
+  2.1 fixed billing
+  2.2 pay-per usage model
+depends on the needs we can choose the billing model and take advantage of it
+3. on-demand delivery of the computing resources are supported by the cloud providers, and there is no need of long-term contracts needs to be signed in procuring the infrastructure unlike hosting providers or data centers.
+4. we can provision or de-provision the resources instantaneously
+5. monitoring, backup and recovery of the services would be taken care by cloud provider
+6. licensing, patching, upgrading the operating system and utility softwares on the infra would be handled by cloud providers.
+  
+The cloud providers takes care of managing the lifecycle of the cloud resources like
+1. provisioning = create a resource
+2. de-provisioning = releasing or destroying the resource
+3. scale-up/scale-down = increasing/decreasing the computing capacity of the machines/resources is called "scale-up"/scale-down resply
+4. scale-out/scale-in = adding and removing the resources from the cluster is called "scale-out and scale-in"
+5. backup/recovery = periodical backup and incase of crash automatic recovery will be handled by cloud provider
+6. start/stop/restart = staring, stopping and restarting an resource
+
+#2. PaaS [Platform as a Service]
+To run software applications ontop of the IaaS infrastructure we need additional software packages or libraries like programming language software, database servers, application server softwares etc. These softwares that sits between the infra and the software application are called "Middleware software" or "Platform Software".
+  
+Upon taking the computing resources aspart of IaaS services from the cloud provider, the devops engineers within the organization has to takecare of installing, configuring these platform softwares ontop of the infrastructure provisioned, to run the software applications on it. This involves
+1. procuring the software licenses
+2. downloading the softwares
+3. installing and configuring them manually ontop of the infra
+
+managing these platform softwares manually has several dis-advantages:
+1. The time it takes to install, configure and manage these platform softwares is very high
+2. incase of scale-up/scale-down the infrastructure would be restarted, so that the devops engineers has to manually take care of bringing up the platform softwares that are installed on the infra in event of restart. Otherwise they need to develop special scripts in brining up these softwares in the event of restart, which is quite complex
+3. scale-out or scale-in of the infrastructure will not bring the platform software automatically. The cloud provider only provides infra, the devops engineers has to manually take care of installing or uninstalling the platform software by re-configuring them incase of scale-out or scale-in which is very complex to handle.
+4. monitoring, backup and restore of the platform softwares has to be taken care by the ops engineers which is an on-going maintainance efforts
+5. patching, upgrading these platform softwares is difficult job
+
+Instead of we taking care of managing the platform softwares, the cloud providers itself takescare of provisioning and managing the platform software aspart of the lifecycle operations, so that we can directly run the applications on the PaaS services they provided.
+  
+The most popular middleware softwares that are there are provisioned and provided as PaaS services by the cloud providers.
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  

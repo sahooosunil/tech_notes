@@ -1,0 +1,27 @@
+server:
+  port: 8081
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+# guidelines:
+#   oxygenLevels: 80
+#   quarantine: 15
+#   liters: 4
+#   temparatureLevels: 98.9 - 101
+  
+management:
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true  
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - info       
+config:
+  location: /config/                     

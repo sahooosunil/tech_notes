@@ -1,0 +1,137 @@
+virtualization = it is an technology through which we can run multiple parallel isolated environments on one single physical machine.
+	
+containerization = is a technic through which we can package the software application along with dependent software libraries/packages and run in a container isolated from other programs that are running in the same environment.
+	
+From the above we can understand both these technologies are meant for running multiple software programs in-parallel isolated from each other on a single physical machine. Then what is the difference between them, which one should be used when?
+	
+Virtualization
+--------------
+advantages:-
+	1. In case of virtualization, each virtual machine can have an full blow operating system being installed which is independent of the host machine operating system, which means we can run different programs on different operating ssytem environments easily using virtualization
+	2. as each virtual machine has been installed with their own dedicated operating system env, due to which we can achieve highest-level of security
+	3. virtual machines are by nature designed to be running for longer amount of time, so ideally suitable for long-running applications like application servers, web servers, database servers etc
+	4. suitable for running all types of applications even which requires dedicated operating system env
+	
+dis-advantages:-
+	1. since each virtual machine is being installed with a dedicated operating system for running the software applications isolated from each other, the amount of system resources being consumed in keeping the software programs running isolated from each other on that operating system is very high, so that it results in huge wastage of underlying system resources in running the applications	
+	2. virtual machines are heavy weight because of the dedicated operating system being installed aspart of them, due to which we cannot carry the virtual machine disk images across the environments and are not portable	
+	3. The virtualization technology cannot be used for achieving scalability, because the virtual machines takes huge amount of startup time in running as each of them has their own dedicated operating system, that needs to be bootup before the actual application is running.		
+	4. we cannot easily achieve continous integration and continous delivery through virtualization and virtual machine images, because those are heavy weight cannot be carried across the envs, and cannot be booted quickly.
+		
+From the above we can understand virtualization is suitable for 
+	1. using virtualization we can created dedicated computer environments that can be distributed to various different people allowing them to work/use it isolated from others. For eg.. cloud providers using/greatly relies on virtualization technic in creating dedicated computer environments which are called compute instances of required capacity and distribute to the people on-demand
+	2. In an organization environment, the administrators and IT operational engineers can create multiple virtual machine environments dedicated for development, testing and certifying the applications for different teams/applications so that they can lower the IT infrastructure cost.
+-------------------------------------------------------------------------------------------------------------------------------
+Containerization
+advantages:-
+	1. containers are light weight, they dont run dedicated operating system within them, so that we can run multiple different containers on the same machine and can achieve high and effective utilization of system resources of a physical computer.
+	2. container images are light weight as they dont package/run a dedicated operating system of their own, thus making them easily carry across the environments. "Containers are shippable/transferable"
+	3. The containerized applications can be easily scalable, as they dont have an operating system to be booted inorder to run the software applications within them
+	4. The container images are easily shippable due to light weight, unlike the virtual machines, the containers are quickly started and shutted down, because all it takes to run/stop a container is just the application program packaged inside it, so the containerization technology is favaourable in achieving continous integration and continous delivery
+	5. patching and upgrading the containers are quite easy when compared with virtual machines
+	
+dis-advantages:-
+	1. we cannot have dedicated operating system environment running inside the container independent of the host machine operating system
+	2. less secured when compared with virtualization, as each container doesnt have dedicated operating system 
+	3. suitable for short-running applications only
+	
+When to use Virtualization and Containerization?
+Virtualization:
+if we want to run isolated environment of independent operating system and share them across teams or users in running their applications then use virtualization
+
+Containerization:
+If we want to run multiple software applications isolated from each other on a physical computer then use containerization
+
+There are 2 main benefits of using containerization technology
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

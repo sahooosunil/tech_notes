@@ -1,0 +1,293 @@
+There are 2 major types of shells are there in linux operating system
+Bourne Shell = if we are using bourne-shell, the $ character is the default prompt
+1. Bourne Shell (sh)
+2. Korn Shell (ksh)
+3. Bourne Again Shell (bash)
+4. POSIX [Portable operating system interface]	 (sh)
+	
+C Shell = If you are in C-Shell, the % character is the default prompt
+1. C Shell (csh)
+2. TENEX/TOPS C shell (tcsh)
+	
+Most of the distros supports these 2 types of shells and bourne shell is the default shell will be available as part of most of the distro
+
+How to see the Folder structure?
+tree command/utility can be used for seeing the directory structure under the given directory
+
+syntax:
+tree directoryName
+	
+To see the default/build-in directory structured created by the linux operating system during the install we can use
+tree / = by default tree displays all the directories along with sub-directories recursively
+if we want to see only a specific level of childs then we can use -L switch
+	
+tree -L 1 / = displays only the level-one directories from the given directory
+
+
+tree utility is not available by default aspart of ubuntu operating system we need to explicitly install. a normal linux user cannot install the software, only the root user has permission to install it.
+	
+To switch to the root user we need to 
+su -
+prompts for root user password:
+
+upon switching to root user we can install the tree utility using
+sudo apt update -y
+sudo apt install -y tree
+-----------------------------------------------------------------------------------------------------------------------------------
+1. File Management
+we need to store the data on the secondary storage device or harddisk of the computer, to have the data permanently stored on the computer. To store, organize and manage the data on the harddisk of the computer operating systems uses FileSystem technics
+
+Filesystems allows us to store the data on the harddisk of the computer interms of Files/Folders
+File = File is an data structure in which the operating system stores the address locations of the data where it has been stored on the harddisk of the computer, along with storing the address location of the data, the operating system stores additional information representing the file like
+1. FileName
+2. owner
+3. created date
+4. modified date
+etc
+In order to access the data we have stored on the harddisk of the computer, we need to ask the operating system to fetch the data from the address locations, since the address location information is stored aspart of the Files, we pass the Filename as an input to the operating system stating refer the address locations within the file to fetch the data
+
+So logically we can thing by referring the file we are able to access the data which indirectly means files holds the data (holds the references to the data)
+	
+From the above we can understand, to store the data on the harddisk of the computer we need to use File
+
+How to create an File on the FileSystem of the Linux operating system?
+touch filename
+touch command creates an empty file with no data inside it under the current directory in which we are in
+
+Terminal:
+Many of the linux distros packages gui, tools and utilities like
+1. music players
+2. video players
+3. browsers
+etc
+these utilities makes us using the computer more sophisticatedly, hence making linux operating system as general purpose operating system.
+	
+but when we are running linux operating system on production environment, we only use the computer for running the application, thus doesnt require gui or user friendly software tools/utilities. So that the computing capacity of the machine is dedicated for running the application and can achieve high performance/throughput
+
+This way of running the linux operating system without gui/utilities program is called "headless linux". In this case linux will offer a black blank window to interact with the kernal/bash of the operating system which is called "Terminal" window
+
+By default when we launch the terminal windows in linux operating system, the terminal window starts with $HOME/desktop directory.
+all the contents we placed within the desktop directory will be shown up on the operating system window upon login for quick access
+it is not recommended to place any contents in the desktop directory, since upon login everyone will be able to see the contents on your computer
+
+Since a user can access only the HOME directory (/home/username) it is recommended to place the files/folders inside his home directory, so that other users cannot access the contents (files/folders) from your home directory
+
+
+How to goto the home directory of the logged in user?
+cd = change directory = by typing cd takes to the user home directory
+cd ~ = goes to the home directory
+cd $HOME = $HOME is an env variable by default points to the logged in user home directory location
+
+How to see in which directory we are in?
+pwd = pwd stands for print working directory
+
+How to see the contents of a directory?
+ls = list files and folders under the current directory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

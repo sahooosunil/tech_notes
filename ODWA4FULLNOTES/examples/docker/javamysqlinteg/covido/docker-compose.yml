@@ -1,0 +1,27 @@
+services:
+  covidomysqldb:
+    container_name: covidomysqldb
+    image: mysql:8.3.0
+    restart: always
+    volumes:
+      - covidomysqlvol:/var/lib/mysql/
+      - ./src/main/db/covidodb.sql:/docker-entrypoint-initdb.d/covidomysql.sql
+    networks:
+      - covido_ntwk
+    environment:
+      MYSQL_DATABASE: covidodb
+      MYSQL_ROOT_PASSWORD: welcome1 
+  covido:
+    container_name: covido
+    image: covido:1.0
+    networks:
+      - covido_ntwk
+    ports:
+      - 8080:8080               
+    depends_on:
+      - covidomysqldb
+volumes:
+  covidomysqlvol:      
+networks:
+  covido_ntwk:
+    driver: bridge

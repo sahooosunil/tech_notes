@@ -1,0 +1,189 @@
+1. How to find the user in which we are executing the shell commands?
+whoami
+
+2. How to find the logged-in user information?
+logname
+
+3. How to get the list of users logged-in to the linux operating system machine?
+who
+
+4. How to know the name of the operating system?
+1. uname
+2. uname -a
+3. lsb_release -a
+4. cat /etc/os-release
+
+5. How to find the hostname of the linux machine?
+1. hostname
+2. hostname -i = loopback ip address
+3. hostname -I = ip address of all the network adapters attached to the machine
+
+6. how to change the name of computer?
+1. sudo vim /etc/hostname
+2. hostnamectl set-hostname name
+
+7. How to find all the network adapters and their physical and logical ip addresses of the adpaters of the machine?
+ifconfig = to use this we need to install net-tools package
+	
+8. How to check whether another computer is reachable from our computer or not?
+ping ipaddress
+
+9. How to list down all the hardware devices attached to the computer?
+lshw
+
+10. how to get the cpu information of the computer?
+linux stores the information about the cpu in a file called /proc/cpuinfo
+
+cat /proc/cpuinfo
+lscpu
+
+11. What are init levels or run-levels in linux operating system?
+init-level or run levels indicates how we wanted the linux operating system to be booted. There are total 7 run levels are there from 0 - 6, to boot the linux operating system in a specific run-level or init level we need to use a command "init" followed by run-level
+sudo init runLevel
+
+1. sudo init 0 = shutdown / poweroff
+2. sudo init 1 = single user-mode with no networking, no multi-tasking and only root access (its same as safe-mode in windows)
+3. sudo init 2 = with networking and multi-tasking. no gui
+4. sudo init 3 = supports networking, multi-tasking, no gui
+5. sudo init 4 = same as init 3 level, but reserved for research purpose
+6. sudo init 5 = supports networking, multi-tasking, with gui and sound
+7. sudo init 6 = reboot
+-----------------------------------------------------------------------------------------------------------------------------------
+Process Management
+
+What is an process?
+A program under execution is called "process".
+	
+program: program is a file in which set of instructions are written and can be passed to the operating system of the computer asking to run on the underlying hardware of the computer.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

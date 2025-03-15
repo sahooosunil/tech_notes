@@ -1,0 +1,109 @@
+How many types of ip addresses are there?
+There are 2 types of ip addresses are there
+1. public ip address
+2. private ip address
+
+
+2. private ip address
+private ip address is assigned by the network router to all the computers connected to the network. using the private ip address we can uniquely identify and access the computer within the network only, using the private ip address we cannot access the computer/host from the public/internet network.
+The scope of the ip address and the accessibility is within the network only
+
+1. public ip address
+public ip address is assigned by the internet service provider (isp) to the computer rather than the network router. The scope and accessibility of this ip address is global to the world. using the public ip address we can access the machine over the internet from anywhere. For every computer we dont need public ip address rather the computer within a network access the internet through network router.
+	
+For large organizations who are hosting DNS servers or web servers over the public world globally requires public ip address, otherwise we dont need public ip for a computer. We can get an public ip for our computer from isp provider by paying the price/cost for it.
+	
+How do we identify by looking at an ip address, whether it is public or private ip address?	
+The IANA (Internet Assigned Numbers Authority)	has pre-defined the ranges of public and private ip addresses. 
+	
+Private networks should utilize the following address ranges only:
+Class A: 10.0.0.0    - 10.255.255.255
+Class B: 172.16.0.0  - 172.31.255.255
+Class C: 192.168.0.0 - 192.168.255.255
+	
+These ip addresses that falls into the above ranges are considered as non-routable, because these are not unique globally.
+	
+Public ip address Ranges:
+All addresses outside private ip range are considered public ip. All the ip addresses that fall into one of the following predefined public ip address range are definitely public ip addresses only:
+1. 1.0.0.0 - 9.255.255.255
+2. 11.0.0.0 - 126.255.255.255
+	
+3. 129.0.0.0 - 169.253.255.255
+4. 169.255.0.0 - 172.15.255.255
+	
+5. 172.32.0.0 - 191.167.255.255
+6. 192.169.0.0 - 198.17.255.255
+7. 198.20.0.0 - 223.255.255.255
+-----------------------------------------------------------------------------------------------------------------------------------
+Virtualization
+Virtualization is a technic/mechanism through which we can run multiple different environments isolated from each other in parallel on the physical computer machine
+
+Why do we need run multiple parallel environments on one physical machine?
+There are several reasons for having multiple environments on one single computer:
+1. 
+
+senior developer:
+1. project#1 -> windows environment, jdk11, database server: oracle server10g
+2. project#2 -> Linux environment, jdk17, database server mysql server8
+
+
+
+	
+
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

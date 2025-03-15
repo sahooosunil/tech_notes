@@ -1,0 +1,551 @@
+Loadbalancers are used for distributing the network/application traffic across the instances of the application. AWS Cloudplatform has provided 3 types of loadbalancers
+1. Application Loadbalancer
+2. Network Loadbalancer
+3. Gateway Loadbalancer
+
+1. Application Loadbalancer
+Application Loadbalancer is also called as http loadbalancer as it works based on http protocol in distributing the traffic across the instances of the web application. It is an region level service and hosted at vpc-level, used for loadbalancing the requests to the instances of the application running across the Availability Zones of a region
+
+The http protocol works based on exchaning the request/response between the server/browser(client), which are called HttpRequest and HttpResponse. The Application Loadbalancer allows us to build routing rules in distributing the request among instances based on the http request
+
+An HttpRequest contains #3 parts
+1. 
+protocol/version:
+uri:
+request method:
+-------------------
+2. 
+http headers
+standard key/value pair
+
+-------------------
+3.
+body
+html/mark (or)
+data (html form data)
+  
+We can build routing rules in identifying and distributing the requests among the group of instances of the applications based  on
+1. uri/path
+2. header
+3. query parameters
+etc
+
+The elastic cloud loadbalancers is the managed service that is provisioned, managed and monitored by the aws cloudplatform. guaranteed availability, scalability of these loadbalancers are taken care by aws.
+Multiple instances of the Application Loadbalancer will be provisioned and distributed across the AZs of the vpc region for high-availability and scalability.
+  
+
+speed = /speed/health [war]
+roadster = /roadster/actuator/health [war]
+
+-----------------------------------------
+required software packages:
+1. jdk 11
+2. apache-tomcat-9
+
+
+in the vpc:
+1. #2 public subnets across the azs of the vpc = for provisioning lbr 
+2. #2 hybrid subnets across the azs of the vpc = for provisioning ec2 instances to deploy the applications
+3. #1 ec2 instances as jumpbox on public subnet, so that we can ssh into application ec2 instances on hybrid subnet to installing/configure the software packages
+
+4. #4 ec2 instances to run #2 instances per each application across the azs
+
+
+How to provision the application loadbalancer?
+1. speed application = https://github.com/techsriman/speed.git
+2. roadster application = https://github.com/techsriman/roadster.git  
+git pat token=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
+username: techsriman
+
+Networking Setup
+------------------
+
+#1 create vpc
+vpcname: automobilevpc
+region: us-east-1
+cidr: 172.10.0.0/16
+  
+#2. subnets
+@2 public subnets for provision alb
+@2 hybrid subnets for provisioning ec2 instances for running java applications
+
+2.1 
+subnet name: automobilepubsn1
+cidr: 172.10.1.0/24
+vpc: automobilevpc
+availability zone: us-east-1a
+
+2.2 
+subnet name: automobilepubsn2
+cidr: 172.10.2.0/24
+vpc: automobilevpc
+availability zone: us-east-1b
+
+2.3 
+subnet name: automobilehybsn3
+cidr: 172.10.3.0/24
+vpc: automobilevpc
+availability zone: us-east-1a
+
+2.4 
+subnet name: automobilehybsn4
+cidr: 172.10.4.0/24
+vpc: automobilevpc
+availability zone: us-east-1b
+
+#3. make the @2 subnets as public subnets
+3.1 create internet gateway
+gateway name: automobilegw
+
+
+3.2 attach to the vpc: automobilevpc
+
+3.2 create route table to route public network traffic from the subnet resources through internet gateway
+route table: automobileigrt
+vpc: automobilevpc
+subnet associations: automobilepubsn1, automobilepubsn2
+route rules:
+172.10.0.0/16   local
+0.0.0.0/0       automobileig
+
+#4. make the @2 subnets as hybrid subnets
+4.1 create nat gateway
+nat gateway name: automobileng
+vpc: automobilevpc
+subnet: automobilepubsn1
+elastic ip: allocate
+
+4.2 create route table to route outbound network traffic from subnet resources to the external network thru nat gateway
+route table: automobilengrt
+vpc: automobilevpc
+subnet associations: automobilehybsn3, automobilehybsn4
+route rules:
+172.10.0.0/16  local
+0.0.0.0/0      automobileng
+
+#5. create security groups for jumpbox, javaec2 instances and lbr
+5.1 
+security groupname: automobilejbsg
+vpc: automobilevpc
+ingress:
+ssh  22   0.0.0.0/0  allow
+egress:
+all traffic  anyport 0.0.0.0/0  allow
+
+5.2
+security groupname: automobilejavasg
+vpc: automobilevpc
+ingress:
+ssh       22   172.10.0.0/16  allow
+customTcp 8080 172.10.0.0/16  allow
+egress:
+all traffic  anyport 0.0.0.0/0  allow
+
+5.3 
+security groupname: automobilelbrsg
+vpc: automobilevpc
+ingress:
+http  80   0.0.0.0/0  allow
+egress:
+all traffic  anyport 0.0.0.0/0  allow
+--------------------------------------------------------------------------------------------------------------------------------------
+Compute Instances
+Provision #4 ec2 instances on hybrid subnet on which we need to deploy and run java applications
+Provision #1 ec2 instances on public subnet that is used as jumpbox to connect to the java application ec2 instances for installing, deploying and running the java applications.
+  
+#1. 
+instancename: automobilejbec2
+vpc: automobilevpc
+subnet: automobilepubsn1
+ami: ubuntu
+shape: t2.micro
+ssh keys: javakp.pem
+Enable public ip: true
+security group: automobilejbsg
+  
+#2. 
+provision #4 ec2 instances with same configuration on distributed across both the hybrid subnets
+instance names: speedec2_1 (automobilehybsn3)    , speedec2_2 (automobilehybsn4)
+                roadsterec2_1 (automobilehybsn3) , roadsterec2_2 (automobilehybsn4)
+vpc: automobilevpc
+ami: ubuntu
+shape: t2.micro
+ssh keys: javakp.pem
+Enable public ip: false
+security group: automobilejavasg
+--------------------------------------------------------------------------------------------------------------------------------------
+Install the software packages on each of these machines as below.
+  
+1. on jumpbox
+1.1 copy the keypair onto the jumpbox so that it can be used for connecting to the java ec2 instances from jumpbox
+scp -i ~/.ssh/javakp.pem ~/.ssh/javakp.pem ubuntu@jumpboxpublicip:/home/ubuntu/.ssh/
+  
+1.2 ssh onto the jumpbox ec2 instances
+ssh -i ~/.ssh/javakp.pem ubuntu@jumpboxpublicip
+
+1.3 install java11 on the jumpbox
+sudo apt update -y
+sudo apt install -y openjdk-11-jdk
+
+1.4 install maven on the jumpbox
+sudo apt install -y maven
+
+1.5 change the permission of the ssh key on the jumpbox
+chmod 600 ~/.ssh/javakp.pem
+
+1.6 clone both the git repositories onto the jumpbox and do an maven build, so that the binaries can be copied into respective ec2 instances for deploying/running.
+  1.6.1 create workspace directory
+  mkdir ~/workspace
+  cd workspace
+  1.6.2 clone speed repository
+  git clone https://github.com/techsriman/speed.git
+  1.6.3 build the project using maven
+  cd speed
+  mvn clean verify
+  1.6.4 copy the generated war file into both speed ec2 instances using scp command
+  scp -i ~/.ssh/javakp.pem target/speed.war ubuntu@speedec2_1privateip:/home/ubuntu
+  scp -i ~/.ssh/javakp.pem target/speed.war ubuntu@speedec2_2privateip:/home/ubuntu
+  
+  1.6.5 clone roadster repository
+  cd ~/workspace
+  git clone https://github.com/techsriman/roadster.git  
+  git pat token=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
+  username: techsriman
+  
+  1.6.6 goto roadster project directory and build
+  cd roadster
+  mvn clean verify
+  
+  1.6.7 copy the generated war file into both roadster ec2 instances
+  scp -i ~/.ssh/javakp.pem target/roadster.war ubuntu@roadsterec2_1privateip:/home/ubuntu
+  scp -i ~/.ssh/javakp.pem target/roadster.war ubuntu@roadsterec2_2privateip:/home/ubuntu
+  
+--------------------------------------------------------------------------------------------------------------------------------------
+Setup @4 java application ec2 instances by installing software packages as below
+
+1. 
+ssh into each of the java ec2 instances using their private ips from jumpbox and install the below software packages
+
+1.1 
+from jumpbox:
+ssh -i ~/.ssh/javakp.pem ubuntu@speedec2_1publicip
+                                speedec2_2publicip  
+                                roadsterec2_1publicip
+                                roadsterec2_2publicip
+
+1.2  install java 11
+sudo apt update -y
+sudo apt install -y openjdk-11-jdk
+
+1.3 setup the tomcat server
+1.3.1 create middleware directory
+mkdir ~/middleware
+cd ~/middleware
+
+1.3.2 download the apache tomcat 9 server 
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.84/bin/apache-tomcat-9.0.84.tar.gz
+tar -xzvf apache-tomcat-9.0.84.tar.gz
+rm apache-tomcat-9.0.84.tar.gz
+
+1.3.3 copy speed.war and roadster.war into the respective ec2 instances tomcat/webapps deployment directory
+cp ~/speed.war ~/middleware/apache-tomcat-9.0.84/webapps = speedec2_1, speedec2_2
+cp ~/roadster.war ~/middleware/apache-tomcat-9.0.84/webapps = roadsterec2_1, roadsterec2_2
+
+1.3.4 start the tomcat servers on all the @4 instances
+cd ~/middleware/apache-tomcat-9.0.84/bin
+./startup.sh
+
+1.3.5 verify on all the 4 instances the application is running or not by running below curl on respective instances
+curl http://localhost:8080/speed/health/readiness.htm
+curl http://localhost:8080/roadster/actuator/health.htm
+above curls should not return any error output.
+--------------------------------------------------------------------------------------------------------------------------------------
+Provision Application Loadbalancer
+
+1. create #2 target groups for each of the application instances
+
+1.1  Target group for speed application
+TargetGroup: speedtg
+vpc: automobilevpc
+
+Include: instances
+
+Target Application Protocol
+Protocol: HTTP  Port: 8080
+  
+Health Check
+HealthCheck URL: /speed/health/readiness.htm
+
+choose out of the list of instances listed the speedec2_1 and speedec2_2 instances and include as pending
+click on create target group
+
+1.2  Target group for roadster application
+TargetGroup: roadstertg
+vpc: automobilevpc
+
+Include: instances
+
+Target Application Protocol
+Protocol: HTTP  Port: 8080
+  
+Health Check
+HealthCheck URL: /roadster/actuator/health.htm
+
+choose out of the list of instances listed the roadsterec2_1 and roadsterec2_2 instances and include as pending
+click on create target group
+
+1.3 setup application loadbalancer
+Choose Loadbalancer Type: ALB
+Loadbalancer Networking: internet-facing
+vpc: automobilevpc
+choose the azs: us-east-1a, us-east-1b
+from each az choose public subnets: automobilepubsn1, automobilepubsn2
+Security Group: automobilelbrsg
+
+Listener:
+HTTP   80   Default: TargetGroup: speedtg
+We need to configure default route rule pointing to one of the TargetGroups of the application. once provisioned we need to edit the route rules of the listener.
+  
+Click on create loadbalancer
+
+1.4 after the loadbalancer has been provisioned, we need to goto listener and edit the route rules
+1. click on the loadbalancer details page
+2. navigate to listener and choose the listener and select modify rules
+
+3. now we are in route rules page.
+4. add rule
+  rulename: speedrule
+  priority: 1
+  condition:
+    path: "/speed/*"
+  target group: speedtg
+5. add rule
+   rulename: roadsterrule
+   priority: 2
+   condition:
+     path: "/roadster/*"
+   target group: roadstertg     
+
+6. edit the default rule
+   choose response: 404
+   with error message: no resource found
+
+
+IAM service
+S3 storage bucket
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

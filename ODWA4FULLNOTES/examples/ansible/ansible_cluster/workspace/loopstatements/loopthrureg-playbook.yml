@@ -1,0 +1,13 @@
+- name: loop thru register variable
+  hosts: all
+  vars:
+    search_input: failed_when
+    source_dir: /vagrant/workspace/
+  tasks:
+    - name: list files/folders
+      shell: ls -l "{{source_dir}}" | grep "{{search_input}}"
+      register: resultlist
+    - name: show result
+      debug:
+        msg: "{{item}}"
+      loop: "{{resultlist.stdout_lines}}"

@@ -1,0 +1,81 @@
+Kubernetes Namespace
+--------------------
+Namespaces are used for creating naming compartments or logical group of objects/resources on the Kubernetes cluster.
+ A kubernetes cluster would be shared across multiple teams to run various different projects on the cluster,
+ so to avoid objects/resources of one project/team accessing the others we can use namespaces
+
+A kubernetes administrator can create multiple kubernetes users, assocate them into groups.
+ create kubernetes namespaces and grant access to the users/groups to those namespaces only.
+The administrator can create namespaces per team/project/application, 
+create users/groups associate them to the namespaces allowing them to create/manage/modify the objects/resources of their respective namespace only. 
+So that we can avoid different groups of people to see or manage resources of others. hence the cluster is secured and protected.
+	
+By default aspart of the kubernetes install there are 4 namespaces will gets created
+
+1. default          = every object that is created on kubernetes cluster will be placed by default under "default" namespace only. all the users/groups of the cluster has access to the default namespace and it should be sufficient for most of the usecases. The default namespace by default is empty.
+	
+2. kube-system      = all the kubernetes system objects like api manager, controller manager and scheduler are placed under "kube-system" namespace
+
+3. kube-public      = by default kube-public namespace is empty, if we place any objects within the kube-public those are accessible publicly to everyone without authentication
+
+4. kube-node-lease  = all the kubernetes leased objects are associated within the kube-node-lease namespace
+
+1. How to see the namespaces on the cluster?
+kubectl get namespaces
+in short we can use ns instead of namespaces
+kubectl get ns
+
+returns all the list of namespaces that are available on the cluster.
+	
+2. How to create our own namespace in the kubernetes cluster?
+kubectl create namespace namespacename
+
+3. How to delete a namespace?
+kubectl delete ns namespacename
+
+4. How to see all the pods running/available on the cluster?
+kubectl get pods
+
+by default the kubectl will be running on "default" namespace only so it shows all the objects like pods, deployments, replicaset, services etc that are on default namespace only
+
+If we want to see the objects/resources under a specific namespace then we need to use -n switch as below
+kubectl get pods -n namespacename
+
+5. How to see all the objects on the cluster irrespective of the namespace?
+kubectl get pods -A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

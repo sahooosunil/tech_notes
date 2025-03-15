@@ -1,0 +1,53 @@
+Change in the way qa performs the testing for certifying the application
+1. qa prepares the testplan and testcases for the stories they to verify
+
+2. Change In the culture of testing
+	2.1 right from the development to the production the env would be same, so that we dont need an UAT env for certifying the application to be production ready
+	2.2 when and ever an story has been finished by the developer he would delivery it to the qa for testing, so development and qa goes hand-in-hand or in-parallel
+	
+3. we need test env for qa to verify or certify the application	
+3.1 setting up an physical server environment has lot of problems 
+	3.1.1 time required for setting up the physical server environment is huge
+	3.1.2 the investment cost and maintainance in setting up and using the physical server environment is high
+Instead of it create the infrastructure using cloud platforms like aws, azure, oci, gcp etc
+The amount of time it takes for setting up the cloud infrastructure is very less and even it is cost effective.
+	
+4. settingup the cloud infrastructure in testing and releasing the application into production is an repeatitive activity. if we setup the cloud env manually
+	1. it takes lot of time
+	2. no guarantee we would endup with setting up successfuly, because of human errors
+to overcome this we need to use iac (infrastructure as a code) automation tools like terraform. Terraform is an cloud infrastructure automation tool that helps us in quickly setting up the cloud infrastructure. upon writing the terraform code and can use it to reproduce the env repeatedly
+
+5. by setting up the infrastructure we cannot deploy and run the software application. on top of the env we need to install software libraries like
+1. language software
+2. database servers
+3. application servers
+and configurations for running the applications
+
+We need to setup these software packages and configure the env manually upon creating the cloud infrastructure. again since it is an repeatitive process that has to be perform for various environments multiple times manually installing and configuration is not adviced
+We need to use Software Configuration Management tools like Ansible, Puppet, chef or Saltstack
+By using the software configuration management tools we can write the code for installing and configuring the infrastructure,so that we can repeatedly apply code in recreating the env
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,188 @@
+expect shell utility
+---------------------
+expect is used for executing an interactive shell-program non-interactively, so that we can accomplish touch-less automation.
+There are 3 major fundamental utilities are there to be used for implementing expect
+1. spawn = is used for spawing or running an interactive script that requires inputs
+2. expect = is used to match the statement for which the script is waiting for interactive input
+3. send = command to pass the actul values to the script
+
+
+addNumbers.sh
+--------------
+#!/bin/bash
+read -p "Enter A :" A
+read -p "Enter B : " B
+SUM=$(A+B)
+echo "SUM : $SUM"
+	
+Enter A: 10
+	
+	
+automation.sh
+-------------
+#!/usr/bin/expect -f
+set timeout -1
+spawn ./addNumbers.sh
+expect --exact "Enter A :"
+send -- "10\r"
+expect --exact "Enter B :"	
+send -- "20\r"
+expect eof
+
+now the wrapper script automation.sh will takes care of running the addNumbers.sh silently.
+	
+by default aspart of the ubuntu distro, expect is not available, we need to install it through package manager:
+sudo apt update -y
+sudo apt install -y expect
+--------------------------------------------------------------------------------------------------------------------------------------
+
+3. expect module
+expect module is used for executing an shell-script non-interactively
+aspart of an software configuration automation, within a playbook we wanted to execute an shellscript program. The shellscript is taking an interactive inputs and will block the execution of the playbook, to run the shellscript program non-interactively aspart of the playbook execution we can use expect module as below.
+	
+syntax:-
+- name: task
+	expect:
+    command: shellscriptfile or shell command
+		chdir: directory
+		echo: true
+		responses:
+			"response1": val1
+			"response2": val2
+			
+addNumbers-playbook.yml
+---
+- name: addNumbersPlay
+	hosts: all
+	tasks:
+    - name: execute addNumbers shell program
+			expect:
+        command: ./addNumbers.sh
+				responses:
+          "Enter A :": 10
+					"Enter B :": 20	
+			register: sum
+		- name: prit sum
+		    debug:
+				  msg: "SUM : {{sum}}"
+...
+
+note: install expect shell utility on all the managed nodes of the cluster whomever we want to run this playbook
+-------------------------------------------------------------------------------------
+#2. File Category
+The File category related modules are used for performing various different file operations like
+1. copy
+2. create, delete file/directory
+3. change permissions/ownership of a File/directory
+4. inline edit
+all these operations we can perform using File Category modules.
+
+even though we can perform these operations using shell/command module it is not recommended since these are non-idempotant, where as File Modules are designed keeping in view ofidempotatncy only
+
+3.1 copy module
+copy module is used for copying an file/directory from the local filesystem of the control node server onto any of ther managednodes of the cluster. Incase if we want to do a local copy which means pick the sourcefile from managed node and copy it into one its local directory structure ofthe managed node itself we can use a property remote_src: true that indicates pick the source file also from managed node itself.
+
+1. copy file from source to the destination directory?
+- name: copy
+  copy:
+		src: filename
+		dest: directoryLocation
+		
+2. copy the file/folder from srouce location 	to desitnation with given file permissions/ownership 	
+
+- name: copy
+  copy
+		src: file/directory locationn
+		dest: directoryName
+		owner: 'owner'
+		group: 'group'
+		mode: 657
+		
+3. we can enforce validation constraints while copying the files from source to destination location as below
+
+- name: copyWithValidation
+	copy:
+		src:
+		destination:
+		validation: "/usr/bin/visudo -csf %s"
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

@@ -1,0 +1,18 @@
+How many types of subnets are there?
+There are 3 types of subnets are there
+1. private subnet
+2. public subnet
+3. hybrid subnet
+
+
+1. private subnet
+The resources within the private subnet can communicate only with other subnet resources that are part of the same vpc only, these resources cannot have access to the public network
+
+By default when we create subnets within the vpc, all of them are private subnets only.
+  
+  
+2. public subnet
+these resources that are part of the public subnet can talk to all the resources across the subnets of the same vpc along with that these resources will have access to the external network as well.
+  
+How to create a public subnet?
+  

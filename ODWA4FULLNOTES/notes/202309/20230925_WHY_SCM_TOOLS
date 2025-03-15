@@ -1,0 +1,110 @@
+To overcome the problems in manually installing & configuring the software packages on the infrastructure, the automation has to be adopted. 
+	
+1. Shellscripting	
+The devops engineer instead of installing/configuring the software packages manually on the infrastructure, they can write shellscript programs, in which they can write instructions in installing/configuring the software packages requiredfor deploying the application.
+	
+There are lot of advantages of using shellscripting in installing/configuring the software packages:
+1. The amount of time it takes in installing/configuring the software packages will be very less
+2. once the ops engineer has written the shellscript programs for installing/configuring the software packages, they can be reused in setting up the infra across the environments
+3. we can quickly and easily create reproducible infrastructure using shellscripting
+4. upgrading and patching the envs can be done easily
+
+
+From the above we can think of many advantages of using shellscripting, but it has its own dis-advantages as well in installing/configuring the software packages:
+1. In order to work on shellscripting, one needs to have strong programming language background and should be good at programming. Unless otherwise writing the shellscripting programs in installing/configuring the software packages is very difficult. It looks like most of the existing ops engineers or administrators doesnt have programming language background, so always having the manpower in writing the shellscript programs in installing/configuring the software packages is very difficult.
+	
+2. Shellscripting is platform specific and works only on Linux/Unix operating system platforms only and is not portable across the platforms. An devops engineer has to write several versions of the programs pertaining to each platform to ensure he can accomplish the automation of installing/configuring the software packages on all the envs
+
+3. Even though the shellscripts works on Linux platform, but it is not portable across the distros of the linux operating system. Because the tools/utilities offered by various distros will differ.
+For eg.. an package manager tool in ubuntu/debain distros is : apt
+                                 in an Redhat distro         : yum
+																 
+having an shellscript written for installing the software packages using apt tool will not works on Redhat distro operating system envs.
+	
+4. The shellscripting doesnot support exception handling/error management. It means while installing and configuring the sofware packages using shellscript program, if there is an error has been encountered, it abnormally terminates and leaves the system in in-consistent state.
+	
+5. idempotancy
+idempotancy is an principle, that states a post effect of performing an operation 1 time or N number of times will not affect the state of the system.
+The idempotancy guarantees the desired state of the system.
+Desired state means = what we wanted to the end state of the system to be.
+	
+For eg.. the desired state of the system is to have mysql-server-8.0 or tomcat-19 to be installed on the targeted env. 	
+	
+To accomplish the desired state of the system we can write shellscript program, but we need to endup in writing lot of complex logic in determining the target env is already in desired state or not to avoid reinstalling/reconfiguring the env if it is already exists. accomplishing the idempotancy is very difficult using shellscript programming.
+	
+6. No logging capabilities
+There is no support of logging the shellscript, due to which identifying the failures during execution and debugging them is very difficult.
+--------------------------------------------------------------------------------------------------------------------------------------
+3. Python
+Python is an high-level platform independent scripting language. It has rich set of modules/reusable libraries are there that can be used quickly in building the software programs using the python, most of the time the programmer never needs to write programming logic in accomplishing an operation, always the developers find one or another module that can be quickly imported and can be used in building the program.
+These rich set of reusable modules makes python more popular and favourable programming language in the world.
+	
+Python is heavily used in writing administrative scripts to configure and manage server-side softwares. Each server-side software providers provides python sdks/api through which we can administer and manage the server programmatically.
+	
+For eg.. Weblogic Server is an java server software that provides python modules, using which the ops engineer can write automation program for configuring the resources/objects on the weblogic server
+
+There are lot of advantages of using Python in installing and configuring the software packages through automation:
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

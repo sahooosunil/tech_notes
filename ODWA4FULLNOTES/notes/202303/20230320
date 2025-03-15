@@ -1,0 +1,143 @@
+How are we going to install the linux operating system?
+1. We are going to use Virtualization technology in running linux ubuntu operating system on our machine
+To use virtualization we need to install oracle virtualbox software along with extension pack
+1.1 install VirtualBox-7.0.6-155176-Win.exe
+1.2 after installation of the above software install Oracle_VM_VirtualBox_Extension_Pack-7.0.6a-155176.exe by double clicking on it
+
+with the above tools being installed we can create an virtual machine and install operating system inside. 
+	
+2. download ubuntu-desktop iso image for installing ubuntu on the virtualmachine
+ubuntu-22.04.2-desktop-amd64.iso
+
+3. lets create an virtual machine using oracle virtualbox virtualization manager tool
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Linux during the time of installation will creates an standard FileSystem directory structure on the harddisk of the computer
+
+tree = is an shell command that helps us in exploring the file system structure from the terminal window
+by default tree utility is not available, we need to install the tree by running the below command from the linux terminal
+
+sudo apt update -y
+sudo apt install -y tree
+prompt for root password = enter the root password
+
+tree /
+tree -L 1 / = shows only level 1 folders from the root
+
+-----------------------------------------------------------------------------------------------------------------------------------
+About "Shells"
+We cannot directly talk to the kernal of the linux operating system since it is very complex, that is where shell interpreter utility has been provided. The shell provides bunch of commands using them we can interact with the kernal of the operating system asking to perform operations
+
+There are 2 major types of shells
+Bourne Shell
+C Shell
+
+The Bourne Shell has sub-categories
+1. Bourne Shell (sh)
+2. Korn Shell (ksh)
+3. Bourne Again Shell (bash)
+4. POSIX [Portable operating system interface] 
+
+The C-Type shell has 2 sub-categories
+1. C Shell (csh)
+2. TENEX/TOPS C Shell (tcsh)
+----------------------------------------------------------------------------------------------------------------------------------
+By default we will be logged-in into the linux operating system as normal user, so we cannot perform any administrative operations like
+1. installing softwares
+2. adding users
+etc
+
+we need to switch to the root user by running the below command
+su -
+prompt for root password: (during the installation we gave password as : welcome1)	
+then the terminal/bashprompt should show up root@machine#
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: healthinspectorsconfigmap
+data:
+  district-healthinspectors.properties: |
+    WestGodavari=Ravi
+    EastGodavari=Rajesh
+    Krishna=Mahesh
+    Nellore=Satish
+    Guntur=Kumar
+    Rayalaseema=Sridhar
+    Kadapa=Manoj
+...

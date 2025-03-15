@@ -1,0 +1,106 @@
+How does the default permissions to a File/Folder will be assigned by the linux operating system upon creating a File/Folder?
+The user dont need to explicitly set the File/Folder permissions while creating them, since it is an tedious job for setting the permissions for every File/Folder we create. Most of the time we wanted to create a File/Folder with same permissions across, setting the same permissions manually doesnt makes sense.
+	
+Thats where linux operating system computes the File/Folder permissions from an special variable called umask. The umask variable will be available per each user of the linux operating system.
+	
+The default umask variable value
+For root user = 0022
+For normal user = 0002
+	
+The default max permissions allowed
+On a File in Linux operating system is = 666. Because the execute permission on a File will not be granted by default for security
+On a Folder the max permission = 777, we should be able to change directory (cd) 
+	
+For eg.. the greg umask = 0022
+Now greg is creating an File
+touch technobytes.txt, now linux will compute the default permissions for this file as below
+max permission file = 666
+	                 - 0002
+	                  ------
+	                   0664  = (rw-rw-r--) default permission
+	                  ------
+										
+For e.g.. bob has created an directory
+mkdir trips
+max default permission for a folder = 777
+	                                 - 0002
+	                                ---------
+	                                   0775  = rwxrwxr-x (default permission)
+	
+How to know what is the umask value of a user?
+we need to run the umask command that displays the umask value for that user
+umask
+
+
+we can change the default permissions being assigned while creating a file/folder for a user by changing the default umask value for that user
+umask 0ownergroupothers
+first '0' = indicates its an octal number
+
+
+when we change the umask variable value for a user, it will be temporary upon restart/relogin into the terminal/operating system the umask value will be reset to the default
+	
+How to permanently change the umask value for an user?
+add an entry into ~/.bashrc file as shown below to permanently change the umask value
+
+vim ~/.bashrc
+goto the end of the file shift+g 
+
+umask 0026
+then save and quite
+
+The above umask variable value will be applied for the user for whom we have changed
+-----------------------------------------------------------------------------------------------------------------------------------
+Software Package Management
+(or)
+Package Managers
+----------------------------
+What is a program?
+Program is set of instructions written in a File, that can be passed as an input to the operating system asking to execute on the underlying hardware of the computer.
+	
+What is an Software Application?
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

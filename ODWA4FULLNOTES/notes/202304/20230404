@@ -1,0 +1,165 @@
+find
+-----
+1. find directory/ -name "pattern"
+2. find directory/ -name "pattern" -print (default)
+3. find directory/ -name "pattern" -print0
+4. find directory/ -type d/f -name "pattern"
+5. find directory/ -name "pattern" -empty
+6. find directory/ -name "pattern1" -o -name "pattern2"
+7. find directory/ -name "pattern" -exec command {} \;
+------------------------------------------------------------------------------------------------------------------------------------
+grep
+----
+grep is used for searching the files based on content. grep searches for all the occurences of matching text in a given file line by line and output only lines that are matching on the console
+
+1. grep "text" filename
+searches for the give text within the file and output all the matching lines within the file
+2. grep -R "text" directory
+searches for the given text recursively in all the files under the given directory and even sub-directories as well and displays in each file the matching lines along with filename
+3. grep -n "text" filename
+searches for the given text within the file and displays matching lines along with the line number
+4. grep -i "text" filename
+-i stands for ignore case, by default grep searches for the text based on matching case only, if we use -i then it ignores the case while matching the text
+5. grep -w "text" filename
+-w = whole word match, by default partial word matches also it returns the matching lines, but if we use -w only the whole word matching lines will be displayed
+6. grep -o "text" filename
+-o output only matching words, dont display the matching lines
+7. grep -c "text" filename
+displays the count of matching phrase in the file
+
+The below grep options are helpful for viewing the log files with exceptions/errors
+8. grep -digit "text" filename
+grep -1 "text" filename
+print along with matching lines in the file, one line above and one line below as well
+9. grep -Adigit filename
+print along with matching lines the digit number of lines after the matching lines
+10. grep -Bdigit filename
+print along with matching lines the digit number of lines before the matching lines
+
+11. grep -v "text" filename
+-v = invered match, give me all the lines that doesnt have this matching line
+
+products.txt
+1   apple watch 8  10000
+2   samsung watch4 8000
+3   lenova laptop  23000
+4   mac m2         225000
+	
+grep -v "lenova" products.txt
+show me all the products in the file that doesnt have "lenova" word
+In grep along with text/phrase searching we can use regular expressions also for more complex matching
+
+regular expressions supported by grep
+-------------------------------------
+1. [] = any one of the single character match in the group
+2. [1-10] = matches any one character within the give range of characters
+3. ^ = this pattern must appear at the begining of the line
+4. . = matches any one character
+5. $ = this pattern must appear at the end of the line
+6. \ = escape character
+7. * = occurence of a pattern for zero or once
+8. .* = nothing or any number of matches
+
+1. show me all the directories in a give directory
+ls -l | grep ^d.*
+2. show me only the files within the given directory
+ls -l | grep -v ^d.* | grep -v "total"
+-----------------------------------------------------------------------------------------------------------------------------------
+Working with text editors
+How to edit a file in the linux operating system?
+To edit the contents of a file like modifying the text or deleting the words or lines or adding or appending the lines within the file can be done using text editors, in windows operating system we have notepad or wordpat and there are third-party text editor applications are available like
+1.atom
+2.brackets
+3.notepadd++
+4.editplus
+etc
+
+similarly we have textfile editors available in linux operating system as well
+1. gedit = is an in-built text editor provided as part of ubuntu distro.  we can use gedit filename will popups the file contents inside the gedit editor.
+	
+in addition we can install the third-party text editors like
+1. atom
+2. brackets
+etc
+but these editors only works in gui, but while working with headless linux (no gui) these editors will not be available. 
+So linux operating system has provided non-gui editors that are helpful for editing the text files are
+1. vi
+2. nano
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,174 @@
+What is exitcode, what is the purpose of it?
+every program upon completion returns an exitcode indicating the status of its completion to the underlying operating system of the computer. So, that the operating system can keep track of the information about which programs has finished execution successfully or which program has been terminated due to failures and can optimize in running the applications on that machine
+
+if a program has completed execution successfully during its exit, it returns an exitcode as "0" indicating the successful completion. Incase if the program has failed during its execution, during the termination it returns "non-zero" exitcode indicating the failure 
+
+upon recieving the exitcode from the program operating system stores the exitcode of the last completed program in an special or magic or implicit variable "$?"
+	
+we can access the exitcode of the program using echo $?
+-----------------------------------------------------------------------------------------------------------------------------------
+Working with function returnValues
+----------------------------------
+functions are the way through which we can achieve reusability in shellscript program. if we wanted to execute a block of code at various different places within the shellscript program, we can wrap the block of code in a function and called at different places
+
+At various different parts of the program we might want to call a function by supplying data interms of args, upon function completing the execution might compute some data as an output, that is required as an input to the other parts of the program, so how can the output computed by a function can be passed as an input to the other parts of the program.
+	
+That is where functions are supposed to take parameters/args and return returnValue that is computed aspart of the function. When a function is returning the returnValue, it will be returned to the callee
+
+In shellscripting functions cannot return the returnValue, but there is return statement in shellscript that can be used for returning the status of the execution of an shell function
+The exitcode can be collected at the callee using $?
+	
+To collect the output that is computed within the function within the other parts of the program, we need to use GLOBAL VARIABLES.	
+
+program.sh
+----------
+SUM=0
+function add() {
+	NARGS=$#
+	if [ $NARGS -ne 2 ]; then
+		return 200
+	fi
+		
+	A=$1
+	B=$2
+	SUM=$[A+B]
+		
+	return 0 #purely used for returning the status of the execution of a function
+}
+
+#main program
+add 10 20
+STATUS=$?
+if [ $STATUS -eq 0 ]; then
+	echo "SUM : $SUM"
+elif [ $STATUS -eq 200 ]; then
+	echo "error! arguments are missing"
+fi
+-----------------------------------------------------------------------------------------------------------------------------------
+
+wap to take array of numbers as input and print only even numbers using functions
+
+printEvenNumbersInArray.sh
+---------------------------
+
+#!/bin/bash
+IS_EVEN="FALSE"
+
+function isEven() {
+	local NARGS=$#
+	
+	if [ $NARGS -ne 1 ]; then
+		return 100
+	fi
+	N=$1
+	REM=$[N%2]
+	
+	if [ $REM -eq 0 ]; then
+		IS_EVEN="TRUE"
+	else
+		IS_EVEN="FALSE"
+	fi
+	return 0	
+}
+
+#main block
+read -p "Enter numbers" -a NUMBERS
+
+for NUM in ${NUMBERS[@]}
+do
+	isEven $NUM
+	STATUS=$?
+	if [ $STATUS -eq 0 ]; then
+		if [ $IS_EVEN = "TRUE" ]; then
+			echo "$NUM "
+		fi
+	elif [ $STATUS -eq 100 ]; then
+		echo "error: arg missing"
+		exit 1
+	fi
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	

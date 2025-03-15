@@ -1,0 +1,466 @@
+Java Framework package [13k] 
+1. Spring Framework with Spring Boot [7 months] [for only spring boot: 1 Month] [7:00 am - 8:00 am] [more than a month, 25% spring] [8k]
+2. Hibernate and Jpa api [3 months, 15 days] [7 days back] [6k]
+3. Restful Services [3 months, 15 days] [another 10 days] [5k]
+4. Java Microservices [1 Month] [4k]
+
+Not part of the package:
+Java Real-time tools [3k] [2 months] 
+Java Design Patterns [3k] [2 months] 
+
+Java Realtime project training [6k] [2 months]
+
+Devops with AWS [12k] [8 months]
+AWS CloudPlatform [6k] [3 months]
+-----------------------------------------------------------------------------------------------------------------------------------
+Devops with AWS [Fee: 12k] [duration: 8/9 months] 
+Timings: 6:00 AM - 7:00 AM IST [Monday - Saturday] [Sunday also, but in evening: 5:30 PM IST]
+Daily Running Notes will be prepared during the sessions and would be provided on weekly basis
+No recordings, No youtube and students are not permitted to record the sessions, if we found anyone recording the sessions we will cancel the admission without fee refund.
+	
+Pre-requisite:- no pre-requisite, with no knowledge on computer science you can join these sessions. will cover from scratch basics
+
+Course Content:-
+1. Introduction to Devops, why Devops what is the purpose of it
+	1.1 How does devops help us in developing and delivering the application quickly
+	1.2 How to achieve CI/CD
+2. Linux operating system [2 months]
+	2.1 File Management
+	2.2 Process Management
+	2.3 User Management
+	2.4 Disk Utilities
+	2.5 File Permissions
+	2.6 Networking 
+	2.7 Init.d Service
+3. Linux Shellscripting [15 - 20 days]
+-----------------------------------------------------------------------------------------------------------------------------------
+4. Networking
+4.1 How does computer networks works?
+4.2 Topologies
+4.3 Networking devices
+4.4 Protocols
+4.5 OSI Model Layer
+4.6 Ip addressing/Subnetworking
+4.7 Classfull Ip addressing and Classless IpAddressing
+-----------------------------------------------------------------------------------------------------------------------------------
+5. SSH protocol and how does SSH works?
+6. SystemD Int Service
+7. SCP other utilities
+
+8. What is virtualization, why do we need it?
+5.1 Virtualbox hypervisor
+5.2 Virtualbox Networking Modes
+5.3 Vagrant Virtualization automation tool
+
+9. automation of developing an static web application on apache2 server [project]
+-----------------------------------------------------------------------------------------------------------------------------------
+10. Ansible
+What is Software configuration Management Tools? why do we need to use them?
+What is the difference between shellscripting, Python and SCM Tools
+Architecture of SCM tools/Ansible
+Setting up the Ansible Environment
+Adhoc
+Inventories
+YAML basics
+Playbooks
+	- Modules [File, User, Sql, apt, Service]
+Jinja2 Templates
+Ansile Vault
+Ansible Roles
+Handlers
+Variables
+FailedWhen, ChangedWhen
+Control Statements
+
+11. AWS Cloud Platform
+In Devops With AWS i will cover only required services that are needed to learn DEVOPS tools, but full coverage of AWS will not be there in this course, you need to separately join AWS Cloud platform course [5k]
+5 domains
+1. Compute
+	1.1 EC2
+	1.2 Loadbalancer	
+2. Database
+	2.1 RDS Service
+3. Networking
+	VPC
+	Subnet
+	Internet Gateway
+	NAT Gateway
+	Security Groups
+	NACL
+	VPC Peering	
+4. IAM 
+	users
+	roles
+	policies
+	
+5. Storage
+	S3 Bucket
+
+12. Java Tools
+Basics of java programming language
+jar/war how to package
+tomcat server
+maven
+git repository
+jfrog artifactory server
+sonarcube
+	
+13. Terraform
+What is terraform, why do we need to use?
+Resource declarations
+DataSources
+Provisioning an AWS Cloud Infrastructure using terraform
+Varibles [Input/Output]
+Terraform Statefile [remote state management AWS S3 Cloud Storage Bucket] 
+Terraform Modules
+Terraform Provisioners
+
+end to end application deployment using Ansible + Terraform on aws cloud [PROJECT]
+
+14. Jenkins
+what is continous integration and delivery, how can we achieve that using Jenkins
+jenkins installation (worker/agent nodes)
+Global Tool configurations
+plugin Management
+credential store
+integrating jenkins with
+- git
+- maven
+- ansible
+- terraform
+- docker
+
+job types
+free style
+pipeline job (declarative, scripted)
+
+15. Docker
+Introduction to containerization
+why docker
+architecture docker
+setting up the docker env
+image managment
+container managements
+docker directives (build docker images)
+docker images are stacable and layer why?
+docker volumes
+docker expose
+docker networking
+docker container registry (dcr)
+How to setup jfrog container registry of our own?
+	
+multi-tier application deployment using docker
+
+16. kubernetes
+what is cluster container manager
+microservices application architecture, and why do we need kubernetes
+architecture of kubernetes
+setting up minikube and aws eks cluster
+kubernetes objects
+pods
+replicaSet
+daemonSet
+deployment (types: reCreate, rolling-update, bluegreen, canary, a/b testing)
+Service
+	- ClusterIP
+	- Headless
+	- NodePort
+	- Ingress
+	- Loadbalancers
+Job
+Kubernetes Dashboard
+deploying an multi-tier application on kubernetes infrastructure
+
+17. Helm
+18. Elastic Search
+Kibana/Splunk/Grafana
+LogStash
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Add-on batch
+actual batch started: 1 month (approximately) [10 days] [10 days: pongal holidays] [500 students]
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

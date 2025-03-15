@@ -1,0 +1,191 @@
+What is sudoers, what is the purpose of it?
+Root user can promote any other normal user of the linux operating system as an sudoer, so that the user can execute linux commands onbehalf of the root user
+
+There are 3 ways we can promote a user as a sudoer
+1. /etc/sudoers file
+2. /etc/sudoers.d/
+3. sudoers group
+
+
+1. /etc/sudoers
+This is the sudoers configuration file through which we can promote a user or a group of users as sudoers by adding an entry into this file
+
+1.1 under the user section we can make any user as sudoer as below
+username ALL=(ALL:ALL) ALL
+
+1ST ALL = Any Remote Host
+2ND ALL = onbehalf of any user
+3RD ALL = onbehalf of any group
+4TH ALL = can execute any of the linux commands on the above mention users/groups of any location
+
+
+How does an sudoer can execute an linux command onbehalf of the ROOT user?
+sudo command
+
+How can the sudoer can execute an linux command onbehalf of any other user?
+sudo -u username command
+
+How can the sudoer can execute an linux command onbehalf of any group?
+sudo -g groupName command
+
+How to edit the sudoers file?
+by default the sudoers file can be accessed by the root user only and he has read-only access. if we modify the sudoers file wrongly then all the users looses the sudo access. 
+There are 2 ways we can edit the sudoers file
+1. visudo
+visudo is a tool provided by linux that can be used only by the root user for editing the sudoers file. on terminal/bash prompt the root can directly type visudo, this will by default opens the /etc/sudoers file either in (nano/vim) editor
+
+upon editing the sudoers file, when we save it, the visudo editor performs syntactical validation, if there is any error, it will not allow us to save the sudoers file. upon successful validation it saves the sudoers file
+
+2. using an tmp file approach
+1. instead of directly modifying the sudoers file, we can create a copy of the /etc/sudoers file as below
+cp /etc/sudoers /etc/sudoers.tmp
+
+2. grant write permission on the tmp file we copied above
+chmod u+w /etc/sudoers.tmp
+
+3. edit the tmp file by adding new entry as required
+vim /etc/sudoers.tmp
+
+4. check for whether the changes are looking good or not using visudo
+visudo -cf /etc/sudoers.tmp
+
+5. if the validation is success then we can override the sudoers file with sudoers.tmp file as below
+chmod u-w /etc/sudoers.tmp
+mv /etc/sudoers.tmp /etc/sudoers
+
+
+2. group section
+instead of promoting an individual user as a sudoer we can promote a group of users easily by adding the group to the sudoers file under group section
+
+For eg..
+if we have #10 devops engineers within our business unit, and want to promote all of the people as sudoers, instead of adding each user in the sudoers file, we can group all the users into an devopsgroup and promote the devopsgroup users as sudoers 
+
+%groupName ALL=(ALL:ALL) ALL
+% = indicates the supplied name is not user, it is group
+
+
+3. /etc/sudoers.d directory
+There is an include directory in /etc/sudoers file as /etc/sudoers.d directory
+/etc/sudoers
+@includedir /etc/sudoers.d
+this means any file inside the sudoers.d/ directory has sudoers entries will also be parsed and make them as sudoers
+
+
+for eg.. if we want to make an joe user as a sudoer, instead of modifying /etc/sudoers file we can create a new file under /etc/sudoers.d directory with any name and make james as sudoer by adding an entry into the file
+for eg.. lets create a file with name james under /etc/sudoers.d
+
+sudo touch /etc/sudoers.d/james
+sudo vim /etc/sudoers.d/james
+
+james ALL=(ALL:ALL) ALL
+:wq
+
+now james becomes the sudoers
+
+The best practise is per each user create an new file with username under /etc/sudoers.d, so that it is easy to manage. incase if we want to drop a sudoer permission for an user, just delete the file with username under the /etc/sudoers.d directory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,162 @@
+Terraform
+---------
+upon building the application by the developers, inorder to deploy and make the application alive (publicly accessible), we need to host the application and requires infrastructure.
+  
+There are 2 ways we can procure infrastructure
+1. virtualization
+2. cloud platforms
+
+It is preferred to create infrastructure on the cloudplatforms than using virtualization, because there are lot of benifts of using cloud platform over manualy infrastructure management through virtualization.
+The cloud platforms offers #3 types of services as
+1. IAAS
+2. PAAS
+3. SAAS
+and the lifecycle operations of these services like
+1. provisioning
+2. deprovisioning
+3. scale-up/scale-down
+4. scale-in/scale-out
+5. backup/restore
+6. start/stop/restart
+are managed by the cloud providers itself.
+  
+There are many cloud providers are available in the market like
+1. amazon webservice cloud (aws)
+2. azure
+3. google cloudplatform (gcp)
+4. oracle cloud infrastructure (oci)
+5. ibm bluemix
+etc
+and offer different range of cloud services. Inorder to use these services most of these cloud providers provides cloud management console web applications.
+  
+We need to create respective cloud vendor account and login into the cloud console of the provider, navigate through different pages and fill the forms in creating the infrastructure, so that we can deploy the software applications on the infrastructure provisioned.
+  
+This way of provisioning the infrasturcture is considered as a Manual process and has lot of dis-advantages:  
+1. The amount of time it takes in provisioning the infrastructure resources required for deploying the applications is very high
+2. always the manual process leads to human errors
+3. we need to recreate the same infrastructure across different environments of the application delivery, which is repeatitive process and manually setting up the infrastructure repeatedly will leads to huge time and in-consistencies
+
+Instead of using cloud consoles in provisioning the infrastructure manually, every cloud provider offers cloud apis/sdks for managing the infrastructure programmatically.
+  
+1. api
+Apis are http endpoints exposed by cloud providers which are accessible over the internet. These are inter-operable and can be used for provisining, managing and administering the cloud services and resources of a cloud account. We can build software programs using the programming language of our choice invoking these cloud apis in create the infrastructure on the cloud vendors
+
+2. sdks
+sdk stands for software development kit, which are programming language libraries/apis written in different programming languages like
+1. java
+2. python
+etc
+by the cloud providers itself and distributes them to the world.
+We can choose the cloudsdks based on the language in which we want to build our software programs in automating the infrastructure and use them for creating.
+  
+by using programs we can provisioning and manage the infrastructure which is called infrastructure automation, and eliminates all the problems we discussed in manually creating/manging the infrastructure.
+--------------------------------------------------------------------------------------------------------------------------------------
+From the above discussion we went through we can understand to achieve infrastructure automation we need to build software programs, to build software programs it requires significant amount of programming knowledge and in addition there are lot of challenges in building the programs as below.
+  
+1. The time required for developing the infrastructure automation code is pretty high
+2. the efforts and complexity involved in building the programs is very high
+3. need more manpower resources in creating the automation programs to build infrastructure and leads to huge cost
+4. testability of the code is quite difficult
+
+From the above we can understand building infrastructure automation programs for deploying the applications is not an viable solution.
+  
+To overcome all the above problems in building and achieving the infrastructure automation, the iac tools are provided.
+iac stands for "infrastructure as code", where each resource or service we want to manage/provision is expressed interms of code and gets executed to produce the infrastructure quickly
+
+There are lot of iac 
+tools are available in the market
+1. Terraform
+2. openstack heat
+3. cloudformation
+4. hashicorp packer
+etc
+
+note: vagrant is also an iac tool, but is used for building infrastructure using virtualization only.
+  
+software configuration management tool
+1. ansible
+2. puppet
+3. chef
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

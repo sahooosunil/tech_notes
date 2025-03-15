@@ -1,0 +1,290 @@
+How to configure sync_folders in Vagrantfile?
+
+Vagrant.configure(2) do | config |
+	config.vm.box = "ubuntu/jammy64"
+	config.vm.synced_folder "sourcedirectory" "guestMountDirectory"
+end
+
+Vagrant Networking
+Every Virtual machine requires networking capabilities to make the applications running within the virtual machine to be accessible from the external network or host. Similarly an Application running within the Virtual Machine may need external network access this can be accomplished through virtual networking.
+	
+Every hypervisor provider supports networking through virtual (software) network adapters, which are attached to the virtual machine allowing them to connect to the network. In addition each hypervisor provider provides modes of networking through which we can control the accessiblity of the machines.
+	
+When it comes to oracle virtualbox hypervisor provider, it supports 7 networking modes:
+1. Not Attached
+2. NAT
+3. NAT network
+4. Host-only Network Adapter
+5. Internal Network
+6. Bridge Network
+7. Generic Driver
+
+The devops engineer has to choose an appropriate network mode while configuring the network adapter for that virtual machine based on the way he wanted to virtual machine to be accessible over the network
+
+When we are working with Vagrant, since the virtual machine is provisioned through Vagrant, the vagrant itself should take care of provisioning the virtual network adapter based on the mode and should attach it to the virtual machine enabling it to connect to the network.
+	
+different hypervisor providers supports different networking modes or adapter types, if vagrant enforces the ops engineers in writing provider specific networking configuration within the vagrant machine configuration file, then we run into 2 problems:
+1. The Machine configuration file will be tightly coupled with underlying hypervisor provider, if we want to switch from one provider to another we need to rewrite the machine configuration file
+2. since we need to write hypervisor specific networking configuration, one should have strong knowledge on the hypervisor provider to provision the machine even we are using vagrant
+
+
+So to overcome the above problem, vagrant has comeup with its own networking modes that are supported across all the hypervisor providers. These vagrant provided networking modes are mapped to each underlying hypervisor provider networking modes internally by vagrant itself.
+	
+Now we need to write vagrant networking configurations in Vagrantfile, so that vagrant takes care of mapping this vagrant specific networking mode into the underlying hypervisor provider networking mode while provisioning the virtual machine, so that our machine configuration will be portable across all the hypervisor providers
+
+Vagrant supports 3 types of networking configurations
+1. forwarded_port  = NAT with port forwarding (virtualbox)
+2. private network = Internal Networking (virtualbox)
+3. public network = bridge network (virtualbox)
+	
+#1. forwarded_port
+it is an nat network with port forwarding in oracle virtualbox
+purpose:-
+during the time of development of the software applications, the developer can setup the server environment to test his code he has written by using virtualbox NAT networking. So that the virtual machine has access to the external network. To test the application by accessing it from the host machine he can configure port fowarding.  This results in higly secured environment for developing the application
+
+#2. private network
+private network is mapped to Internal Network adapter in virtualbox
+All the vms connected to the same private network can communiate with each other. But the virtual machines donot have access to external network or host, and even host/external network cannot communicate with VMs
+purpose:
+when we are deploying multi-tier applications we run application on one virtual machine and database on another virtual machine. here only the vms should be able to access each other, either the host/external network should not have access to any of these vms this can be achieved through private network
+
+#3. public network
+public network is configured as bridge network in oracle virtualbox and is less secured and should not be used in production environment.
+purpose:
+during the development we want to allow the virtual machines to be accessed from anywhere, we are not bothered about security in such env we can use public network
+
+How to configure these networking modes using vagrant?
+In Vagrantfile along with box name we need to specify the networking configuration as well.
+By default for every virtual machine we provisioned through vagrant, it attached an network adapter with default network mode as NAT with port forwarding on 22, to support SSH access to the machine.
+additionally we can configure more network adapters allowing these machines to be accessible based on our requirement.
+	
+	
+syntax:
+Vagrant.configure(2) do | config |
+	config.vm.box = "boxname"
+	config.vm.synced_folder "source", "destination"
+	
+	config.vm.network "network mode" [more configuration options based on networking mode we are choosing]
+	for eg.. forwarded_port means we need to specific sourcePort, targetPort
+	         public means we need to specify the host network adapter to be bridged
+					 private means we need to tell network name, so that all the vms of the same network can communicate
+end
+
+
+#1. forwarded_port
+syntax:
+
+config.vm.network "forwarded_port", guest: guestPort, host: hostPort
+for eg..
+Vagrant.configure(2) do | config |
+	config.vm.box = "boxname"
+	config.vm.network "forwarded_port", guest: 8080, host: 8081
+end	
+The above configuration indicates all the network traffic on the host machine to the port 8081 will be forwared to the guest machine port: 8080
+http://localhost:8081 (host) => will be forwareded to http://guest:8080
+
+#2. private network
+The private network maps to host-only network adapter in oracle virtualbox. There are multiple options are there in configuring the private network in vagrant configure file as shown below.
+	
+2.1 DHCP Enabled
+by enabling the DHCP server the ip addresses of all the vms are generated automatically, which are connected to the same host-only network adapter
+
+config.vm.network "private_network",type: "dhcp"
+	
+2.2 static ip address binding
+instead of enabling the dhcp option, we can configure an fixed ip address to each vm attached to the private_network so that during the reboots also the machine ips will not change.
+This will helps in building the applications pointing / accessing the database servers running on another vm using fixed ip
+
+Machine#1 (java application server)
+config.vm.network "private_network"	, ip: "192.168.10.1"
+
+Machine#2 (database server)
+config.vm.network "private_network"	, ip: "192.168.10.2"
+
+3. make an private network for both the virtual machine
+
+Machine#1
+config.vm.network "private_network", ip: "192.168.10.1", virtualbox_intnet: "mynetwork"
+	
+Machine#2
+config.vm.network "private_network", ip: "192.168.10.2", virtualbox_intnet: "mynetwork"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

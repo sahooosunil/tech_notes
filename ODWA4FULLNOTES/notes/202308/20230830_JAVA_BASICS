@@ -1,0 +1,495 @@
+1. High-level programming language
+2. How to write an basic java program
+3. How to compile / execute an java program
+4. What is Jar, what is the packaging structure of an Jar file
+	1. Distributable Jar
+	2. Excecutable Jar
+5. Distributed Web Application in Java, how do we develop
+	1. how to package the application as War?
+	2. how to deploy it on tomcat server?
+	
+	
+Build Tools for java (Realtime tools)
+1. Ant
+2. Maven
+3. Git/SVN
+(Introduction to)
+3. JUnit
+4. Sonarcube
+5. Jacoco
+6. Log4j/Sl4j
+
+demo link : java realtime tools
+--------------------------------------------------------------------------------------------------------------------------------------
+operating systems:
+operating system provides system routines (operating system instructionset) (linux: eg shell), using which if we write the programs, these programs are portable across all the hardware platforms 
+
+Low-level programming languges
+--------------------------------
+These are the programming languages provided by the operating system itself. Each operating system provides their own instructionset which are also called as System routines, using which we can write/develop programs
+
+eg.. of an low-level programming language is shellscripting in linux operating system
+
+when we write programs using low-level programming language, these programs are portable across all the hardware platforms, which means write the program once and run it on any hardware (worah)
+
+The operating system takes the system routines we have written in the program and translates them into hardware instructionset and passes it to the underlying hardware of the computer asking to execute/perform operating., so that the same program can be executed across any of the hardware platforms that are supported by that operating system.
+
+advantages:-
+1. The low-level programming languages provides powerful instructionset using which we can write programs at hardware interrupt level controlling the hardware devices of the computer.
+
+2. These programs written in low-level language instructionset are directly executable on the underlying operating system
+which means the code written by the developer itself is executable code that can be executed on the underlying operating system, so that the speed at which these programs execute will be very high
+
+dis-advantages:-
+1. the low-level language provided instructionset are not developer friendly, the syntaxes in writing these programs are complex and difficult to understand
+2. the programs written using an low-level language instructionset works only on that operating system and will not be portable across other operating system platforms.
+3. not suitable for developing enterprise business applications
+
+--------------------------------------------------------------------------------------------------------------------------------------
+High-level programming langauges
+High-level programming languages provides sophisticated instructionset using which we need to write programs. These instructionset provided by the HLL are english like instructionset that can be easily understandable and programmable. The syntaxes and semantics in writing these programming instructions are very easy
+
+These languages provides powerful features like
+1. reusability through functions through which we can achieve reusability
+2. DataTypes
+3. Powerful mathematical and logical operations/functions using which we can perform arthematic and logical operations easily
+which makes these languages idle/suitable for developing business/enterprise applications.
+
+upon writing the programs using HLL instructionset, these programs cannot be executed by the underlying operating system, because operating system only understands System Routines/Operating System instructionset.
+
+So these programming languages provides Tools called "Compilers / Interpreters", that takes care of translating the HLL instructions into operating system executable instructionset, so that it can be passed as an input to the underlying operating system for execution.
+	
+How to develop the program and execute it using HLL?
+1. write the programs using HLL instructionset
+2. using the compiler/interpreter tool provided by the programming language of the that operating system platform and compile the program into operating system executable code
+3. then execute the program on the operating system.
+	
+advantages:-
+1. easy to write and understand the programs since the syntaxes are developer friendly
+2. we can develop business/enterprise applications as they provide powerful arithematic and logical routines
+3. the program written once can be executed on any operating system platform, given it should be compiled for each operating system
+
+dis-advantages:-
+1. The High-level programming languages provides low-level instructionset as well that works only on that specific operating system. If the developers has written their programs using those low-level instructionset, then the programs will not be portable across the operating system vendors.
+	
+So its the responsibility of the developers to ensure the programs there are writing are portable across all the operating systems by writing conditions in their program
+
+if(os == 'linux') {
+	// block of code
+}else if(os == 'windows'{
+	// block of code
+}
+
+for eg.. consider C language as an High-level programming language, along with providing common instructionset, C lang provides low-level/platform/hardware level instructionset that works on specific os platform. So developers has to execerise proper care in writing the programs to ensure thoese are portable across operating systems.
+		 
+2. Need to spend extensive testing to certify the programs written by developers works across all the operating systems. 
+3. The cost and time required for development/testing the applications will be huge
+4. The organization has to maintain multiple copies of the application distributables to deliver it to the customers of various platform.
+		 
+From the above we can understand, the applications developed using HLL languages requires more time/cost in developing and testing along with maintainance will be high
+
+To overcome the above problems Platform-Independent High-level programming languages has been introduced.
+
+
+High-level languages
+dis-advantages:
+The High-level programming languages provides low-level instructions/operating system specific instructions in writing the programs. So that if the developer is writing the program using those operating system specific instructions, the programs will not become portable across the operating system platforms.
+		 
+So developers has to write the programs ensuring their programming logic is portable across the operating system platforms, even though those are compiled to be executed on any platform.
+		 
+1. more development time and efforts of developing the application to achieve portability across the operating system platforms
+2. more testing time is required to test and certify the application is portable across all the platforms
+3. cost of development/testing would be high
+4. the software should be build/compiled for each platform and should distributed different binaries the application pertaining to each platform
+--------------------------------------------------------------------------------------------------------------------------------------
+Platform Independent High-level programming langauges
+Platform Independent High-level programming langauges provides instructionset that is completely operating system independent, which means using these langauges we cannot build applications that can work with operating system routines or hardware/device, so that the appliations are portable across the platforms
+
+
+since the programs are written using Platform Independent High-level programming langauge instructionset, it cannot be executed by the underlying operating system. So we need to compile these programs to make them executable
+
+But unlike High-level programming langauges, the platform independent High-level programming langauges will not compile native to the operating system platform, because we need to build several binaries of the application each per platform.
+		 
+instead the Platform Independent High-level programming langauge instructions are compiled to Intermediate executable code, which in java is called "Bytecode"
+		 
+The bytecode cannot be executed by the underlying operating system, so the Platform independent	high-level programming languages provides runtime engines specific to the operating system platform.
+		 
+now the user has to pass the bytecode as an input to the runtime engine, which takescare of translating the intermediate executable code (bytecode) into operating system executable code and passes it to the underlying operating system of the computer for execution.
+		 
+So upon writing the program, if we compile once, it can be executable on any of the operating system platform which is called "WORA" write once run anywhere
+--------------------------------------------------------------------------------------------------------------------------------------
+Java programming language
+Java is an platform independent high-level programming language that is initially developed by Sun Microsystems, later on acquired by Oracle. Using java programming language we can build desktop and majorly the network/distributed applications that can run across the network/internet.
+Java is an object oriented programming language, which works based on oops principles.
+		 
+		 
+Java is distributed in #2 distributions
+1. jdk = stands for java development kit. It is an software that is distributed by java language that should be used by the developers who develops software application using java language
+
+jdk comes or ships with development related tools as well as runtime execution tools bundled together to allow programmers to develop and run the java applications
+developers tools like
+1. java compiler
+2. profiler tools
+3. debugging tools
+
+along with that the jre (java runtime environment) runtime engine for java platform, that can execute the bytecode
+
+developer tools + runtime engine = jdk
+
+Now developers to develop the java application, and ship it, they need to install ontheir computers the jdk distribution.
+
+2. jre
+jre stands for java runtime environment it contains only the runtime engine that is required for running the java application that is shipped by the developer , it doesnt have any developer tools aspart of it.
+The enduser should install jre on his machine, inorder to execute the java program that is distributed by the developers/organizations
+--------------------------------------------------------------------------------------------------------------------------------------
+How to install the java on the computer?
+Java is distributed as an packaged distribution through ubuntu repositories, we can directly install java using apt tool as below
+
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+		 		 
+in addition to sophisticated develop and test the java program on our machine we can install vscode editor with extension for java in it.
+		 
+upon installing the java you can verify the java installation by running the below command from terminal
+java -version
+--------------------------------------------------------------------------------------------------------------------------------------
+How to develop and run a java program?
+without using vscode editor:
+		 
+1. It is recommended to begin developing java program by creating an project directory. while creating the project it is recommended to follow below directory layout in creating project directories
+
+project (directory)
+|-src
+|-bin
+
+src = directory we write sourcecode of the java programs
+bin = directory we place the bytecode that is generated upon compiling the sourcecode of the java program
+
+2.
+2.1 Every java program should be written in a file with extension .java
+2.2 Every java program must and should start with an class structure, because java is object oriented programming language.
+2.3 every java program begins its execution from an Main class, main method, the main class should be written following few rules
+
+1. The Main class name and file name should be same
+2. The Main class should be public
+3. every java class should be written under an package so that we can uniquely identify the class. 
+		 
+		 
+when we are writing the class it is adviced to create the class ".java" file under the directory structure based on package name inside the src.
+project
+|-src
+  |-com
+    |-devopsit
+	  |-tools
+	    |-App.java
+|-bin
+
+		 
+package com.devopsit.tools;
+class App {
+	public static void main(String[] args) {
+		System.out.println("Hello all! Welcome to Java Application...");
+	}
+}		 
+		 
+		 
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		 
+
+
+
+		 
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		 
+		 
+
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+            

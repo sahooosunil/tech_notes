@@ -1,0 +1,104 @@
+How to work with floating/decimal number aspart of the shellscript program?
+The shellscript is not an language that is designed keeping in view of supporting mathematical or scientifical operations. it is an language that is designed to perform administrative related activities like automating the installtations, configurations etc.
+So by default shellscript or shell interpreter supports only perform arithematic operations on the integer inputs/values only.	
+	
+But inorder to support floating/decimal values, the shell interpreter has provided an shell utility called "bc" which stands for basic calculator. Pass the arithematic expression we wanted to evaluate with floating/decimal numbers as an input to the bc so that it performs the calculation and returns the outcome as an output to the STDOUT by default
+	
+by default bc takes the input from the keyboard or STDIN and performs operation and writes the output to STDOUT.
+	
+wap to read #2 floating point values as an input and perform addition of 2 numbers?
+adddecimalnumbers.sh
+#!/bin/bash
+read -p "A : " A
+read -p "B : " B
+
+SUM=$(echo "$A+$B" | bc)
+echo "SUM : $SUM"	
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to calculate the electricity bill for the consumed units based on the slab system?
+units: 200
+	
+between 0 - 200 = 3
+	    201 - 750 = 4.5
+	    751 - 2000 = 6.5
+	    >2000      = 8.2
+	
+780 units
+200 * 3 + (550 * 4.5) + (30* 6.5)
+	
+	
+powerbill.sh
+-------------
+#!/bin/bash
+read -p "units: " UNITS
+BILL_AMT=0
+	
+if [ $UNITS -gt 0 -a $UNITS -le 200]; then
+	BILL_AMT=$(echo "$UNITS * 3" | bc)
+elif [ $UNITS -gt 200 -a $UNITS -le 750 ]; then
+	BILL_AMT=$(echo "(200 * 3) + (($UNITS-200) * 4.5)" | bc)
+elif [ $UNITS -gt 750 -a $UNITS -le 2000 ]; then
+	BILL_AMT=$(echo "(200 * 3) + (550 * 4.5) + (($UNITS-750)*6.5)" | bc)
+else 
+	BILL_AMT=$(echo "(200 * 3) + (550 * 4.5) + (1250 * 6.5) (($UNITS-2000)*8.2)" | bc)
+fi
+echo "BILL AMOUNT : $BILL_AMT"
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

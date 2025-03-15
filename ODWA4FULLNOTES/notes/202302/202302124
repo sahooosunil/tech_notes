@@ -1,0 +1,109 @@
+what is the role of qa engineer, what is the change in culture and the adoption of new tools and technologies in quickly certifying the application to make it ready for delivery?
+qa engineers has to verify whether the application is working asper the requirement or not, inorder to do that the qa engineer has to run the application and pass the possible inputs and capture the output of the application and verify the application is producing the expected results or not
+
+1. The qa engineer has to understand the user story and prepare testcases around it
+
+2. In order to testing the application based on those testcase he need qa environment
+	2.1 unlike the traditional way of certifying the application through qa, uat and production when it comes to devops it recommends to have one env through out the development to delivery
+		1. Let the developer develop the application and certify the application is working by running the unit testcases on the production like env only
+		2. since the developer has developed and certified his code on production like env the application can be further tested by the qa on a production like env itself, thus eliminating the need of uat/stage or pre-prod
+		so that the application can be quickly tested and made it available delivery
+		
+3. The qa will not certify the application at the end of the sprint, rather whenever the developer finished as userstory, it should be delivered to qa for verification. so the development and qa will go hand-in-hand that speeds up the certification process in getting the solution early for release
+
+4. For an qa to certify the application he need qa environment
+In order to setup the qa environment we need
+1. infrastructure or physical server computers
+2. networking
+3. internet connection
+4. operating system software
+5. language softwares
+6. database servers
+7. application servers
+so that finally the application can be deployed and executed on that environment and make that env released to the qa for testing
+
+There are several dis-advantages in setting up the infrastructure on physical server machines described as below
+1. The cost of procurement of these physical server resources are very high
+2. the time required for setting up the infrastructure is huge and need more man power resources in setting up the infrastructure or env
+
+
+4.1 Instead of setting up the physical server environment, we can make use of the cloud platform in creating the infrastructure quickly.
+4.2 to automate the process of setting up the cloud infrastrure we need to use terraform (iac tool) which is infrastructure automation tool
+4.3 To install the software packages and configure them on the infrastructure we need to use Ansible, The ansible is an software configuration management tool, that is used for installing and configuring the software packages on the env
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

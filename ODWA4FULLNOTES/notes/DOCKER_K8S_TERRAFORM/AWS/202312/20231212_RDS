@@ -1,0 +1,390 @@
+Networking
+1. vpc
+2. subnets
+  |-private
+  |-public
+  |-hybrid
+3. internet gateway
+4. nat gateway
+5. nacl rules
+6. security groups
+--------------------------------------------------------------------------------------------------------------------------------------
+Database domain
+all the database related services are provided aspart of the database domain. There are 5 services are offered aspart of the database domain
+1. RDS Service
+2. AuroraDb
+3. DynamoDb
+4. Elastic Cloud Cache
+5. Redshift
+
+RDS Service
+RDS stands for "relational database service", it is not an database server provided by the aws cloudplatform rather it is an managed service that takes care of provisioning, installing, configuring, managing the popular database server products on the aws cloud infrastructure.
+
+Relational Database Management Systems
+1. Oracle Database (license)
+2. Ms-sql Server
+3. Mysql Server
+4. Postgres
+5. Db2
+etc
+
+currently RDS Service supports provisioning 4 popular database servers and host them as managed services
+1. oracle database
+2. mysql server database
+3. ms-sql server database
+4. postgres database
+
+
+in the production environment where confidential data is being stored on these systems, we should keep them private and restricted to be accessed aspart of the software application only. Inorder to do that we need place the database servers on private subnet only.
+  
+How to provision the RDS Service?
+1. setup an vpc network 
+vpcname: netbankingvpc
+cidr: 10.1.0.0/16
+  
+2. create 3 subnets
+1 subnet = application
+2 subnets = rds database service
+
+2.1 subnet name: netbankingpubsn1
+                 10.1.1.0/24
+          vpc : netbankingvpc
+
+2.2 subnet name: netbankingprvsn2
+                 10.1.2.0/24
+          vpc : netbankingvpc
+          
+2.3 subnet name: netbankingprvsn3
+                 10.1.3.0/24
+          vpc : netbankingvpc          
+  
+3. create internet gateway
+internet gateway: netbankingigw
+attach to vpc: netbankingvpc
+
+4. create route table and route public network traffic from the subnet of resources through the internet gateway
+route table: netbankingigwrt
+        vpc: netbankingvpc
+subnet association: netbankingpubsn1
+route rules
+cidr          target
+10.1.0.0/16   local
+0.0.0.0/0     netbankingigw
+
+
+5. create #2 security groups
+1 security = ec2 instance (jumpbox) created under public subnet for connecting to rds database for testing
+2 security = rds database service
+
+#1 security group
+name: netbankingec2jumpboxsg
+vpc: netbankingvpc
+
+ingress
+protocol   port   cidr       action
+ssh        22     0.0.0.0/0  allow
+
+egress
+protocol   port   cidr       action
+any        any    0.0.0.0/0  allow
+
+#2. security group for rds
+name: netbankingrdssg
+vpc: netbankingvpc
+
+ingress:
+protocol        port    cidr         action
+mysql/auroradb  3306    10.1.0.0/16  allow
+
+egress
+protocol   port   cidr         action
+any        any    10.1.0.0/16  allow
+
+--------------------------------------------------------------------------------------------------------------------------------------
+1. create a dbsubnet group by choosing the subnets of our vpc
+aws rds service takes care of provisioning the rds database instance across any given subnets of our vpc, so that it can be accessible within the vpc network.
+For High Availability, the rds service takes care of provisioning the database on multiple computers across the subnets, so we need to create a dbsubnet group specifiying the subnets of our vpc and pass it as an input to rds service asking to provision
+
+dbsubnet group: netbankingdbsubnetgroup
+vpc: netbankingvpc
+choose: private subnets of the vpc where we wanted rds service to be provisioned
+
+2. goto rds and create rds service
+  1. choose database creation method
+    1.1 standard = we need to set all the configurations using which rds provisioning the database (backup, shape etc)
+    1.2 Easy create = creates with default configuration and can change it later upon creating the database
+    
+  2. choose the database engine to be used in creating the database service
+    1.1 aurora db
+    1.2 mysql
+    1.3 ms-sql server
+    1.4 postgres
+    1.5 oracle
+    1.6 maria
+  choose: mysql
+  
+  3. choose the database engine version: mysql 8.0.33
+  4. choose the template
+    1. production
+    2. dev/test
+    3. free tier
+    
+  5. database settings
+    5.1 dbinstance identifier: netbankingdb
+    5.2 database username
+    5.3 database password
+    5.4 dbinstance shape
+    5.5 storage type
+  6. connectivity
+    6.1 Don’t connect to an EC2 compute resource / Connect to an EC2 compute resource
+    6.2 choose vpc
+    6.3 choose dbsubnet group
+    6.4 public access: no
+    6.5 choose security group
+  7. Database authentication
+    7.1 password authentication
+leave the rest of the options to default and click on create database
+--------------------------------------------------------------------------------------------------------------------------------------
+Inorder to connect to the rds (mysql) database we need jumpbox to be provisioned on the public subnet of the vpc. Then we need to install mysql client tool for connecting to the rds instance
+
+1. provision an ec2 instance on the public subnet of the vpc
+  1.1 vpc: netbankingvpc
+  1.2 subnet: netbankingpubsn1
+  1.3 enable public ip
+  1.4 shape: t2.micro
+  1.5 ami: ubuntu
+launch
+
+2. ssh onto the ec2 instance
+3. install mysql client tool as below
+sudo apt update -y
+sudo apt install -y mysql-client-8.0
+    
+4. connect to the mysql server database using mysql client utility
+mysql -hendpoint -uuser -ppassword
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

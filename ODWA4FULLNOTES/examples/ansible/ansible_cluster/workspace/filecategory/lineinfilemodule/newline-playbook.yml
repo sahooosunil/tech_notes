@@ -1,0 +1,10 @@
+---
+- name: add newline in existing file play
+  hosts: all
+  tasks: 
+    - name: add new line
+      lineinfile:
+        path: /home/vagrant/sshd.conf
+        line: 'PasswordAuthentication yes'
+        insertafter: '^PermitEmptyPasswords.*'
+...

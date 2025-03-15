@@ -1,0 +1,239 @@
+What is systemd init system, why do we need to use it?
+The Systemd init system is an software package that used for running a software program/tool/utility as a service within the linux operating system.
+	
+How many ways are there in registering a program as a service in initd system?
+There are 2 ways are there a program is being registered as service in initd system
+1. through packaged installation by the package manager
+2. administrator has to manually register a program as an service in initd system by writing the service definition file
+
+How to register a program as a service manually in the initd system?
+We need to write an service unit file with servicename.service with an extension as ".service", in this file we need to describe the information about the program we wanted to configure it as an service and should place in the predefined directory locations, so that the initd system can pick and register the program as service
+
+There are #2 different locations under which we can place the service definition file
+1. /usr/lib/systemd/system = package managers while installing the packaged softwares places the service definition files under this location.
+2. /etc/systemd/system = the administrators has to manually place the service definition file in this location to register the program as service
+
+How to write an service unit file?
+The Service unit file comprises of 3 sections wherein each section there are pre-defined directives using which we need to describe the information about the program to be registered as service
+1. Unit
+2. Service
+3. Install
+
+1. Unit
+In the Unit section we describe the information about the service along with their hard/soft dependencies.
+1.1 Description
+1.2 After
+1.3 Required
+1.4 Wants
+
+2. Service
+Here we describe how to start/stop or restart a service
+2.1 ExecPreStart
+2.2 ExecStart
+2.3 ExecStartPost
+2.4 ExecStop
+2.5 Restart=always, on-failure or never
+2.6 Type
+There are 5 types of services are there
+	1. simple
+	2. forking
+	3. dbus
+	4. oneshot
+	5. notify
+
+3. Install
+When does the service should be installed or executed?
+WantedBy=multi-user.target 
+multi-user.target = run or install the service when linux has been booted up after runLevel=3
+-----------------------------------------------------------------------------------------------------------------------------------
+
+initd system = takes care of managing/monitoring and running the programs as services
+systemctl = is used for talking to initd system for registering, monitoring, starting, stopping the services with initd system
+	
+By writing the service definition file we described the information about our program to be ran as a service, but we need to register the service definition, start, stop, restart, monitor, manage the services. To help us in monitoring/managing the services within initd system, it has provided a tool called systemctl. systemctl is an superuser command and should be used with root/sudoer permissions only	
+	
+when we write the service definition file with filename.service, the name of the service becomes the filename itself. for e.g.. if we write tomcat.service file, then service name becomes tomcat
+
+1. sudo systemctl daemon-reload = will reload all the service definitions file that are placed in predefined locations
+2. sudo systemctl start serviceName
+3. sudo systemctl stop serviceName
+4. sudo systemctl restart serviceName
+5. sudo systemctl status serviceName
+6. sudo systemctl disable serviceName = it will not be executed anymore during the bootup
+7. sudo systemctl enable serviceName = bring back the service
+8. sudo systemctl list-units = shows all the services registered with initd system
+
+Let us write our own utility/program and register it as service in initd system.
+
+monitormem.sh [/usr/bin]
+--------------
+#!/bin/bash
+while [ true ]
+do 
+	date >> /var/memory.log
+	free -h | grep -w "Mem:" | awk '{print "Used: " $3 "\t available: " $7}' >> /var/memory.log
+	sleep 120s
+done
+
+/etc/systemd/system
+memory-monitoring.service
+[Unit]
+description=service used for monitoring the memory usage
+After=Network.target
+
+[Service]
+ExecStart=/usr/bin/monitormem.sh
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl deamon-reload
+sudo systemctl start memory-monitoring
+sudo systemctl status memory-monitoring
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

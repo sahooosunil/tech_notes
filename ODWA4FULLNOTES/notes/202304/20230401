@@ -1,0 +1,191 @@
+1. How to count the number of characters, lines and words in a given text file?
+wc = word count, by default displays number of lines, words and characters in a given text file. We can use the below switches in finding the individual counts also
+-l = lines
+-w = words
+-c = characters
+
+2. How to find the current logged in user of the linux system?
+whoami
+
+3. How to find all the users currently loggedin into the linux system?
+who
+------------------------------------------------------------------------------------------------------------------------------------
+1. There can multiple user accounts can be created and different users can use the linux system. Linux stores all the information about the users that are registered in the operating system under the file /etc/passwd. we can see all the users who are registered on the linux machine using
+
+cat /etc/passwd
+
+/etc = is the directory where all the installed software package configuration files are stored here.
+	
+2. working with pipes and redirections
+Pipe (|) = Pipes are used for joining the linux commands together. We can send the output of one linux command as an input to another linux command by using pipe operator (symbol). This is one of the very powerful feature of the linux operating system that allows us to create infinte combinations of linux command by using them.
+	
+1. how to count the number of files/folders within a given directory?
+ls directory | wc -w
+
+2. How to find the number of users currently logged in into the linux system?
+who | wc -l
+
+3. how to find the total number of users registered in the linux operating system?
+cat /etc/passwd | wc -l
+
+4. how to see the top 5 files/folders in a given directory?
+ls -l | head -5
+	
+we can join any number of linux commands using pipe operator and all the commands are evaulated from left to the right
+
+Redirections:
+Redirections are used for reading and writing the input/output of a command from different source/destination rather than STDIN OR STDOUT
+
+> = output redirection operator
+< = input redirection operator
+
+what is the difference between pipes and redirections?
+1. In case of pipes we can pass the output of one command as an input to another command, so always the right side of the pipe should be a command only
+
+2. whereas in case of redirection operators the output of a command will be written onto an destination file or console only using redirectors we cannot pass the output of an command to another command. after > there cannot be one more command it should be destination or source (incase of <)
+-----------------------------------------------------------------------------------------------------------------------------------
+Find command
+Find is one of the very repeatedly used linux command, that is used for searching the file/folder on filesystem of the computer by name. By using the find we can search for file or folder by name including the sub-directories as well.
+	
+library
+|-comics
+	|-spiderman.txt
+	|-titin.txt
+	|-batman.txt
+|-business
+	|-indiatoday.txt
+	|-businesstoday.txt
+	|-timesnow.txt
+|-finance
+	|-budget.txt
+	|-economictimes.txt
+|-magzines
+	|-times.txt
+	|-outlook.txt
+	|-forbes.txt
+|-novels
+	|-marvel.txt
+	|-godman.txt
+	|-harryporter.txt
+	
+we want to see the contents of the file budget.txt within the library, to locate and see the contents of the budget.txt we need to navigate into each folder under library/ directory and list all the files and folders to find where is budget.txt. Looks like it takes lot of time in navigating to each directory to locate the file we want, instead we can quickly using find command to locate the file under an given directory
+
+find has many options in searching and locating a file / folder.
+1. find directory -name "name"
+directory = refers under which directory we want to search for the file with the given name -name "name"	
+	
+find library/ -name "budget.txt"	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+
+

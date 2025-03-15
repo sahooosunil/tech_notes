@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: solrdaemonset
+spec: 
+  selector:
+    matchLabels:
+      appName: solr
+  template:
+    metadata:
+      labels:
+        appName: solr
+    spec:
+      containers:
+        - name: solr
+          image: solr:9.6.0
+          ports:
+            - name: solrport
+              containerPort: 8983
+              protocol: TCP

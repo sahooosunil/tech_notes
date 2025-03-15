@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apache2pod
+spec:
+  containers:
+    - name: apache2
+      image: ubuntu/apache2:latest
+      ports:
+        - name: apache2port
+          containerPort: 80
+          protocol: TCP
+...

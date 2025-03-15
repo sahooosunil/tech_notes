@@ -1,0 +1,72 @@
+What is virtualization?
+Virtualization is an technic/mechanism through which we can run multiple parallel isolated environments on one physical machine.	Virtualization works ontop of Hypervisor engine. Hypervisor can be either an software or an hardware component that takes care of distributing and allocating physical system resources of the computer across the virtual machines that are running on that computer.
+	
+There are 2 types of Hypervisors are there
+1. Software Hypervisor
+2. Hardware Hypervisor
+
+1. Software Hypervisor
+Software Hypervisor is an software that has to be installed on top of the host operating system, using which we can create virtual machines of the desired shape (cpu, ram, storage etc). The software hypervisor takes care of distributing / allocating the hardware resources across the virtual machines through the help of host operating system.
+There are lot of software hypervisor providers are there like
+1.1 oracle virtualbox
+1.2 microsoft hyperv
+1.3 parallelx
+1.4 vmware desktop, fusion and workstation
+
+advantages:
+	1. less costly and opensource options are available
+	2. Best suited for personal desktop usage
+dis-advantages:
+	1. Since the software hypervisors works ontop of the host operating system, most of the system resources are consumed by the host operating system itself in running the machine
+	2. Not suitable for enterprise environment
+	
+
+2. Hardware Hypervisor
+Hardware hypervisor is an hardware component that directly being equiped aspart of the physical resources of the machine. In case of hardware hypervisor, there is no host operating system to be installed on the physical machine to create virtual machines. The virtual machines are directly created and managed through hardware hypervisor itself.
+	
+There are the specialized boxes manufactured and distributed by the virtualization/hypervisor providers itself as below.	
+Hardware Hypervisor providers:
+1. Microsoft Hyper-v machines
+2. Oracle VM (Virtual Machine) Server
+3. VMWare ESXi
+4. Xen Server
+etc
+
+advantages:-
+	1. The hardware hypervisors eliminates the host operating system, so the entire system resources can be utilized for running the virtual machines, so no wastage of resources
+	2. high performance
+	3. suitable for using in enterprise and cloud environments
+	
+dis-advantage:-
+	1. very costly to adopt 
+	
+Virtual Networking
+------------------
+A Virtual Machine is equally same as an Physical server computer, in which we run application programs inside them. We wanted these programs to have access to the network or the external programs running on remote machines to be able to access the programs running on virtual machine, unless the virtual machines are accessible over the network, these cannot be seen as an equivalent to the physical computers.
+	
+The process of attaching networking to the virtual machines is called "Virtual Networking"	.
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	

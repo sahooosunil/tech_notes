@@ -1,0 +1,163 @@
+Arrays
+Arrays are contigeous memory locations in which we can store identical dataType values, so that those can be accessed through index and perform operation on those values easily.
+	
+Arrays are also called as indexed collections, because we collect group of values and access them based on memory indexes. Always the array index starts with 0 to n-1 if the number of elements are N
+
+advantage/purpose:
+we can apply the programming logic on the group of elements by iterating over them sequentially, so that we can avoid duplicating the code 
+
+How to declare an array in shellscript?
+There are 3 ways we can delcare arrays in shellscript programming
+
+#1. while creating the array itself we can populate values into them as below
+PRODUCT_PRICES=(300 350 500 450)
+	
+#2. Index declaration
+PRODUCT_PRICES[0]=300
+PRODUCT_PRICES[1]=350
+PRODUCT_PRICES[2]=500
+PRODUCT_PRICES[3]=450
+	
+#3. Array declaration
+declare -a ARRAY_NM 
+here -a indicates the variable as Array Type
+
+here we declare a variable of empty array now we need to populate the data into the array using indexes
+declare -a PRODUCT_PRICES
+PRODUCT_PRICES[0]=300
+PRODUCT_PRICES[1]=350
+PRODUCT_PRICES[2]=500
+PRODUCT_PRICES[3]=450
+
+	
+How to interactively read the data into arrays?
+while reading the data itself we can store them in an array using -a option within read instruction as below.
+	
+read -p "Product Prices: " -a PRODUCT_PRICES
+the above read statement prompt for values, we need to pass the values separated by space, so that all the values will taken and stored in PRODUCT_PRICES array
+-----------------------------------------------------------------------------------------------------------------------------------
+How to access elements from the Array?
+	
+1. How to access all the elements from the array?
+${ARRAY_NM} = is the expression to refer an array
+$VARIABLE_NM = variable expression
+
+1.1 ${ARRAY_NM[@]}	
+1.2 ${ARRAY_NM[*]}
+
+2. How to find the number of elements in an Array?
+${#ARRAY_NM[@]}	
+
+3. How to access a specific index element in the Array?
+${ARRAY_NM[INDEX]}	
+
+#1. wap to print all the elements in an array?
+traverseArray.sh
+----------------
+#!/bin/bash
+N=(30 45 68 93 28)
+	
+There are 2 ways we can iterate over the above array elements and can display them
+1. using for loop
+2. while loop
+
+using for loop:
+for ELEM in ${N[@]}
+do
+	echo $ELEM
+done
+
+(or)
+using while loop: counter based loops
+LEN=${#N[@]}
+I=0
+while [ $I -lt $LEN ]	
+do
+	echo ${N[I]}
+	I=$[I+1]
+done
+
+(or)
+		
+LEN=${#N[@]}
+for((I=0;I<LEN;I++))
+do
+	echo ${N[I]}
+done
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to collect interactively the values into an array and find the biggest number and print it?
+	
+highestNumberInArray.sh
+#!/bin/bash
+read -p "Numbers: " -a N
+BIG=0
+	
+for ELE in ${N[@]}	
+do
+	if [ $BIG -lt $ELE ]; then
+		BIG=$ELE
+	fi
+done
+echo $BIG
+	
+1. wap to find second highest number in the array?
+2. wap to sum all the numbers in the array and print it?
+3. wap to reverse the array elements and print it? 
+4. wap to print odd numbers in the given array
+5. wap to remove negative numbers in the array and return a new array
+6. wap to sort the elements of the array and print them 74 72 9 34 => 9 34 72 74
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

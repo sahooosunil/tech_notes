@@ -1,0 +1,224 @@
+2. ENV directive
+ENV is a directive that is used for creating an environment variable during the image building, so that it will be available while running the container out of the image.
+(or)
+ENV are defined during the time of building the image and would be available at the runtime, while running the container.
+	
+environment variables = are global or operating system level variables available across all the applications/program running on the operating system environment.
+	
+syntax:-
+ENV variableName=value
+
+There are 2 ways we can create environment variables
+1. during the time of building the image
+2. while lauching container we can pass the environment variables as an input to the container
+
+1. during the time of building the image
+even though the environment variables are runtime variables created or set during the time of running the containers, so that program running inside the container can use it, we can still set these environment variables during the time of building image aspart of the Dockerfile
+
+There could be few environment variables which are seems to be static or fixed or well-known at the time of building the image itself.
+ For eg.. configuring/creating an Environment variable pointing to the directory locations of the software packages can be done during the time of building the image itself.
+
+2. we can pass the environment variables while lauching the container
+since environment variables are runtime variables we can pass them while running the container as input. Not all the variables are static or well-known to be created/defined at the time of building image.
+	
+
+For eg.. we are packaging an java application into a docker image. This application requires Database configuration like driverClass, url, username and password to be supplied as inputs inorder to connect to the database and perform operations.
+	
+These variables can be configured to be passed as env variables to the application, how do we define these database configuration as env variables for the application?
+	
+These variables cannot be defined aspart of Dockerfile at the time of building image, because the database against which we want to run the application will differ from Environment to environment and needs to be supplied dynamically at the time of running the container only.
+In this case the environment variables are passed or supplied while running the container.
+	
+	
+~/envatruntime:/>
+|-Dockerfile
+|-variables.env
+
+Dockerfile
+----------
+FROM ubuntu:24.04
+CMD ["/bin/bash", "-c", "echo DRIVER_CLASS=$DRIVER_CLASS URL=$DB_URL USERNAME=$DB_USERNAME PASSWORD=$DB_PASSWORD"]
+	
+~/envatruntime:/> docker image build -t envruntime:1.0 .
+	
+while running the container we can pass the env variables we defined aspart of variables.env as input using --env-file switch as below.
+variables.env
+-------------
+DRIVER_CLASS=com.mysql.cj.jdbc.Driver
+DB_URL=jdbc:mysql://192.168.10.1:3306/db
+DB_USERNAME=root
+DB_PASSWORD=welcome1
+	
+docker container run --env-file=variables.env envruntime:1.0
+--------------------------------------------------------------------------------------------------------------------------------
+#3. ARG
+ARG is an directive used for parameterizing an docker image build 
+(or)
+ARG is used for passing arguments as input while building the docker image. We can define parameters in the Dockerfile and we can pass values for these parameters at the time of building the image. So that we can avoid creating multiple Dockerfiles and can parameterize them by passing the values at the time of building the image.
+	
+~/arg:/>
+ |-Dockerfile
+ 
+Dockerfile
+-----------
+FROM ubuntu:24.04
+ARG JAVA_PKG_NAME
+RUN apt update -y
+RUN apt install -y $JAVA_PKG_NAME
+CMD ["/bin/bash", "-c", "java --version"]
+
+the java version would be depends on the JAVA_PKG_NAME that we supplied at the time of building image.
+	
+~/arg:/> docker image build -t env:1.0 .
+this will result in error, since we didnt supplied the value for the JAVA_PKG_NAME argument defined in the Dockerfile
+
+~/arg:/> docker image build --build-arg JAVA_PKG_NAME=openjdk-11-jdk -t env:1.0 . 
+	
+now when we run the container, the java version will be printed as jdk11
+docker container run env:1.0
+	
+if we look inside the container this JAVA_PKG_NAME will not be available as environment variables:
+docker container run -it env:1.0 /bin/bash
+
+after entering into the container run env command
+$env
+we will not see the JAVA_PKG_NAME variable available 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

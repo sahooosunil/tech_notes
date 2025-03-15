@@ -1,0 +1,165 @@
+user management
+---------------
+Linux is an multi-user operating system, multi-users can use the linux machine parallely or one after the another. Incase if multiple users are using linux operating system parallely, the physical hardware resources of the machine will be shared across all of the users using the machine.
+	
+There are 2 types of users are there in linux operating system
+1. Root user
+2. Normal User
+
+1. Root User
+During the time of installing the ubuntu operating system, the root user of the linux operating system will be created with the password we provided during the installation. A root user has unrestricted access to all the resources of the machine for eg..
+1. user management = can add/delete or modify the users of the linux machine
+2. process management = can see and control all the process that are running on the linux machine
+3. file management = the root user can see or modify the contents or changing the permissions of any files of any users of the machine
+4. System Configurations
+5. Hardware Resource/Device management = enabling network adapter, bluetooth or logging onto an network all these can be managed by root user only
+
+By default during the time of Linux installation along with creating an ROOT user, the linux creates an normal user aswell with the supplied username and the password. Linux restricts the ROOT user to login into Linux machine directly, because ROOT user has an unrestricted access to all the resources of the machine, working or logging in as ROOT might poses risk on system. if accidentally/mistakenly the ROOT executes an command the machine might get corrupted or information might be lost, to avoid this linux permits always to login as an Normal user only
+
+If it is necessary for performing any administrative activities, then we can always switch to an root user by executing the below command
+su -
+here su stands for switch user and - indicates we want to switch as an root
+There can be only one root user in the linux machine with name "root" only and the default home directory for the root user is "/root".
+
+
+2. Normal User
+The root user can add other users into the linux operating system who are called "normal users". The normal users of the linux operating system will have access to his/her own home directory only. The normal user cannot see the files/folders that are created by others or even cannot see the processes that are lauched by the other users
+
+restricting a file/folder to be accessible by the owner who has created the file/folder will not work in a broader/cooperate perspective. In a corporate or a business environment one may have to grant or delegate access to files/folders created by one user to others of the linux operating system. The job of granting the access to the files/folders of a user to other users of linux operating system can be done by either owner of the file/folder or root user only
+
+granting, managing and keeping tracking of which file/folder has been granted access to which users of the linux operating system is an tedious job, so linux permits us to group the users into groups and allow us to grant access permissions on the files/folders at the group level
+So there are 3 things in linux system from user management perspective
+1. Root user
+2. Normal user
+3. groups
+
+we can create groups and assign similar type of users based on their nature of work to the group for eg.
+1. devopsgroup = all the people in the organization working on devops role can be assigned devopsgroup
+2. qagroup = all the qa can be categorized and managed in qa group
+etc
+-----------------------------------------------------------------------------------------------------------------------------------
+Root user can add additional users or create groups in the linux machine. A user or a group of the linux operating system is associated with few attributes of data as below.
+	
+user:
+Each user of the linux operating system is associated with few information 
+1. username = every linux user has his own username with which he will identified and should be unique across all the users of the system.
+2. uid = each user will be assigned with an unique id which is auto-generated while adding/creating an user in the linux system
+3. password = to verify and permit access to the linux machine for that user
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

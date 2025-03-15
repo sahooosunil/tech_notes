@@ -1,0 +1,130 @@
+Loadbalancer
+-------------
+AWS Classic Cloud Loadbalancer is a controller that can be used for routing the external network traffic towards the pod replicas that are running on the cluster. 
+We dont need an ClusterIP additionally to discover or loadbalance the traffic across the replicas.
+
+urotaxi-loadbalancer.yml
+------------------------
+apiVersion: v1
+kind: Service
+metadata:
+	name: urotaxi-loadbalancer
+spec:
+  type: LoadBalancer
+	selector:
+		app: urotaxi
+		version: "4.1"
+	ports:
+		- port: 80
+			targetPort: 8080				
+--------------------------------------------------------------------------------------------------------------------------------
+There are 5 types of services are there in Kubernetes
+1. ClusterIP
+2. NodePort
+3. Ingress
+4. Loadbalancer
+5. Headless
+
+5. Headless Service
+using the ClusterIP service we can discover and distribute/loadbalance the requests across the replicas of the pod applications running on the cluster. 
+But if we wanted to query or gather the ip addresses of all the pods on which our application is running, 
+how do we retrieve such information?
+	
+There are 2 ways we can do this:
+1. We can write programs using Kubernets apis for querying the ip addresses of all the pods that matching based on the pod labels. 
+But the problem with this approach is we will be tightly coupled with kubernetes api
+
+2. The other way we can access the ip address of all the pods is using Headless Service. 
+Headless service does an discovery of the pods based on the selector labels we specified and register them as Endpoints. 
+So that when we do a dnsLooup on the headless service instead of returning the service ip address it returns all the pod ips that has been registered with it. 
+So that using those list of ip addresses we can reach to the individual pods easily.
+--------------------------------------------------------------------------------------------------------------------------------
+How to access the objects that are deployed or available on the cluster?	
+always we can access the objects and administer them on the cluster using kubectl cli commands, 
+the otherway we can see the information about the objects on the cluster is using kubernetes dashboard. 
+	
+By default kubernetes dashboard will not be available on the cluster, we need to enable it explicitly.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+		
+

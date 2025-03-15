@@ -1,0 +1,11 @@
+[Unit]
+Description=Memory Monitoring Service
+After=network.target
+
+[Service]
+ExecStart=/home/vagrant/memmonitor.sh
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

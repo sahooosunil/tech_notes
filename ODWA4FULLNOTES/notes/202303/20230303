@@ -1,0 +1,18 @@
+Assembly level language
+To overcome the problems with machine language, the Assembly level language has been introduced. Assembly language has defined instructions in english like keywords or mnemonics. The user of the computer should use these keywords of the language passing them as instructions to the processor asking to perform operations
+
+There are several keywords are provided by the language like
+1. ADD
+2. SUB
+3. MUL
+4. DIV
+5. MOD
+6. COPY
+7. MOVE
+8. STORE
+etc
+
+There are advantages of using assembly level languages
+1. simple to memorize
+2. easy to write programs/instructions
+

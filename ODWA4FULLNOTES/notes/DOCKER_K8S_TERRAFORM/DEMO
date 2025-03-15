@@ -1,0 +1,217 @@
+Docker, kubernetes and Jenkins
+------------------------------
+Timings: 6:00 AM IST - 7:00 AM IST [Monday-Friday], 7:00 AM IST - 8:00 AM IST [Saturday/Sunday]
+Duration: 2 month, 15 days
+Fee: 5k
+Live classroom notes will be provided to the students on weekly basis
+No recordings, no youtube, no videos provided will not be provided. Students are not permitted to record the session, if we found any one recording the sessions, their admission will be terminated without any fee refund.	
+	
+Pre-requisite:
+1. Linux knowledge is required.
+mkdir, touch, cp, chown, chmod, useradd, usergroup, apt, wget, curl
+
+1.1 shell commands:
+1.1.1 File management commands
+1.1.2 File permissions 
+1.1.3 Process Management Commands
+1.1.4 User Management Commands
+1.1.5 Software Package Managers (apt, yum, dpkg etc)
+
+2. Shellscripting (optional)
+3. basics of java programming language
+	1. how to compile a java program and execute it
+	2. java libraries or dependencies
+	3. jar and war
+	4. webapplication basics and how to package and deploy an java web application into an Tomcat server (optional)
+	
+3. aws cloud platform knowledge (optional)
+	1. ec2 instance
+	2. vpc, subnet, internet gateway
+	3. rds service
+--------------------------------------------------------------------------------------------------------------------------
+Course Content
+--------------
+0. jfrog artifactory setup and usage
+
+1. Docker (20/25 days)
+1.1 Introduction to containerization technology
+1.2. Virtualization vs Constainerization
+1.3. Introduction docker
+1.4. Docker Installation
+1.5. Docker CLI commands
+1.6. Docker Hub Registry
+1.7 Docker Images and Layer Architecture (Docker images are layered and stacable)
+1.8. Docker Directives (Image building instructions)	
+	1. FROM
+	2. COPY
+	3. ADD
+	4. RUN
+	5. CMD
+	6. ENTRYPOINT
+	7. ARG 
+	8. HEALTHCHECK
+	9. WORKDIR
+	10. EXPOSE
+	11. VOLUME
+	12. ENV
+1.10 Docker Tag
+1.11 publishing docker images to the docker hub registry
+1.12 Docker networking
+1.13 Setting up our own docker container registry (using artifactory) and publishing, pulling the images from it
+1.14 Docker volumes vs Bindmounts
+1.15 Docker compose
+
+2. Kubernetes (K8S) (25 days)
+2.1 Introduction to Kubernetes and why do we need it
+2.2 Architecture of Kubernetes
+2.3 kubectl
+2.4 Kubernetes Specs
+	1. pod spec
+	2. deployment spec
+	3. service spec
+	4. loadbalancer
+	5. ingress
+	6. replicaset 
+	7. daemonset
+2.5 pv and pvcs
+2.6 kuberntes networking
+2.7 types of controllers
+2.8 namespaces
+2.9 configmaps and configsecrets
+2.10 health probes
+2.11 resource configurations
+2.12 rolling strategies
+2.13 working on elastic kubernetes services (EKS) on aws cloudplatform
+
+3. HELM and managing kubernetes deployments through HELM (2/3 days)
+4. Jenkins (10 days)	
+	1. Why jenkins, what is the purpose of it
+	2. How to setup an jenkins cluster
+	3. installing and configuring jenkins plugins
+	4. configuring global security
+	5. integrating with git, maven, docker in jenkins
+	6. free-style project
+	7. pipeline
+		1. declarative pipeline (new)
+		2. scripted pipelines (groovy scripting) (old) #only one example
+	8. bulding ci/cd pipelines through jenkins
+		1. terraform / ansible 
+		2. docker and kubernetes
+		
+5. ELK (elastic search, kibana, logstash)	(2/3 days)	
+--------------------------------------------------------------------------------------------------------------------------
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

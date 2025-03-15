@@ -1,0 +1,44 @@
+let us understand what are the roles & responsibilities of an qa engineer, and what is the change in culture and which new tools & technologies should be adopted by the qa team in testing and certifying the application
+
+qa has to verify/test whether the application that is developed by the developer is working properly asper the requirement or not. In order to do so the qa engineer has to access the application that is running and should verify whether the application is producing the expected output for all the possible inputs that are being passed
+
+To perform the testing the qa has to perform several activities like
+1. understand the requirement or the user story that he/she has to test and prepare the test plan and test cases for testing the application
+2. now the qa has to begin testing the application based on the testplan/testcases being prepared, but to test the application we need the code to be running undert the qa environment
+The qa dont know how to setup the qa environment and run the application inorder to test it, its the responsibility of the devops engineer to setup the qa environment and deploy the application, so that qa can conduct the testing
+
+3. To setup the qa environment 
+3.1 we need physical server computers which should be procured and assembled
+3.2 networking should be configured
+3.3 install all the required tools and softwares needed for running the application like
+	3.3.1 language softwares
+	3.3.2 dependent software libraries
+	3.3.3 database servers
+	3.3.4 application servers
+	etc
+3.4 take the application binary from artifactory repository
+3.5 deploy the application onto the qa environment and release the env for qa for testing the application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

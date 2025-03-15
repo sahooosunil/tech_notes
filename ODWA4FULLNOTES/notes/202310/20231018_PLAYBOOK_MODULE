@@ -1,0 +1,177 @@
+Ansible Playbook
+----------------
+Playbooks are used for applying the software configuration management automation on the managed/fleet servers to achieve the desired state of the system. The playbooks are written in YAML format in which we declare ansible modules as tasks that needs to executed on the managed nodes.
+	
+syntax:
+playbook.yml
+---
+- name: play1name
+  hosts: groupName
+	tasks:
+    - name: task1
+		  module:
+        arg1: val1
+				arg2: val2
+		- name: task2
+		  module:
+        arg1: val1
+				arg2: val2
+- name: play2name				
+  hosts: groupName
+	tasks:
+    - name: task1
+		  module:
+        arg1: val1
+				arg2: val2
+...
+					
+How does ansible executes the playbooks?
+The playbook tasks/modules are executed by default from top to the bottom, and each task will be executed sequentially on the fleet by fleet in the order of their declaration.
+The default fork value being configured in /etc/ansible.cfg is "5", which means each task will be executed parallely on #5 fleet servers until a task has been finished execution on all the nodes of the cluster defined, it wont pick the next task in the playbook to begin execution on the fleet.
+					
+during the execution of a task, if it has resulted in failure on any managed nodes, it marks that managed node as skipped/omitted and continues to execute the rest of the tasks on remaining servers.
+--------------------------------------------------------------------------------------------------------------------------------------
+How does ansible output the execution of an Playbook?
+The Ansible control node server displays the status of each task execution that is declared in the playbook for each managed node on the cluster.
+	
+There are 5 possible statuses in which a task can be there and is reported by the ansible control node server per each managed node during execution. At the end a summary of total tasks executed per each managed node and possible statuses resulted on that node will be displayed as PLAY RECAP as shown below.
+	
+1. ok (n) = for how many task executions the control node is able to successfully connect to the managed nodes
+2. changed (n) = indicates how many tasks of the playbook executions has changed the state of the managed node
+3. unreachable (n) = how many tasks executions of the playbook resulted in failure due to unable to connect to the managed node
+4. failure (n) = how many tasks executions of the playbook has resulted in failure during execution
+5. skipped (n) = how many tasks executions are omitted on the managed node due to previous task failures on that managed node
+6. rescued (n) = no of retried task executions
+7. ignored = ignored task execution due to unmatched condition
+
+PLAY [debugPlay] **********************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************
+ok: [192.168.10.11]
+ok: [192.168.10.12]
+
+TASK [debugTask] **********************************************************************************************************
+ok: [192.168.10.11] => {
+    "msg": "Welcome to Ansible Playbooks"
+}
+ok: [192.168.10.12] => {
+    "msg": "Welcome to Ansible Playbooks"
+}
+
+PLAY RECAP ****************************************************************************************************************
+192.168.10.11              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+192.168.10.12              : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Modules
+---------------
+An Ansible module represents an unit of work that can be applied on the Managed nodes to accomplish a task or an operation. Ansible modules are wrtten in Python language, and they take data as an input through arguments and produces the output in json format, the output produced contains the status of the action/operation that has been performed on an managed node
+
+We dont have to write or develop modules, instead Ansible developers has developed lot of modules and distributed them aspart of the ansible distribution. These modules that are distributed by the ansible developers are called "Built-in" modules.
+	
+In addition to the build-in modules, there are other developer communities and third-party organizations contributing in developing and distribution ansible modules through ansible repositories, since ansible is very popular software configuration management tool. Few of the third-party contributors are:
+1. aws cloud platform
+2. vmware
+
+From the above we can understand there are un-ending list of modules are there in ansible distribution. searching and identifying an module and using it is very difficult since there are lot of modules provided. To help us in easily locating these modules ansible has grouped related modules into categories. Now we can search through these cateogies in identifying and using an module of our choice for eg.. we have modules like
+1. file modules
+2. identity modules
+3. remote management modules
+4. database modules
+etc
+
+We can browse the modules list by cateogory in this link
+https://docs.ansible.com/ansible/2.9/modules/modules_by_category.html
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					

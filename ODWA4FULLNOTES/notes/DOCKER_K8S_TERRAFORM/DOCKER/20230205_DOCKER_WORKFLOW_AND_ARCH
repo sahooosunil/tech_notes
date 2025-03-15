@@ -1,0 +1,136 @@
+Virtualization 
+Virtualization is a technology through which we can create multiple parallel isolated environments on one single computer system using hypervisor software
+
+advantages:-
+	1. dedicated operating system independent of the host machine operating system.
+	2. highly secured, since each guest/virtualmachine has its own operating system environment that makes it protected, even the host got compromised
+	3. suitable for running any type of applications, even they require dedicated operating system environment
+	4. suitable long running applications
+	
+dis-advantages:-
+	1. huge amount of computing resources of the underlying machine will be wasted because of running dedicated operating system environments on each guest/virtual machine
+	2. the disk images are heavy weight and cannot be easily carried across the environments, hence not portable
+	3. not suitable for scalability, as they take longer bootup time in bringing operating system and applications inside them
+	4. cannot achieve ci/cd using virtualization
+
+
+Containerization
+Containerization is an technology through which we package the software application along with dependent software packages and libraries and run it isolated from other programs that are running the on computer.
+
+advantages:-
+	1. effective utilization of system resources as each container is light-weight that runs only on bins/libs
+	2. the containerization images are light-weight as they dont package operating system aspart of them, that makes the shippable and distributable across the environments
+	3. containerized applications takes less-time for booting up, so those are suitable for achieving scalability
+	4. easily implement ci/cd
+	
+dis-advantages:-
+	1. we cannot have dedicated operating system independent of the host machine operating system
+	2. less secured when compared with virtualization
+	3. not suitable for long-running application environments
+	
+	
+When to use virtualization and containerization?
+Virtualization
+a) if we need dedicated isolated environment with independent operating system and share these across the teams or users then use virtualization
+eg.. cloud providers uses virtualization in provided dedicated compute instances for the cloud users
+
+Containerization
+If we just want to run software programs isolated from other programs that are running on the same operating system environment, then use containerization
+
+
+There are 2 benefits of using containerization technology
+1. using containerization we can abstract the underlying technology of the application and the way we need to run the application from the ops engineer or enduser, so that we can standardize the workflow of delivery of the software application
+
+2. the containers are light-weight due to which we can run multiple containers/programs isolated from others on the same operating system environment and can optimize the utilization of underlying resources of the machine
+
+
+There are lot of containerization technology tools are available in the market
+1. docker
+2. redhat openshift
+3. podman
+4. mesosphere
+5. containerd
+6. microsoft container
+etc
+
+among the above, the docker is most popular containerization technology in the market
+
+Docker
+------
+docker is the word derived from dock-work. The dock worker is job of a person who loads containers and unloads them from the ship. using docker we can implement containerization technology like we can package the software application into docker images and ship them. 
+Now we can run the application out of the images isolated from another applications on the env within the containers.
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,13 @@
+---
+- name: autoremove play
+  hosts: all
+  tasks:
+    - name: autoremove unused packages
+      apt:
+        autoremove: yes
+      become: yes
+    - name: autoclean cache
+      apt:
+        autoclean: yes
+      become: yes
+...

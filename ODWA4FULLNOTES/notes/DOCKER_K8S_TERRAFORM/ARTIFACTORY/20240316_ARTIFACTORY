@@ -1,0 +1,369 @@
+Artifactory Servers
+-------------------
+The Artifactory servers are used for 2 purposes
+
+1. The Artifactory servers are nothing but the remote repositories that are used for caching and distributing the dependencies/plugins within the organization
+
+2. To distribute the build artifacts that are produced out of the build process and deploy/deliver them across the various environments internally the organizations use artifactory servers.
+	
+The artifactory servers are manufactured and distributed by various third-party vendors in the market. Few of commercial and others are opensource
+1. nexus repository (commercial)
+2. jfrog artifactory (commercial)
+	 The JFrog platform has provided rich set of features aspart of it like
+	 2.1 dependency management through various types of repositories like maven central, bintary, jcentral, google etc
+	 2.2 docker repositories or container registries
+	 2.3 release management pipeline
+	 2.4 security scanner
+	 2.5 distribute and release management
+	 
+3. jfrog oss repository (opensource stack) (community edition)= that has limited set of features.
+-------------------------------------------------------------------------------------------------------------------------------
+How to setup the artifactory repository?
+1. provision the ec2 instance with the below configuration
+
+instance name: jfrogartifactoryec2
+instance_type: t2.medium
+ami: ubuntu
+vpc: artifactoryvpc
+subnet: public_subnet
+
+security groups: 
+jfrogartifactorysg
+Ingress:
+protocol   port   source_cidr  action
+http       80     0.0.0.0/0    allow
+Outbound:
+protocol   port   source_cidr  action
+any        any     0.0.0.0/0    allow
+
+
+
+2. install jdk17
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+
+3. setup the jfrog artifactory oss repository
+1. ssh into the ec2 instance and create /u01/middleware directory
+
+sudo mkdir -p /u01/middleware
+sudo chown -R ubuntu:ubuntu /u01
+
+2. download the artifactory oss repository tar.gz (linux distribution) into the /u01/middleware directory
+cd /u01/middleware
+wget -O jfrog-artifactory-oss/[RELEASE]/jfrog-artifactory-oss-[RELEASE]-linux.tar.gz https://releases.jfrog.io/artifactory/bintray-artifactory/org/artifactory/oss/jfrog-artifactory-oss/[RELEASE]/jfrog-artifactory-oss-[RELEASE]-linux.tar.gz?_gl=1*rfv280*_ga*MzQ5NjgwMDQ1LjE3MTA3MjQ3MjA.*_ga_SQ1NR9VTFJ*MTcxMDg5NjY3My40LjAuMTcxMDg5NjY3My4wLjAuMA..*_fplc*TWxzYjgwUEVxSlZab2wyJTJCbVl6QVRXNzJuZGRucmV6N3RMYUIlMkZ3THFyd2ExY09iRkdXWHdYZ2lmU1BFdVZxTiUyRndvelhjMkJiU1lTa0tqJTJGRHVXeGZLekQyT3lyMUR3ZllDMUNYa0J5OWo4bGpiT2ZmQjVJWjAwSDBvNTNHZ3clM0QlM0Q.
+
+3. extract the jfrog artifactory tar.gz
+tar -xzvf jfrog-artifactory-oss/[RELEASE]/jfrog-artifactory-oss-[RELEASE]-linux.tar.gz 
+
+4. goto the app/bin directory and start
+cd /u01/middleware/artifactory-oss-7.77.7/app/bin
+./artifactoryctl start
+
+There are 2 endpoints of the artifactory repsitory ui and endpoints runs on 8082/8081 respectively
+
+4. install and configure apache2 server as an proxy to artifactory
+The jfrog artifactory server needs to be run on a domain name, so we need to install apache2 server that receives the request on http/80 port and proxy/forward the traffic to the artifactory server on 8082 port
+
+4.1 install apache2 server
+sudo apt update -y
+sudo apt install -y apache2
+
+2. enable the http_proxy modules on apache2 server to work as proxy redirectory
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod lbmethod_byrequests
+
+3. create an virtual host configuration file, in which we need to configure to receive the incomming traffic on 80 port and forward to backend application (jfrog artifactory) that is running on 8082 port
+
+cd /etc/apache2/sites-available/
+sudo nano artifact_quicktools_net.conf
+
+<VirtualHost *:80>
+	ServerName artifactory.quicktools.net
+	ProxyPreserveHost on
+	ProxyPass / http://127.0.0.1:8082/
+	ProxyPassReverse / http://127.0.0.1:8082/
+</VirtualHost>
+
+4. sudo a2ensite artifact_quicktools_net
+5. sudo systemctl reload apache2
+6. sudo systemctl restart apache2
+
+
+4. configure local dns pointing to the jfrog ec2 public ip
+in linux or ubuntu edit /etc/hosts
+windows: c:\Windows\System32\drivers\etc\hosts
+
+public_ip_ec2_instance  artifactory.quicktools.net
+
+with this the setup of artifactory server is done!
+--------------------------------------------------------------------------------------------------------------------------------
+Now we need to setup the proxy repositories in artifactory proxying the remote/central repositories we want by accessing the adminstration console of the artifactory server
+
+1. open the administration console
+http://artifactory.quicktools.net (browser)
+the default username and password to login into the dashboard is admin/password
+2. upon logging in it prompts for changing the password and setup baseURL of the repository server
+
+	
+3. navigate administration tag and click on repositories and create #4 repositories as below
+
+libraries:
+local: localQuickToolsRepository
+remote: remoteQuickToolsRepository
+
+plugins:
+local: localPluginQuickToolsRepository
+remote: remotePluginQuickToolsRepository
+	
+Combining these #2 local & #2 remote repositories create #2 virtual repositories
+virtual libraries:
+virtual repo: virtualQuickToolsRepository
+              |-localQuickToolsRepository
+							|-remoteQuickToolsRepository
+							
+virtual plugin repo: 
+virtual repo: virtualPluginQuickToolsRepository
+              |-localPluginQuickToolsRepository
+							|-remotePluginQuickToolsRepository
+							
+4. goto application tab
+click on artifactory -> artifacts and select the button setme up
+choose the libraries (snapshot/release) and plugins (snapshot/release) and generate the settings.xml
+
+copy the settings.xml onto the workstation machine where we want to build the maven project into ~/.m2/settings.xml
+the artifactory supports only https protocol based request, to allow http we need to add mirrors configuration into the settings.xml as below.
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.2.0 http://maven.apache.org/xsd/settings-1.2.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <servers>
+    <server>
+      <username>admin</username>
+      <password>Welcome@1</password>
+      <id>central</id>
+    </server>
+    <server>
+      <username>admin</username>
+      <password>Welcome@1</password>
+      <id>snapshots</id>
+    </server>
+  </servers>
+  <mirrors>
+     <mirror>
+       <id>maven-default-http-blocker</id>
+       <mirrorOf>central</mirrorOf>
+       <name>Pseudo repository to mirror external repositories initially using      HTTP.</name>
+       <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsRepository</url>
+      <blocked>false</blocked>
+     </mirror>
+     <mirror>
+       <id>maven-default-http-plugin-blocker</id>
+       <mirrorOf>central</mirrorOf>
+       <name>plugin repository mirror</name>
+       <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsPluginRepository</url>
+       <blocked>false</blocked>
+     </mirror>
+  </mirrors>
+  <profiles>
+    <profile>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>virtualQuickToolsRepository</name>
+          <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsRepository</url>
+        </repository>
+        <repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>virtualQuickToolsRepository</name>
+          <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsRepository</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>virtualQuickToolsPluginRepository</name>
+          <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsPluginRepository</url>
+        </pluginRepository>
+        <pluginRepository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>virtualQuickToolsPluginRepository</name>
+          <url>http://artifactory.quicktools.net/artifactory/virtualQuickToolsPluginRepository</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <id>artifactory</id>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>artifactory</activeProfile>
+  </activeProfiles>
+</settings>	
+	
+Now we can navigate to any maven project on the workstation and can run maven command to build the project
+mvn clean verify
+
+if we want to publish the build artifact into the jfrog artifactory local repository we setup above we need to add distributionManagement in pom.xml of the project as below.
+	
+<distributionManagement>
+	<repository>
+		<id>central</id>
+		<url>http://artifactory.quicktools.net/artifactory/localQuickToolsRepository/</url>
+	</repository>
+</distributionManagement>	
+	
+we can publish the build artifactory into the above configured local repository using
+mvn clean verify deploy
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

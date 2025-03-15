@@ -1,0 +1,154 @@
+What are the problems we run into if the developers, qa engineers and operational engineers are working dis-jointly in separate teams in developing and delivering the software applications?
+Even though all the 3 roles of people are working for one project, if there are working in separate teams we run into several problems:
+1. lack of co-oridination and communication gaps between the teams/people delays the development delivery of the project
+2. due to communiation gaps the teams repeatedly hit into failures in delivery of the application due to which the motivation and the moral of the team members goes down
+3. as the teams are working separately a failure in delivery brings the blame game across the teams
+4. rather than the whole success of the project, they strive for individual success 
+5. gurus emerges within the team who controls every aspect of software development and delivery
+
+To overcome the above problems adopt the devops process and practices:
+What is Devops?
+Devops is change in culture/process and adoption of new tools and technologies in developing and delivering the software applications, so that we can achieve fast-paced development and delivery of the application
+
+What is the change in culture?
+Rather than working in 3 individual teams, let all the people work under one-single team called "devops team". There are plenty of advantages of working under one-single team
+1. No chance of communication gaps or co-ordination problems between the people as everyone works under one-single team, every one will be involved right from the day one of commencement of the project, so that everyone knows everything throughout the stages/phases of the project so there is
+	1.1 no chance of delay in development and delivery of the project
+	1.2 no failures in delivery since there is no communication gap
+	1.3 no more blame games as all are working under one team
+	1.4 rather than looking at individual success they look for team success as everyone is working in one-single team
+From this we can understand by adopting the devops culture we can eliminate most of the problems we encounter while working on an project or application	
+
+In addition to this we need to adopt new tools and technologies in developing and delivering the application
+------------------------------------------------------------------------------------------------------------
+#1 developer
+what are the tools/technologies developer has to adopt in speeding up the development of the project?
+1. requirement gathering and understanding the requirement so that he can develop the software application
+2. choose the programming language that suites the nature of the application development
+3. setup the development environment to facilitate developing the application
+	3.1 need infrastructure
+	3.2 operating system sofware
+	3.3 install language software 
+	3.4 install developer tools like ide, utilities etc
+	3.5 install database server
+	3.6 install application server and configure it 
+	3.7 setup the sourcecode of the project by taking from sourcecode repository
+
+To setup the development environment above initially it takes at an average of 15-20 days per one single resource. there after incase of system replacement due to upgrades or hardware failures takes an week to 1- days. and if we consider a team of 5 - 7 people , for setting up the development environment for the whole team it takes an about 150 - 180 person days for the entire team, which means the client has to pay per a resource half-year cost per doing nothing. which contributes to the increases cost of development and delivery of the application
+
+how to overcome the above problem?
+adopt virtualization technology in setting up the development environment.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

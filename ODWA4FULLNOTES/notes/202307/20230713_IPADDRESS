@@ -1,0 +1,104 @@
+ip address
+-----------
+For each computer on a network, to uniquely identify the computer and access it we need ip address. The ip address is an logical address assigned to the computer only when it is connected to the network
+
+There are 2 ways a computer is assigned with an ip address
+1. static ip configuration  = network administrator takes care of configuring the ip address for each computer on the network, joining them onto the network
+2. dynamic ip configuration = dhcp (dynamic host configuration protocol) server takes care of assigning the ip address to all the computers on the network onfly
+
+There are 2 versions of ip address are there
+1. ipv4 = ipv4 addressing schema has 32-bits of length 
+2. ipv6 = ipv6 address is of 128-bit length
+
+by using the ip4 addressing version of 32-bit in length we can connect 4.1 billion computers on the network by assigning the numbers to all the computers. Everything that is connected to the network must and should have an ip address assigned like
+1. computer
+2. laptop
+3. printer
+4. mobile
+5. smart device 
+6. scanner
+7. Television
+8. Refrigirator
+9. Switch
+10. Router
+from the above we can understand, everything that is connected should be assigned within an ip address, so there is a high chance that we quickly run out of ip addresses that can be generated using ipv4 addressing when more and more number of devices are connected to the network
+
+So to overcome this problem, ipv6 addressing schema has been introduced with an length of 128-bit. The ipv6 address is represented using hexa decimal numbers 0 - 9 ABCDEF allowing to have more number of computers connected to the network. So with an 128-bits looks like we never run out of ip addresses.
+	
+Right now all the network devices supports both ipv4 and ipv6 addressing schema and people are actively using ipv4 address.
+	
+	
+ipv4 addressing model
+----------------------
+ipv4 address is of 32-bit length, in which we can represent 2^32 possibilities from which we can derive numbers from 0 - 4.1 billion numbers. so from this we can understand we can assign uniquely numbers from 0 to 4.1 billion to the computers that are connected to the network
+
+but the ip addressing schema has been designed to be "hierarchial" in nature.
+What is hierarchial?
+Hierarchial representation means, any thing that is represented interms of parent/child relationship is called "hierarchial representation" or notation, it is an inverted tree representation.
+	      (blake)             
+     grandfather
+         |
+ --------------------
+ |                  |
+ son (paul)       daughter (susan)
+ |                  |
+-----               -
+|    |              |
+son  daugther	      daughter
+(bob) (alice)       (pam)
+	
+who are you?
+blake.susan.pam 
+hierarchial model helps you in grouping the entities together easily.
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

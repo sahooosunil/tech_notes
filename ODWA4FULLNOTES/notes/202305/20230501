@@ -1,0 +1,137 @@
+What is a Program?
+Program is a set of instructions written on a File that is passed as an input to the underlying operating system, asking to execute on the hardware of the computer
+
+What is an Software Application?
+A Software Application is developed by the developer based on requirements provided by the product owner/business owner. In general within an application, developers need to build multiple functionalities to fulfill the needs of the business, aspart of it the developer has to build/develop multiple programs, that has to be put together to execute which is called an "Software Application".
+	
+In-Short: A software application comprises of multiple programs that needs to be put together and executed.	
+	
+How to distribute the software application to the enduser/business owner/customer?
+	
+software distribution:	
+upon developing the software application the developer has to delivery the application to the enduser/customer, the process of delivering the software application to the customers/endusers is called "software distribution"
+	
+1. The developer inorder to develop the software application, he/she is going to write the programming instructions within the Files, usually software applications are build using High-level programming languages, so these instructions cannot be executed on the underlying operating system of the computer. So these program files are called "source code".
+
+2. The developer should not delivery the sourcecode directly to the enduser, because the enduser dont know how to convert the sourcecode into operating system executable code. So its the responsibility of developer to build/compile the source code in operating system executable code. So that it can be delivered to the enduser.
+The process of converting the sourcecode into operating system executable code is called "build process"
+	
+3. upon building the application, we produce bunch of operating system executable files. 
+	
+Can we delivery these exectuable program files to the enduser?
+No, we should not deliver them to the enduser because
+1. Not all the programs within the software application needs to be executed. For every software application there will be one entrypoint program, that needs to be kicked off to run the whole application. If we deliver the operating system executable files to the enduser, he dont know what is the entrypoint program he needs to run to launch the software application
+
+2. we cannot ship/deliver bunch of files inside a folder to the enduser, because directories are not transerable. sending individual executable files is very difficult because an application contains lot of program files
+
+3. if some how some way if we delivery these operating system executable programs to the enduser, the enduser dont know how to lauch the application, because different programs written in different programming languages has to be executed differently
+For eg..
+in case of shell program:
+1. The enduser has to grant execute permission 
+2. pass the program file name using ./program.sh to launch the application
+
+in case of java program:
+1. need to pass the main program name as an input to jvm
+2. java fqnMainClass
+
+How to overcome the above problems in distributing the software application?
+Let the developer package all the operating system executable files into one-single distributable packaged file like zip or tar.gz etc and deliver it to the enduser along with documentation describing how to run the program
+
+advantages:
+1. since we packaged into once-single distributable file it is easily transferable to the enduser
+
+dis-advantages:-
+There are still many problems exists with this approach
+1. The enduser has to un-package the software program files distributed by the developer manually into one directory, for this he/she has to have the relevant software installed on the operating system for unpacking
+2. The enduser has to gothrough the documentation to understand how to launch the software application, many of the times the enduser feels very complex in understanding it
+3. everytime when there is a change in the software, the instructions in running the software will change, so again the enduser has read the new documentation to run the program that makes tedious job
+
+From the above we can understand, running the software applications on the underlying computer systems are very complex thus making them un-usable. So its the responsibility of the operating systems to provide relevant tools/environment to sophisticatedly run the software applications on the underlying operating system of the computer. That is where operating systems introduced packaging standards.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,571 @@
+Terraform Modules
+------------------
+Terraform modules are the group of resources that can be imported in various terraform configurations in creating the infrastructure. 
+Modules are the way through which we can reuse terraform resource declarations across the projects.
+	
+We can create modules of our own locally and can reuse them accross various projects we are working on 
+or there are lot of published modules available in the market, which we can import and reuse in building the Terraform configuration.
+	
+The Terraform configuration and the resource declarations we are writing remains same, 
+but the way we are writing and organizing them will change while working with modules.
+	
+How to work with modules?
+While working with modules we need to organize the project into an standardized directory structure 
+to differentiate modules from main terraform configuration. Each resource/group should be placed in 
+a defined module to identify and quickly use in Terraform configuration.
+	
+Let us write terraform configuration with module definitions for creating an ec2 instance under an public subnet of a vpc. 
+For this we need to create below resources organized into groups:
+
+1. network
+1.1 vpc
+1.2 subnet
+1.3 internet gateway
+1.4 route tables
+
+2. compute
+2.1 security groups
+2.2 keypair
+2.3 ec2
+
+based on this we need to create the project with the below directory structure.
+javaserverec2
+|-modules
+	|-services
+		|-network
+			|-vpc
+				|-main.tf
+				|-variables.tf
+				|-output.tf
+			|-subnet
+				|-main.tf
+				|-variables.tf
+				|-output.tf
+			|-internetgateway
+				|-main.tf
+				|-variables.tf
+				|-output.tf      			
+		|-compute
+			|-securitygroup
+				|-main.tf
+				|-variables.tf
+				|-output.tf
+      		|-ec2
+				|-main.tf
+				|-variables.tf
+				|-output.tf			
+|-main (global #terraform configuration) [here we are going to reuse the modules that are declared above]		
+	|-main.tf 
+	|-variables.tf
+	|-outputs.tf
+	
+javaserverec2/modules/services/network/vpc
+variables.tf
+------------
+variable "vpcconfig" {
+	type = object({
+		vpc_cidr = string
+		vpc_name = string
+	})
+}
+
+main.tf
+-------
+resource "aws_vpc" "vpc" {
+	cidr_block = var.vpcconfig.vpc_cidr
+	tags = {
+		"Name" = var.vpcconfig.vpc_name
+	}
+}
+
+outputs.tf
+----------
+output "vpc_id" {
+	value = "${aws_vpc.vpc.id}"
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+javaserverec2/modules/services/network/subnet
+variables.tf
+------------
+variable subnetconfig {
+	type = object({
+		subnet_cidr = string
+		vpc_id = string
+		subnet_name = string
+		available_zone = string
+	})
+}
+
+main.tf
+-------
+resource "aws_subnet" "subnet" {
+	vpc_id = var.subnetconfig.vpc_id
+	cidr_block = var.subnetconfig.subnet_cidr
+	availability_zone = var.subnetconfig.availability_zone
+	tags = {
+		"Name" = var.subnetconfig.subnet_name
+	}
+}
+
+outputs.tf
+----------
+output "subnet_id" {
+	value = "${aws_subnet.subnet.id}"
+}
+-------------------------------------------------------------------------------------------------------------------------------------
+javaserverec2/modules/services/network/internetgateway
+variables.tf
+------------
+variable "igconfig" {
+	type = object({
+		vpc_id = string
+		vpc_associated_subnet_ids = list(string)
+		route_cidr = string
+		ig_name = string
+	})
+}
+
+main.tf
+--------
+resource "aws_internet_gateway" "internet_gateway" {
+	vpc_id = var.igconfig.vpc_id
+	tags {
+		"Name" = var.igconfig.ig_name
+	}
+}
+
+resource "aws_route_table" "internetgateway_routetable" {
+	vpc_id = var.igconfig.vpc_id
+	route {
+		cidr_block = var.igconfig.route_cidr
+		gateway_id = aws_internet_gateway.internet_gateway.id
+	}
+}
+
+resource "aws_route_table_association" "ig_routetable_association" {
+	route_table_id = aws_route_table.internetgateway_routetable.id
+	subnet_ids = var.igconfig.vpc_associated_subnet_ids
+}
+
+outputs.tf
+-----------
+output "internet_gateway_id" {
+	value = "${aws_internet_gateway.internet_gateway.id}"
+}
+output "internet_gateway_routetable_id" {
+	value = "${aws_route_table.internetgateway_routetable.id}"
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+javaserverec2/modules/services/compute/securitygroup
+variables.tf
+------------
+variable "security_rule" {
+	type = object({
+		from_port = number
+		to_port = number
+		protocol = string
+		cidr_block = string
+	})
+}
+
+variable "security_group_config" {
+	type = object({
+		vpc_id = string
+		ingress = security_rule
+		egress = security_rule
+	})
+}
+
+main.tf
+--------
+resource "aws_security_group" "security_group" {
+	vpc_id = var.security_group_config.vpc_id
+	ingress {
+		from_port = var.security_group_config.ingress.from_port
+		to_port=var.security_group_config.ingress.to_port
+		protocol = var.security_group_config.ingress.protocol
+		cidr_blocks = [var.security_group_config.ingress.cidr_block]
+	}
+	egress {
+		from_port = var.security_group_config.egress.from_port
+		to_port=var.security_group_config.egress.to_port
+		protocol = var.security_group_config.egress.protocol
+		cidr_blocks = [var.security_group_config.egress.cidr_block]
+	}
+}
+
+output.tf
+---------
+output "security_group_id" {
+	value="${aws_security_group.security_group.id}"
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+javaserverec2/modules/services/compute/ec2
+variables.tf
+------------
+
+variable "keypairconfig" {
+	type = object({
+		key_name = string
+		public_key = string
+	})
+}
+
+variable "ec2config" {
+	type = object({
+		instance_type = string
+		ami = string
+		subnet_id = string
+		ec2_name = string
+		key_name = string
+		associate_public_ip_address = bool
+		security_group_id = string
+	})
+}
+
+main.tf
+-------
+resource "aws_key_pair" "keypair" {
+	key_name = var.keypairconfig.key_name
+	public_key = var.keypairconfig.public_key	
+}
+
+resource "aws_instance" "ec2instance" {
+	subnet_id = var.ec2config.subnet_id
+	ami = var.ec2config.ami
+	instance_type = var.ec2config.instance_type
+	associate_public_ip_address = var.ec2config.associate_public_ip_address
+	key_name = aws_key_pair.keypair.key_name
+	vpc_security_group_ids = [var.ec2config.security_group_id]
+	tags = {
+		"Name" = var.ec2config.ec2_name
+	}
+}
+
+outputs.tf
+-----------
+output "ec2_public_ip" {
+	value = "${aws_instance.ec2instance.public_ip}"
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+javaserverec2/main
+
+variables.tf
+------------
+variable "vpc_cidr" {
+	type = string
+}
+variable "vpc_name" {
+	type = string
+}
+variable "subnet_cidr" {
+	type = string
+}
+....
+	
+main.tf
+-------
+terraform {
+	required_providers {
+		aws = {
+			source = "hashicorp/aws"
+		}
+	}
+}
+provider "aws" {
+	region = "ap-south-1"
+	profile = "default"
+}
+module "javaserverec2_vpc" {
+	source = "../modules/services/network/vpc"
+	vpcconfig.vpc_cidr = var.vpc_cidr
+	vpcconfig.vpc_name=var.vpc_name
+}
+module "javaserverec2_subnet" {
+	source ="../modules/services/network/subnet"
+	subnetconfig.vpc_id = javaserverec2_vpc.vpc_id
+	subnetconfig.subnet_cidr=var.subnet_cidr
+	subnetconfig.subnet_name=var.subnet_name
+	subnetconfig.available_zone=var.available_zone
+}
+module "javaserverec2_internet_gateway" {
+	source ="../modules/services/network/internetgateway"
+	igconfig.vpc_id = javaserverec2_vpc.vpc_id
+	vpc_associated_subnet_ids = [javaserverec2_subnet.subnet_id]
+	route_cidr = var.route_cidr
+	ig_name = var.ig_name
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+Terraform Statefile
+-------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

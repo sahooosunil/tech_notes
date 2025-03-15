@@ -1,0 +1,95 @@
+In case if we modify the sudoers file with a wrong syntax then everyone looses the sudoers access then how to fix the sudoers file?
+There is an utility called pkexec that is used for running any  linux commands as another user, if username is not specified by default it tries to execute the command under root user
+
+pk stands for polkit, it provides an organized way for non-privileged processes to communicate with primivileged ones
+
+pkexec visudo /etc/sudoers
+it prompts for root password: 
+----------------------------------------------------------------------------------------------------------------------------------
+How to enforce restrictions while granting the sudoers access to any users of the linux machine?
+To enforce restrictions on sudoers permitting them to perform operations we need to use aliases
+There are 4 types of aliases are there
+1. user_alias = specifies a group of users by username indicating sudoer can perform operations onbehalf of these users only
+2. runas_alias = specifies a group of users by UID
+3. host_alias = specific list of host machines only
+4. cmnd_alias =  specific list of commands only
+
+#4. Cmnd_Alias
+Command Alias is used for defining the list of commands that are allowed for the sudoer to execute onbehalf of the root user of the machine
+
+#CMD ALIAS
+Cmnd_Alias FILE_MGMT_CMD_ALIAS=/usr/bin/ls,/usr/bin/touch,/usr/sbin/groupadd,/usr/sbin/useradd
+
+#Users
+bob ALL=(ALL:ALL) FILE_MGMT_CMD_ALIAS
+
+#3. HOST ALIAS
+we can grant an sudoer to execute commands under sudo permission if the user is connected through a specific host machine only
+
+#CMD ALIAS
+Cmnd_Alias FILE_MGMT_CMD_ALIAS=/usr/bin/ls,/usr/bin/touch,/usr/sbin/groupadd,/usr/sbin/useradd
+
+#HOST ALIAS
+Host_Alias ORG_HOSTS=192.168.1.10
+	
+#Users	
+greg ORG_HOSTS=(ALL:ALL) FILE_MGMT_CMD_ALIAS
+
+#2. RUNAS ALIAS
+Runas aliases are used for specify group of users, or system groups (prefixed by %) permitting the sudoer to execute the commands onbehalf that user only
+
+Runas_Alias DEV_ALIAS=po,james
+
+greg ALL=(DEV_ALIAS) ALL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

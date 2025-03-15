@@ -1,0 +1,492 @@
+How to write an ReplicaSet spec file?
+
+sailor-replicaset.yml
+---------------------
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: sailorreplicaset
+spec:
+  replicas: 2
+	selector:
+    matchLabels:
+      appName: sailor
+			version: 1
+  template:
+    metadata:
+      labels:
+        appName: sailor
+				version: 1
+		spec:
+			containers:
+        - name: sailor
+				  image: techsriman/sailor:1.0
+					ports:
+            - name: http
+						  containerPort: 8080
+							protocol: TCP
+
+1. How to see the replicasets on the cluster?
+kubectl get rs
+
+if we delete any of the pods of the replicaset, the replicaset controller will bring up automatically another pod to meet the desired state of definition.
+	
+2. if we want to change the number of replicas running we need to either modify the replicaset spec and apply it again or edit in replicaset object in the kubernetes directly as below
+
+2.1 modify the replicaset spec yaml file
+change replicas from 3 to 2 and save it
+then use kubectl replace -f sailor-replicaset.yml
+
+2.2 edit the kubernetes object of replicaset 
+kubectl edit rs sailorreplicaset
+this opens the spec in vim editor by default change the replicas: 3 to 2 and save it, so that it would be applied automatically.
+--------------------------------------------------------------------------------------------------------------------------------
+How many types of controllers are there in Kubernetes?
+There are 5 controller types are available
+1. ReplicaSet
+2. Deployment
+3. DaemonSet
+4. Job
+5. Service
+
+2. Deployment Controller
+Deployment Controller is another way of deploying the application onto the Kubernetes Cluster. Instead of we taking care of deploying and managing the application along with new version rollouts, we can make use of the Deployment Controller. Through deployment controller any changes to the pod template can be rolled-out in a controlled way easily.
+	
+For eg.. if we have an pod application of version v1 is running on the cluster, and we have an updated version of the application v2 has been provided by development team, that should be rolled-out on the cluster. To update the existing version of the application v1 to v2, instead of we manually taking care of rollingout them we can use Deployment Controller which helps us in releasing the new versions by providing various different rollout strategies.
+	
+There are 5 deployment strategies are there in rolling out the new versions of the applications in Kubernetes cluster:
+1. Recreate
+2. Rolling update (Ramped)
+3. Blue/Green deployment strategy
+4. Canary
+5. a/b testing
+
+1. Recreate
+In Recreate strategy all the existing pods on the current version would be terminated on the cluster and the new version of the pods will be rolled out onto the cluster.
+
+With Recreate always there is an application downtime and should be used only during the development, for rolling out the newer versions of the application.
+	
+There are few cases under which Recreate strategy should be used.
+1. In development environment we have limited set of system resources to rollout the newer version of the pod application
+2. if we have private volume being mounted on Pod v1 and to rollout Pod v2 mounting the same private volume the only way to get this rollout achieved is through Recreate strategy.
+	
+advantages:-
+1. At one shot the newer version of the application would be rolled out
+2. No need of additional infrastructure to be planned for the release
+
+dis-advantage:-
+1. not suitable for production roll-outs as the application will incurr downtime.
+	
+
+How to deploy an application using Recreate strategy?
+To rollout the application using deployment controller we need to create it by writing deployment spec file.
+
+Deployment controller applies the strategy of rolling or release the pod replicas on the cluster, by which we can understand without ReplicaSet there is no deployment controller exists to manage the releases. So within the Deployment spec always we embed the ReplicaSet spec
+
+sailor-deployment.yml
+---------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailordeployment
+spec:
+  replicas: 2
+	selector:
+    matchLabels:
+      appName: sailor
+			version: 1
+  template: #pod spec
+    metadata:
+      labels:
+        appName: sailor
+				version: 1
+		spec:
+      containers:
+        - name: sailor
+				  image: techsriman/sailor:1.0
+				  ports:
+            - name: tomcatport
+						  containerPort: 8080
+							protocol: TCP
+	strategy:
+    type: Recreate
+	
+in the deployment spec if we have not specified any deployment strategy, the kubernetes by default applies the strategy as: rolling-update.
+	
+we need to create the deployment by using the below command
+kubectl create -f sailor-deployment.yml
+
+How to see the deployments on the cluster?
+kubectl get deployments
+
+How to see the details of the deployment?
+kubectl describe deployment deploymentName
+
+Whenever we create an deployment, kubernetes internally creates an replicaset in rolling out the pods based on the deployment.
+	
+How to rollout the newer versions of the application?
+1. get the newer version of the application from the development team, build, test and package the application and distribute it as a docker image by publishing into the docker container registry.
+	
+2. upon the new version of the image is published and ready, we need to edit the deployment we have already created for our application on the cluster (earlier)
+There are 2 ways we can modify the deployment
+1. using kubectl cli commands
+2. updating the specfile directly on the cluster
+
+
+1. kubectl cli commands
+kubectl set image deployment/deploymentName container=newImage:newTag
+
+for eg..
+kubectl set image deployment/sailordeployment container=techsriman/sailor:2.0
+	
+The above command modifies the image attribute under the container section for the existing deployment we specified.	
+
+2. we can modify the spec file on the container directly
+kubectl edit deployment deploymentName
+
+for eg..
+kubectl edit deployment sailordeployment
+
+
+3. How to see the revision history of the rollout changes?
+revision history means the modifications done to an deployment. we can see those changes using the below command
+kubectl rollout history deployment/deploymentName
+
+everytime when we modify the deployment, kubernetes internally creates an new replicaset controller with the latest changes or modifications we made and modifies the old replicaset replicas to "zero" to rollout the new version of the pod. 
+	
+Note: The way the old and new replicaset controllers are changed will be purely depends on the strategy we have chosen.
+	
+If the changes we rolled out aspart of the newer version of the application doesnt looks good, then we need to rollback to the previous version of the application, how can we rollback to the prevision version of the application
+
+1. one way we can rollback is directly edit the deployment specfile on the cluster by changing the image version to the old one. This will rollbacks the application to the previous version
+
+But every change in the deployment kubernetes creates an new version of the deployment and a new replicaset controller with the latest changes made in deployment by updating the previous deployment replicas to 0
+	
+The 3rd revision of the deployment is un-necessary, because we are not rolling out the new version, rather than we are going back to 1 version previous. instead of modifying the deployment spec, we can instruct the deployment controller to rollback to previous version of revision history using the below command
+
+kubectl rollout undo deployment/deploymentName --to-revision=1
+	
+How to pause and resume the deployments?
+If we want to perform multiple updates/changes to the pod or deployment and wanted to deploy all the changes at once, then we can pause the deployment and resume once we finish the changes using the below commands.
+	
+1. pause
+kubectl rollout pause deployment/deploymentName
+
+2. resume
+kubectl rollout resume deployment/deploymentName
+
+How to scale the replicas in the deployment?
+kubectl scale deployment/deploymentName --replicas=4
+	
+--------------------------------------------------------------------------------------------------------------------------------
+2. Rolling Update (Ramped)
+A Rolling update or Ramped deployment updates the pods in a rolling update fashion. It creates an second replicaset with newer version of the pod spec, then it increments the replicas of the new replicaset to 1, once the new pod readinessProbe has been passed, then it deletes the older version of the pod by decrementing the replicas by 1.
+In this way it incrementally moves all the pods 1 by 1 from old to newer version of the application. 
+	
+sailor-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailordeployment
+spec:
+  replicas: 5
+	selector:
+    matchLabels:
+      appName: sailor
+			version: 2
+	template:
+    metadata:
+      labels:
+        appName: sailor
+				version: 2
+		spec:
+      containers:
+        - name: sailor
+				  image: techsriman/sriman:2.0
+					ports:
+            - name: tomcatport
+						  containerPort: 8080
+							protocol: TCP
+	strategy:
+    type: RollingUpdate
+		rollingUpdate:
+      maxSurge: 2         
+			maxUnavailable: 0
+
+maxSurge = indicates how many pods can be added at one time
+maxUnavailable = how many pods can go un-available during this roll-out
+
+--------------------------------------------------------------------------------------------------------------------------------
+3. Blue/Green Deployment
+In Blue/Green Deployment along with older version of the application, in-parallel the newer version of the application (Green) will also be deployed and brought up. once the testing team has tested and signed-off the newer version, then the traffic would updated to route through newer version of the application
+
+For supporting the blue/green deployment strategy, we need to create one more deployment spec to rollout the new version of the application and once it is tested, we repoint the traffic to the new service and deletes/scale-downs the older deployment.
+				
+
+advantages:-
+	1. instant rollout/rollback of the application
+	2. zero downtime of the application
+	3. avoids version issues, because it changes all the instances or replicas of the application at one shot
+	
+dis-advantage:-
+	1. require more infrastructure for every release
+	2. handling stateful applications will be very hard
+--------------------------------------------------------------------------------------------------------------------------------
+Persistence Volume and Persistent Volume Claim
+----------------------------------------------
+How to run stateful applications on kubernetes cluster?
+The stateful applications generates the data during their execution, and it is by default written onto the Container Writable Layer of the container running inside the Pod. Incase of a crash, the data written onto the Container Writable layer will be lost
+
+How can we persist the data that is generated by a stateful application that is running inside a container of a Pod on kubernetes cluster?
+Kubernetes has introduced Persistent Volumes and Persistent Volume Claims
+
+Persistent Volume = is a storage defined on the kubernetes cluster and it is created and maintained by the kubernetes administrators.
+Persistent Volume Claim = is a request for that storage to be consumed by the kubernetes engineer that can be used aspart of the pod application
+
+There are different types of persistent volumes are there
+1. local
+2. nfs
+3. iscsi
+4. ebs block volumes
+etc
+
+The kubernetes administrator is responsible for setting up the persistent volume and making it available for the pod applications to consume by creating an volume claim. These	persistent volumes are claimed by the kubernetes developers to be used in running their pod applications
+
+There are few attributes we need to define while creating an persistent volume:
+1. storageClassName
+2. accessMode:
+	ReadOnly
+	ReadWriteOnce
+	ReadWriteMultiple
+3. Capacity
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+												
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					
+					
+	
+	
+	
+	
+	
+	
+	
+	
+	

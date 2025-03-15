@@ -1,0 +1,164 @@
+Inventory File Variables
+------------------------
+variables are the placeholders or reservered/named memory locations in which we can store the value and refer it through the variableName. By using the variables we can easily maintain the program, incase if we need a change in the value being used in a program instead of changing all the lines of code wherever we are using the value, we can change the value assigned to that variable.
+	
+We can define variables and attach to either host or group level within the inventoryFile. These variables that are defined within the inventoryFile will acts as input while executing the playbook/module on the managed nodes of the cluster. So that we can avoid hardcoding the values inside the playbook and run the playbooks by passing different values from the variables.
+	
+There are 3 levels at which we can define variables in the Inventory File:
+1. Global Variables
+These are the variables that will be passed to all the modules/playbooks that are executed against the hosts/groups on which those are defined.
+	
+2. Host-level Variables
+These are the variables defined/attached at the specific host-oly, so that these variables will acts as an input to the playbook/module while it is running on that specific host only. ideally configuration values, labels that classifies the machine/usage are defined as host-level variables
+	
+3. Group-level variables
+Group level variables are the one defined for a group of hosts whose value seems to be common for that group
+
+There are 2 types of variables are there in ansible
+1. ansible pre-defined variables
+2. custom/user-defined variables
+
+1. ansible pre-defined variables
+Ansible pre-define variables are the one for which the ansible has attached pre-defined meaning to them. Through these variables we can change the behaviour of the control node server on how it has to be connected to the managed nodes or how it has to execute a module/playbook on the managed on the cluster. All the ansible predefined variables are prefixed with "ansible_"
+	
+1. ansible_host
+2. ansible_port
+3. ansible_user
+4. ansible_password
+5. ansible_ssh_private_key_file
+6. ansible_become
+7. ansible_become_user
+8. ansible_become_password
+9. ansible_shell_type
+
+2. user-defined variables
+In addition to the above predefined variables we can define our own variables attaching with values and we can pass them as an input while executing an module or plabook
+
+How to declare variables?
+1. INI
+host-level variables
+192.168.10.11 variableName=value variableName=value
+
+group-level variables
+[dbservers]
+192.168.10.11
+192.168.10.12
+	
+[dbservers:vars]	
+variableName=value
+variableName=value
+
+2. YAML
+Host-level variables
+
+all:
+  hosts:
+    192.168.10.11:
+      variableName=value
+			variableName=value
+	children:
+    dbservers:
+      hosts:
+        192.168.10.12
+				192.168.10.13					
+		  vars:	
+			  variableName=value
+				variableName=value
+
+
+Ansible host alias
+In addition to the host address, we can assign an alias name to the host for added readability as below
+~/hosts
+mysqlserver ansible_host=192.168.10.11
+javaserver1 ansible_host=192.168.10.12
+	
+
+					
+Host Ranges
+-----------
+In an organization we might have lot of hosts with similar host patterns either with a secific naming convention or ip address range.  To avoid adding each host in the org in inventoryFile manually we an use hosts patterns.
+	
+for eg.. we have javaservers starting with an ip address of 192.168.10.11 to 192.168.10.25. Now insteadof adding these 14 managed servers in the inventoryFile which is an huge effort we can rely on ost ranges.
+	
+~/hosts
+[javaservers]
+192.168.10.[11:25:1]
+min=11
+max=25
+increment by =1
+
+	the above expression generates the hosts ips starting from 192.168.10.10 to 192.168.10.25.
+	
+YAML:
+all:
+  hosts:
+    192.168.10.[11:25:1]:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

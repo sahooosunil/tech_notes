@@ -1,0 +1,68 @@
+Ip Address
+ip address is an logical address that is assigned to the network adapter of the computer upon connecting to an network. There are 2 types of ip addressing models/schemas are there
+1. ipv4
+2. ipv6
+
+1. ipv4
+ipv4 address is of 32-bit in length which is divided into 4 octets, of which it contains 2 types of addresses in it
+1. network address
+2. host address
+
+
+How do we identify within a given ip address, what is the network address and host address?
+To help us in identifying the network and host addresses within the given ip, the classful ip addressing has been introduced. The ip addresses are classified into 5 classes A, B, C , D. We can identify an ip address is in which class based on the top 3 bits in the first octet.
+	
+FIRST OCTET      IP CLASS        NETWORK BITS         HOST BITS
+  1 - 126           A             8 bits               24 bits
+128 - 191           B            16	bits               16 bits
+192 - 223           C            24 bits                8 bits
+224 - 239           D            multicasting and no classification of bits
+240 - 254           E            reserved for experimental and future usage
+
+0 = by default belongs to gateway
+127.*.*.* = loopback ip address
+255.*.*.* = broadcasting
+
+What is Subnet mask?
+Subnet mask is used for computing network address and host address from an given ip address. This will be used by switches/routers network devices in routing the data packet to the right network of computers. The subnet mask is prefixed for each ip class and should be configured by the network administrator for all the devices that are connected on the network
+
+class A : 255.0.0.0
+class B : 255.255.0.0
+class C : 255.255.255.0
+	
+The gateways upon receiving the ip packet would determine the network address from the given destination ip address by doing an logical bit AND operation on the ip/subnetmask 
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

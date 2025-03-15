@@ -1,0 +1,10 @@
+---
+- name: creates command play
+  hosts: all
+  tasks:
+    - name: create only if it doesnt exist
+      command: touch file2.txt
+      args:
+       chdir: /tmp
+       creates: file2.txt
+...

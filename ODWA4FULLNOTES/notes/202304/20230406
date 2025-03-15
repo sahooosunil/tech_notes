@@ -1,0 +1,136 @@
+vim 
+---
+vim is an visual editor improved, it is an non-gui editor that is most popular and is being shipped aspart of almost every linux distribution. it is called programmer editor, since it works with commands. 
+There are 3 modes are there in vim editor
+1. command mode
+by default when we open the vim editor, the editor enters into command mode, so that any keypress on the keyboard is considered as a command and performs an operations on the contents of the file. at any point of time we can return back to the command by pressing the esc key on the keyboard
+
+2. input/insert mode
+by pressing the "i" key on the keyboard, the editor enters into insert mode, each keypress in the insert mode enters the data onto the file.
+	
+3. exit mode
+once we are dont with editing/modifying the contents of the file we can save and quite the file by entering into exit mode. to enter into exit mode first we need to goback to command mode by pressing esc key, then we need to type : that takes us into exit mode
+here we have few options
+1. w = save/write the contents
+2. q = quit the file (this can be done only after saving/writing the changes)
+3. wq = write and quite
+4. q! = quit without saving
+
+What are the command available in vim editor under command mode:
+1. A = append the data at the end of the line
+2. a = append the data to the right side of the cursor position
+3. I = insert the data at the begining of the current line
+4. i = insert the data in the current cursor position
+5. O = open a new line above the current cursor position
+6. o = open a new line below the current cursor position
+7. r = replace a single character at the current cursor position
+8. R = replace the text from the current position
+9. S = replace the current line
+10. yy = yanking (copy the line)
+11. nyy = copy n number of lines
+2yy = copy 2 lines
+12. p = paste
+13. x = delete a character in the current cursor position
+14. dw = delete a word
+15. dd = delete a line
+ndd = delete n number of lines
+16. u = undo the previous action
+17. b = back to the beginging of the current word
+18. w = beginging of the next word
+19. e = end of the current word
+20. :linenumber = jump to the given line number in the file
+21. G = goto the end of the file
+22. ctrl + f = one page forward
+23. ctrl + b = one page backward
+
+24. /phrase + enter = search for the text in the file
+after pressing enter, it shows the first matching word with the given text to find the next matching word
+press n = to show text matcing next content
+shift + n = to show previous matching content
+-----------------------------------------------------------------------------------------------------------------------------------
+nano
+nano is another text editor that is available in linux operating system under non-gui mode. unlike vi/vim being an programmers editor, nano is simple text editor that provides easy commands for editing the text files.
+nano is not available by default aspart of all the linux distros, but in ubuntu the nano is shipped along with vi/vim editor
+
+How to work with nano?
+nano filename
+if it is an existing file, it opens up for editing otherwise creates an blank file for writing the content.
+	
+ctrl + o = writes the unsaved changes onto the file
+ctrl + x (enter) = quit if there are any unsaved changes are there it asks for confirmation to save or not (y/n)
+ctrl + w = search for a word in the file
+ctrl + \ = to replace a text phrase with different
+prompts for searching for a phrase: input the phrase and press enter
+prompts for replace phrase: input replace phrase and enter
+
+ctrl + k = cut the line
+ctrl + u = paste the line
+ctrl + c = displays line number, characters in the file
+ctrl + (underscore)+ = jump to a specific line in the file
+alt + e = redo
+alt + u = undo
+alt + a = goto selection mode to mark the content
+alt + 6 = copy selected text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

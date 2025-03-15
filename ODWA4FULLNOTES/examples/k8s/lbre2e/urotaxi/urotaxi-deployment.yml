@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urotaxideployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: urotaxi
+      version: "1.0.1"
+  template:
+    metadata:
+      labels:
+        app: urotaxi
+        version: "1.0.1"
+    spec:
+      containers:
+        - name: urotaxi
+          image: techsriman/urotaxi:4.2
+          ports:
+            - name: tomcatport
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "252Mi"
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          env:
+            - name: spring_datasource_password
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlsecret
+                  key: password
+            - name: spring_datasource_username
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlsecret
+                  key: username
+            - name: spring_datasource_url
+              valueFrom:
+                configMapKeyRef:
+                  name: urotaxiconfigmap
+                  key: dburl
+
+
+
+
+

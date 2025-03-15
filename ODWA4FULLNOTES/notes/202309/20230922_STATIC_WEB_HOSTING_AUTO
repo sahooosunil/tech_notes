@@ -1,0 +1,21 @@
+#1
+vagrant machine
+forward_port, host: 80, guest:80
+
+#2
+provisioners
+2.1 file provisioner to copy the website
+2.2 file provisioner to copy apache2 site config template file
+2.3 shell provisioner for hosting the static application
+
+hostsite.sh
+-------------
+The Shell program takes #2 arguments
+1. SITE_DIR
+2. DOMAIN_NM
+
+fn1: check and install apache2 server
+fn2: check the site directory exists or not
+fn3: create the virtualhost configuration file and enable/reload the site
+
+

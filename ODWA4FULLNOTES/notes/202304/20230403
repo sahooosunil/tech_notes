@@ -1,0 +1,160 @@
+Find
+----
+find is used for searching and locating the files/folders based on the Filesystem based on a pattern. There are plenty of options are available in find command 
+
+1. find directory/ -name "pattern"
+it searches for the file pattern under the specified directory including sub-directories and display the list of matching filenames along with their path each per line
+
+2. find directory/ -name "pattern" -print = displays each matching file in a new line, default option
+
+3. find directory/ -name "pattern" -print0 = prints all the matching files/folders in a single line 
+
+4. find directory/ -type f -name "pattern"
+-type f = stands for display only the matching files of the pattern ignore directories
+-type d = only matches with directory names and ignores filenames
+
+5. find directory/ -name "pattern" -empty
+display all the matching files/folders of the given pattern, which are empty only (no contents inside them)
+
+6. How to search for files/folders of multi-pattern match
+display all the files and folders that matches with either pattern1 or pattern2
+
+find directory/ -name "pattern1" -o -name "pattern2"
+for eg..
+find library -name "c*" -o -name "d*"	
+	
+7. How to perform an action or an operation on the output of the find command?
+find directory/ -name "pattern"	 -exec command {} \;
+
+
+find library/ -type d -name "c*" -exec ls {} \;
+find library/ -type f -name "*.log" -empty -exec rm {} \;
+
+find library -type f -name "news*" -exec cat {} \;
+-----------------------------------------------------------------------------------------------------------------------------------
+grep 
+find is used for searching for a file/folder with the given name or pattern, but whereas if we want to search for files based on the content then we need to use grep
+
+library
+|-comics
+	|-spiderman.txt
+	|-ironman.txt
+	|-batman.txt
+|-finance
+	|-businesstoday.txt
+	|-indiatoday.txt
+	|-news.txt
+	
+1. give me all the files/folders who name contains "man"?
+find library/ -name "*man*"	
+
+2. give me all the files which contains a word inside it called "Man"
+this cannot be done using find, we need to use grep.
+	
+grep (content based search)	
+----------------------------
+grep is used for search for the files based on the content. it displays all the files which contains the given text inside it and returns all the matching lines along with the filename where it was found. It is a very powerful linux command used for searching within the log files for the errors quickly
+
+There are plenty of options are available in grep command:
+1. grep "text" filename = it displays all the matching lines of text within the file
+2. grep -R "text" directory/ 
+search witin the given directory including the subdirectories recursively to find the files that contains the "text" content, if found display the matching lines where the text was found
+
+3. grep -R -n "text" directory/
+-n displays the matching line number where the text content was found in the file.
+
+4. by default grep search for the given text within the file matching with case, if we want the text search to ignore the case we need to use -i
+grep -i "text" filename
+grep -R -i "text" directory/
+
+5. by default grep search for the give text within the file with partial matching also for eg. if we search for text content "like" it returns all the lines which contains like word, for eg likewise will also match with like. but if we want to search based on whole word match then use -w
+
+grep -R -w "like" directory
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

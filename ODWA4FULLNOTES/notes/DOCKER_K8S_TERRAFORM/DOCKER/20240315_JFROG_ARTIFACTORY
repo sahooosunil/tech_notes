@@ -1,0 +1,57 @@
+Artifactory Servers
+--------------------
+
+Maven
+1. dependency management
+2. standardized directory structure
+3. build abstract through build lifecycle
+4. plugins
+5. archetypes
+
+enterprise java project = if we are building the project from scratch, it takes huge amount of time, so java helps in building the applications quickly by allowing us to reuse the libraries that are built by others.
+	
+libraries = pre-built java components packaged into jar files, and distributed to the people around the world.
+Now the java developers can download these reusable jar dependencies, add to the classpath of the project and develop the application by reusing the components quickly.
+	
+Manually managing the dependencies seems to be quite difficult job:
+1. each of the developers in the team has to download the dependencies by searching through the internet and add them to the classpath manually
+2. identifying the dependencies required for the project with the right version of them is very difficult
+
+To overcome the challenges in managing and build the project with dependencies, maven build has been introduced.
+
+Maven:
+While working with maven, we need to create our project based on standardized directory structure and declare the information about our project in pom.xml along with dependencies. Maven takes care of downloading these dependencies from the artifactory repositories using which it buidls the project
+
+There are 3 types of artifactory repositories are there
+1. central repo
+2. local repo
+3. remote repo
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

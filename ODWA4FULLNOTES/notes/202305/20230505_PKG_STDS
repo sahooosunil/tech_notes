@@ -1,0 +1,121 @@
+How does the packaged software is distributed in the Linux operating system?
+There are 3 ways in which the packaged softwares are distributed in linux operating system.
+1. repository based packaged software distribution
+2. direct downlodable packaged software distribution
+3. binary distribution
+
+1. repository based packaged software distribution
+The packaged software utilities or tools that are build by various different opensource software contributors are made recheable/available to the linux uses around the world through software repositories.
+	
+since each distro has their own packaging standards and package installers, there are different software repositories provided by each vendor to publish/distribute the software packages of their distro specific within their distro repositories
+
+There are commercial software manufacturing vendors are there and their software packages are not distributed through distro repositories, rather these vendors hosts their own software repositories and distribute their softwares to their customers only
+
+There are 2 types of repositories there from the above
+1. distro repositories
+2. software vendor repositories
+
+There can be small to moderate software manufacturing vendors who might build commercial software libraries/applications, and wanted to distribute them, or could be an individual wanted to distribute his own commercial software. but maintaining, hosting an software repository for distributing their own commercial software is not an easy job, it requires huge resources, manpower in maintainance and high cost involved just for distributing the software, instead they can publish their software libraries into distro repositories itself.
+	
+So to identify or differentiate which softwares are distributed from which sources and what is their licensing terms of usage, the distro vendors has introduced categories in software repositories. There are 4 categories are there in software repositories
+
+1. main        = canonical distributions / opensource software packages that are verified by the distro vendor are categories as Main
+2. universe    = community maintained / opensource / freely distributed software (should be used at your own risk)
+3. restricted  = device driver softwares, proprietory vendor softwares are placed in restricted
+4. multiverse  = packages with copy rights, legal restrictions or commercial are published and distributed under multiverse
+-----------------------------------------------------------------------------------------------------------------------------------
+
+How to install the software packages in ubuntu operating system?
+From the above we can understand the software pacakges are distributed through software repositories, so to install them on the machine we need package managers / installers
+
+There is an difference between package managers and software installers
+package manager:
+package manager is an advanced installer, that helps us in searching, downloading and installing the software packages from the package repositories directly
+	
+installer:
+installer will not download the software package from repository, rather we need to manually download the packaged software compatible for that distro and install it through the help of installer
+
+The ubuntu operating system has provided an tool called "apt", stands for advanced packaging tool, through which we can browse, search and download software packages and install them on to the operating system of the computer
+The ubuntu has provided 2 tools for installing the software packages onto an machine
+1. apt  = apt is an package manager which internally uses dpkg only for installing the softwares, but additional the apt can do the below.
+	1.1 identify any dependent software libaries required while installing an software
+	1.2 downloading them from the repositories automatically
+	1.3 installs them through dpkg
+	
+2. dpkg = debain package manager = installer, if you have downloaded an .deb file manually you can install it using dpkg tool
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -61,7 +61,8 @@ resource "aws_db_instance" "eks_rds" {
   db_subnet_group_name   = module.vpc.database_subnet_group
 }
 -------------------
-Here’s a Terraform script using modules to create an AWS EKS cluster with a managed node group of 5 nodes. It also includes networking (VPC, subnets, security groups) and access to S3 and RDS within the same VPC. I'll explain each component in detail.
+Here’s a Terraform script using modules to create an AWS EKS cluster with a managed node group of 5 nodes. 
+It also includes networking (VPC, subnets, security groups) and access to S3 and RDS within the same VPC. I'll explain each component in detail.
 
 ### Explanation:
 

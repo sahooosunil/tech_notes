@@ -1,0 +1,111 @@
+Terraform state file management
+-------------------------------
+By default terraform generates and stores the terraform statefile within the project directory.
+	
+To save the terraform statefile on a remote backend like S3 storage bucket.
+	1. create an S3 storage bucket with granting policies to the IAM user who can access the bucket and its objects
+	2. create an dynamodb table for locking
+		1. This table should be created with an partition key as LockID, grant the IAM user the permission for accessing the table
+	
+main.tf
+-------
+terraform {
+	required_providers {
+		aws = {
+			source = "hashicorp/aws"
+		}
+	}
+	backend "s3" {
+		bucket = "sailortfbucket"
+		key = "terraform.tfstate"
+		region = "region"
+		dynamodb_table = "sailortflocktable"
+	}
+}
+
+provider "aws" {
+	region = "ap-south-1"
+	profile = "default"
+}
+
+resource "aws_security_group" "tfstatesg" {
+	ingress {
+		from_port = 22
+		to_port = 22
+		protocol = "tcp"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+	egress {
+		from_port = 0
+		to_port = 0
+		protocol = "-1"
+		cidr_blocks = ["0.0.0.0/0"]
+	}
+}
+	
+resource "aws_key_pair" "tfstatekp"	{
+	key_name = "tfstatekp"
+	public_key = file("~/.ssh/terraformkp.pub")
+}
+
+resource "aws_instance" "tfstateec2" {
+	instance_type = "t2.micro"
+	ami = "ami-28383"
+	vpc_security_group_ids = [aws_security_group.tfstatesg.id]
+	key_name = aws_key_pair.tfstatekp.key_name
+	tags = {
+		"Name" = "tfstateec2"
+	}	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

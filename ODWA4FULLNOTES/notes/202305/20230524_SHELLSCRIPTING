@@ -1,0 +1,314 @@
+What is shellscripting what is the purpose of it?
+Shellscripting is an file in which we write shell commands that are passed as an input to the underlying linux operating system of the computer, that executes the shell commands by using shell interpreter in performing an operation
+
+purpose:
+shellscript is used for achieving automation. if we have a repeatitive job that has to be carried over a period of time by running bunch of shell commands, instead of we manually typing thoese commands on the terminal, we can have them placed in a shellscript program and get them executed repeatedly whenever we want to accomplish the job (non-interactively)
+	
+How to write an shellscript program?
+1. create an file with a name appropriate to the operation we want to perform and write the file extension as ".sh" (recommended) and a good practise to identify it easily.
+touch print.sh
+
+2. open the print.sh and starting writing the shell commands
+3. every shellscript program must and should start with a starting line shebang
+print.sh
+--------
+#!/bin/bash
+
+shebang is an instrution to the shell interpreter asking to use a specific shell type for running all the shell commands written in the program
+
+4. Followed by the shebang we can write any shellcommands that we want to execute to accomplish the desired outcome
+in our case we want to just print an message onto the console lets write an echo! statement
+
+print.sh
+---------
+#!/bin/bash
+echo "Good Morning! Welcome to Shellscripting"
+	
+How to execute the shellscript program?
+There are 2 ways in executing the shellscript program
+
+#1. grant execute permission to the shellscript program and run the shellprogram file on the bash interpreter as below.
+chmod u+x print.sh
+./print.sh
+
+if the shellscript program is not in the current working directory we need to specify either the path to the program to execute or need to PATH environment variable pointing to the directory location of the program it resides in running it.
+	
+sriman@odwa3$./print.sh = the shellscript program will be executed on the current shell interpreter we are in
+for eg.. lets say we have exported an env variable with in the current bash, since the program is also running on the same bash interpreter we can access the env variable inside the program.
+	
+	
+sriman@odwa3$ export MESSAGE=Good Morning
+sriman@odwa3$./printenv.sh
+printenv.sh
+-----------
+#!/bin/bash
+echo $MESSAGE
+
+The above program prints Good Morning by referring the value of env variable
+
+#2. we can execute a shellscript program without having an execute permission as well, we just need to have an READ permission on the file. The same above print.sh program can be executed even though we dont have EXECUTE permission as below.
+	
+sriman@odwa3$ bash print.sh
+now when we run the bash interpreter by passing the shellprogram as an input, since the file has READ permission the bash interpreter reads the commands inside it and executes one by one.
+
+but the shellprogram will not be executed on the current shell in which we are, it launches an new BASH interpreter and executes so that the env variables we set in the current shell will not be available in the shellprogram
+
+sriman@odwa3$ export MESSAGE="Good Morning"
+sriman@odwa3$bash printenv.sh
+
+since printenv.sh is not running on the current shell the env variable will not available, so it prints empty
+-----------------------------------------------------------------------------------------------------------------------------------
+vscode editor
+
+we can write shellscript programs in vim or nano editor, but there is an better alternate that provides syntax highlighting and inline code assistance, embedded terminal and huge community plugins are available for working on all the devops related technologies and is provided by microsoft for free.
+	
+we need to download the .deb file of the vscode editor and install it through dpkg or apt
+
+1. download the vscode editor based on the linux distro we are using (ubuntu: .deb)
+2. install the editor by using the below command
+sudo apt install -f codexxxx.deb
+-----------------------------------------------------------------------------------------------------------------------------------
+Working with variables in shellscripting
+----------------------------------------
+Within an shellscript program we wanted to use values in performing the operation. The values that we use directly aspart of the shellprogram are called "literals"
+	
+There are different types of literals are there
+1. String literal = value written by sourrounding in double quotes. "Good day!"
+2. Integer literal = directly if we use a number like 20 
+3. Float/Decimal literal = directly if we write floating point value 20.3
+
+Lets say we want to perform operations on #2 numbers 10, 20 like add, substract, multiply and division, for this we can write the shellprogram as below.	
+
+calculator.sh
+#!/bin/bash
+echo $[10+20]
+echo $[20-10]
+echo $[10\*20]
+echo $[20/10]
+
+in the above program the values 10, 20 are directly used as literals due to which we have many problems:
+if we want to modify the 10, 20 with 30, 50 
+1. we need to goto each and everyline in the program and change the values 10, 20 to 30, 50 respectively which is time consuming and difficult job aswell.
+2. while modifying the values there is a chance of commiting human error
+3. we might endup in modifying few places and might miss others, that leads to inconsistency and results in wrong outcome.
+	
+From the above we can understand if we use literal values in a program, maintaining the program is very difficult, so we need to use variables
+
+What are variables?
+variables are placeholders or reserved memorylocations given with a name, in which we can store values. so within the program whereever we want to use the values, instead of using literals we can refer variables directly in using the values
+
+How to declare variables in Shellscript program?
+calculator.sh
+-------------
+#!/bin/bash
+VARIABLE_NM=VALUE
+
+The best practise or standard convention in writing the variables names is using capital letters in shellscripting. it is an recommendation but not mandatory
+
+A=10
+B=20
+while declaring the variables give an appropriate name based on the purpose of usage
+
+
+How to refer the variable value inside the shellprogram?
+Anything we write in the shellscript program when we pass it as an input to the shell interpreter it treats as an command and tries to execute. but when we want to refer a variable value to let the shell interpreter differentiate between a command and refererence to the variable value we need to use $VARIABLE_NM expression
+
+echo $A
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

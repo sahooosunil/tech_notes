@@ -1,0 +1,122 @@
+Web Application
+---------------
+Web Applications are the sofware programs/applications that are accessible over the network using an web browser, they distribute web pages/html pages providing the information/functionality of an business to the world
+
+A business organization provides several services to the customers or endusers, inorder to let the enduser know the business services it is offering or allow the enduser to access these services, the business organization document/describe their services in webpages/html pages and distribute them over the network using web applications
+
+There are 2 types of web applications are there
+1. static web applications
+2. dynamic web applications
+
+
+1. static web application
+In static web application, the business organization documents/describes the information about their business/services in the HTML pages using colors, fonts, images, audio, video etc and make these web pages accessible over the network. The clients using the web browser will be able to browse the web pages that are distributed by the organization in knowing the information about the business.
+	
+In case of static web application, always the application dispatches/renders the same output irrespective of the number of times the user is sending the request in browsing the application
+
+2. dynamic web application
+In dynamic web application, the enduser along with browsing the informational pages/html pages in accessing the information about the business, he can even interact with the application passing data as an input asking the application to perform operation and return the dynamic response back to the user.
+	
+These applications are developed by the organizations, allowing the endusers to avail business services of the business at the comfort of the customer. Almost every web application in the world is an dynamic web application like
+1. online ticket reservation system
+2. food order applications
+3. ecommerce applications
+
+How does these dynamic web applications works?
+In java the developers uses the jee technology like servlets/jsps or third-party frameworks like structs/spring framework in building web applications.
+	
+upon developing these applications, those must be deployed on to the java servers (jee servers/servlet containers). The process of placing the application developed by the developer to the server to make the application accessible is called "deployment".
+	
+The developer develops the application and delivers it to the devops engineer, and it is the responsiblity of the devops engineer to deploy the application on to the web server.
+	
+War file
+---------
+Incase of java web application, the application should be packaged into an special packaging standard called "WAR", stands for web application archieve and deploy it onto the web server like (Tomcat)
+	
+Typical structure of an java web application project
+project (directory)
+|-src
+	|-*.java (sourcecode)
+|-WebContent
+	|-WEB-INF (protected)
+		|-lib
+			|-*.jar
+		|-web.xml (holds the info about the programs)
+  |-html/jsp
+	|-css
+	|-js
+	|-images
+	|-fonts
+	|-icons
+	|-audio
+	|-videos	
+|-bin
+	|-*.class
+|-dist
+	|-*.war
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+Kubernetes (k8s)
+----------------
+Kubernetes is an container cluster manager used for managing, monitoring and scaling containerzied applications on a clustered infrastructure.
+	
+To better understand the purpose or usage of Kubernetes it will be good to know the basics of Microservices application and their architecture.
+	
+	
+There are 2 types of applications are there
+1. Monolithic Application
+2. Microservices Application
+
+1. Monolithic Application
+An Enterprise Large-scale business system/application consists of several functional areas.	All of these functional areas are also even termed as modules are built into one single sourcecode project and will be build and packaged into one single deployable artifact which is called "Monolithic Application Architecture".
+	
+advantages:
+1. everyone in the team knows all the modules/functionalities of the whole system, thus any one can work on any of the modules of the system
+2. easy to build, package and deploy the application
+3. scalability can be achieved very easily by deploying one more instance of the application on another server/computer
+
+dis-advantages:-
+1. as the enterprise large-scale application is huge in nature that comprises of several modules/functionalities aspart of it, the developers find it very complex to understand the whole system and often find it very difficult to work on it
+
+2. Integrated development environments (IDEs) becomes very slow in handling such a huge code, that kills the developers time in developing the application
+
+3. overloaded server runtimes (tomcat/weblogic/websphere..) they take more time in deploying and starting up the application and even shutdown as well. So developing and debugging the application is very slow.
+
+4. Monolithic applications supports only horizontal scaling, which means the whole/entire system should be scaled on one more computer
+  1. even though the load on one module is high we need to scale the entire system due to which the cost of scalability will be very high
+  2. we cannot customize the computing resources in scaling a specific module/functional area of the system
+--------------------------------------------------------------------------------------------------------------------------------
+Microservices Application Architecture
+--------------------------------------
+The Enterprise large-scale application that comprises of several functionalities are broken down into smaller microservices applications based on few characteristics
+1. loosely coupled
+2. independently deployable
+3. highly scalable
+4. high available
+5. resilient
+6. collaborative services
+that can be developed by multiple independent parallel collaborating teams.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

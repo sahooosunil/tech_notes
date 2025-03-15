@@ -1,0 +1,19 @@
+
+1. docker network create covido_ntw
+2. docker volume create covidomysqlvol
+3. run the mysql server container by mouting the docker volume to /var/lib/mysql/ directory of the container
+docker container run --name covidomysqldb -v covidomysqlvol:/var/lib/mysql:z --network covido_ntw -e MYSQL_ROOT_PASSWORD=welcome1 -d mysql:8.3.0
+
+4. create database schema inside the mysql container
+docker cp src/main/db/covidodb.sql covidomysqldb:/tmp/
+docker container exec -it covidomysqldb /bin/bash
+#mysql -uroot -pwelcome1 < /tmp/covidodb.sql
+
+msql -uroot -pwelcome1
+mysql:/> show databases;
+we should see covidodb
+
+then exit from mysql and container
+
+5. goto application.yml and modify the variables based on mysql instance that we launched
+6. docker container run --name covido --network covido_ntw -p 8080:8080 -d covido:1.0

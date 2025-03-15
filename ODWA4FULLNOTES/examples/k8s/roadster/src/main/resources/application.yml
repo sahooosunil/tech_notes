@@ -1,0 +1,25 @@
+server:
+  port: 8082
+preferences:
+  city: Hyderabad
+  origin-country: India
+  age: 35
+  international-places: true
+  gender: Male 
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp  
+management:
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true  
+  endpoints:
+    web:
+      exposure:
+        include:
+        - health
+        - info          

@@ -1,0 +1,23 @@
+---
+# tasks file for apache2site
+- name: install apache2 server
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+  become: true
+#- name: copy site
+#  copy:
+#    src: files/ninestars
+#    dest: /var/www/
+#    access_time: preserve
+#    modified_time: preserve 
+#  become: yes
+- name: create site configuration file
+  template:
+    src: templates/apache2site.conf.j2
+    dest: "/etc/apache2/sites-available/{{site_dir}}.conf"
+  notify:
+    - enableSite
+    - reloadApache2
+  become: yes

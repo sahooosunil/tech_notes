@@ -1,0 +1,98 @@
+How to host the static website using apache2 server on ubuntu guest machine?
+1. setup an ubuntu virtual machine in oracle virtualbox with 
+	1.1 networking mode: NAT 
+	1.2 port forward: 80 (host) -> 80 (guest)
+easy way to setup the virtual machine with Nat + Port forwarding = use vagrant
+
+2. install apache2 server
+sudo apt update -y
+sudo apt install -y apache2
+
+apache2 :
+1. is an packaged software that is distributed aspart of ubuntu repositories, so we can use apt tool for installing it
+2. the apache2 will be configured as initd service by apt tool itself
+
+sudo systemctl status apache2
+
+3. to host the static web applications, we need to copy the website directories into the apache2 server machine under the below directories
+/var/www
+|-crazyeats (www.crazyeats.com)
+|-toyland   (www.toyland.com)
+
+/var = stands for variable large files
+/var/www = an standard directory in linux to host static websites
+
+4. write apache2 site configuration files for configuring virtual host configurations
+
+upon installing apache server on ubuntu operating system, it will be installed with default configurations placed under
+/etc/apache2
+     |-sites-available
+		 	|-virtual host configuration files per each site we want to host
+		 |-sites-enabled
+		 
+now we want to host @2 websites so we need to write @2 virtualhost configuration files under /etc/apache2/sites-available
+
+cd /etc/apache2/sites-available/
+#1	
+sudo touch crazyeats.conf
+vim crazyeats.conf
+
+<VirtualHost *:80>
+   ServerName www.crazyeats.com
+	 DocumentRoot /var/www/crazyeats
+</VirutalHost>
+
+#2
+sudo touch toyland.conf
+vim toyland.conf
+
+<VirtualHost *:80>
+   ServerName www.toyland.com
+	 DocumentRoot /var/www/toyland
+</VirutalHost>
+
+
+5.
+we need to enable the sites we have configured above using below commands
+sudo a2ensite crazyeats
+sudo a2ensite toyland
+
+sudo systemctl daemon-reload apache2
+--------------------------------------------------------------------------------------------------------------------------------------
+
+How to host an static web application through touch-less automation?
+	
+
+
+		 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

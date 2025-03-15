@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: retailstoreconfigmap
+data:
+  distributorNetworkHost: distributor-network-service
+  distributorNetworkPort: "8080"

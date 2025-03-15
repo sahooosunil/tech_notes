@@ -1,0 +1,260 @@
+How many levels at which we can declare the variables in ansible?
+There are 7 different levels at which we can declare variables in ansible
+1. ansible global settings (/etc/ansible/ansible.cfg)
+2. inventory variables
+		- predefined variables
+		- user-defined variables
+	2.1 global
+	2.2 host-level
+	2.3 group-level
+3. playbook variables
+4. vars_files
+5. extra-vars
+6. register variables
+7. ansible magic variables (or) ansible facts
+
+
+How to pass the variables with values dynamically while running the playbooks in ansible?
+There are 3 ways we can pass dynamic values while running the playbooks
+1. vars_files
+2. extra-vars
+3. playbook variables
+
+2. extra_vars
+In the playbook we can declare modules with variables as an input and while running the playbook we can supply the values via extra-vars which is command-line inputs
+
+Let us create a playbook that creates an new linux user with variable values supplied thru --extra-vars
+
+adduser-playbook.yml
+---
+- name: create new linux user play
+  hosts: all
+  tasks:
+    - name: create new user
+			user:
+        name: "{{linuxuser}}"
+				uid: "{{uid}}"
+				create_home: "{{create_home}}"
+				shell: "{{shell_type}}"
+				state: present						
+			become: yes	
+...
+
+Now while running the playbook we can supply the values through command-line using --extra-vars var1=val1 --extra-vars var2=val2 ...
+	
+ansible-playbook -i hosts.yml --extra-vars linuxuser=joe --extra-vars uid=1006 --extra-vars create_home=yes --extra-vars shell_type=/bin/bash adduser-playbook.yml
+
+
+#2. declare local variables in playbook
+local variables in the playbook is similar to declaring local variables in a program, so that we can reuse the values by referring those variables across different places within the playbook
+
+newfile-playbook.yml
+---
+- name: new file play
+  hosts: all
+	vars:
+    owner: vagrant
+		group: vagrant
+		perm: 0655
+	tasks:
+    - name: create empty file
+		  file:
+        name: "{{filename}}"
+				owner: "{{owner}}"	
+				group: "{{group}}"
+				mode: "{{perm}}"
+				state: touch	
+...
+
+most of the time owner, group and perm with which we want to create files would be same, only the filename will be changing for each run/execution of the playbook. So instead of passing group, owner and perm using --extra-vars we can declare them as local variables inside the playbook with values assigned. So that we reuse these variables across the modules/tasks of the playbook
+
+ansible-playbook -i hosts.yml --extra-vars filename=f2.txt newfile-playbook.yml
+
+3. using vars_files
+we can pass variable values as input dynamically while running the playbooks using --extra-vars, but everytime when we launch the playbook we need to type variableNames and values in the command-prompt so that
+1. the command goes quite lengthy if there are more variables, thus making it difficult to enter
+2. there is always a chance where something might go wrong while entering the variables with values in command-prompt
+3. memorizing these variableNames to pass the values is challenging
+
+so to overcome the problem we can define all the variables in an vars yml file and refer inside the playbook. So each time while running the playbook if we want to execute with different values modify the vars file before execution
+
+write a playbook for registering and enabling an service using service unit file
+
+newservice-playbook.yml
+-----------------------
+---
+- name: new service play
+  hosts: all
+	vars_files:
+    - service_vars.yml
+	tasks:
+		- name: copy service unit file
+		  copy:
+        src: "{{servicefilename}}"
+				dest: /etc/system/systemd
+			become: yes
+		- name: reload service
+		  service:
+        name: "{{servicename}}"
+				state: reloaded
+			become: yes
+		- name: enable service
+		  service:
+        name: "{{servicename}}"
+			  enabled: true
+			become: yes		
+...
+
+service_vars.yml
+servicefilename: memorymonitoring.sh
+servicename: memorymonitor
+--------------------------------------------------------------------------------------------------------------------------------------
+6. register variables
+when we ask the ansible controlnode server to execute a playbook, it reads all the tasks/modules of the playbook from top-bottom and transfers them over the ssh to the managed nodes, executes them locally and captures the output of these modules which is in json format and transfers back to the control nodeserver to display
+
+if we wanted to capture the output of an module execution to pass it as an input to another module in the playbook, we can have these output stores by using an register variables. 
+The register variables are the dynamic variables that are created by the ansible, during the execution of the playbook when defined.
+we can even use these register variables, to capture and print the module output for debugging.	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,66 @@
+Network topologies
+------------------
+Network topologies refers to the way the computers are inter-connected with each other over an network
+There are 2 types of network topologies are there
+1. Logical topologies
+2. Physical topologies
+
+1. Logical topologies
+The logic topology indicates the way the data is being transferred between the computers within the network
+
+2. Physical topologies
+The way the computers are inter-connected with other physically forming the network refers to Physical Topology
+
+There are 5 different topologies are there in inter-connecting the computers
+1. Bus topology
+2. Ring topology
+3. Star topology
+4. Mesh topology
+5. Hybrid topology
+
+1. Bus topology
+----------------
+In bus topology a backbone cable will be laid inter-connecting all the computers across network. Each computer is tapped or pierced into the backbone cable forming the network.
+A computer inorder to send the data to another computer within the network, should drop the data onto the backbone cable, so that it would transmitted from one end to the another end of the cable. During the transmission each computer that is connected to the backbone cable will receive the data, it looks for the destination computer address, and if it does not belongs	to it, it ignores the data and the data packet moves to the other computers on the network. Always the data is moved in uni-directional only. At any point of time only one  computer can transmit the data over the network otherwise it leads to data collision.
+	
+advantages:-
+1. Easy to setup the network and quick to inter-connect the computers
+2. very less hardware devices are required in estabilishing the network
+3. The cost of setting up the network is very less
+4. Troubleshooting the network is easy
+
+dis-advantages:-
+1. single-point of failure, means if the backbone cable fails, the whole network goes down
+2. not suitable for inter-connecting large group of computers because
+	2.1 the signals gets degraded or lost over the transmission if the length or the distance between the computers to be transmitted is huge
+	2.2 The more the number of computers are connected, it generates more amount of traffic, that leads to collisions and lost of data over transmission
+	2.3 The more the computers are connected, the performance the network will be degraded 	
+3. less secured, as the data moves along though all the computers/hops on the network before it reaches to the destination computer.
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

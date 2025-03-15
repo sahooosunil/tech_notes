@@ -1,0 +1,225 @@
+How to create the environment variables permanently on the linux operating system?
+To launch the bash terminal with various different configurations/settings we need to use bash profiles. There are bunch of configuration files available, that we can use for customizing the way we want to launch the bash shell
+
+There are 2 types of terminal/shells are there
+1. interactive shell
+2. non-interactive shell
+
+For both these shells there are different configuration files (bash profile files) provided by the linux allowing us to configuration and apply the settings
+1. /etc/profile = only the root or the super user can modify the configurations or settings here, and are applied across all the users of the linux machine
+2. ~/.bash_profile = for interactive shell logins, ad the settings/configurations are applied only to the user level
+3. ~/.profile      = in the absence of ~/.bash_profile the settings are applied
+4. ~/.bash_login   = same as ~/.bash_profile but will be applied in the absence of ~/.bash_profile only
+5. ~/.bashrc       = for non-interactive shell logins
+-----------------------------------------------------------------------------------------------------------------------------------
+Binary Software Distribution
+The Binary Software distributions are the software applications developed by the developer, upon testing/certified for release without packaging them into standard installable package, the compiled binaries are directly distributed to the public release.
+	
+Why does the compiled binaries are released directly?
+There are few platform independent programming languages, using which if we develop the software application, upon compiling they produce platform (OS) independent executable code, that can be distributed and executed on any operating system. Such binaries rather than packaging them into operating system packaging standard, since it is a common binary executable the vendors distribute them as direct binary distributable software packages
+
+usually the binary distribution software packages are packaged as .tar.gz or .zip files, the user has to download these compressed software packages, and use them. since these are not bundled based on standard packaging format, these cannot be installed through package managers or package installers.
+	
+so the enduser by himself should be able to download, extract and launch the software application manually. The instructions in lauching the software application, entrypoint program information is provided by the software vendor itself.
+	
+java software is distributed in #2 ways
+1. repository based packaged distribution
+2. direct downlodable binary distribution as well
+-----------------------------------------------------------------------------------------------------------------------------------
+Symbolic Links
+--------------
+Symbolic Links are in-short called as symlinks, the symlinks are the pointers to the original file/directory of the Filesystem of the computer, these are similar to shortcuts in windows operating system.
+There are 2 types of symlinks are there
+1. softlink
+	1.1 softlinks can be created for both file or a directory
+	1.2 the permissions of the softlink file is different from the original file, always the softlink will be created with full/all permissions irrespective of original file permissions pointing to the original file. when the user while trying to access the original file/directory through softlink, the permissions of the original file are only applied
+	The permissions for the soft symlink is created and defaulted to (rwxrwxrwx) and cannot be changed as there is no importance of these permissions. because only the original file permissions are used across
+	1.3 we can create softlinks for the files across the filesystems
+	1.4 inode address of the original file and symlink file are n different
+	1.5 the softlinks are broken when the original file has been modified or re-allocated to a different location
+		
+2. hardlink
+	2.1 hardlinks can be created only for files and cannot be created for directories
+	2.2 hardlinks can be created only for the files of the local filesystem only and cannot be created for remote files of another filesystem
+	2.3 The file permissions of the hardlink files and the original file are always same and if we modify the original file permissions it reflects the hardlink file also
+	2.4 inode address of hardlink and original file are same
+	2.5 if the move, modify or rename the original file, the hardlink will not be broken
+	
+
+
+how to use symlinks:
+apache-tomcat-9.0.8-bin.tar.gz
+
+mkdir /middleware/
+tar -xvzf apache-tomcat-9.0.8-bin.tar.gz .
+		
+/etc/profile
+export PATH=$PATH:/middleware/apache-tomcat-9.0.8/bin
+bin/
+	|-startup.sh
+	|-shutdown.sh
+	|-add-user.sh
+	|-
+
+startup.sh
+shutdown.sh
+
+PATH=
+	/bin
+	/sbin
+	/usr/bin
+	/usr/sbin
+	/usr/local/bin
+	/usr/local/sbin
+	
+ln -s /middleware/apache-tomcat-9.0.8/bin/startup.sh /usr/bin/tomcatstart.sh
+ln -s /middleware/apache-tomcat-9.0.8/bin/shutdown.sh /usr/bin/tomcatstop.sh
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

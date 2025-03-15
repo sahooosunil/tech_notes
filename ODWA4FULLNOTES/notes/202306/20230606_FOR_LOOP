@@ -1,0 +1,207 @@
+There are 3 types of loop control statements are there
+1. while loop
+2. for loop
+3. until loop
+
+2. for loop
+------------
+for loop is also an loop control statement which is used for executing a block of code repeatedly at a point/place within the program. The for loop is designed majorly for iterating over the fixed list of values (which are also called as "items"), but we can still use for loops for counter based iterations as well.
+	
+From the above we can understand there are 2 forms of for loop are there:
+1. loop through fixed list of values
+2. counter-based for loop
+
+1. loop through fixed list of values
+here we iterate over a fixed list of values taking each value as an input to perform operation using it. These list of values are called items. we drew/take each item from the list of items one by one and using which we perform operations on that item.
+syntax:
+
+for VAR IN ITEMS
+do
+	statements
+done
+
+1. wap to print 1 to 10 numbers sequentially
+printForNNumbers.sh
+-------------------
+#!/bin/bash
+for I in 1 2 3 4 5 7 8 9 10 
+do
+	echo "$I"
+done
+----------------------------------------------------------------------------------------------------------------------------------
+2. wap to add N given numbers non-iteractively
+
+sumOfNNumbers.sh
+-----------------
+#!/bin/bash
+NARGS=$#
+if [ $NARGS -lt 1 ]; then
+	echo "atleast 1 argument is required"
+	exit 0
+fi
+SUM=0
+for ARG in $@
+do
+	SUM=$[SUM+ARG]
+done
+echo "SUM : $SUM"
+
+./sumOfNNumbers.sh 10 34 29 49
+-----------------------------------------------------------------------------------------------------------------------------------
+Most of the time the for loops are used for iterating over the list of files/folders of the FileSystem.
+for eg.. we want to count no of files including the sub-directories within the given directory, we can easily iterate over all the list of files/directories in the given directory using for loop
+
+~/products
+	|-electronics
+		|-televisions.txt
+		|-refregirators.txt
+		|-microwave.txt
+		|-lights.txt
+	|-fashion
+		|-mensjeans.txt
+		|-womenclothes.txt
+		|-kids.txt
+	|-homeappliances
+		|-utensils.txt
+		|-tools.txt
+		
+./countfiles.sh /products/electronics/		
+
+countfiles.sh
+-------------
+#!/bin/bash
+
+NARGS=$#
+if [ $NARGS -ne 1 ]; then
+	echo "error! directory name required"
+	exit 1
+fi
+
+DIR_NM=$1
+if [ ! -d $DIR_NM ]; then
+	echo "error! not a directory"
+	exit 1
+fi
+CNT=0
+	
+for F in "$DIR_NM/*"
+do
+	if [ -f $F ]; then
+		CNT=$[CNT+1]
+	fi
+done
+echo "no of files: $CNT"
+---------------------------------------------------------------------------------------------------------------------------------
+#4. wap to delete all the empty files within the given directory
+
+deleteemptyfiles.sh
+-------------------
+#!/bin/bash
+NARGS=$#
+
+if [ $NARGS -ne 1 ]; then
+	echo "error: directory is required"
+	exit 1
+fi
+
+DIR_NM=$1
+if [ ! -d $DIR_NM ]; then
+	echo "error: not a directory"
+	exit 1
+fi
+
+for F in "$DIR_NM/*"
+do
+	if [ -f $F -a -z $F ]; then
+		rm $F
+	fi
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

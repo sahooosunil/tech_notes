@@ -1,0 +1,104 @@
+Software Package Management
+
+How does the software application has to be distributed to the enduser/customer?
+if we deliver the software application as an single-packaged distribution file along with documentation describing how to launch the application	it is not sufficient, because the enduser/customer has to unzip/unpack the software and copy into the Filesystem directory and manually launch the program by reading the documentation, which is an tedious job in running an application
+
+From the above we can understand, unless we pass the required information as an input the underlying operating system, it cannot run the application, but the enduser dont know the details in executing the application, so it is the responsibility of the operating system to provide a mechanism to the enduser helping them to easily run the software application that delivered by the developer
+
+The operating system has provided packaging standards which is called "packaged software distribution". The developer instead of distributing an .tar/.zip of a software application, he has to package the software application based on the operating system defined packaging standard that contains
+	1. the software application binaries
+	2. information about the software application (metadata) like
+		2.1 author
+		2.2 manufacturer		
+		2.3 license
+		2.4 supported platforms
+		2.5 version
+		2.6 documentation if any applicable
+	3. entrypoint program instructions
+	4. instructions in running/lauching the application
+and deliver this operating system standard packaged application to the enduser
+
+
+upon delivering the package software application, the enduser cannot directly run it on the underlying operating system, he has to perform below steps in running the application
+1. extract the software package onto the FileSystem of the computer
+2. pass the relevant instructions to the underlying operating system to run the software application by reading the instructions file written the developer
+
+again it looks like we are back to the original problem of running an software application is still a difficult job for the enduser, so to overcome this problem the operating systems has provided softwaer package manager tools or installers
+	
+every operating system provides tools like package managers / installers that takes the packaged software file as an input and does the below.
+	1. extracts the packaged software file and copies into the filesystem directory location of the computer
+	2. reads the instructions contained in the packages software and stores them into the operating system registry of the computer
+	3. creates an shortcut, containing the instructions in launching the application
+everytime the enduser wants to run the software application, he needs to simply run the shortcut that has been created during the installation, that kickoff the execution of the program by the operating system by reading the program instructions from the registry
+---------------------------------------------------------------------------------------------------------------------------------	
+The software packaging standards and the installation tools provided by the operating systems are different from one to the other operating system, what is the reason for having different packaging standards and installations tools across the operating system?
+	
+	
+	
+	
+.exe/.msi = packaging standards of windows operating system
+it contains application binaries compiled to be executable on windows operating system along with instructions in running the application
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

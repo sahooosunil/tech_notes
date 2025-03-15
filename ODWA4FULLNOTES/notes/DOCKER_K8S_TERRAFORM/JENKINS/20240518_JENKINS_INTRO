@@ -1,0 +1,183 @@
+Jenkins
+--------
+What is devops?
+A change in culture, and adoption of new tools and technologies for fast-paced application development and delivery 
+
+
+For fast-paced development and fast-paced delivery we need to adopt ci/cd process in deliverying the application. These are total 3 phases 
+1. continous integration
+2. continous deployment
+3. continous delivery
+by adopting the ci/cd process the development and delivery of the application can be improved alot.
+
+	
+1. continous integration
+Continous integration is about performing a bunch of quality checks on the code, that is developed by the developer and before allowing the him to merge the code with master/develop branches. Through continous integration we ensure the stability and the quality of the code being allowed into our main/master code base. Whenever the developer pushes the code into the feature branch and creates an PR for merging into master/develop, before allowing the PR to be merged by the developer, the Continous integration pipeline will be triggered that performs a series of checks on the code within the feature branch like:
+1. unit tests
+2. code coverage
+3. code review
+4. security testing
+once all the checks are passed and the build produces the artifact, it will be pushed into the artifactory repository so that it will be available for deployed on the next envs.
+	
+2. continous deployment
+The continous deployment is the process of releasing the feature that is developed and merged by the developer into master/develop to the qa environment for further testing. upon merging the code into master/develop branch the continous deployment pipeline will be triggerred that performs series of operations in deliverying the code to the qa
+ 1. pull the artifact from artifactory repository
+ 2. deploy the code onto the target env
+ 3. run the integration-tests
+   3.1 if integration-tests passed, then release the env for testing
+	 3.2 if integration-tests failed, rollback the system to the last goodluck state
+
+3. continous delivery
+The continous delivery is the process of releasing the tested/certified code into the production env. This process differs from type of application to another.
+		 
+For eg.. 
+		 3.1 A mobile = delivery refers to releasing the new version of the mobile app into playstore or app store, so that customer will be able to update
+		 3.2 Software Application (SaaS) = the newer version of the application will be deployed onto the production
+		 
+There are lot of continous integration tools are available in market like
+1. Jenkins
+2. Hudson
+3. Bamboo
+4. Concourse
+5. Teamcity
+etc
+
+among them the Jenkins is widely used and popular in the market.
+		 
+Jenkins Architecture
+---------------------
+Jenkins follows the master & slave architecture. The Jenkins will be installed on the Central Server Computer, it provides an
+console access. Users can login, create jobs and schedule them for execution. The Jenkins master stores all the information about the jobs and their execution information within the persistence store of it.
+	
+To the Jenkins master we can attach slave nodes, each slave node will be installed with an Jenkins Agent Software through which
+the Jenkins master communicates with the slave for running the jobs.
+	
+When we ask Jenkins master to execute a job, it identifies one of the slave node that is available for performing the build and ask the corresponding agent running on the slave to execute job, since jenkins distributes the jobs and executes them across the slaves, it is highly distributable and scalable.
+	
+Features:
+1. Highly scalable = because of its master/slave architecture it is highly-scalable. We can attach any number of slave nodes to the master, allowing him to schedule/distribute the jobs across these slaves of the cluster.
+	
+2. Scripted Pipelines
+The build steps/activities we wanted to perform in building, deploying and delivering the project can be scripted and versioned aspart of the sourcecode repository. upon asking the Jenkins master to execute the build for a project, it will pull the scripted pipeline code from the git server directly and executes the job/build. With this approach there are lot of advantages:
+	2.1 The pipeline code can be versioned, so that we can easily keep track of the changes that has happened to the pipeline and can understand how the project has been evolved to the current state by looking through the versions
+	2.2 developers can collaborate in writing the pipeline instructions
+	2.3 The devops engineers can use IDE of their choice in writing the pipeline instructions, there are not being forced to write the instructions in jenkins console
+	2.4 since the code is residing inthe git repository, we can take this across any envs in creating/executing the jobs
+	
+3. plugin-based architecture
+Through plugins we can add new features into the Jenkins by installing new plugins to support diferent types of builds
+4. We can establish parent-child relationship between the jenkins jobs
+5. We can run multiple pipelines in parallel for faster build and deliveries
+-------------------------------------------------------------------------------------------------------------------------------
+How to install Jenkins?
+To install and configure jenkins env we need atleast 3 machines. 1 Machine for Jenkins master and 2 Slave nodes. These machines can be physical servers or cloud compute instances or virtual machines as well. 
+	
+The quickest way to setup Jenkins environment is use Virtualization and through Vagrant.
+	
+Let us setup the virtual machines with Vagrant
+1. We need 3 machines, that can be done by writing multi-machine vagrant file
+	1.1 Master
+	1.2 2 slave Nodes
+	
+2. Networking
+	1. Master Node
+		NAT Network + Port Forwarding
+		Private network (Master-Slave communication)
+	
+	2. Slave Node
+		Nat Network (public network)
+	  Private Network
+
+~/jenkinscluster:/>
+Vagrantfile
+------------
+Vagrant.configure(2) do | config |
+	config.vm.define "jenkinsmaster" do | jm |
+		jm.vm.box = "ubuntu/focal64"
+		jm.vm.network "private_network", ip: "192.168.10.10"
+		jm.vm.network "forwarded_port", guest: 8080, host: 8080
+		jm.vm.hostname = "jenkinsmaster"
+		jm.vm.provider "virtualbox" do | vb |
+			vb.cpus=2
+			vb.memory=2048
+			vb.name="jenkinsmaster"
+		end
+	end
+	%w{slavenode1 slavenode2}.each_with_index do | nodename, index|
+			config.vm.define nodename do | slavenode |
+				slavenode.vm.box = "ubuntu/focal64"
+				slavenode.vm.network "private_network", ip: "192.168.10.#{index+11}"
+				slavenode.vm.hostname=nodename
+				slavenode.vm.provider "virtualbox" do | vb |
+					vb.cpus=2
+					vb.memory=2048
+					vb.name=nodename
+				end
+			end
+	end
+end
+
+goto the Vagrantfile directory and type vagrant up
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,209 @@
+#5. sed
+--------
+sed stands for streaming editor. it is used for processing text from a file or STDIN and supports 3 types of operations on the text content.
+1. print
+2. delete
+3. substitute or replace a given text with another content
+
+#1. 
+sed '' filename = print the entire contents of the file similar to cat
+if we dont provide any option to sed, by default it prints
+
+The sed has provided symbols to indicate operation/action to be applied on the text content
+1. p = print
+2. d = delete a text
+3. s = substitute specified text with another text
+
+printing
+--------
+#2. 
+sed 'p' filename = sed prints the contents twice, because default option is print and we also explicitly asked to print so it prints twice
+
+employees.txt
+-------------
+e0383,smith,developer,6,28300,contractor
+e9283,steve,devops engieer,3,23000,permanent
+ec938,mark,senior developer,9,34000,contractor
+e8739,adrew,developer,1,22000,permanent
+
+2.1 
+sed -n 'p' employees.txt = -n no default printing
+	
+2.2 
+sed -n '2p' employees.txt = print 2nd line only
+
+2.3 
+sed -n '2,5p' employees.txt = print from line#2 to line#5 only
+
+2.4 
+sed -n '2,+3p' employees.txt = from 2nd line print next 3 lines
+
+2.5 
+sed -n '2~3p' employees.txt = print the lines starting from 2 and skip every 2 lines from there and print rest of the file (~n=indicates lines to skipped after each line being printed)
+-----------------------------------------------------------------------------------------------------------------------------------
+#2. delete
+-----------
+The sed takes the content of a file apply the actions on in-memory contents and writes the output to the STDOUT (TTY) by default without modifying the source file, that is why it is called "streaming editor"
+	
+sed '3d' employees.txt = deletes the 3rd line and prints the rest of the contents (in-memory only)	
+we can use all the options we used in 'p' for 'd' as well in specifying the lines on which operations to be applied
+
+if you want to modify the original file contents directly we need to use -i option indicates inline edit
+-----------------------------------------------------------------------------------------------------------------------------------
+#3. substitute or replace a specific content in the file
+3.1 
+sed 's/text1/text2/' filename
+sed goes line by line within the given text file, searches for the 'text1' content. If found it replaces the 'text1' with 'text2' ignoring the other occurences of the 'text1' in the same line and moves to the next line
+
+in-short: per each line only 1st occurence will be replaced
+
+note: sed only applies the operation on in-memory only, if we want to apply on the file we should use -i
+
+change all the contractors in the employee.txt to permanent
+sed 's/contractor/permanent/' employee.txt
+
+3.2 
+replace nth occurence of a text in each line
+sed 's/text1/text2/nth' file
+this will replace every nth occurence of the matching text in the file line by line
+
+3.3 repace all the occurences of the text in the given file
+sed 's/text1/text2/g' file
+-----------------------------------------------------------------------------------------------------------------------------------
+What are the disk management commands are available in linux operating system?
+1. fdisk -l = shows all the disks attached to the computer
+2. lsblk = shows all the block devices attached to the machine
+3. hwinfo
+4. du = disk usage, how much memory a file/folder is consuming on the disk
+5. df = displays usage size also, similar to fdisk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

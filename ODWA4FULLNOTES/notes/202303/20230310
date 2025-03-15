@@ -1,0 +1,56 @@
+What are the features of Linux operating system?
+1. portable = it can run on various different hardware platforms
+2. opensource = freely distributed and modifiable
+3. multi-user and multi-programming operating system = it supports multiple users to access the linux operating system parallel by sharing the underlying hardware resources of the computer. In addition to that it support multiple program to be executed simultaneously or parallely on the computer
+4. hierarchial filesystem
+5. shell = shell is an interpreter program that sits ontop of the kernal of the linux operating system, provides simple/easy to use commands through which we can interact with the kernal of the computer 
+6. Security = Linux operating system offers various different levels of security
+1. user authentication: inorder to grant access to the computer/hardware resources of the computer
+2. file-level security: through which we can control access to the files/folders on the computer
+3. process-level security: where a program launched by a user can only be managed by himself or administrator, but other users of the computer cannot see or modify or manage the programs launched by others.
+hence making linux as more secured operating system.
+-----------------------------------------------------------------------------------------------------------------------------------
+Linux operating system Architecture
+The Linux operating system has 4 layers 
+1. Hardware Layer = it consists of all pheripheral devices like RAM/CPU/HDD etc
+2. Kernal = it is the core component of the operating system, that interacts directly with the hardware resources of the computer
+3. Shell = acts as an interface to the kernal of the operating system, hiding the complexity of kernel functions from the user. 
+4. Utilities = Utilities are the software programs provided by the operating system through which users can interact and perform common operations like
+text editors, searching utilities etc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+	

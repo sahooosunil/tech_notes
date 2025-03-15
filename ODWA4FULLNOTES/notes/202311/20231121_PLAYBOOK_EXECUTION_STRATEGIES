@@ -1,0 +1,73 @@
+
+1. /etc/ansible/roles (global directory)
+2. within the playbook directory inside the roles/ directory place the roles so that those can be used in playbooks
+3. roles_path property within the ansible.cfg file, under this directory we can place the roles
+---------------------------------------------------------------------------------------------------------------------------------------
+Playbook execution strategies
+By default ansible controlnode server executes each task within the playbook on all the hosts listed within the inventory before moving to the next task which is called "linear" execution strategy. if we want to use different strategies we can specify them in the playbook.
+    
+There are 3 strategies supported by the ansible
+1. linear
+2. free
+3. debug
+
+2. free = there is no order guaranteed it runs the tasks in any order on the fleet of the cluster.
+    
+We can apply these strategies either by specifying in playbook file or centrally in ansible.cfg file
+playbook.yml
+---
+- name: play
+  hosts: all
+  strategy: free
+  
+or
+
+ansible.cfg
+[default]
+strategy=free
+
+
+How to achieve rolling update (or zero-downtime patching)?
+There are keywords using which we can apply the execution strategies.
+#1.      
+serial: number
+indicating the playbook should be applied for how many machines in batches
+
+fleet nodes: 10
+
+the serial can take a number or percentage
+serial = 3 = batch of 3 machines at once the playbook should be applied
+serial = 20% = which means out of the number of hosts/servers on the inventory list, count 20% nodes as batch and apply
+
+#2. order
+The order keyword indicates in which order the nodes should be choosen to apply the playbook
+order:
+1. inventory
+2. reverse_inventory
+3. sorted
+4. reverse_sorted
+5. shuffle
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

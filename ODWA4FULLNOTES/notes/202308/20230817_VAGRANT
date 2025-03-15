@@ -1,0 +1,243 @@
+Vagrant Architecture
+There are 5 major components are there in vagrant
+1. Vagrant engine
+2. Vagrant CLI
+3. Vagrant Cloud
+4. Vagrant File
+5. Vagrant BoxFile
+
+
+1. Vagrant engine
+Vagrant engine takes the vagrant file as an input, understands and interprets the machine configuration information described in it and interacts with the underlying hypervisor provider in provisioning and managing the virtual machines
+
+2. Vagrant CLI
+Vagrant CLI is an Command-Line interface tool using which we can interact with the vagrant engine asking to provision, manage the virtual machines running on top of the hypervisor.
+The Vagrant CLI acts as an unified interface through which we can talk to any of the underlying hypervisor providers in managing the virtual machines
+	
+3. Vagrant Cloud
+Vagrant Cloud is the place where the vagrant boxfiles are placed and distributed, so that vagrant engine can quickly download the boxfiles in provisioning the virtual machines
+
+4. Vagrant File
+Vagrant File is the machine configuration file in which the ops engineer has to define the information about the virtual machine to be provisioned by the Vagrant.
+	
+	
+5. Vagrant BoxFile
+The Vagrant boxfiles are prepackaged and compressed virtual disk template files, that contains operating system, software tools and configurations that can be quickly imported in provisioning the virtual machines.
+	
+
+What are the features of Vagrant?
+There are 6 features of Vagrant are there
+1. Networking
+2. Sync Folders
+3. Vagrant Boxfiles
+4. Provider Customizations
+5. Provisioners
+6. Mult-Machine Vagrant
+
+How to install the Vagrant?
+To install the vagrant we need hypervisor provider to be installed on the host machine. The default hypervisor provider that vagrant works with is "Oracle Virtualbox", which is an popular opensource hypervisor provider available in the market.
+
+1. install oracle virtualbox including extension pack (extension pack is mandatory otherwise few features like networking, shared folders etc will not work)	
+2. download the vagrant binary distribution which is "vagrant.msi" and click to install it
+
+How to create an virtual machine using vagrant?
+To create an virtual machine using vagrant we need to create vagrant configuration file in a directory. The directory in which we create an vagrant configuration file is called vagrant project directory. We create virtual machines for running our project, so it would be best practise to create vagrant configuration file inside the project directory itself.
+	
+For eg.. if we are working on a java project, the project directory structure looks as below
+project
+|-src
+  |-main
+		|-java
+		|-resources
+		|-webapp
+			|-WEB-INF
+				|-web.xml
+|-pom.xml
+|-vagrant configuration file 
+
+How to create the vagrant configuration file?
+The vagrant configuration file must and should be written with filename as "Vagrantfile" only and should be kept inside an directory only. In this file we need to write configuration information describing the virtual machine we wanted vagrant to provision.
+	
+The Vagrant configuration files are written in ruby language. Ruby is an programming language, to work with vagrant we dont need to learn ruby language, because we are going to write programming instructions in creating the machine rather we use ruby to define configuration only.
+	
+Ruby language supports DSL Language (Domain Specific Language), which is n english like language using which we can write configuration information easily
+
+
+
+How to create the vagrant file and provision the virtual machine?
+#1. create an project directory
+d:\work\vagrant:/>
+|-firstvagrant
+	|-Vagrantfile
+	
+Vagrantfile
+-----------
+Vagrant.configure(2) do | config |
+	
+end
+
+The vagrant configuration file begins with a config object block declaration. Here we are creating an vagrant configuration object into which we populate the machine configuration information. The vagrant engine reads the configuration that is binded to config object and creates the virtual machine.
+	
+Vagrant.configure(2) = the vagrant configuration version we are using in writing the machine configuration is 2.
+Into the config object the only required configuration we should specify is vm.box = pointing to the vagrant boxfile to be used in creating/provisioning the virtual machine.
+	
+Vagrant.configure(2) do | config |
+	config.vm.box = "hashicorp/precise64"
+end
+
+after writing the above Vagrantfile to bring up the virtual machine we need to navigate to the project directory in the command-line. and run vagrant up
+
+The vagrant engine downloads the vagrant boxfile we specified in the Vagrantfile from vagrant cloud using/importing it creates an virtual machine.
+	
+upon bringing up the virtual machine to access the machine we need to use the command vagrant ssh from the project directory that will ssh you into the created virtual machine.
+-----------------------------------------------------------------------------------------------------------------------------------Instead of we writing the Vagrantfile manually we can quick create/generate the machine configuration file by running vagrant init command. This will generate an Vagrantfile with default configurations/values commented. we can modify these configurations quickly in provisioning an machine
+
+1. create a project directory
+2. go into the project directory and run vagrant init command
+3. open the generated Vagrantfile and edit the configuration values and bring up the machine using vagrant up
+
+
+
+	
+	
+-----------------------------------------------------------------------------------------------------------------------------------
+AWS Cloud platform
+Monday: 8:00 am IST - 9:00 am IST
+duration: 90 days
+pre-requisite: linux, networking, ssh, ufw, initd service
+Fee: 6k (5k) / [4k]
+Yes it is mandatory to join this course
+
+
+	
+	
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	

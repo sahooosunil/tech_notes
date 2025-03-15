@@ -1,0 +1,141 @@
+docker networking
+------------------
+Container networking refers to the ability of containers to connect and communicate with each other or to the host/external network. Containers have networking enabled by default, and they can make outgoing communication/connection. 
+
+Docker supports networking through Network drivers, we can always can write our own network driver and can plugin into the docker engine, so that we have our containers being created withour own network configurations. By default docker engine supports 5 network drivers
+
+1. bridge  = The default network driver, where all the containers connected to the same bridge can communicate with each other.
+2. host    = remove network isolation between the docker container and the host
+3. overlay = Overlay networks are distributed networks that spans across the docker hosts. This network allows all the containers running across any docker hosts to communicate with each other.
+4. IPvLAN  = IPvLAN is an advanced driver that offers full control over ipv6 and ipv4 addresses assigned to the containers. 
+5. macvlan = macvlan allows the containers to appear as physical devices on your network. It allows us to assign each container in the network a unique MAC address.
+6. none    = isolates the container, doesnt attaches to the network.
+	
+1. bridge
+When we create a docker container without specifying any network mode, by default the container will be launched with network mode as "bridge". The containers that are connected to the same bridge can communicate with each other.
+
+If we want to isolate the container from other containers running on the docker host, we need to create our own bridge network and launch the application under our bridge network, so that all the containers running under our bridge network can communicate with each other.
+	
+The docker engine by default provides an bridge network with name "bridge", and all the containers by default are connected to that "bridge" network, so that every container that is running on the docker host can communicate with any other container on the host, thus leaving an security breach. So it is always recommended to create our own bridge network in launching our containers.
+	
+There are lot of advantages of creating our own bridge network, rather than using the default "bridge" that docker engine has provided:
+1. When we run containers on default bridge network, one caontainer can access the other container connected to the default bridge only using ip address of the container, the dns resolution doesnt works. We need to run docker container inspect to know the ip address of the container inorder to communicate with it from another container
+
+Instead if we are using our own bridge network, a container can access the other container using its containername rather than referring its ip address
+
+2. with default "bridge" network, the container cannot be attached or detached to the bridge, if we create our own bridge, we can attach or detach containers while running
+
+3. If we are using our own bridge network, we can customize the network configurations and ip tables using which we want to launch the containers
+
+How to create our own bridge network?
+docker CLI has provided commands to manage/create networks on the docker host:
+1. docker network create bridgeName
+2. docker network rm bridgeName
+3. docker network connect bridgeName containerName
+4. docker network disconnect bridgeName containerName
+5. docker network ls 
+
+while launching the container we can specify the network option or bridge to which the container should be connect as below:
+
+docker container run --name containerName -d --bridge bridgeName image:tag
+
+#2. host
+There is only one host network per docker engine that will be created by default. When we launch the container on host network, the container will be running on the network of the host directly. The host and container can communicate directly with each other. When we use host network we dont need port forwarding to make the containerized application access from the host.
+	
+docker container run --name containerName -d --host image:tag
+
+	
+
+Published Ports
+----------------
+By default (when it is attached to bridge network), when we create a container using docker create or docker run the container doesnt expose any of its application ports to the outside world. Use --publish or -p flag while launching the container to make the container port accessible outside the container.
+This creates an firewall rule in the host, mapping container port to a port on the docker host to the outside world.
+	
+1. -p 8080:80 = Map port 8080 on docker host to port:80 in the container. 
+	http://localhost:8080 -> portforward to container port: 80
+
+2. -p 192.168.10.11:8080:80 = Map port 8080 on the docker host ip 192.168.10.11 to port: 80 container
+
+3. -p 8080:80/udp = Map port: 8080 on the docker host to udp port: 80 of the container
+
+docker container run -p 8081:8080 image:tag
+-------------------------------------------------------------------------------------------------------------------------------
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

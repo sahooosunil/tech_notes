@@ -1,0 +1,55 @@
+How many networking modes are supported by oracle virtualbox?
+7 Network modes are supported
+1. Not Attached
+2. NAT
+3. NAT Network
+4. Bridge
+5. Host-only Network Adapter
+6. Internal Network
+7. Generic Driver
+-----------------------------------------------------------------------------------------------------------------------------------
+ubuntu service or systemd init system
+-------------------------------------
+
+What is ubuntu service, how to manage them using systemd init system?
+
+	
+program (mandatory services)
+want to run a program right after the linux operating system has been started and want to stop, only upon shutting the operating system.
+	
+systemd init system
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

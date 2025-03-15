@@ -1,0 +1,240 @@
+Functions
+---------
+What are functions, why do we need to use functions?
+functions are the way through which we can achieve reusability in shellscript programming. For eg.. if we have a block of code that we wanted to execute at various different places within the shellscript program, we cannot use loop control statements. Because loop control statements are used for repeatedly executing a block of code at one place within the program.
+	
+but here our requirement is to execute a block of code at different places within the program, one way we can achieve it is write the block code at all the places wherever we want to execute it. But this leads to duplication of code, that incurrs lot of maintainability problems like:
+1. if there is change required within that block of code, we need to modify it across all the places wherever we have written the same code
+2. the efforts of making the changes is very high
+3. the cost of making the changes will be very high
+4. time required for implementating the changes is more
+5. if there is a bug creep up within the block of code, it gets duplicated across all the places whereever we have written.
+	
+Instead of duplicating the code across all the places within the application we can make use of functions
+Functions are named codeblock, that is written at one place and can be reused across several different places within the application.
+	
+How to work with functions?
+---------------------------
+While working with functions our shellscript program is divided into #2 blocks of code
+1. main block of code
+2. function block
+
+Always the shellscript program begins execution from main-block only, by default the fnctions will not be executed by default. In order to execute a function we need to call these functions within the main block of code or by any other function within the program.
+	
+1. main block of code = the instructions that we wrote directly within the shellscript program are part of main block of code in the program
+
+2. function block = the instructions that are wrapped inside the function() {} declaration are called function block
+	
+syntax:-
+function functionName() {
+	statement1
+	statement2
+	statement3		
+}
+
+basicfunction.sh
+----------------
+#!/bin/bash
+
+function message() {
+	echo "Good Morning"
+	echo "Good bye!"
+}
+
+#main block code
+echo "main block begins"
+message #refer the function name to call the function or execute the function block of code here
+echo "exiting..."
+	
+
+chmod u+x basicfunction.sh
+./basicfunction.sh
+main block begins
+Good Morning
+Good bye!
+exiting...
+	
+How to call a function?
+within the main block or in another function we can call a function by just referring function name. in the above program we referred message function name in the main block to execute the function
+
+How does the flow of execution of the program takes place while working with functions?
+1. always the shellscript program begins the execution from main block only from top-to-bottom sequentially ignoring function blocks.
+2. within the main block if we have called the function by referring to function name, the program pointer/control goes to the function block and begins execution
+3. upon completion of the lines of code within the function block the control returns back to the nextline code after the function call to the main block and continues to execute until completion
+-----------------------------------------------------------------------------------------------------------------------------------
+
+wap to add #2 numbers and print the sum using function
+
+addNumbers.sh
+--------------
+#!/bin/bash
+function add() {
+	A=10
+	B=20
+	SUM=$[A+B]
+	echo "SUM : $SUM"
+}
+
+#main block
+#1
+add
+
+function arguments
+--------------------
+In the above program we are calling the function "add" at different places within the program, here always the add method will perform addition of #2 numbers A, B with 10, 20 value only and prints 30. but at different places within the program we want to reuse the add but with different values as input, we dont want to add the same numbers across all the places wthin the program. This can be done using function arguments.
+	
+function arguments is nothing but we can call the function by passing our own input values using which the block of code inside the function will perform the operation and produces the output, so that we can reuse the same function at multiple places with our own set of values being passed
+
+How to pass the values as an input while calling the function?
+along with referring function name in calling the function we need to pass values separated by space. for eg.. for an add function to be called with passing A and B value as  input we can do the below
+
+add 10 20
+(or)
+add 40 50
+	
+How to read the values,arguments passed to function while calling within the function?
+we can collect the function arguments using magic/implicit variables within the function using $1, $2, $3...$N similar to program arguments.
+1. $# = returns number of arguments passed
+2. $@ or $* = will allows us to access all the argments
+
+The above program can be rewritten by using function arguments as below.
+	
+functionWithArgs.sh
+#!/bin/bash
+
+function add() {
+  NARGS=$#
+	if [ $NARGS -ne 2 ]; then
+		echo "error! #2 arguments are required"
+		exit 0
+	fi
+	
+	A=$1
+	B=$2
+	SUM=$[A+B]
+	echo "SUM : $SUM"
+}
+#main block 
+add 10 20
+	
+add 30 40
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

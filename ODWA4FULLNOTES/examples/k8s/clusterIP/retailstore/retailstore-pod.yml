@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: retailstorepod
+spec:
+  containers:
+    - name: retailstore
+      image: techsriman/retail-store:1.0
+      ports:
+        - name: tomcatport
+          containerPort: 8081
+          protocol: TCP
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "512Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1024Mi"
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8081
+        initialDelaySeconds: 5
+        timeoutSeconds: 15
+        failureThreshold: 3
+      livenessProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: 8081
+        initialDelaySeconds: 15
+        timeoutSeconds: 15
+        failureThreshold: 3
+      env:
+        - name: distributor_host
+          valueFrom:
+            configMapKeyRef:
+              name: retailstoreconfigmap
+              key: distributorNetworkHost
+        - name: distributor_port
+          valueFrom:
+            configMapKeyRef:
+              name: retailstoreconfigmap
+              key: distributorNetworkPort

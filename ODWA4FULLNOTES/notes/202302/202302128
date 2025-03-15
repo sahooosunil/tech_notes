@@ -1,0 +1,158 @@
+What is the change in culture and adoption of new tools and technologies during the phase of delivery of the application by the ops engineer to speed up the delivery of the application?
+There are different types of applications are there like
+1. standalone/desktop applications
+2. distributed web applications
+3. Mobile applications
+4. Cloud based solutions
+
+The delivery or the release management process would be different from one application to another based on their type. let us explore each of these application types and how does these applications being delivered 
+
+1. standalone application (or) mobile applications
+The Standalone applications or mobile applications will be downloaded and installed at the client devices like 
+1.1 on a computer/desktop/laptop = standalone applications
+1.2 on the mobile/tablet devices = mobile application
+
+aspart of these applications, there will be an update center software will be pre-incorporated while distributing the application, so that each time when there is an new version of the software available, the upgrade tool will takes care of downloading the latest version and upgrades the software on the client system automatically.
+	
+From the above we can understand, the devops engineer dont need to install the software	on any computer/mobile/device, the application binary should be distributed to the world.
+	
+To distribute to the public world, depends on the application
+1. standalone application = the devops engineer has to publish the binary into the public repository so that it would be available for the customer to download
+2. mobile applications = the application binary should be published to play store or apple store depends on the mobile platform, so that customers by themself can browse the application install/update the application on their mobile devices
+
+then how does the continous delivery pipeline will looks like?
+continous integration = code quality checks before releasing it to qa
+continous deployment  = deploying the code for quality testing
+continous delivery    = release the application to the world/customer/enduser
+
+2. distributed web applications
+The distributed web applications are deployed and executed on a central server environment, and the clients will be accessing the application over the network using web browsers. So there are 2 stages in which these applications has to be delivered into the production
+
+1. Initial Release
+If it is the initial release of the application into production, the devops engineer has to gather the requirements in running the application on production from business team and technical architect of the application
+based on that he has to create
+1.1 infrastructure required for running the application
+1.2 install required set of tools and software packages for running the application
+
+based on the environment on which the application is deployed and exposed the process would change:
+The production server infrastructure is created on
+1. datacenter or inhouse
+then devops engineer has to manually procure the hardware resources and configure and install softwares manually to run the application.
+	
+2. cloud environment
+use automation tools like terraform for creating the infrastructure and ansible for installing and configuring the software packages and libraries on that infrastructure
+
+pull the release binary of the software application then deploy it on production environment and run the end-end integration-tests to verify the stability of the application and release it to public world
+
+2. Incase of upgrade or a new version of the software to be release
+1. identify the deltas or changes in the environment to rollout the new version of the software
+2. make necessary changes in the existing terraform code and ansible code to accomodate the infrastructure changes
+3. take the backup of the existing env
+	1. application binary that is running the production
+	2. database
+4. rollout the new version of the application into the production by using rollout strategy
+
+
+In addition the devops engineer has to do more responsibilities like monitoring and maintaining the application on the production environments
+use the tools like app dynamics, nagios, cloud watch, datadog, splunk, promethesus, graphana, dynatrace, etc for monitoring and managing the application in production environment
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,16 @@
+---
+- name: loops play
+  hosts: all
+  vars:
+    products:
+      - rice bag
+      - flour
+      - dhal
+      - sugar
+      - wheat
+  tasks:
+    - name: generate shopping list
+      template:
+        src: shoppinglist.j2
+        dest: shoppinglist.txt
+...

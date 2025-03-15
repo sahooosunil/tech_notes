@@ -1,0 +1,9 @@
+---
+- name: new file play
+  hosts: all
+  tasks:
+    - name: new file
+      file:
+       path: /home/vagrant/filemodule.txt
+       state: touch
+...

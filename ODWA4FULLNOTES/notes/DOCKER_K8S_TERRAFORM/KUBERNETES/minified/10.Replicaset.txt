@@ -1,0 +1,91 @@
+**Types of Controllers in Kubernetes**
+
+Kubernetes consists of four major components:
+1. **Control Plane (Master Node)**
+2. **Worker Node**
+3. **Kubectl (CLI Tool)**
+4. **etcd (Key-Value Store)**
+
+### **Control Plane Components**
+1. **API Server** - Acts as the front-end for the cluster, handling all communication via `kubectl`.
+2. **Scheduler** - Identifies suitable worker nodes for scheduling pods.
+3. **Controller Manager** - Ensures the cluster always meets the desired state.
+
+### **Types of Controllers**
+1. **ReplicaSet**
+2. **DeploymentSet**
+3. **DaemonSet**
+4. **Service**
+5. **Job**
+
+---
+
+### **ReplicaSet Controller**
+A **Pod** is the smallest deployable unit in Kubernetes, running one or more containers that share resources like storage, network, etc.
+
+#### **Limitations of Pods**
+- Creating individual pod manifests for multiple replicas is inefficient.
+- Pods do not restart automatically if they crash.
+
+To overcome these, **ReplicaSet** ensures a specified number of pod replicas are always running.
+
+#### **How ReplicaSet Works**
+- Continuously monitors worker nodes.
+- If replicas are below the desired count, it requests the Scheduler to create new pods.
+- If a pod crashes, a new one is automatically created.
+
+#### **ReplicaSet Specification Example**
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: speedreplicaset
+  labels:
+    env: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      appName: speed
+      version: 1
+  template:
+    metadata:
+      labels:
+        appName: speed
+        version: 1
+    spec:
+      containers:
+      - name: speed
+        image: techsriman/speed:1.0
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+```
+
+### **Managing ReplicaSets**
+1. **List ReplicaSets**
+   ```sh
+   kubectl get rs
+   ```
+2. **Delete a Pod (ReplicaSet will recreate it)**
+   ```sh
+   kubectl delete pod <pod-name>
+   ```
+3. **Scale ReplicaSet**
+   - Modify `replicas` in YAML and apply it:
+     ```sh
+     kubectl replace -f speed-replicaset.yml
+     ```
+   - Edit directly in Kubernetes:
+     ```sh
+     kubectl edit rs speedreplicaset
+     ```
+     (Change `replicas: 2` and save)
+
+ReplicaSet ensures high availability by distributing pods across worker nodes, but it does not guarantee unique node placement for replicas.
+
+---
+
+Would you like to explore **Deployments** next? 🚀
+

@@ -1,0 +1,48 @@
+How does devops helps us in fast-paced application development and delivery?
+Devops recommends us to change the culture and adopt new tools & technologies across the stages of development to delivery of the application to achieve fast-paced development and delivery
+during the time of development, there are bunch new tools and technologies to be adopted and change in the culture in building the application as described below:
+1. understand the requirements
+2. choose the programming language
+3. setup the development environment
+	3.1 use virtualization for creating an isolated development environment
+	3.2 use vagrant for automating the process of creating the virtual machine
+4. choose the process model for development and delivery of the application
+devops recommends us to use agile based scrum methodology for faster-development and rapid delivery of the application. 
+5. use an sourcecode management repository for collaborative application development
+devops recommends us to use GIT repository, since it is
+	1. distributed sourcecode management repository
+	2. it supports better branching strategy when compared with other repository management systems
+6. during the time of development, the developer has to conduct the unit testing before delivery of the application
+devops strongly recommends to use Test driven development (TDD) approach and use unit test automation frameworks for conducting the unittesting for an software application
+
+In addition to automation testing, we need to use tools for verifying the coverage like
+test report = to see how many tests are passed and failed using sure-fire tool
+test coverage tool = to see what percentage of code has been tested using the test automation using jacoco, cobertura and emma
+
+In addition the developer has to use static code analysis tools for code review like sonarcube
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

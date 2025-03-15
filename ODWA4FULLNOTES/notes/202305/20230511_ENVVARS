@@ -1,0 +1,238 @@
+What are environment variables? What is the purpose of them?
+Environment variables are the global variables created at the operating system level, that are accessible across all the programs that are running on the operating system of the machine
+
+There are 2 types of environment variables are there
+1. System variables
+2. User-Defined variables
+
+2. User-Defined variables
+These are the variables created by the user of the operating system, so that the variables can be accessed across all the programs that are running on the operating system machine
+
+How to create/set the value for an environment variable?
+export variableName=value
+
+How to access the value of an variable?
+$variableName
+
+1. System variables
+System variables are the build-in variables or the pre-defined variables created by the operating system itself, that has pre-defined meaning or purpose of usage.
+	
+There is an pre-defined environment variable called "PATH", that is used by the linux operating system in resolving the location of a program to launch or execute it.
+note: environment variables are case-sensitive in linux operating system
+
+PATH is an predefined variable that is created by the linux operating system pointing to default directory locations as below
+1. /bin
+2. /sbin
+3. /usr/bin
+4. /usr/sbin
+5. /usr/local/bin
+6. /usr/local/sbin
+
+since the PATH has been configured by default by the linux operating system pointing to the predefined Linux FileSystem directories, we are able to run all the linux commands/shell utilities without specifying the PATH/location of the program files
+
+How does multiple file system directory locations can be assigned to a PATH variable?
+each directory location should be separated by ":" while appending multiple directories as below
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+when we are configuring the PATH variable withour own directory location, we should not override it, if we override the default linux system commands will not work, so always append our own directory locations along with existing PATH variable value as below.
+	
+~/routines
+ |-daily
+ 	|-quickbytes
+		|-greet.sh
+	
+export PATH=$PATH:~/routines/daily/quickbytes	
+
+How does linux operating system resolves a program to execute?
+whenever we typed a text on the bash terminal prompt, the bash/linux operating system tries to resolve the text by performing the below activities
+1. bash by default looks for any program file with execute permission exists within the current directory of the user, if yes it will executes the program
+
+2. if there is no program file matching with text we typed under the current directory, then it goes the PATH environment variables and picks all the directory locations separated by ":" and looks for is there any program file with execute permission available inthose directories matching with the text we typed on the prompt. if it exists run the corresponding program file instructions
+
+3. if it is not available, throws an error stating unknown command
+
+From the above we can understand, each time when we want to run a program we have 2 options
+1. navigate to the directory location program or use absolute path of the program file to run/launch it
+2. set the PATH environment variable pointing to the directory location of the program file, so that we can run the program from any directory location of the Filesystem of the computer
+
+#2 option seems to be more viable solution than always typing/memorizing the complete location of the program file.
+-----------------------------------------------------------------------------------------------------------------------------------
+	
+How to make the Environment Variables permanent on the machine?	
+The Environment variables that we created on the Bash/Shell Terminal	are local to the terminal and if we close the terminal and reopen the user-defined variables we created are lost
+
+How to make these environment variables permanent on the linux operating system?
+The linux has introduced or provided profiles to configure settings or configuration values using which an user is logged-in to the linux operating system
+
+profiles are settings or configurations or features using which we want to use the machine. its similar to the profiles we have in mobile phones. In mobile phones we can create multiple profiles like office, home etc with different settings like
+	1. ringtones
+	2. wallpapers
+	3. themes
+	4. fonts
+	etc
+so while launching or booting the mobile, we can choose the profile in which it should be started
+
+similarly every linux user can choose to launch the operating system/bash terminal with different configurations, settings or env variables through profiles. There are lot of settings/configurations available aspart of the linux operating system, an user can be allowed to customize the way he wanted to boot/lauch the terminal. 
+We can customize these settings based on the way we logged-in or launched the terminal 
+
+There are 2 types of terminals are there
+1. interactive terminal
+
+2. non-interactive terminal
+within an existing terminal we launched, if we create a new shell inside it then it is called non-interactive terminal
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+---
+- name: add user and configure as sudoer play
+  hosts: all
+  tasks:
+    - name: add jim user
+      user:
+        name: jim
+        uid: 1005
+        create_home: yes
+        shell: /bin/bash
+        password: welcome1
+      become: yes
+    - name: promote as passwordless sudoer
+      lineinfile:
+        path: /etc/sudoers
+        line: 'jim ALL=(ALL) NOPASSWD:ALL'
+        insertafter: '^root.*'
+        validate: '/usr/sbin/visudo -csf %s'
+      become: yes
+...

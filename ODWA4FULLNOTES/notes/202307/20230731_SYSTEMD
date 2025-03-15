@@ -1,0 +1,70 @@
+What is ubuntu service or systemd init system, why do we need to use it?
+There a few mandatory services or activities that has to be performed by the administrator of the linux operating system right from the bootup of the operating system / kernal like
+1. Disk Management
+2. Process Management
+3. Memory Management
+4. Netwoking Services
+5. Monitoring
+etc
+
+To perform these activities the administrator of the linux operating system has to build/use tools/utilities or scripts, and these utility programs/tools has to be started right from the bootup of the operating system and continue to execute until the machine has been shutted down
+
+How to run such mandatory utility programs or tools on the operating system of the computer?
+since these programs are non-interactive and should execute for longer amount of time, we can run them as background processes in Linux operating system. But running these programs as background process has lot of challenges as below:
+
+1. There could lot of utilities/programs that has to be executed right after the bootup of the operating system, having them memorize and running them manually one after the another is an time taking task
+
+2. Many of the times these utilities has inter-dependency between them, the administrator of the operating system/machine has to memorize the inter-dependency between these programs/tools and has to run them in a specific order of the their dependencies which is an very difficult job
+
+3. as these programs are mandatory services, the administrator has to monitor continously to ensure these are always running, incase of crash these programs needs to be restarted by the administrator.
+	
+4. starting, stopping and restarting these programs should be relied on bunch of linux commands which makes it tedious to manage.
+	
+To overcome the above problems in managing and running mandatory programs on the linux system, the linux operating system has provided systemd init service.
+	
+	
+The systemd init service is an software package that helps in managing the programs to run as services on linux operating system. It is an software package that is being developed and distributed aspart of the GNU Linux project initiative and has been adopted by most of the linux distro in market
+	
+kernal
+ - GNU Linux = systemd init servce (opensource initiate package)
+	
+The systemd init system provides #2 major things in managing the programs as services:
+1. Register a program with initd system as service asking the it to monitor, manage and run the program continously
+2. it has provided utilities that help us in managing these services
+
+How to register our program as an service into initd system?
+There are 2 ways a program or a software can be registered as a service in systemd init system.
+1. Through packaged software installation. The manufacturers by themself ships the service unit definition file along with software binaries packaged in the software distribution. So the package managers while installing the software package (like apt, dpkg) will read the definition file and register the software automatically into the systemd init service
+
+2. The administrator of the operating system might have written some software utilities/programs or they could be few software programs distributed as binary software (which are not packaged softwares (zip/.tar.gz)), that might wanted to be registered as services onto the initd system. For such software programs the administrator has to manually write the service definition file describing the information about the program and register it manually onto the initd system by himself.
+	
+
+How to register a program as a service in systemd init system?
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

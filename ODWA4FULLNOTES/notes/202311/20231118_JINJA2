@@ -1,0 +1,157 @@
+1. How to write conditions within the jinja2 template in generating the content dynamically based on the inputs?
+generate an report stating whether a give user is eligible for voterid or not based on the age and generate an HTML file.
+    
+voterreport.html.j2
+<html>
+    <body>
+        <h2>Voter Eligibility</h2>
+        Dear {{user}}
+        {% if age >= 18 %}
+            <p>You are eligible for applying voter id</p>
+        {%else%}
+            <p>You should be 21 years to get an voter id</p>
+        {%endif%}
+    </body>
+</html>
+
+voterid-playbook.yml
+---
+- name: voter id jinja2 if play
+  hosts: all
+  vars:
+    user: joe
+    age: 23
+  tasks:
+    - name: generate voterid report page
+      template:
+        src: voterreport.html.j2
+        dest: voterreport.html        
+...
+
+
+2. How to use loops in jinja2 templates for generating the dynamic content?
+Take the list of products that has to be purchased and display it as an report/output to the user?
+    
+shoppinglist.j2
+Below are the list of products in the shopping list
+{% for product in products %}
+  product: {{product}}
+{% endfor %}
+
+
+shoppinglist-playbook.yml
+---
+- name: loops jinja2 play
+  hosts: all
+  vars:
+    products:
+      - rice
+      - dal
+      - flour
+      - pulses
+      - sugar
+  tasks:
+    - name: generate shopping list
+      template:
+        src: shoppinglist.j2
+        dest: shoppinglist.txt
+...
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Handlers
+When we declare tasks/modules within the playbook, by default the ansible control nodeserver executes all the tasks/modules of the playbook in the sequantial order from top to the bottom on the managed nodes. Few times we wanted to execute a task or a module only when a task has been completed execution successfully. This can be achieved using Ansible Handlers.
+            
+For eg.. whenever there is a change in the configuration file on an server (apache2 server or an tomcat server) we want to immediately restart the server to reflect the changes, this can be done through handlers.
+            
+Handlers are nothing but special type of tasks only,but rather than executed by default aspart of the playbook execution, those will be executed only based on the outcome of the another task of the playbook
+
+---
+- name: play
+  hosts: all
+  tasks:
+    - name: task1
+      module:
+        arg: val
+        arg: val
+    - name: task2
+      module:
+        arg: val
+        arg: val
+      notify:
+        - handler1
+    - name: task3
+      module:
+        arg: val
+        arg: val
+  handlers:
+    - name: handler1
+      module:
+        arg: val
+        arg: val
+...
+
+In the above playbook, ansible control node server executes all the tasks sequentially from top to the bottom, but the handlers declared under the handlers: section would be executed only when a task has notified for execution.
+    
+A task can report multiple handlers to be executed by define list of handlers under notify. 
+    
+note:
+1. an handler of a task will be executed only when the task has reported the status as : changed
+2. all the handlers that are notified by the tasks during the execution of the playbook will be executed at the last after all the tasks in the playbook are completed.
+    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    

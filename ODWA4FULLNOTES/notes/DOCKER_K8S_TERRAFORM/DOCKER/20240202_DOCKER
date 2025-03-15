@@ -1,0 +1,95 @@
+Virtualization
+---------------
+Virtualization is a technology used for creating multiple parallel isolated environment on one single physical machine. It works using Hypervisor software.
+	
+Purpose:-
+it can be used for greatly reducing the I.T infrastructure cost in developing and delivering the software application
+1. organizations can leverage virtualization technology for certifying and delivering the applications by running on multiple parallel virtual machines.
+2. developers can setup multiple envs using which they can work on multiple projects independently
+3. enterprises can package their products into virtual machine images and can distribute to the customers across the world, so that customers can import these virtual machine images in quickly setting up the software product to evaluate it
+4. classical problem: "My code works on my machine" can be completely eliminated by using the help of virtualization technology where developers can setup production like env on their workstation for developing the application using it.
+	
+Containerization
+----------------
+Containerization is a technology through which we can package software application along with its dependent software packages and libraries and run within a container which is isolated from other software applications that are running on the same environment.
+	
+Unlike the virtual machines in which a full blown operating system is being installed dedicatedly on which the application programs runs inside that virtual machine, incase of containerization a thin layer (bins & libs) are backed into the container through which the application programs running inside the container will communicates with the underlying containerization engine in distributing/allocating the physical system resources to the applications that are running inside the container.
+	
+From the above we can understand both virtualization and containerization technologies helps us in running the software applications isolated from each other on one single computer, then which one should be used when, what are the advantages/dis-advantages of these technologies
+
+Virtualization:-
+advantages:-
+1. Incase of virtualization we can install full blow operating system on each virtual machine of our choice, that works independent of the host operating system. Due to which we can easily run different software applications on different operating system environments on one physical server machine itself.
+	
+2. all types of application programs including the ones that requires an dedicate operating system environment to run can also be executed in virtual machine env isolated from another.
+	
+3. all the virtual machines are isolated from each other and runs their own independent operating system, due to which we can achieve highest-level of security, Even the host machine has been compromised still the guest machines are not impacted as each of the virtual machines has their own operating system protecting them.
+	
+4. virtual machines are suitable for deploying and running software applications that can run for any amount of time.
+	
+dis-advantages:-
+1. 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

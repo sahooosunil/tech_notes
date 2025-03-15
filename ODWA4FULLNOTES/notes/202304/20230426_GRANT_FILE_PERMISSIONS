@@ -1,0 +1,146 @@
+How to grant access to a File/Folder to other users of the linux operating system machine?
+By default when we create an user in linux operating system, the user will be created with default group as username group, so that he/she created file will be associated with owner: user and group: user only, so that all the rest of the users of the linux operating system becomes others for the file
+
+There are 2 options left in granting access permissions on a file/folder to other group of users 
+1. while creating the user, associate the user with a group other than the default group (username group) as a primary group
+For eg.. when creating a bob user, rather than associating him with the default group as: bob, assign him to devgroup as a primary group. So that all the files/folders created by bob will be associated with owner: bob and group: devgroup
+now we can control access permissions on file/folder created by the bob by granting them at all #3 levels
+1. owner permissions
+2. group
+3. others
+
+problem:
+all the files/folders created by the bob user by default becomes accessible to the devgroup of users as well, thus making it less secured
+
+2. let the user be created with default group as username group itself, so that by default every file/folder created by an user will become accessible by himself and all the other users of the linux machine becomes others.
+For the specific file/folders that bob wants the devgroup users to access, let the bob change the group of those specific files/folders to devgroup granting the permissions at the group level
+
+1. we have greg user with an primary group "greg" only, now let the greg create an file with name for e.g.. "invoice.txt"
+/home/greg$ touch invoice.txt
+
+when the greg created the invoice.txt file, it will be created by default with owner: greg and group also as: greg only we can verify that using
+stat invoice.txt
+(or)
+ls -l ~/invoice.txt
+
+2. we want to grant access to the file to other specific set of users on the linux machine, first let us create a group specific to users to whom we want to grant access
+
+sudo groupadd devgroup
+
+3. add those users into the above group to whom we wanted to grant access
+sudo usermod -aG devgroup bob
+sudo usermod -aG devgroup joe
+
+if there exist already a group with the users to whom we want to grant permissions in accessing the file we can avoid create a new group like above
+
+4. Now change the group of the file to devgroup, so that we can grant permissions in accessing the file at the group level as well
+chown = stands for change ownership of the file/folder
+
+syntax:
+chown is an super user command that can be executed only by root or sudoers who has access
+
+sudo chown owner:group filename
+if we want to modify the owner & group fo a directory we can specify the directory/ name
+sudo chown owner:group directory/ = but this will not change the owner & group for all the files resides in that directory, if we want to change owner & group for all the files and sub-directories under the given directory we need use -R (recursively)
+	
+sudo chown -R owner:group directory/
+----------------------------------------------------------------------------------------------------------------------------------By default the linux will takes care of assigning the default permissions to a file/folder while creating them for owner, group and others of that file
+How to change the permissions of an existing file/folder in linux?
+Only the root/sudoer or owner of the file by himself can change the permissions for a file/folder, using a command called "chmod"
+	
+chmod = stands for change mode of access which means "permissions" for a file/folder
+chmod supports 2 modes of changing the file permissions
+1. octal mode
+2. symbolic mode
+
+#1. octal mode
+The possible permissions we can grant on a File/Folder is
+1.1 read (r)    = 4
+1.2 write (w)   = 2
+1.3 execute (x) = 1
+	              ----
+	                7
+	              ----
+	
+to 
+1. owner
+2. group
+3. others
+
+7 = indicates we granted all the permissions read, write and execute
+5 = read & execute only
+6 = read & write only
+3 = write & execute only
+
+now we need to calculate the weight number depends on the permissions we want to grant on that file for each level of users and pass it as an input to chmod asking to grant those permissions on that file to owner, group and others as below
+
+chmod owneroctalgroupoctalotheroctal file/folder
+
+chmod 754 invoices.txt
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

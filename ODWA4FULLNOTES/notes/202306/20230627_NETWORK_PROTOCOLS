@@ -1,0 +1,70 @@
+What are protocols, what is the purpose of protocols?
+Protocols are set of rules or guidelines that should be followed by the applications/computers in order to effectively communicate over the network. Protocols provide #4 different activities
+1. The data that is send by the sender will be received by the intended receiver only
+2. even though the physical transmission channel is shared among the group of computers, the protocol gives us the illusion that every computer connected to the network has their own dedicated channel of communication over which they are exchanging the data
+3. protocol ensures no 2 people data is collided over the same channel of communication
+4. end-to-end guaranteed delivery of the data is taken care by the protocol
+
+From the above we can understand any 2 computers/programs to exchange the data over the network effectively must and should require an protocol, that is where OSI Model Layer protocol is introduced.
+	
+How many types of protocols are there?	
+There are 2 types of protocols
+1. Application Protocol = helps in exchanging the data between the applications across the network
+2. Transport Protocol = is about how to transmit the physical bits of data from one computer to the another computer over the network is defined by Transport protocol
+
+The OSI Model Layer protocol comprises of both Application protocol & Transport protocol together to ensure end-end communication takes between the applications across the network
+
+-----------------------------------------------------------------------------------------------------------------------------------
+OSI Model Layer protocol
+OSI stands for "open system inter-connection standard" that allows any 2 computers/programs to exchange the data over the network irrespective of the hardware platform or underlying operating system of those computers 
+
+The OSI Model layer protocol comprises of 7 layers aspart of it
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+These 7 layers defines various different responsibilities that has to be followed by the computers/network devices/software programs in order to exchange the data effecitively over the network
+
+1. Application Layer
+The Application Layer is nothing but it represents an application protocol that should be followed by the software applications to exchange the data.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	

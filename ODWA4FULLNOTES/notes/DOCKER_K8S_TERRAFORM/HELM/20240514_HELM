@@ -1,0 +1,130 @@
+Helm
+----
+Helm is an package manager for kubernetes applications. Helm has been awarded as an official package manager for kubernetes by cloud native computing foundation.
+	
+Helm can be treated similar to any other package managers that typically exists in other domains for eg.. we can consider helm as equivalent to:
+1. maven/gradle = java
+2. pip = python
+3. apt/yum = ubuntu or redhat distributions
+etc
+
+These are all build/package management tools that takes care of
+	1. identifying the dependent libraries
+	2. downloading them from the repositories
+	3. adding these dependencies to the application build path
+	4. compiling and packaging the applications
+	5. deploying / executing them
+	etc
+	
+are usually taken care by any package management or build tools.
+	
+Similarly HELM also acts as an package manager tool for kubernetes that takes care of:
+1. identifying the dependent helm packages
+2. downloading them from the helm repositories
+3. generating the final manifest files by susbtituting the env spec values
+4. identifying the dependency order of the resources
+5. deploying/creating these objects on the cluster
+etc
+are taken care by Helm.
+	
+
+How to install HELM?
+https://helm.sh/docs/intro/install/
+
+How to deploy kubernetes objects onto cluster using HELM?
+We want to deploy the Hangout application onto the cluster, for this we need below kubernetes objects to be deployed on the cluster.
+1. Deployment spec
+2. ClusterIP
+3. Ingress
+
+
+For this we need to write the manifests or kubernetes spec files and deploy them one by one based on their dependency on to the cluster. Instead of we manually writing the deployments, service and ingress specs, we can make use of the HELM.	
+	
+HELM:
+1. HELM Cli helps us in creating the helm chart quickly with standardized directory with default manifest files aspart of it. 
+go into an workspace/ directory and run the below command
+
+~/helmworkspace:/> helm create chartName
+here: helm create hangout
+
+upon running the above command, helm cli creates the standardized chart directories with default manifest files within it as below.
+	
+chartName (directory) 
+|-chart.yml
+|-values.yml
+|-templates/
+|-charts/
+|-helmignore
+|-_helpers.tpl
+
+1. charts.yml
+The charts.yml has basic information about the helm chart like author, description, licensing etc
+
+2. values.yml
+it holds default values with which the HELM chart has to be deployed onto the cluster. The chart author while preparing the chart will write this values.yml and packages inside the chart.
+while installing the chart the helm picks the values from values.yml and substitutes with the place holders or token we defined in the manifests and generates the final specs using which the objects are deployed on the cluster.
+	
+The user can expliclity pass the values.yml file overriding the default values.yml that is part of the chart, so that helm ignores the one that is already inside.
+	
+3. charts/ (directory)
+the direct dependent charts can be placed inside the charts/ directory. the charts that are placed inside the charts/ directory will be installed locally itself without downloading them from the helm repository
+
+4. templates/ (directory)
+A directory contains the templatized manifest files, that can be combined with the values to generate the final manifests for deploying the objects on the cluster.
+	
+5. _helpers.tpl 
+A .tpl is also an YAML format only, and is compiled using golang programming language. In the _helpers.tpl file we define the logic for determining and setting variable values.
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	

@@ -1,0 +1,213 @@
+How to provision/run an vagrant machine?
+1. create an project directory in which create an Vagrantfile
+2. inside the vagrant file write machine definition/configuration information as below
+
+Vagrant.configure(2) do | config |
+	config.vm.box = "hashicorp/precise64"
+end
+	
+3. goto the project directory and run the below command to bringup the virtual machine
+vagrant up
+
+4. inorder to access the machine we need to be in project directory and run
+vagrant ssh
+
+5. type "exit" to quite from the machine
+6. vagrant halt for shutting down the virtual machine
+
+What are the Vagrant CLI commands available in provisioning/managing the virtual machines?
+All the VagrantCLI commands should be executed inside the project directory only:
+
+1. vagrant init = creates an Vagrantfile with default machine configuration
+2. vagrant up = brings up the virtual machine
+3. vagrant ssh = ssh into the virtual machine
+4. vagrant halt = shutdowns the virtual machine
+5. vagrant status = tells the status of the virtual machine
+6. vagrant suspend = saves the current state of the machine and poweroff, when we reboot the machine all the programs will be resumed.
+7. vagrant resume = boots back the virtual machine to the saved state
+8. vagrant reload = restart the virtual machine
+9. vagrant destroy = will stops and deletes the virtual machine including the vdi file
+
+global-command:
+1. vagrant global-status = we can run this command from anywhere in the terminal, need not be in project directory and shows the statuses of all the vagrant machines on the host
+-----------------------------------------------------------------------------------------------------------------------------------
+How does an vagrant machine will be booted?
+What will happens when we run vagrant up for provisioning an virtual machine for the first-time?
+	
+when we run vagrant up from the project directory, first-time, vagrant performs several activities in provisioning and bringingup the virtual machine as described below.
+	
+1. downloads the vagrant boxfile specified in Vagrantfile (config.vm.box) and places within the host machine
+if we want to create 5 virtual machines of a boxfile "ubuntu/jammy64", the vagrant downloads the boxfile from vagrant cloud only once and places it on the host machine under the directory $VAGRANT_HOME/.vagrant.d/boxes and imports the same boxfile in creating the virtual disk image files for each virtual machine
+
+The vagrant boxfile will be downloaded only once and stores it locally and reuses in creating any number of virtual machines of the same boxfile type
+
+2. import the boxfile into the project directory
+Vagrant creates an separate vdi file per each virtual machine by importing the vagrant boxfile which is downloaded above
+it places the vdi file it has created for the virtual machine of each project in ~/Virtualbox vms/
+	
+for eg... if we create an project
+d:\work:/>
+|-firstvagranteg
+  |-Vagrantfile
+	
+It downloads the vagrant boxfile from vagrant cloud and places the boxfile under ~/vagrant.d/boxes and creates an virtual disk image file for this project by importing the vagrant box file.
+The vagrant boxfile is an compressed file, it will extract it under ~/Virtualbox Vms/ and then imports that as an disk image for the virtual machine it is creating.
+	
+3. booting up the machine
+upon running the vagrant up inside the project directory first-time. Vagrant creates an .vagrant directory inside the project directory.
+Inside the .vagrant directory it stores the metadata information of the virtual machine that is being created. For each virtual machine while creating vagrant assigns an unique id that is used for identifying the vagrant machine in addition instores lot of information pertaining to the machine inside this directory to manage like:
+1. vdi file location
+2. networking configuration
+3. ssh keys for authenticating / accessing the machine
+4. sync folder configuration
+5. vagrant machine name
+etc
+	
+d:\work:/>
+|-firstvagranteg
+  |-.vagrant
+  |-Vagrantfile	
+
+vagrant up
+	
+by default vagrant provisions the virtual machine by setting up the networking as NAT with port forward on 22 port. In addition it generates an public/private key and seeds the public key into the virtual machine while creating and stores the public/private key under the project directory inside .vagrant directory
+
+when we run vagrant ssh command, it internally runs ssh client only by pickingup the public/private key from .vagrant directory and ssh into the machine
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

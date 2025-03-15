@@ -1,0 +1,15 @@
+---
+- name: failed_when play
+  hosts: all
+  tasks:
+    - name: check diskspace
+      shell: "df /dev/sda1 | grep -v Filesystem | awk '{print $4}'"
+      register: diskspace
+      failed_when: "diskspace.stdout | float < 36723779"
+    - name: install mysql
+      apt:
+        name: mysql-server-8.0
+        state: present
+        update_cache: yes
+      become: yes
+...

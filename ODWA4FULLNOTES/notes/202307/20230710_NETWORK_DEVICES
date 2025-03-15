@@ -1,0 +1,42 @@
+Network devices
+There are 7 types of network devices are there
+1. Repeater
+2. Hub
+3. Switch
+4. Router
+5. Bridge
+6. Modem
+7. Firewall
+
+
+4. Router
+Router is an network device that is used for inter-connecting various different networks. Router operates at network layer of OSI Model Protocol. upon receiving the ip packet the router will identify the destination ip address and computes the network address to which the data packet has to be transffered and sends the packet to the specific network only.
+
+The Router maintains an Routing table, in which the network administrator can configure the traffic patterns allowing/controlling the flow of data between the networks.
+	
+6. Modem
+Modem is an device that performs modulation and demodulation in converting the analog signals into digital signals and digital to the analog.It is used for connecting the computers to an dial-up network.
+	
+7. Firewall
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

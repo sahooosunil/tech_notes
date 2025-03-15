@@ -1,0 +1,45 @@
+Linux Filesystem
+1. How does the data is being stored on the harddisk of the computer?
+The data is stored on the harddisk of the computer interms of bits or binary format. all the data or characters should be convertered or represented into 0s/1s to be stored on the harddisk of the computer.
+	
+For representing the characters in binary format, the charset encoding standards are introduced. For each symbol to be represented and stored on the computer, the charset encoding standards assigned an decimal number.	The corresponding decimal number of each character will be convereted into binary equivalent and stored as bits of data on the computer system.
+	
+The process of converting a character or symbol into binary representation based on charset encoding standard is called "encoding", and the process of build back the character/symbol from the binary representation is called "decoding".
+	
+ASCII is one of popular charset encoding standard available in the market. "American Standard code for information interchange".
+
+All the data will be stored on the harddisk of the computer interms of Files & Folders.
+
+File = File is a datastructure that holds the memory address locations of the actual data that is stored on the harddisk of the computer.
+every file will be given an name to identify it. we can refer the filename for accessing the data that is stored on the harddisk of the computer.
+	
+Folder
+Folders are the way through which we can organize the Files and access them together quickly. Folders are the special type of files in which information about group of related files will be stored.
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

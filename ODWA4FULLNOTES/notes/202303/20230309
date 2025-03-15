@@ -1,0 +1,93 @@
+How to use the linux operating system?
+To help us in using the linux operating system the distros are introduced. Different groups and organizations came forward and build linux operating system with their own choice of software tools/utilities, configurations and packaged and distributed linux operating system with sophisticated operating system installers. The people can download the linux distros provided by these companices and can easily install them on their machine to use the linux operating system.
+	
+	
+The linux kernel is more or less same across all the linux installations, the software that surrounded the kernal that provides the capabilities like package managers, control of services and location of configurations files differs from one distro to another
+
+There are 4 major categories of linux distributions are derived from the original distribution of Linux
+1. Arch
+2. Debian
+3. Redhat
+4. Slackware
+
+out of the above 2 major/popular distros are 
+1. Debian distributions
+2. Redhat distributions
+each distro vendor to suite the requirement of different category of users, the produced different flavors of the linux operating system with mixed set of tools / utilities
+
+1. Debian distributions
+1.1 Linux Mint
+1.2 Ubuntu
+1.3 Elementary OS
+1.4 Kali Linux
+
+2. Redhat distributions
+2.1 CentOS
+2.2 Fedora
+2.3 Redhat Enterprise Linux
+-----------------------------------------------------------------------------------------------------------------------------------
+Features of Linux operating system
+1. portable  = Linux operating system can work on different hardware platforms and kernal supports installation on any kind of hardware platform
+2. opensource = the linux operating system is distributed under GNU License, which means Linux operating system is freely distributed and even the sourcecode of the operating system is provided for free. anyone can modify the sourcecode and redistribute it either as opensource/commercial of their own.
+3. multi-user / multi-programming operating system
+The linux operating system supports multiple programs to be executed in parallel on the computer, it shares the system resources across the programs on the computer based on different strategies: round robin, time sharing etc. In addition linux operating system supports multiple users to access and use the computer at the same time which is multi-user operating system.
+4. Hierarchial FileSystem
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,98 @@
+wap to reverse the elements in the given array?
+
+10 38 40 82 11
+0   1  2  3  4
+	
+reversearray.sh	
+---------------
+#!/bin/bash
+read -p "Enter numbers :" -a N
+LEN=${#N[@]}
+I=$[LEN-1]
+J=0
+declare -a RN
+
+until [ $I -lt 0 ]
+do
+    RN[$J]=${N[$I]}
+    J=$[J+1]
+    I=$[I-1]
+done
+echo "reverse array : ${RN[@]}"
+-----------------------------------------------------------------------------------------------------------------------------------wap to sort the elements of an given array
+There are lot of sorting algorithms are available
+1. bubble sort
+2. insertion sort
+3. merge sort
+4. quick sort
+5. selection sort
+6. heap sort
+
+1. bubble sort
+iterate from 0 to N-1 elements, compare every #2 adjacent numbers and swap it if N greater than N+1
+
+OUTERLOOP = I=0-N-1
+	          J=0; J<N-I-1
+INPUT ARRAY: 41 23 40 56 11 J=0
+	           23 41 40 56 11 J=1
+	           23 40 41 56 11 J=2
+	           23 40 41 56 11 J=3
+			       23 40 41 11 56 J=4 (LEN-1) [STOP]						
+---------------------------------------------------			
+	           23 40 41 11 56 J=0
+			       23 40 41 11 56 J=1
+			       23 40 41 11 56 J=2
+	           23 40 11 41 56 J=3
+----------------------------------------------------
+             23 40 11 41 56 J=0	
+	           23 11 40 41 56 J=1
+	           23 11 40 41 56 J=2
+----------------------------------------------------
+	           23 11 40 41 56 J=0
+	           11 23 40 41 56
+	
+5-1 = 4 (3)	
+
+sort.sh
+-------
+#!/bin/bash
+read -p "Enter Numbers :" -a N
+LEN=${#N[@]}
+for((I=0;I<LEN-1;I++))
+do
+	for((J=0;J<(LEN-1)-I;J++))
+	do
+		if [ ${N[J]} -gt ${N[J+1]} ]; then
+			TEMP=${N[J+1]}
+			N[J+1]=${N[J]}
+      N[J]=$TEMP
+		fi
+	done
+done
+echo "sorted array: ${N[@]}"			
+-----------------------------------------------------------------------------------------------------------------------------------
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			

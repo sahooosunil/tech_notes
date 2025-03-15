@@ -1,0 +1,161 @@
+Here are **20 commonly asked AWS EKS interview questions** along with their answers:  
+
+---
+
+### **1. What is Amazon EKS?**  
+**Answer:**  
+Amazon **EKS (Elastic Kubernetes Service)** is a managed Kubernetes service that simplifies deploying, scaling, and managing containerized applications using Kubernetes on AWS. It automates tasks like cluster management, scaling, and security.
+
+---
+
+### **2. How does EKS work internally?**  
+**Answer:**  
+EKS manages the **Kubernetes control plane**, which includes API servers, etcd, and controllers. You only manage worker nodes using **EC2 instances or Fargate**. AWS handles high availability, patching, and updates.
+
+---
+
+### **3. What are the components of an EKS cluster?**  
+**Answer:**  
+- **Control Plane** (Managed by AWS): API Server, etcd, Controller Manager, Scheduler  
+- **Worker Nodes** (EC2/Fargate): Runs Pods  
+- **VPC & Networking**: Uses VPC CNI, security groups, IAM roles  
+- **Add-ons**: CoreDNS, Kube-Proxy, AWS CNI  
+
+---
+
+### **4. What are the different networking options available in EKS?**  
+**Answer:**  
+- **AWS VPC CNI (Recommended):** Pods get native VPC IPs  
+- **Calico:** Supports network policies  
+- **Cilium:** Advanced networking with eBPF  
+
+---
+
+### **5. How do you deploy an application on an EKS cluster?**  
+**Answer:**  
+1. Create a **Deployment YAML** file.  
+2. Apply using `kubectl apply -f <deployment.yaml>`.  
+3. Expose it via a **Service** or **Ingress**.
+
+---
+
+### **6. What is the difference between EC2 and Fargate in EKS?**  
+**Answer:**  
+| Feature | EC2 Worker Nodes | AWS Fargate |
+|---------|----------------|------------|
+| Node Management | Self-managed | Fully managed |
+| Scaling | Manual or AutoScaling | AutoScaling |
+| Cost | Pay for instance uptime | Pay per pod usage |
+
+---
+
+### **7. How does IAM authentication work in EKS?**  
+**Answer:**  
+EKS integrates with **IAM roles** for authentication via `aws-auth` ConfigMap. Users assume an IAM role that maps to Kubernetes RBAC.
+
+---
+
+### **8. How do you manage secrets in AWS EKS?**  
+**Answer:**  
+- **Kubernetes Secrets** (`kubectl create secret ...`)  
+- **AWS Secrets Manager** (Use `External Secrets Operator`)  
+- **AWS Parameter Store**  
+
+---
+
+### **9. How do you update an EKS cluster?**  
+**Answer:**  
+1. Upgrade the control plane using AWS Console or CLI (`eksctl upgrade cluster`).  
+2. Upgrade worker nodes by updating AMI or replacing nodes with new versions.  
+3. Upgrade Kubernetes add-ons (CoreDNS, kube-proxy).  
+
+---
+
+### **10. What is a Cluster Autoscaler in EKS?**  
+**Answer:**  
+The **Cluster Autoscaler** automatically adjusts the number of nodes based on pending pods. It uses **Auto Scaling Groups (ASG)** to launch or terminate EC2 instances.
+
+---
+
+### **11. How does EKS handle logging and monitoring?**  
+**Answer:**  
+- **AWS CloudWatch Logs**: Stores logs from control plane and worker nodes.  
+- **Prometheus + Grafana**: Collects and visualizes metrics.  
+- **Fluentd/Fluent Bit**: Sends logs to CloudWatch, Elasticsearch, or Loki.  
+
+---
+
+### **12. How do you implement security in EKS?**  
+**Answer:**  
+- Use **IAM Roles for Service Accounts (IRSA)** for least privilege.  
+- Apply **Network Policies** with Calico or Cilium.  
+- Enable **Encryption** using AWS KMS for etcd and Secrets.  
+
+---
+
+### **13. What is the difference between an Ingress and a LoadBalancer Service in EKS?**  
+**Answer:**  
+| Feature | Ingress | LoadBalancer Service |
+|---------|--------|------------------|
+| Purpose | Routes traffic based on paths/hostnames | Exposes a service externally |
+| Type | Layer 7 (HTTP/S) | Layer 4 (TCP/UDP) |
+| Cost | Less (single ALB/NLB) | More (separate ALBs) |
+
+---
+
+### **14. How do you configure an ALB Ingress Controller in EKS?**  
+**Answer:**  
+1. Install the **AWS Load Balancer Controller**.  
+2. Define an **Ingress resource** with path-based or host-based rules.  
+3. Apply the YAML using `kubectl apply -f ingress.yaml`.  
+
+---
+
+### **15. What is an EKS Fargate Profile?**  
+**Answer:**  
+Fargate Profiles define **which Pods** run on **Fargate** instead of EC2. You specify namespace selectors in the profile.
+
+---
+
+### **16. How do you ensure high availability in EKS?**  
+**Answer:**  
+- Deploy worker nodes across **multiple AZs**.  
+- Use **Auto Scaling** to handle failures.  
+- Use **multi-cluster setups** for disaster recovery.  
+
+---
+
+### **17. What is IRSA in EKS?**  
+**Answer:**  
+**IAM Roles for Service Accounts (IRSA)** allows Kubernetes pods to assume **IAM roles** securely using **OIDC authentication**.
+
+---
+
+### **18. How do you enable Kubernetes Dashboard in EKS?**  
+**Answer:**  
+1. Deploy the Dashboard YAML (`kubectl apply -f dashboard.yaml`).  
+2. Get a **bearer token** for authentication.  
+3. Use `kubectl proxy` to access the UI.  
+
+---
+
+### **19. How do you troubleshoot networking issues in EKS?**  
+**Answer:**  
+- Use `kubectl describe pod` to check errors.  
+- Verify **security groups and NACLs**.  
+- Check **VPC CNI logs** (`kubectl logs aws-node`).  
+- Use `tcpdump` and `nslookup` for DNS issues.  
+
+---
+
+### **20. What are EKS Best Practices?**  
+**Answer:**  
+- Use **EKS Managed Node Groups** for easy upgrades.  
+- Implement **RBAC and IAM least privilege**.  
+- Enable **Cluster Autoscaler**.  
+- Deploy **multi-AZ nodes** for HA.  
+- Use **IRSA** for secure AWS access.  
+
+---
+
+This should help you ace your **AWS EKS** interview! 🚀 Let me know if you need more details.

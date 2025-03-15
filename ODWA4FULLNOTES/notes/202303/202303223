@@ -1,0 +1,386 @@
+1. How to create an empty file?
+touch filename
+
+2. How to create an directory?
+mkdir directoryName
+
+3. How to create a file with contents inside it?
+echo "contents"	> filename
+
+> & < are called redirection operators used for output and input redirection respectively. By default a shell commands writes the output to STDOUT and reads the input from STDIN, to redirect the STDOUT & STDIN we use redirection operators
+
+4. How to print a message onto the terminal?
+echo "message"
+	
+5. How to see the contents of a File?
+cat filename
+
+6. How to see the files/folders within the current directory?
+ls
+
+7. How to change to another directory?
+cd directoryName
+cd $HOME
+cd ~
+cd
+
+8. How to goto the previous directory from where we have navigated from?
+cd -
+	
+9. How to see the directory in which we are in?
+pwd
+-----------------------------------------------------------------------------------------------------------------------------------
+1. How to create a directory in linux?
+mkdir directoryName
+
+Want to create the below directories
+HOME$
+|-dir1
+  |-dir2
+		|-dir3
+		
+#1             
+mkdir dir1     
+cd dir1
+mkdir dir2
+cd dir2
+mkdir dir3
+
+#2
+mkdir dir1/dir2/dir3 
+(only works when dir1/dir2 already exists other fails)
+	
+#3 instead the quickest way of creating all the directories along with the path is
+mkdir -p dir1/dir2/dir3 = -p creating including parent directories, if they dont exists
+
+
+#4. How to switch to a different shell interpreter?
+bash shell
+1. bash shell (sh)
+2. korn shell (ksh)
+3. bourne again shell (bash)
+4. POSIX 
+
+c shell
+1. c shell (csh)
+2. TENEX (tcsh)
+	
+by default when we launch the linux terminal we will be into bash shell, if we want to switch to a different shell we need to use shellname in the terminal like
+bourne shell = sh
+bourne again shell = bash
+korn shell = ksh
+c shell = csh
+
+by default in ubuntu installation only bourne and bourne again shells are installed and available
+
+#5. How to know in which shell we are in?
+echo $0 = prints the shell interpreter name
+
+#6. Bash command structure
+There are 3 parts in bash command
+1. command
+2. options (optional)
+3. arguments (optional)
+	
+structure:
+command [options] [arguments]
+here both options and arguments are optional
+
+command = is the shell command we want to use or execute
+arguments = are the inputs we are passing to the command asking to perform the operation using those commands
+options = options are passed using - (switch) and are used for changing the behaviour of the shell command
+	
+mkdir     -p         dir1/dir2
+command  [options]   [arguments]
+
+#7. How to see the list of files and folders?
+ls
+ls directoryName = to see the files and folders inside the specified directory
+ls only shows the files and folders that are there in specified directory, but will not show the files/folders under the sub-directories of the given directory
+
+library
+|-comic
+  |-gumpymonkey.txt
+	|-humor.txt
+|-fiction
+  |-book1.txt
+|-thriller
+
+ls library/ = it only shows the immediate files/folders under library directory only, it doesnt shows the subdirectories or files inside those directories recursively
+
+ls -R directoryName = will show recursively the subdirectories as well
+
+ls by default shows the files and folders with color coding, if it is a directory it displays in blue color and its a plain file it displays in white color, if we dont want color coding while displaying we can use
+
+ls --color=none
+
+#8 How to tell what type of file it is?
+A file can be
+1.text
+2.video
+3.audio
+4.image
+etc
+
+to identify every file what type of contents are there inside it, we generally use extension (3 characters) for filename. file extensions are used by the operating system to identify the filetype so that it can associate appropriate program to perform operations on file.
+
+banner.jpg = windows image viewer
+.mp3 = opens a music player to play the music in the file
+.mkv = opens an windows media player to play the video file
+.txt = opens nodepad
+
+these extensions are heavily used by windows operating system to identify the type of file, so that it can associate a default program for every filetype to perform operation
+
+but when it comes to linux operating system, linux doesnt uses file extensions at all, we dont need to write the filenames with extensions, linux will identify the filetype based on its contents automatically
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,19 @@
+---
+- name: loop thru register vars play
+  hosts: all
+  vars:
+    product: macbook pro3
+  tasks:
+    - name: copy products
+      copy:
+        src: products.txt
+        dest: /tmp/
+    - name: show products
+      shell: cat /tmp/products.txt
+      register: productsList
+    - name: print matching product
+      debug:
+        msg: "{{item}}"
+      loop: "{{productsList.stdout_lines}}"
+      when: "{{item in product}}"
+...

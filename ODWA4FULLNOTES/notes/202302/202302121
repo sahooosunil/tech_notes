@@ -1,0 +1,155 @@
+what is the change in process and adoption of new tools & technologies in developing/delivering an software application?
+during the development, the developer has to adopt these change in culture, new tools/technologies for developing the application as below.
+1. understand the requirements to develop the software application
+2. choose a programming language based on the nature of the application 
+	2.1 java
+	2.2 .net
+	2.3 python
+	2.4 phph
+	2.5 scala
+	2.6 ruby
+3. setup the development environment with all the required software libraries and tools that helps in developing the application
+To reduce the time needed in setting up the development env, the devops engineers has to use
+	3.1 virtualization = is an technology through which we can run multiple parallel isolated environments on a machine
+	3.2 vagrant = virtualization workflow automation tool, that helps us in quickly building and distributing the virtual machines
+4. choose the process model in building the application, there are various process models available in the market like
+	4.1 waterfall model
+	4.2 spiral
+	4.3 iterative or incremental model
+	4.4 prototype
+	4.5 agile methodologies, scrum model
+The devops recommends us to use agile based scrum methodology in developing/delivering the software applications.
+scrum principle: scrum works based on "fast-fail" approach, which means let there be a failure, but let it arrive early stage so that the loss incurred would be minimal and recoverable
+5. for collaborative application development,the team should use sourcecode management repositories. There are lot of sourcecode management repositories are provided by different vendors
+	5.1 vss
+	5.2 wincvs
+	5.3 perforce
+	5.4 svn
+	5.5 Git
+	etc
+devops recommends us to use Git Repository than other scm repositories.
+git is an distributed sourcecode management repository, that has light weight branching strategies 
+
+6. upon developing the software application, the developer first-in place has to unit test the application before delivering the application to the qa for further testing
+unit testing: the developer byhim self verify the code he has written is working properly or not to certify the code is ready for testing is called "unit testing"	
+unit testing is not an one-time activity rather it is an repeatitive activity that has to be conducted redundantly for various number of times
+
+To perform the unit testing the developer has to run the application by passing possible set of inputs and see the application has produced the expected results or not. 
+	1. incase the test conducted by the developer has not produced the expected outcome, the developer has to consider it as an bug and should fix the code and has to retest the application/code
+	2. incase if the test conducted has produced expected output, then move on to the next possible test scenarios until he has tested all the possibilities
+	3. in addition the developer has to perform unitesting on all the programs which are related to the current functionality we modified
+	
+upon completing the unit testing the developer has to delivery the code to qa, while qa performs the testing, might find some bugs and reports them onto the developer. again aspart of fixing the bug the developer has to perform unittesting in cerifying the code he has modified and related functionalities are working properly or not before delivering the code to qa again
+
+Manually conducting the unittesting is seems to be time taking and since it is repeative process, it takes more time and delays the delivery of the application
+
+So to avoid the delay in delivery and huge development/delivery cost of the application, devops strongly recommends to adopt unit testing automation.
+The test automation is the process of writing the testcase code, to verify the actual code written is working properly or not, so that the developer can quickly certify the code for qa/release. There are lot of unitesting frameworks are available in the market like
+1. JUnit
+2. TestNG
+3. JBehave
+4. Mockito/PowerMock/JMock
+etc
+
+during the time of performing the unittesting we need to generate
+test report = using surefire
+test coverage report using = cobertura, emma, jacoco
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

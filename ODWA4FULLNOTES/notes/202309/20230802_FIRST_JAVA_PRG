@@ -1,0 +1,316 @@
+What is java programming language?
+java is an platform independent object oriented programming language that is used for building desktop, distributed web applications and enterprise applications.
+	
+java has been distributed in #2 distributions
+1. jdk = java development kit
+The developers inorder to develop and run the java applications they need to install jdk on their computer. Jdk comes with developer tools + runtime engine (jre). The developer develops the java program and using compiler tools (shipped aspart of jdk) will compile and produces the bytecode. Then execute the bytecode on the underlying jre (runtime engine)
+	
+2. jre
+jre  = java runtime environment, it contains jvm runtime engine on which the bytecode of the java program will be executed by translating it into operating system specific instructions. The enduser/client has to install the jre on their machine inorder to run the java program that is distributed by the developer
+
+--------------------------------------------------------------------------------------------------------------------------------------
+How to develop/run an java program?
+To develop and run an java program first we need to install jdk on our machine. The jdk software has been distributed as packaged distribution in ubuntu repository, we can install it using apt manager as below
+
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+
+To start developing an java program, it is advised to create an project with basic directory structure as below
+@1. project directory structure
+
+quickdesk
+|-src
+|-bin
+
+src directory = we need to place the sourcecode ".java" files of the java programs
+bin directory = upon compiling the java files (java programs) the compiler will generate bytecode (.class), the bytecode will be placed inside the bin directory
+if we separate the sourcecode from bytecode by keeping them in separate directories we can distribute/ship the executablecode (bytecode) of the program quickly to the enduser/customer.
+	
+@2. What is an Java class?
+java is an object oriented programming language, so everything in java is represented interms of an class only. A class represents a thing or an entity describing its characteristics and behaviours that can be performed on it
+	
+	
+Aeroplane = is an object/entity that has existence to represent an aeroplane we need to create an class in java that contains attributes holding the info about the aeroplane and behaviours that can be performed on the aeroplane as below
+	
+class Aeroplane {
+	String engineType;
+	long flyingRange;
+	int seatingCapacity;
+	String model;
+	String manufacturer;
+	
+	public void fly() {
+		// functionality for flying the areoplane			
+	}
+	public void landing() {
+		// logic for landing the aeroplane
+	}
+}
+to use an class, we need to create an object of an class, object is nothing but instance of an ClassType
+
+Aeroplane aeroplane1 = new Aeroplane(); // with this we have one aeroplane of the Aeroplane type
+
+aeroplane1.engineType = "boeing";
+aeroplane1.flyingRange=6000;
+aeroplane1.seatingCapacity=300;
+aeroplane1.model="model1";
+aeroplane1.manufacturer="Airbus";
+aeroplane1.fly();
+
+
+@3. Java Main class
+An java appliation comprises of several classes within it, out of those many classes we write a special class called "Main" class from which the execution of the java program begins with
+	
+it is recommended to write every java class by declaring it under an package. Package helps us in uniquely identifying our java program from other java programs that are written by other people around the world.
+	
+App.java
+--------
+package com.quickdesk.run;
+public class App {
+	public static void main(String[] args) {
+		System.out.println("Quickdesk Application is running!");
+	}
+}
+
+place this java program inside the src directory of our project, reflecting the package directory structure
+~/javaworkspace:/>
+	|-quickdesk
+		|-src
+			|-com
+				|-quickdesk
+					|-run
+						|-App.java
+    |-bin
+			|-com
+				|-quickdesk
+					|-run
+						|-App.class
+							
+@4. how to compile the java program
+upon writing the java program	it will be executable, we need to compile the java program using java compiler. when we install jdk software it provides an CLI tool called "javac" which is called java compiler using which we can compile the java program
+
+now we need to pass the .java sourcecode file as an input to java compiler, so that it generates the bytecode and places in the specified directory as below
+
+~/javaworkspace/quickdesk$ javac -d bin src/com/quickdesk/run/App.java
+
+-d = stands for directory where we want to generate the bytecode under
+
+@5. How to execute the java program?
+we need to pass the bytecode as an input to the jvm (java virtual machine), that reads the bytecode and translates into operating system code and execute it on the underlying operating system. when we install jdk it has provided an "java" CLI Tool using which we can launch/run an jvm passing bytecode as an input
+
+~/javaworkspace/quickdesk/bin$ java com.quickdesk.run.App
+
+always while running the java program, we need to pass fully qualified name of the java class to identify it uniquely and execute.
+--------------------------------------------------------------------------------------------------------------------------------------
+What is java CLASSPATH, what is the purpose of it?
+CLASSPATH is an environment variable, using which we can point to the location of the java classfiles, so that jvm can pick the classfiles in running the java classes.		
+		
+environment variables are operating system level or system level or global levels variables, that can be configured/created either at an session level of system level (permanently), so that all the programs running within the session or on that machine can access the value of the variable globally
+
+by default when we ask jvm to run a java class, it looks for the classfile of the java class under the current directory only, if we want to run a java program from any directory irrespective of the location of class files are there, then we need to set the CLASSPATH env variable pointing to all the directory locations where the classfiles are located to execute them.
+~/javaworkspace/		
+	|-aerospace (project directory)
+		|-src
+			|-com
+				|-airbus
+					|-planes
+						|-Aeroplane.java
+					|-track					
+						|-TrailTrack.java (#main)
+		|-bin
+		
+src/com/airbus/planes/Aeroplane.java
+package com.airbus.planes;
+public class Aeroplane {
+		public void fly() {
+				System.out.println("flying aeroplane!");
+		}
+}
+
+src/com/airbus/track/TrailTrack.java
+package com.airbus.track;
+import com.airbus.planes.*;
+
+public class TrailTrack {
+		public static void main(String[] args) {
+				System.out.println("Track testing begins!");
+				Aeroplane aeroplane = new Aeroplane();
+				aeroplane.fly();
+				System.out.println("Track testing finished, hurray....");
+		}
+}
+		
+#2. compile the above 2 java programs
+~/javaworkspace/aerospace$ javac -d bin src/com/airbus/planes/Aeroplane.java
+while compiling the TrailTrack.java set the CLASSPATH variable pointing to bin/ directory so that java compiler can locate the Aerospace class file in compiling TrailTrack.java
+
+                           javac -d bin src/com/airbus/track/TrailTrack.java
+													 
+this generates #2 class files under bin directory
+		
+#3. how to run the above program
+goto bin directory of the project and run Main class
+		
+~/javaworkspace/aerospace/bin$ java com.airbus.track.TrailTrack
+
+but we are not in bin directory, lets say we are in $USER.HOME directory, then how to run the above java program
+
+~/java com.airbus.track.TrailTrack = if we run the program from ~/ directory, the jvm looks for class file of the program in $USERHOME only which cannot be found. So to run the program from any location we need to set the CLASSPATH env variable pointing to the directory location of the classfiles of the program
+
+export CLASSPATH=~/javaworkspace/aerospace/bin
+~/$ java com.airbus.track.TrailTrack = since the CLASSPATH variable points to the directory of the classfiles now jvm can pick the files and execute it.
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	

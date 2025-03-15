@@ -1,0 +1,63 @@
+How does an developer develops an software application, what are the things he requires and stages he goes through in building an software application?
+1. The developer has understand the business requirement document that is provided by the business owner, in order to build the software application
+2. choose the suitable programming language that supports the nature of the application he is developing like
+	2.1 java
+	2.2 .net
+	2.3 python
+	2.4 php
+	2.5 ruby
+	2.6 scala
+	etc
+3. setup the development environment with all the software libraries, development tools, database servers and application servers needed for developing the application
+	3.1 programming language software should be installed on the developer computer
+	3.2 development tools like integrated-development environment (ide) like eclipse, vscode or pycharm etc should be installed
+	3.3 database server software should be installed like mysql, oracle, db2, postgres
+	3.4 application server software to be installed like oracle weblogic server, tomcat, IIS server or pyserver etc
+
+4. choose an process model using which we can develop the application
+process model: proven methodology or guidelines provided by experts in the software engineering world, that should be followed in successfully developing and delivering an software application. various different experts has provided different process models like
+ 4.1 waterfall model
+ 4.2 iterative or incremental model
+ 4.3 prototype model
+ 4.4 spiral model
+ 4.5 agile methodologies
+ 
+The very oldest process model in the market is "waterfall model". In water model the project development and delivery is broken into stages/phases from top-to-bottom
+Phases:
+1. requirement gathering & analysis
+2. design
+3. develop/implementation
+4. testing
+5. delivery & maintainance
+
+5. develop the application, to collaborative develop the application by a team of engineers we need to use sourcecode management repositories. There are plenty of vendors provided different sourcecode management repositories like
+  5.1 wincvs
+	5.2 visual source safe (vss)
+	5.3 git
+	5.4 svn
+	5.5 perforce
+	5.6 pvcs
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

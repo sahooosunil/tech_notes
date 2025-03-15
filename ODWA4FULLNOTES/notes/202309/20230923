@@ -1,0 +1,156 @@
+Ansible
+--------
+Vagrant is an virtualization workflow automation tool, using vagrant we can provision virtual machine on which we can install software packages and deploy the applications.
+	
+Similarly on a cloud platform to provision the infrastructure we can use Terraform. Both Vagrant and Terraform are used for provisioning the infrastructure through code, so these are called iac tools (Infrastructure as a Code).
+	
+By having the infrastructure, we cannot deploy and run the software application, we need install software packages and libraries and apply configurations to have environment ready for deploying the application.
+	
+How to install and configure the software packages and libraries on the infrastructure that has provisioned above?
+There are many ways we can install and configure software packages ontop of the infrastructure. Let us understand each of them and know the pros/cons of each
+
+1. Manually install and configure
+Let the devops engineer upon provisioning the infrastructure can manually download, install and configure the software packages. But this approach has several problems:
+1.1 Manually installing and configuring the software packages ontop of the infrastructure takes lot of time
+1.2 In the real production env, we will be deploying and running the software application on a cluster of computers. On all of these computers the devops engineer has to install and configure the same sofware packages and libraries across, so the efforts of installing/configuring them on the cluster env will be multiplied, thus by increasing time required for the development & delivery of the application
+1.3 There can be bunch of software packages to be installed and an handful of configurations to be done on these computers in an specific order. Memorizing all of these and performing them manually is an very complex job 
+1.4 It would be difficult to keep track of which machines are being installed with what software packages and libraries of what verions, because in an organization there will be lot of infrastructure/machines and since we are manually managing in installing and configuring the softwares it would be hard to identify as well.
+1.5 upgrading and patching the existing infrastructure/softwares manually is quite complex and takes lot of time to handle this operation.
+1.6 Installing and configuration the software packages is not an one-time activity or job, it must be carried several times across various different env for several projects within the organization. Manually perform these activities across the projects/environments may not leads to the highest level of consistency and the chances of encouring the failures is very high thus kills the time and delays the delivery of the application
+
+To overcome the above problems in installing/configuring the software packages we need configuration management automation tools. The Software Configuration Management is the process of installing & configuring the software packages and tools on the infrastructure and make it available/ready for use.
+	
+There are many ways we can achieve automating the process of installing/configuring the software packages on the infrastructure:
+
+1. Shellscripting
+Instead of devops engineer manually taking care of installing/configuring the software packages/libraries, he/she can write an shellscript program that contains instructions in installing/configuring the software packages on a give env. Now the devops engineer can run the shellscript program on an machine for installing/configuring the packages.
+	
+There are lot of advantages in using shellscripting for installing/configuring the software packages:
+1. by using shellscript programs, they greatly reduces the time required for installing/configuring the software packages.
+2. upon writing an shellscript program for installing/configuring the software packages required for running the application, the devops engineer dont have to memorize these software packages and their configurations in deploying the application. He can quickly run the shellscript program to setup the machine on any env
+3. these shellscript programs can be reused across the projects in building, installing and configuration software packages if they have similar type of requirements
+4. We can create reproducible environments easily using the shellscript automation
+5. patching and upgradation can be done quickly by writing migration scripts
+
+
+Looks like the shellscript has avoided most of the problems we discussed in manually installing/configuring the software packages on the infrastructure, but there are lot of drawbacks of implement softwaer configuration management automation through shellscripting as below:
+
+
+1. programmers
+2. not portable across the operating system platforms
+3. may not works across the distros of the linux
+4. no exception handling to rollback the state of the system incase of failure
+5. no logging support
+6. idempotancy is tough to achieve
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

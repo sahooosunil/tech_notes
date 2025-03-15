@@ -1,0 +1,149 @@
+#3. Ingress
+------------
+Ingress is an API object that helps exposing the applications and manage external access by providing http(s) routing rules to the service of the Cluster
+
+Typically a service discovers the pod applications running on the cluster and loadbalances the requests across these pods, whereas the Ingress doesnt perform any of these operations rather in receives the request, based on the routing rules configured it forwards the request to the corresponding service that does the job of loadbalancing/discovery.
+	
+By default the Ingress controller is not able on the Kubernetes or minikube cluster we need install Ingress controller explicitly.
+	
+There are different Ingress controller component providers are there in the market, one such provider is nginx. These are internally httpd servers that recieves the http(s) requests and routes the request to the corresponding service based on the route rules configured.
+	
+	
+How to install the Ingress controller?
+guide: https://github.com/kubernetes/ingress-nginx/blob/main/docs/deploy/index.md#quick-start
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+
+Preflight check:
+kubectl get pods --namespace=ingress-nginx
+
+The following command will wait for the ingress controller pod to be up, running, and ready:
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=120s
+	
+https://github.com/techsriman/hangout.git
+https://github.com/techsriman/sailor.git
+	
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: recreation-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hangout.com
+      http:
+        paths:
+          - path: /hangout
+            pathType: Prefix
+            backend:
+              service:
+                name: hangout-service
+                port:
+                  number: 8088
+    - host: sailor.com
+      http:
+        paths:
+          - path: /sailor
+            pathType: Prefix
+            backend:
+              service:
+                name: sailor-service
+                port:
+                  number: 9099
+#status:
+#  loadBalancer:
+#    ingress:
+#      - hostname: localhost
+--------------------------------------------------------------------------------------------------------------------------------
+#4. DaemonSet
+A DaemonSet ensures that all (or some) of the Nodes run a copy of the Pod on the Cluster. There are few applications of type
+1. log collector daemons
+2. monitoring agents that collects the metrics on each node
+
+that should be running on each node of the cluster. by default a replicaset or a deployment chooses the pod to be scheduled based on the capacity/resources of a Node. Unlike that these types of applications must and should be scheduled on each Node of the cluster, that can be achieved using DaemonSet
+
+The DaemonSet is an independent controller takes care of scheduling and ensuring a pod is running on all the nodes of the cluster. Irrespective of the availability of resources on the Node, always DaemonSet takes higher precedence in running the pod on the Node. 
+	
+When new nodes are added to the cluster DaemonSet takes care of scheduling the pod on the new Node, before making the workernode available to the scheduler to schedule the pods for execution. Along with that when a workernode has been destroyed, deleting the pods and garbaging collecting them is done by DaemonSet controller.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

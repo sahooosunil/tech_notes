@@ -1,0 +1,155 @@
+Cloud Platform
+---------------
+on-demand delivery of computing resources/services to the world is called "cloud computing". There are 3 types of services a cloud providers offers to the world
+1. IaaS
+2. PaaS
+3. SaaS
+
+
+3. SaaS
+SaaS stands for "software as a service". There are lot of pre-built enterprise software solutions are available within the market that offers various different functional aspects in running/managing the businesses like
+1. SAP
+2. Siebel
+3. Salesforce
+4. JDEdwards
+5. Workday
+6. Jira
+7. Peoplesoft
+8. Oracle Apps
+9. Oracle EBusiness Suite
+etc
+
+These softwares can be directly used by the enterprise business organizations in conducting their day to day business activities. Inorder to use these software solutions the business needs to perform below operations in having these solutions:
+1. Procure software licenses
+2. Setup the required infrastructure
+3. Install and configure these enterprise softwares on the infrastructure
+4. administering, monitoring and managing these softwares
+having these solutions hosted and managing has lot of drawbacks or difficulties:
+
+challenges:
+1. Licensing cost in procuring these enterprise softwares are very high and cannot be effordable for small or moderate organizations
+2. The time required for installing, configuring and customizing these softwares to be used aspart of the business is quite high
+3. managing the cloud lifecycle operations like scale-up,scale-down, scale-in and scale-out are very complex
+4. patching, upgrading these enterprise solutions is very difficult
+5. monitoring and periodical backup and recovery requires an dedicated team and inccurs huge cost
+6. we need 2 teams of engineers, 1 cloud engineering team and enterprise software engineering team, the cost of having these teams cooridnating and working together in impleration of these enterprise softwares is very high
+
+Instead of the business organizations by themself hosting and managing these software solutions, the cloud providers offers these softwares aspart of SaaS layer. 
+  
+Instead of procuring the licenses and infrastructure in running them, the cloud providers offers these softwares as services based on multi-tenancy model.
+  
+Based on the type of software the licensing model will differ, but we never need to pay for the whole license of the software to use. For eg.. incase of Peoplesoft
+The license model would be not about how many servers on which it is running the peoplesoft, rather would be based on number of users/employees we are managingon the peoplesoft application.
+  
+There are lot of cloud providers are there in the market who provies the above services IaaS, PaaS and SaaS. Few vendors providers few types of services, and few others provides all. The popular cloud providers are listed below
+1. AWS Amazon Webservices Type could
+2. Microsoft Azure
+3. Google Cloud
+4. Openshift
+5. Oracle Cloud Infrastructure (OCI)
+6. Alibaba
+7. IBM Cloud
+etc
+The services offered by these cloud providers varies greatly from one provider to another provider.
+  
+AWS Cloud Platform
+-------------------
+The AWS Cloud Platform offers lot of services aspart of the cloud platform, around 200+ services are there. Locating and using these services out of such a huge list of services is very difficult. To help us in easily identifying and using them AWS has distributed them into domains.
+There are 7 core and popular domains are there in AWS under which the services are organized or grouped into  
+1. Networking
+2. Compute
+3. Database
+4. Storage
+5. IAM
+6. Messaging
+7. Monitoring
+8. Developer Tools
+--------------------------------------------------------------------------------------------------------------------------------------
+AWS Architecture
+-----------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

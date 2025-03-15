@@ -1,0 +1,205 @@
+2. use template files with placeholders.
+define the content we want to generate as an dynamic content in the template files with placeholders defined to be replaced aspart of the programs. In the programs write the logic for replacing these placeholders with the actual values in generating the configuration files or dynamic output.
+    
+This solution works greatly for simple requirements, but we might have complex requirements like
+1. generating the contents based on the conditional evaluation 
+2. or by iterating over a group of values as an input in generating the content
+
+2. we wanted to generate dynamic content or a configuration file based on the collection values taken as an input. 
+For eg.. we want to generate an email content from the program in sending the order information to the user when he has placed an order in our application
+
+order-confirmation.templ
+Hi [USER]
+Your order has been confirmed and the order no : [ORDERNO] Below are the list of products with their quantity placed aspart of the order
+product name     
+[PRODUCTS_INFO]
+
+
+orderemail.sh
+USER=$1
+ORDERNO=$2
+PRODUCTS_INFO=$3
+
+sed -i 's/[USER]/'$USER'/g' order-confirmation.txt
+sed -i 's/[ORDERNO]/'$ORDERNO'/g' order-confirmation.txt
+CONTENT=NULL
+for PRODUCT in $PRODUCTS_INFO
+loop
+  CONTENT=CONTENT+PRODUCT+"\N"
+end
+sed -i 's/[PRODUCTS_INFO]/'$CONTENT'/g' order-confirmation.txt
+
+In the above program we are again writing the logic for building the content that should substituted inside the program, so that again we run into the core problems.
+    
+    
+To overcome the above problems in constructing/generating the dynamic content out an template files, the ansible has introduced jinja2 template module.
+    
+Jinja2 template  is not part of ansible, rather it is an python module used for templating and subtitutions. It has been integrated into Ansible for generating the configuration files by making it as an module.
+    
+How to work with Jinja2 templates?
+1. write the jinja2 template files embedded with jinja2 engine provided instructionset as part of them like
+1.1 placeholders
+1.2 conditional expressions
+1.3 loop statements
+instead of we writing the programming logic in generating this content inside the programs, now the logic for including or generating content is placed aspart of the template files itself. So that the programs looks cleaner and maintainable.
+    
+    
+2. The software programs has the logic for computing the data and pass it as an input to the jinja2 template engine along with jinja2 template file on whom it has to apply the data in constructing the dynamic output.
+    
+Now the job of taking the data and identifying the placeholders or templating logic written to generate the content inside the template file be executed by jinja2 engine and generates the dynamic content 
+So that we can easily generate dynamic contents out of the jinja2 template engine.
+    
+    
+While working with ansible we might want to generate configuration files aspart of the playbook execution pertaining to an fleet server this can be done easily through jinja2 templates as below
+
+#1. write an template file defined with placeholders or jinja2 programming instructions like conditions and loops
+site.conf.j2
+<VirtualHost *:80>
+    ServerName {{Server_Name}}
+    DocumentRoot /var/www/{{Site_Directory}}
+</VirtualHost>
+
+
+siteconf-playbook.yml
+---
+- name: jinja2 basic example
+  hosts: all
+  vars:
+    Server_Name: ninestars.com
+    Site_Directory: ninestars
+  tasks:
+    - name: generate siteconfiguration file
+      template:
+        src: site.conf.j2
+        dest: site.conf
+...
+            
+            
+Jinja2 template engine has provided coding constructs or programming instructions that can be written in the template file for generating the dynamic content based on the user data.
+    
+1. Variable Substitutions
+{{variableName}} = variable expression that should be substituted with an value
+
+2. Conditional Statements in generating the dynamic output
+2.1 if condition:-
+    
+{%if var operator val %}
+  block
+{%endif%}
+
+2.2 if-else condition:-
+{%if var operator val %}
+   block
+{%else%}
+   block
+{%endif%}
+
+2.3 if/elif/else/endif condition:-
+{%if var operator val1 %}
+  block
+{%elif var operator val2 %}
+  block
+{%else%}
+  block
+{%endif%}
+
+
+3. Loop control statements
+{%for var in values %}
+  block
+{%endfor%}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

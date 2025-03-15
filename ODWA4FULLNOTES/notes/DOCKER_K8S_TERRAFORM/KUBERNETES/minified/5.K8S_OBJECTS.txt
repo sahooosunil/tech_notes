@@ -1,0 +1,76 @@
+Kubernetes Objects
+------------------
+Kubernetes object is an record of intent, through which we can tell kubernetes control plane what we wanted to create on the cluster. Upon creating the object kubernetes cluster will tries to bring the system/cluster to the desired state based on the object definition. All the kubernetes objects are persisted permanently aspart of the etcd
+
+There are different types of objects are there
+1. pod
+2. replicaset
+3. deploymentset
+4. daemonset
+5. job
+6. service
+7. ingress
+8. loadbalancer
+etc
+
+How to create an object on the kubernetes cluster?
+The Devops engineer or kubernetes developer has to write the resource spec or manifest describing the information about the object that has to be created on the cluster and pass that as an input to the kubernetes control plane using kubectl. The Kubernetes control plane reads the resource spec or manifest and creates an appropriate object and stores in etcd
+
+1. write an resource spec or manifest based on the type of object we wanted to create on the cluster
+2. pass the spec as an input to the control plane or master node through the help of kubectl
+3. Master Node or Control Plane validates the spec file, reads and extracts the information out of it and creates an appropriate object and stores in the etcd
+4. the system/cluster constantly work to bring the desired the state defined
+
+The resource spec or manifest is an YAML file in which we describe the information about the object we wanted to create on the cluster. The structure and the contents of the spec file or manifest has been defined by the kubernetes itself for each type of the resource/object
+
+All the spec files carries few common attributes irrespective of the type of object as below:
+1. apiVersion = which version of the kubernetes object we are using for defining the spec
+2. kind = type of object
+3. metadata = used for defining lables for  the object
+4. namespace = under which namespace this object should be created
+5. spec = the desired state of the object 
+
+How to create and manage these objects on kubernetes cluster?
+The kubectl has provided sophisticated ways of creating, managing these objects on the cluster. There are 3 ways we can create these objects on the cluster
+1. imperative commands
+2. imperative object configuration
+3. declarative object configuration
+
+1. imperative commands
+kubectl has provided handful of commands to which we can pass arguments in creating various different types of objects. we can avoid writing an spec or manifest file manually in creating objects.
+	
+kubectl run apache2 --image=apache2:latest --port=80
+	
+advantages:-
+we can quickly create an object on the cluster without writing the manifest file using imperative commands and used for testing purpose
+
+dis-advantage:-
+we dont have any spec file in hand, based on the inputs/arguments we passed, the kubectl creates the YAML file onfly and passes as an input to the control plane. In future if we want to modify or recreate the object, we dont have the spec file to use
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

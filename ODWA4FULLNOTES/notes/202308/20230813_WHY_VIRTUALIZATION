@@ -1,0 +1,322 @@
+What is vagrant, what is the purpose of it?
+Vagrant is an virtualization workflow automation tool, that helps the developers, quality assurance engineers and operational/support engineers in developing and delivering the software applications quickly
+
+Why do we need virtualization?
+When we are working on distributed applications, there are 2 parts are there
+1. server application
+A server application provides business services/information to the customers. The people uses the client software/programs to send the request to the server application over then network and recieves the data/functionality as an response back from the server application.
+	
+These server applications runs on server software like (incase of java tomcat server, weblogic server) (incase of php: lamp server), (incase of .net: iis server), (react/angular: node server)
+	
+To developer or run the server application we need software packages and tools like
+1. an http/app server that takes care of handling network/infrastructure aspects of running the application
+2. language software (java, php, python etc)
+3. database server software for storing the user/business data permanently, so that it can be used in future
+4. ide
+etc
+
+2. client application
+The client application are the programs that customers/people around the world users to interact the server application in using the business services. For the customers to access the server application needs few tools like
+1. A web browser to access the web application across the network
+2. database client to connect to the database server to debug the application by developer/qa/ops engineer
+3. postman/advanced rest client tools for debugging the apis etc
+
+For a developer to develop and test the application and deliver it to qa he needs #2 environments
+1. server environment
+A server environment means a computer installed with operating system, programming language softwares, software packages, tools and utilities required for developing the application
+
+2. client environment
+Client environment means a machine setup with required client software tools/utilities to access the application and test to verify the application
+
+How to setup the 2 environments so that developer can develop and test the application so that he can deliver the application to the qa?
+Without virtualization and support of vagrant how can we build an application by setting up 2 environments so that developer can develop and test the application for delivery
+There are 2 ways are there in setting up the client/server environment 
+1. Setup both server/client environment on the workstation of the developer itself
+
+2. Setup an central server environment which acts as an development environment, so that all the developers in the team develops the application locally and to verify the application uses the central server environment to test/verify the application for delivery.
+	
+Let us understand the above 2 approaches and see the advantages/dis-advantages with each of them.
+1. Both Server/Client environment setup on the workstation of the developer:
+dis-advantages:
+1.1 Since we have multiple developers in the team, we need to setup the server/client environment on each of the developers machine within the project. Setting up both environments on all the members of the team takes huge amount of time and increases the development cost and delays the delivery of the application
+
+1.2 different developers/members has different workstation environments, so the process of setting up the server/client environments different from one workstation env to another. during the setting up of the software packages, tools and libraries the developers might run into different issues interms of installation/configurations. each and every individual developer has to spend lot of time in debugging and fixes these issues pertaining to their environment.
+	
+1.3 Not all the members of the team are playing the same role. there are different roles of people like backend developers,	ui developers, database/sql developers etc. Everyone dont know the entire process of setting up the client/server environment, even they dont know the software tools, libraries or technologies and how to install and configure them. So they often find it complex and difficult to setup these environments on their local system.
+	
+1.4 The development environment the developer has setup locally on his workstation doesnt reflects the production like environment, due to which while moving the application into the production environment we might encounter failures/in-compatibilities in running the application
+
+1.5 "My code runs on my machine", due to the different environments across the developers, the code written by one developer may not works on another developers machine, due to which huge amount of time would be spend on rework on code in fixing the env issues.
+	
+1.6 if a developer/qa is working on multiple projects, setting up different development environments on the local workstation is not possible for each project
+-----------------------------------------------------------------------------------------------------------------------------------
+2. Setup the Central server environment that can be used by all the developers in deploying and running their application to verify the code.
+On the local workstation of the developer we setup only the development related tools and softwares, along with client environment related tools required for testing the application.
+The server environment of server software libraries/pacakges required to run the application is setup on an central server computer. so that developers upon developing the application on local workstation, they build the application and deploy the application on the central server environment to test it.
+	
+The application will be tested by the developer by using the local workstation as client env and access the application over the network, which is similar to production like env.
+	
+due to this approach we have plenty of advantages:
+1. each and every developer in the team dont have to spend huge amount of time in setting up the server environment by installing software tools, packages and libraries to run the application, thus reduces the cost/time of development.
+	
+2. no need to troubleshoot the 	installation and configuration of software libraries/packages on each developer workstation env, as all of them are going to use the same central server env
+
+3. My code works runs anywhere since everyone is deploying and testing the application on the same central server environment
+
+4. now the application is being tested/verified in production like env only, so that there is no chance the application fails while moving into production
+
+5. The developers/qa can sophisticatedly work on multiple projects without worrying about setting up the multiple envs of different projects on his local machine.
+	
+usually we use central server environment for developing/testing the application while working on:
+1. banking and financial related applications, where security is the key concern in running the application on local workstations.
+2. the cost of software licenses is high due to which they cannot efford in setting up the software on each developer computer, insuch case we use central server env
+
+dis-advantages:-
+1. since all the members in the team shares the same central server environment in deploying and testing their code, 	one developer at anypoint of time can use that env and rest of the others has to wait, thus killing the developers productivity in developing and delivering the application
+
+2. huge coordination is required between the members of the team in ensuring one developer will not overlap or override the code changes being tested by the other developer. 
+	
+3. since the appliation is deployed on central server environment for testing, it would be difficult to debug the application logic incase of failure. the developer has to rely on log files in identifying and resolving the errors/logical problems in the code, thus increases the time of development of the application
+
+From the above even though the central server environment has addressed majority of the problems of the #1 approach, it doesnt support rapid application development and delivery since it doesnt promotes multiple developers to work in parallel in developing or debugging the application.
+	
+Instead of using the above #2 approaches we can leverage the virtualization technology in quickly setting up/bringing up the server environment on the workstation of the developer as below.
+	
+#3. setup the server environment on the virtual machine and run it locally on the workstation of the developer
+1. setup the server environment on the virtual machine by installing required software libraries/tools and utilities like
+	- language software
+	- application servers
+	- database servers
+	etc
+upon building the virtual machine environment with all the required tools/utilities that is ready for deploying/testing the application, export the virtual machine env as an vdi disk image and distribute it across all the developers in the team.
+	
+Now each individual developer within the team dont need to gothrough the complex process of setting up the server environment rather they can quickly import the vdi image on the local workstation to bringup the server environment on their workstation
+
+This approach has solved all the problems we have discussed earlier:
+1. every developer dont need setup the server environment manually on the local workstations, thus saves huge amount of time and cost of developing the application
+2. no need to troubleshoot the problems that arises in installing/configuring the software packages on their individual workstations
+3. no need to gothrough the complex process of installing/configuring the server environment tools/libraries by every developer
+4. mycode works on any machine, since everyone in the team is using the same server environment
+5. since the application is being developed/tested in production like env, we dont see an issues while moving the application into production
+6. since the server environment is running locally on the workstation of the developer, debugging the application becomes very easy
+7. since every developer has their own independent server environments running on their workstation, all the developers can work in parallel without the need of waiting for central server env
+8. the developer can work on multiple projects, by configuring multiple server environments for each project in separate virtual machine.
+	
+	
+How to setup the virtual machine environment?
+1. we need to install the hypervisor software on the workstation of the each developer along with devops engineer machine.
+2. Now on one of the developer/devops engineers has to setup the server environment by creating an virtual machine manually. Inorder to create the virtual machine there are quite a number of steps to be performed as below
+	1. download the iso image of the relevant operating system platform to be used for setting the server env
+	2. create the virtual machine by choosing appropriate hardware configuration 
+		1. cpu
+		2. ram
+		3. virtual harddisk
+		4. network adatpers/network configuration
+		5. shared folders
+3. install the operating system on the virtual machine that we created above
+4. download the software packages/libraries that are required to run the application
+5. install them and configure them on the virutal machine environment
+6. export the virtual machine as an vdi disk image file and distribute it across all the developers of the team.
+		
+From the above we can understand using virtualization we can eliminate/overcome most of the problems we have discussed earlier, but using the virtualization technic has its own challenges in creating and using them:
+1. creating an virtual machine manually is an laborious process that involves several steps that should be performed sequentially in order to setup the virtual machine, thus takes huge amount of time.
+	
+2. operating system / software upgrades, patching on the virtual machine environments enforces us to recreate the virtual machine from the scratch, which involes huge amount of time in recreating them
+
+3. The process of setting up the virtual machine is not an one-time job, it is an repeatitive task that should be performed by the devops engineer whenever there is a change in infra or software packages or tools or even there is an new version/patches for the softwares. while performing the process of setting up virtual machine if somethings goes wrong it enforces the ops engineer to recreate the machine by following the whole process from the scratch which wastes lot of time.
+	
+4. not everyone in the team is aware of the virtualization/hypervisor technology, they may not know the process of importing the vdi files in creating the virtual machine locally on their workstations, thus making it difficult for the team to adopt.
+	
+even though virtualization has solved all of the problems, using the virtualization has its own challenges, to overcome them in using the virtualization we need sophisticated tools that takes of creating/setting up the virtualization quickly that is where vagrant is introduced.
+	
+Vagrant is an virtualization workflow automation tool through which we can quickly setup/configure virtual machine environments, so that those can be used for development and delivery of the software applications.
+	
+Vagrant Architecture
+--------------------
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

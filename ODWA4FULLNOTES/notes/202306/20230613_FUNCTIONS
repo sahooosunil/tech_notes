@@ -1,0 +1,236 @@
+What are functions, why do we need to use them?
+functions are the named block of code through which we can achieve reusability aspart of the shellscript program. if we want to execute a block of code at various different places within the shell program, rather than repeatedly writing the same block of code at different places, we can make use of functions
+
+we can wrap the block of code inside a function and can be invoked/called at various different places whereever we want to execute it inside the shell program
+
+While working with functions our program will be divided into #2 parts
+1. function block 
+2. main block of code
+
+2. main-block of code: The instructions that are written directly within the shell program are part of main-block of code. Always control flow of execution starts from main-block of code and executes from top-bottom of the program
+
+1. function-block of code: The instructions that are wrapped within the function..() {} are called as function-block of code. The shell interpreter by default will not execute the lines of code that is wrapped within the function declaration. The functions only gets executed when we call them from main-block of code or from other functions
+
+How to write a function in shellscript program?
+function functionName() {
+	// instructions to be part of the function
+}	
+
+How to call a function?
+just refer the function name, whereever we want to call it
+functionName
+-----------------------------------------------------------------------------------------------------------------------------------
+Working with function arguments
+function arguments are the input data/values we can pass as an input while calling the function, so that we can reuse the function at various different places within the program by passing different inputs of data on which it performs the operation.
+	
+How to pass the function arguments while calling the functions?
+while calling function, along with referring the name of the function we can supply argValues separated by space
+
+How to access the function args passed inside the function?
+using magic/implicit variables within the function
+$1 to $N = to access the function parameter values
+$# = no of arguments passed as an input while calling the function
+
+wap to add #2 given numbers using functions
+addNumbersFnArgs.sh
+--------------------
+#!/bin/bash
+function add() {
+	NARGS=$#
+	
+	if [ $NARGS -ne 2 ]; then
+		echo "error: 2 numbers are expected!"
+		exit 1
+	fi
+	A=$1
+	B=$2
+	SUM=$[A+B]
+	echo "SUM: $SUM"
+}
+#main block
+add 10 20
+add 50 40
+-----------------------------------------------------------------------------------------------------------------------------------
+Scope of variables in shell program	
+There are 2 scopes of variables are there in shell program
+1. global scope
+2. local scope
+
+1. global scope
+all the variables that we declare in a shellscript program by default are global variables and are accessible through out the entire shellscript program (within the main-block or in across function blocks)
+	
+2. local variable
+when we create a variable within the function by default the scope of the variable is global and becomes accessible through the program. incase if we want to declare a variable scoped to the function itself then we need to use local keyword in declaring the variable as shown below
+
+local variableName=value
+
+program.sh
+----------
+I=10
+J=20
+	
+function f1() {
+	echo "I :" $I
+	I=20
+	K=30 // global variable
+	local G=40	
+		
+}
+
+#main block 
+f1
+echo "I : $I"
+echo "K : $K"	
+echo "G: $G" // G is not accessible since it is declared as local variable
+-----------------------------------------------------------------------------------------------------------------------------------
+working with exitcodes in linux operating system
+every program that is running on the operating system of the computer, upon completing its execution should return an exitcode indicating the status of its completion
+if the program has completed execution and has returned the exitcode as: 0  means the program finished execution successfully. Anything other than zero indicates a failure execution and has terminated the program.
+	
+it is the responsibility of the operating system to gather the exitcodes returned by the programs and monitor them to keep track of the health of the programs that are running within the operating system.
+	
+upon a program completed execution, and returned the exitcode to operating system, the operating system stores the exitcode returned the program in a special variable called "$?". we can always can find the exitcode with which a program finished execution by using $?
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

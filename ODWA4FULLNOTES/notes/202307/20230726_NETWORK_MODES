@@ -1,0 +1,139 @@
+How many network modes are supported by oracle virtualbox?
+7 network modes are supported by oracle virtualbox
+1. Not Attached
+2. NAT
+3. NAT Network
+4. Bridge
+5. Internal Network
+6. Host-Only Network adapter
+7. Generic Driver
+
+2. NAT, 
+NAT stands for network address translation protocol. NAT is an special type of port that only allows outbound traffic from vm to host and external network, but will not allow inbound traffic from host/external network to vm. 
+NAT port receives the network traffic from the vm and forwards the traffic by copying it onto the external network by translating the source ip address as host address instead of vm address. So that the external network computers always sees the network traffic is originating from host itself rather than vm. since it translates the network traffic from vm onbehalf of the host, it is called "network address translation port"	
+	
+In addition to the above NAT supports port forwarding, we can expose an network application	that is running inside the VM to the host/external network in a controlled way through port forwarding.
+We can configure an forwarding port on the host machine, so that all the network traffic received by the host machine on the specific port is forwarded to the vm application that is running on a specific port, so that we can expose the application rather than vm to the external world.
+	
+The process of creating an virtual machine is called "provisioning".
+By default when we create/provision an virtual machine in oracle virtualbox hypervisor, for each machine one network adapter will be attached with default network mode as NAT only.
+	
+experiment on port forwarding:	
+To understand port forwarding, let us install an apache2 server software on the VM we have provisioned above with NAT as an network mode
+install apache2 server
+1. sudo apt update -y
+2. sudo apt install -y apache2
+after installing apache2 server will be automatically started and available for access.
+	
+we can access the server program within the VM itself by opening the web browser and send the request to the apache2 server on port : 80.	
+http://localhost:80
+
+Now our goal is to make the apache2 server accessed from host/external network through port forwarding.
+To configure the port forwarding 
+1. select the virtual machine from virtualbox manager and click on settings
+2. navigate to network tab in the left pane
+3. here we see Adapter1 enabled with Attached: NAT, expand the advanced section
+4. we see port forwarding button, click on it and configure as below
+HOST PORT: 8081
+GUEST PORT: 80
+leave the rest of the options as blank and click ok.
+	
+Now when try sending the request to the host computer on 8081 port, the request will be forwarded to the guest machine apache2 server that is running on 80 port. to check this
+open an web browser on host machine and type http://localhost:8081
+-----------------------------------------------------------------------------------------------------------------------------------	
+2. NAT Network
+NAT network is same as NAT only, the only difference is the virtual machines that are connected to the same nat network can communicate with each other.
+	
+How to configure NAT network?
+1. open oracle virtualbox manager GUI tool
+2. goto file and tools -> network manager. 
+3. In the Network Manager, switch to NAT Network
+4. Create a new NAT Network adapter by providing the name, cidr and enable DHCP option
+
+With the above we have created our own NAT Network (Switch).
+	
+5. Goto an existing virtual machine settings 
+6. Navigate to Network tab from left and goto Adapter1 and choose the Network mode as : Nat Network for both the virtual machines
+7. Select in the below drop down the above network adapter we created to make the VM connect to the switch
+	
+Now all the vms connected to the same nat network switch will be able to communicate with each other.
+---------------------------------------------------------------------------------------------------------------------------------	
+3. Bridge Network
+Bridge network the name itself indicates used for bridging or inter-connecting multiple networks together. To configure the bridge network we need to choose the network mode for the virtual machine as bridge, then the virtualbox manager pops up another option in a dropdown asking us to select the network adapter of the host machine we want the virtual machine to bridge into.
+	
+Here we need to choose the physical network adapter of the host machine that the internet is plugged into in bridging all the networks together. Usually we choose "Wifi network adapter"	, because our machines are connected over the wireless network
+
+When we configure the bridge network for a virtualmachine, the oracle virtualbox generates the ip address for the virtual machines within the same network range of host adapter network ip, thus forming single network
+
+The bridge network is also called as "public network", because it is open to all, all the possible combinations of communication would be possible in bridge network like
+1. VM TO VM
+2. VM TO HOST / HOST TO VM
+3. VM TO EXTERNAL NETWORK / EXTERNAL NETWORK TO VM
+
+Note: it is not recommended to use bridge network for real-world deployments as the vms are exposed to public world. Incase of local development environment within an intra-network we can use bridge network .
+	
+----------------------------------------------------------------------------------------------------------------------------------
+4. Host-only Network Adapter
+Host-Only Network Adapter allows the virtual machines on the same network adapter to communicate with each other, additional the vm can communicate with host and host to vm is allowed. But VM to External Network and External Network to VM is not permitted.
+	
+Here we need to create an special host-only network adapter on the host machine using oracle virtualbox network manager tool as below.
+	1. goto file -> tools -> network manager
+	2. click on host-only network adapter tab
+	3. create a new host-only network adapter with cidr and enable DHCP server
+
+1. goto each vm settings and goto network adapter and select the network mode as: Host-Only Network Adapter, and choose the network adapter in the below drop down to which we want the VM to be connected on the HOST. So that all the VMs connected to the same Host-Only Network Adapter can communicate with each other.
+	
+5. 	Internal Network
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

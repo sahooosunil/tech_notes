@@ -1,0 +1,415 @@
+2. EXPOSE
+EXPOSE directive does not expose the port of the containerized application to the host/external, it only acts as an documentation stating on what port the containerized application is running, so that the user who is running the container out of the image can decide how he wanted to expose that port while using it.
+	
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENV TOMCAT_HOME=/u01/middleware/apache-tomcat-10.1.19
+ENV PATH=$PATH:$TOMCAT_HOME/bin
+RUN apt update -y
+RUN apt install -y openjdk-17-jdk
+RUN mkdir -p /u01/middleware
+WORKDIR /u01/middleware
+ADD https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.tar.gz .
+RUN tar -xzvf apache-tomcat-10.1.19.tar.gz
+RUN rm apache-tomcat-10.1.19.tar.gz
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+docker image build -t exp:1.0 .
+docker container run exp:1.0
+this runs the container with tomcat server running inside it, but will not expose the tomcat server to be accessible outside the container.
+	
+when we run docker container ls, we can see the port number on which the containerized application is running will be listed
+CONTAINER ID   IMAGE     COMMAND             CREATED          STATUS          PORTS      NAMES
+b23de5062fa5   exp:1.0   "catalina.sh run"   36 seconds ago   Up 36 seconds   8080/tcp   peaceful_engelbart
+--------------------------------------------------------------------------------------------------------------------------------
+3. CMD
+CMD is an directive used for executing an instruction or a command while launching the container. 
+
+To run the packaged application aspart of the image, we need to write CMD directive aspart of the Dockerfile, so that the docker engine while lauching the container will execute the CMD instruction in running the application.
+	
+In a Dockerfile we can write only one CMD, since aspart of the container we run only one application isolated from others and to have that application launched or running we only need to execute one command using CMD.
+Incase if we have written multiple CMD in the Dockerfile only the last CMD will be executed by the docker engine while launching the container ignore all the others.
+	
+There are 3 forms of writing the CMD in the Dockerfile
+1. CMD ["executable", "params"] = execute form (preferrable form)
+2. CMD executable param1 param2 = shell-form
+
+3. CMD ["param1", "param2"] = used in conjuction with ENTRYPOINT (let us discuss while learning ENTRYPOINT directive)
+	
+1. CMD execute form
+CMD execute form will be executed without shell/bash interpretor, so variable expansions, command substitutions, pipes, and redirectors will not work
+
+For example:
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENV AUTHOR="steve"	
+CMD ["echo", "AUTHOR: $AUTHOR"]	
+
+here echo command will be executed without shell/bash interpreter, so that $AUTHOR will not be expanded even the ENV variables is available while running the container. So when we launch the container, it just prints AUTHOR: $AUTHOR
+
+so if we want the command substitutions, variable expansions, pipes and redirectors to be functional, we need to use bash interpreter while running the executable in execute form as below
+
+CMD ["/bin/bash", "-c", "echo AUTHOR: $AUTHOR"]
+here we are running the executable as BASH interpreter, to him we are passing command to be executed as an input using "-c" switch.
+	
+2. CMD shell-form
+CMD shell-form executes the commands we passed as input using shell interpreter always, so all the variable expansions, command substitutions, pipes and redirectors works in shell-form
+
+CMD echo "AUTHOR : $AUTHOR"
+	
+	
+docker container run image:1.0 command
+
+4. ENTRYPOINT
+ENTRYPOINT is an directive used for running a command/instruction while launching the container, it is more or less same as CMD only that makes the container executable.
+	
+CMD is also used for running an instruction/command at the time of launching the container, but we can always override the CMD instruction that is written aspart of the Dockerfile while launching the container, where as if we write the instruction using ENTRYPOINT we cannot override while launching the container.
+	
+Dockerfile
+----------
+FROM ubuntu:24.04
+CMD echo "hi"
+	
+docker image build -t cmdoverride:1.0 .
+docker container run cmdoverride:1.0
+will launch the container by running the default instruction which is echo "hi", incase if we want we can override the instruction at the time of launching the container by passing it explicitly as below
+
+docker container run cmdoverride:1.0 echo "good morning"
+	
+now instead of hi, it prints good morning onto the console
+
+Instead of using CMD, if we use ENTRYPOINT for running the container instruction for executing the container as below
+
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENTRYPOINT echo "hi"
+	
+docker image build -t entrypoint:1.0 .
+docker container run entrypoint:1.0 = will print hi
+
+let us try to override the default instruction specified in ENTRYPOINT
+docker container run entrypoint:1.0 echo "good morning" = still it runs the default instruction only and prints hi
+
+Can we write both CMD and ENTRYPOINT in a Dockerfile? If allowed how do they get executed together?
+The CMD & ENTRYPOINT directives are used for running an instruction/command while launching the container, since we need to run only one instruction in lauching the application, we just need to write only one of them aspart of the Dockerfile. We can use both CMD & ENTRYPOINT inside the Dockerfile, but they would be executed based on the combination in which they are written
+
+
+ENTRYPOINT can be written in #2 forms
+1. execute form
+2. shell-form
+
+1. execute form
+ENTRYPOINT ["executable", "param1", "param2"]
+the executable will be executed without shell interpreter, so variable expansions, command substitutions, pipes and redirectors will not work.
+	
+2. shell-form
+ENTRYPOINT executable param
+here the executable is executed with shell interpreter, so all the shell features like variable expansions, command substitutions, pipes and redirectors works
+--------------------------------------------------------------------------------------------------------------------------------
+Running Infinite................ containers
+-------------------------------------------
+How long the docker containers run?
+docker container is nothing but a program under execution in an isolated env from other programs or containers on the host.
+So until the program terminates the container will run, upon completing the execution of the underlying program, the container would be EXITED.
+
+How long the server processes/programs like databases, web servers, application servers like
+1. mysql/postgress/oracle database
+2. apache2, ngnix http servers
+3. tomcat, weblogic application servers
+should be running?
+These are by nature long-running programs/processes that should be running infinitely until we stop/terminate them explicitly.
+
+These processes/server programs runs in background, without blocking the TTY as these doesnt require any interactive inputs from the user during their execution.
+
+If such programs are packaged aspart of the docker image and runs out of docker container, since they run in background without blocking the TTY immediately upon lauching the container, the container would EXITED or TERMINATED.
+So how to run such daemon or long-running process aspart of the docker container INFINETELY…….. 
+
+Running INFINITE…………………….. containers:
+
+Let us begin with packaging an tomcat server and running inside a container, to understand the above problem:
+
+FROM ubuntu:24.04
+ENV TOMCAT_HOME=/u01/middleware/apache-tomcat-10.1.19
+ENV PATH=$PATH:$TOMCAT_HOME/bin
+
+RUN apt update -y
+RUN apt install -y openjdk-17-jdk
+
+RUN mkdir -p /u01/middleware
+WORKDIR /u01/middleware
+ADD https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.19/bin/apache-tomcat-10.1.19.tar.gz .
+RUN tar -xzvf apache-tomcat-10.1.19.tar.gz
+RUN rm apache-tomcat-10.1.19.tar.gz
+
+COPY run.sh /u01/middleware/apache-tomcat-10.1.19/bin
+RUN chmod u+x /u01/middleware/apache-tomcat-10.1.19/bin/run.sh
+
+
+ENTRYPOINT [ "apache-tomcat-10.1.19/bin/run.sh" ]
+
+run.sh
+#!/bin/bash
+$TOMCAT_HOME/bin/startup.sh
+tail -f /dev/null #this blocks the TTY
+--------------------------------------------------------------------------------------------------------------------------------
+Override ENTRYPOINT instruction while launching the container
+-------------------------------------------------------------
+The main difference between CMD and ENTRYPOINT is, CMD instruction can be overriden while launching the container, whereas ENTRYPOINT instruction that is written in the Dockerfile cannot be overriden while launching the container.
+	
+Want to use ENTRYPOINT directive only for running the instruction/command, but wanted to override the instruction while launching the container is it possible?
+Yes, we can apply a technic in overriding or executing our own instruction at the time of launching the container even we use ENTRYPOINT as well.
+	
+apache2:/>
+|-Dockerfile
+-------------
+FROM ubuntu:24.04
+RUN apt update -y
+RUN apt install -y apache2
+ENTRYPOINT ["systemctl", "start", "apache2"]
+
+In the above docker file, we are installing and running the apache2 server, it has #2 issues
+1. upon starting the apache2 server, it will launched as daemon process, so that the docker engine terminates the container immediately.
+2. since we are running apache2 server using ENTRYPOINT directive, we cannot override while launching the container
+
+run.sh
+-------
+#!/bin/bash
+set -e
+
+if [ $# -gt 0 ]
+then
+	exec $@
+else 
+	systemctl start apache2
+	tail -f /dev/null
+fi
+
+
+Dockerfile
+-----------
+FROM ubuntu:24.04
+RUN apt update -y
+RUN apt install -y apache2
+COPY run.sh /root
+RUN chmod u+x /root/run.sh
+ENTRYPOINT ["run.sh"]
+
+
+docker image build -t apache2:1.0 .
+docker container run apache2:1.0  = this will start the apache2 server blocking the TTY
+
+docker container run apache2:1.0 echo "hi" = since we override the default instruction by supplying our own argument while launching the container asper the logic in run.sh, it simple executes the command we supplied and terminates the container.
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

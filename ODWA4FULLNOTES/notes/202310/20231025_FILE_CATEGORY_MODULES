@@ -1,0 +1,177 @@
+#2. File Category
+To perform filesystem operations on the files/directories we use File category modules. even though we can perform file related operations using shell/command modules it is not recommended since they dont support idempotancy. We can perform various different operations on files/directories using File category modules like
+1. create/deleting files/directories
+2. copying/moving files/directories
+3. changing ownership and file permissions
+4. inline edit of the file contents
+all these operations can be done with idempotancy enforced using file modules
+
+2.1 copy module
+copy module is used for copying files/folders from ansible control node server onto the managed nodes of the cluster. by default it looks for source file/folder on the control node server to copy, incase if the source files/folders are part of the managed node itself we can specify remote_src: true attribute in copy module.
+	
+1. copy file from source to destination directory
+- name: task
+  copy:
+    src: fileLocation
+		dest: directoryPath
+		
+2. copy files/folders from source to destination with given owner/group and permissions
+- name: task
+	copy:
+    src: file/directory
+		dest: directoryPath
+		owner: 'owner'
+		group: 'group'
+		mode: '0777'
+			
+3. we can enforce validations while copying the files from source to the destination using validate attribute
+- name: task
+	copy:
+	 src: sourcefile
+	 dest: directoryPath
+	 validate: "/usr/sbin/visudo -csf %s"
+	
+let us copy an sudoers file from control node server to managed node under /etc/sudoers.d/ directory as below with validation
+bob
+---
+bob ALL=(ALL:ALL) ALL
+
+- name: copy bob sudoers file by validating
+  copy:
+    src: bob
+		dest: /etc/sudoers.d/
+		validate: /usr/sbin/visudo -csf %s
+	become: yes
+
+2. File Module
+File module is used for creating a new file/directory or change the permissions of an existing file/directory or delete a file or directory.
+	
+
+1. create a new file
+- name: task
+  file:
+    path: location
+		state: touch
+		
+this creates an empty file on the managed nodes of the cluster
+
+2. create a new directory
+- name: task
+  file:
+    path: location
+		state: directory
+
+3. How to create a symlink file to an existing file
+we can create symlinks pointing to an existing file/directory on the file system using file module. There are 2 types of symlinks are there
+1.softlink
+2.hardlink
+
+- name: task
+  file:
+    src: sourceFile
+		dest: destinationDirectory/symlinkFileName
+		owner: 'owner'
+		group: 'group'
+		state: link | hard
+
+note:
+while creating an softlink the owner, group and permissions are not applicable. only for the hardlinks we can specify these
+
+
+4. How to change owner/group of an existing file
+- name: task
+  file:
+    path: fileTobeModfied
+		group: 'group'
+		owner: 'owner'
+		mode: 'permissions'
+			
+5. How to preserve the modificationTime and accessTime for a file?
+1. accessTime = read/copy/move operations on file/folder, the accessedTime will be changed by linux
+2. modifiedTime = modify the contents of tile then modified time will be changed
+3. changeTime = when we change attributes of the file like owner, group, permissions then changeTime will be modified
+4. birthTime = birthTime will not be modified and only be set when we create file/folder
+
+So we can preserve the accessTime, modifiedTime and changeTime using attributes as below in file module:
+
+- name: task
+  file:
+    path: fileToBeModified
+		group: 'group'
+		owner: 'owner'
+		mode: 'permission'
+		modification_time: preserve
+		access_time: preserve
+		
+The possible values we can write for access_time and modification_time is:
+1. now
+2. preserve
+3. set, incase of set we can set to custom date and time format as '{{%Y%m%d%H%M.%S}}'
+
+
+
+
+
+new file
+new directory
+symlinks
+change owner/group/permissions
+preserve file timestamps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+	

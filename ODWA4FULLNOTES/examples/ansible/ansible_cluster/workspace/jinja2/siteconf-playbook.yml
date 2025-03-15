@@ -1,0 +1,12 @@
+---
+- name: jinja2 template
+  hosts: all
+  vars:
+    Server_Name: ninestars.com
+    Site_Directory: ninestars
+  tasks:
+    - name: generate site conf file
+      template:
+        src: site.conf.j2
+        dest: site.conf
+...

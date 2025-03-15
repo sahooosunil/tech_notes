@@ -1,0 +1,97 @@
+SSH
+SSH stands for secure shell, it is used for accessing the shell of the remote computer so that users can issue commands over the network to perform various different operations like
+1. installing/updating/uninstalling the software packages
+2. perform administrative activities
+3. configuration management etc
+
+prior to ssh they used to Telnet through which we can access the shell of the remote computer, but the conversations that takes place or not secured, so to overcome the problem SSH has been introduced.
+	
+The SSH uses cryptographic technics in securing the communication, one of the form of cryptography is encryption/decryption. The SSH uses 3 types of encryption technics 
+1. symmetric encryption
+2. assymetric encryption
+3. hashing
+
+1. symmetric encryption 
+In symmetric encryption a single key is used by both the parties for encrypting and decrypting the data
+
+2. assymetric encryption
+There are 2 different keys are used for encryption and decryption
+1. public key  = The public key is used for encrypting the data
+2. private key = The data that is encrypted using the public key can be decryptable using the priate key
+here we have 2 keys being used for encryption/decryption, so it is called "Assymetric encryption"
+	
+3. hashing
+hasing is a technic used for verifying the integrity of the data
+The hash is an special mathematical function where always
+the hash(data) = unique value
+always hash(samedata) = returns in same unique value only. by using the hashvalue we can not compute the original data
+
+so we can easily identify at the receiver end, whether the original message that is send is being recieved or is it tampered by recomputing the hash value on the received data and matching with original hash value
+-----------------------------------------------------------------------------------------------------------------------------------
+How does SSH uses these technics in securing the communication over the network?
+SSH Communication takes place between the computers in 2 stages
+1. establishing the session by generating an session key for exchanging the data
+2. authenticating the remote user in granting the access to the remote machine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

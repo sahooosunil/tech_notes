@@ -1,0 +1,127 @@
+1. how to move the files or directories from one location to a different location?
+$HOME
+|-library
+  |-comedy
+		|-grumpymonkey.txt
+	|-fiction
+	|-education
+	|-horror
+		|-evildead.txt
+		
+$HOME
+|-universallibrary
+	|-comedy
+	
+1.1 To move a file from source location to a different destination directory we need to use mv command
+mv sourceFile destinationDirectory
+mv $HOME/library/comedy/grumpymonkey.txt $HOME/universallibrary/comedy
+
+1.2 How to move the entire directory from source location to destination location?
+mv sourcedir destinationdir
+
+mv library/horror/ universallibrary/
+	
+1.3 how to rename a file or a directory?
+$HOME
+|-greatmovies.txt
+
+how to rename greatmovies.txt to favoritemovies.txt
+in bash there is no rename command available to rename the filename / directoryname, we need to use mv only for this.
+	
+mv sourceFile newFileName
+mv $HOME/greatmovies.txt $HOME/favoritemovies.txt
+----------------------------------------------------------------------------------------------------------------------------------
+Regular expressions in bash commands
+------------------------------------
+There are 3 characters we can use as expressions in shell commands
+* = for any character match
+? = single character match
+[] = given a range of characters with which a single character is matched
+
+
+$HOME
+|-stocks
+	|-infosys
+	|-wipro
+	|-tatapower
+	|-tatamotors
+	|-tataconsultancyservices
+	|-tatasteel
+	|-tatasalt
+	|-jindalsteel
+	|-bushansteel
+	|-adanipower
+	|-hyundaimotors
+	|-ucb-clothing
+	|-gap-clothing
+	|-w-store
+	|-hrx-store
+	|-lee-store
+	|-ucb-store
+	|-usp-store
+	|-jockey-store
+	
+1. how to see the files and folders inside the directory stocks
+$HOME: ls stocks/
+2. how to see all the files and folders inside the stock directory whose name contains power?
+$HOME: ls 'stocks/*power'
+
+show me all the files and folders which are streel related stocks
+ls 'stocks/*steel'
+
+show me all the files/folders which has tata word in it?
+ls 'stocks/*tata*'
+
+ls stocks/???-store
+show me all the files and folders starting with either u or l and filename having 3 characters -store
+ls [lu]??-store
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

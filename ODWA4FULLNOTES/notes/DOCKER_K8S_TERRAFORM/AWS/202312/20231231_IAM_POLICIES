@@ -1,0 +1,136 @@
+#4. Policies
+policies is an json language provided by the aws cloudplatform, that groups multiple permissions to be granted on a resource/service together, so that it can granted to an aws IAM user
+
+There are around 1000+ permissions are defined by the aws developers in controlling the access to the resources/services. While creating the IAM user or a group, granting the access to the resource/service by assigning permissions individually is very difficult as we need to browse through the lengthy list of permissions in granting the access.
+  
+so aws to help us in easily granting the access to services/resources introduced policies. The aws developers has pre-defined or pre-created bunch of policies for each resource/service type in aws cloudplatform based on the type of access to be granted and provided to us.
+For eg for an ec2 service the aws has defined multiple policies as below
+1. AWSEc2FullAccess
+2. AWSEc2ReadonlyAccess
+etc
+
+now depends on what type of access we want to grant to an USER/GROUP we need choose the policy out of the available list.
+  
+These policies can be categorized into 3 types:
+1. AWS Managed Policies
+These are the pre-defined / pre-created policies by the aws cloudplatform developers and made them available for each aws account. The root users can quickly assign these policies while creating an IAM user or a group to the account.
+These policies are maintained and managed by aws cloudplatform developers, which means when a new feature has been added to a service or an existing feature has been removed for a service, along with these changes there is a change in permissions will takes place. based on the change in features, the policies needs to be modified in adding or removing these permissions.
+The AWS Cloudplatform developers takes care of modifying these policies based on new features/change of features to keep them up to the date.
+  
+2. Customer Managed Policies
+For most of the requirements, the pre-defined policies provided by the aws cloudplatform should be sufficient. Incase if we have additional requirements that doesnt falls into aws pre-defined policies, then the cloudplatform users can create their own policies using the policy wizard tool, these policies that are created and maintained by the customers are called "Customer Managed Policies"
+  
+The policies that are created by the aws account user are kept at account-level so that these policies can be reused in assigning to any IAM / group of the account.
+  
+
+3. Inline Policies
+These are also similar to customer managed policies, but rather than defining them at account-level, these are written and binded local to the resource/service where we are defining. hence these cannot be reused.
+  
+
+How to create our own policy?
+Policy definitions are written in json format, and has pre-defined sections within it.There are 5 important sections are there in policy definition.
+  
+1. sid
+sid is the unique name we assign to our policy to identify and distinguish from other policies.
+  
+2. principle
+For every resource we create in aws cloudplatform, the platform assigns an arn (amazon resource name). when we create an IAM user or a group it has an arn assigned to it.
+priciple is the arn of the IAM user to whom we want to grant permission to the resource/service. if we want to apply this policy toall the users of the account, then we can define the principle as "{*}"  or ignore writing principle.
+  
+3. action
+the list of permissions we want to grant to a resource/service
+
+4. resource
+to which resource of the aws account we want to grant access is specified here
+
+5. effect
+tells about the above defined actions are allowed/denied
+
+
+syntax: policy definition:
+{
+  "Version": "2023-12-31",
+  "Statement": [
+    {
+      "Sid": "EC2ReadOnlyRestartPolicy", 
+      "Effect": "Allow",
+      "Action": [
+        "start", 
+        "stop",
+        "restart"
+      ],
+      "Principle": "{*}",
+      "Resource": "ec2:*"
+    },
+    {
+      // statement2
+    }
+  ]
+}
+
+#5. Roles
+Roles are used for granting access to the aws resources/services to access another resources or services of the cloud account
+
+
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

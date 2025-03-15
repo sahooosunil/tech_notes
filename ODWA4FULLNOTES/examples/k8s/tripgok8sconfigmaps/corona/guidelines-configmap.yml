@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: guidelinesconfigmap
+data:
+  oxygenLevel: "85"
+  quarantine: "20"
+  liters: "3"
+  temparatureLevels: "102"
+...

@@ -1,0 +1,112 @@
+What are the advantages of adopting iac tools in building the infrastructure?
+There are several advantages or benefits of adopting iac tools in provisining the infrastructure
+1. higher-rate of deliveries
+The applications that adopt iac tools for provisioning the infrastructure has better rate of delivery of the application, when compared with others.
+  
+2. self-service
+The developers upon developing the application, it needs to be delivered manually into the production env. For this the developers has to reach to the operational engineering team, who takes care of manually setting up the infrastructure needed for deliverying the application. Usually the developments teams will be large in number and the ops teams will be smaller group, due to which we always runs into bottleneck of delivering the applications across
+
+Instead, if we have adopted iac automation for infrastructure management, the development team by themself can release the application straight into the production and will improve the deliverability of the application
+
+3. documentation
+If we express the infrastructure interms of code through iac tools, it acts as an good source of documentation in understanding the infrastructure. So if a new ops engineer joined the team, it takes very less time to become productive, as he can walk through the iac code in understanding the infrastructure the application is using
+
+4. versioning
+
+as we build the infrastructure through code, we can version the code into the version control repository, so that we can easily keep track of the changes that happens on the infrastructure. at anypoint of time we can trackback easily and can understand how does the current state of the system has been evolved by going through the versions of the iac code. Anytime we can rollback the infrastructure to the previous state by taking the prevision revisions/versions of the iac code easily.  
+  
+5. Speed and Safety
+Incase of manually setting up the infrastructure there is always a chance of comitting human mistakes due to which we endup in failure of delivering the application. Instead if we have adopted iac tools for creating the infrastructure, we can always pre-test the iac code before executing or applying it on the actual env. so there is no chance of something going wrong in creating the infra and can quickly produce repeatable infrastructure 
+
+6. Validation
+as we build the infrastructure through code, we can share the code to the peers and get it reviewed. In addition we can apply the iac code on a test envionment and see the final state of the system being produced, there after I can validate the env, before it is being applied on the actual env.
+  
+7. Reusability
+We can write the iac code as libraries or modules, so that when we are working on building the code for creating the infrastructure, we can import existing libraries or modules in quickly writing the code for creating the infrastructure
+
+8. Collaboration & Sharing
+As we create infrastructure through code, we can push the code into version control system and can share it to the other members of the team, so that all the members can collaboratively build the infrastructure and share with each other.
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

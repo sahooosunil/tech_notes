@@ -1,0 +1,154 @@
+Playbook
+Instead of we running the modules manually on the managed servers of the ansible cluster, we can declare and orchestrate these modules by using playbooks
+Playbooks are written in YAML file format, then ansible developer/ops engineer all the modules he wanted to apply on the managed nodes within an playbook and passes it as an input to the ansible control node server. As the playbooks are written in structured format with well-defined semantics attached to it, the control node server will be able to identify the modules and execute them in the specified order on the fleet servers
+
+an automation we wanted to apply on the managed nodes is called a "Play". In a playbook they can be multiple plays, where each play represents group/set of tasks/modules that has to be applied on the managed nodes inorder to achieve the desired system state.
+	
+For a project we might has to perform multiple automations inorder to install/deploy the application. For eg.. we wanted to install/configure
+1. java + tomcat server
+2. mysql server database
+
+these 2 automations can be defined as 2 plays within the playbook so that we can choose to apply them independently on the fleet servers. Here we have 2 solutions/approaches
+
+1. either we can write these 2 automations aspart of #2 different playbooks
+2. we can write them as 2 plays in one single playbook 
+
+How does the playbook looks like?
+The playbook should be written in YAML file format and should be saved with an extension as ".yml" or ".yaml". The Sytax and structure of writing the playbook file is as below.
+	
+playbook.yml
+---
+- name: play1
+	hosts: groupName
+	tasks:
+    - name: task1
+		  module:
+        arg1: arg1Value
+				arg2: arg2Value
+		- name: task2
+		  module:
+        arg1: arg1Value
+				arg2: arg2Value
+- name: play2
+	hosts: group2
+	tasks:
+    - name: task1
+		  module:
+        arg1: arg1Value
+				arg2: arg2Value
+    - name: task2
+		  module:
+        arg1: arg1Value
+				arg2: arg2Value
+...
+	
+A task represents a named execution of a module, through tasks we can control the execution of a module as well. By looking at the taskName we can easily understand wy are we executing that module for. So a play contains multiple tasks in which module is wrapped through which we can achieve the desired state of the machine.
+	
+let us write an basic playbook that demonstrates the syntax of writing an playbook
+debug-playbook.yml
+---
+- name: debugPlay
+	hosts: all
+	tasks:
+	  - name: debug task
+			debug:
+				msg: Good morning! Welcome to anible playbooks!
+...
+	
+	
+inorder to run the above playbook, ansible has provided an CLI command called 'ansible-playbook'	as below
+ansible-playbook -i inventoryFile playbook.yml
+--------------------------------------------------------------------------------------------------------------------------------------
+How does ansible playbooks will execute?
+The playbook tasks are executed by default from top to the bottom in order in which those are declared. each task will be applied sequentially on all the managed nodes of the fleet and then moves to the next task
+by default forks = 5 configured in ansible.cfg file 
+
+which means the task#1 will be applied parallely on #5 managed nodes in the cluster at once, in this way once the task1 has been finished on all the nodes across the cluster, it picks the task2 and begins execution 
+
+The way the tasks can be executed on the managed nodes can be customized through execution strategies. during the execution of a task, it has encountered failue on one of the node, it marks the node as ignored/omitted and continues to apply the remaining tasks on all the other nodes of the cluster.
+					
+task1 -> 1-5 [managed nodes] (success) 6 - 10 [managed nodes] failed on #6 & #7 then marked as skipped/omitted
+task2 -> 1-5 [managed nodes] (success) 8 - 10 [managed nodes] skipping 6 & 7 nodes
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

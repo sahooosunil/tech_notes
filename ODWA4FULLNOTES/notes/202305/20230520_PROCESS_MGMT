@@ -1,0 +1,614 @@
+how to change the priority of the process?
+renice -n NI PID
+
+loop.sh
+--------
+#!/bin/bash
+I=0
+while [ $I -lt 100 ]
+do
+	echo "$I"
+	I=$[I+1]
+	sleep 5
+done
+
+now launch the process
+chmod u+x loop.sh
+./loop.sh
+by default the process is launched with priority: 120 = to see this lets type ps on the terminal
+ps -fl
+top
+
+upon seeing the priority and nicevalue of the process lets pick the pid and change the nicevalue to modify the priority
+renice -n 20 pid
+-----------------------------------------------------------------------------------------------------------------------------------
+What is an foreground and background process?
+There are 2 types of processes are there in linux operating system
+1. Foreground process
+2. Background process
+
+
+1. Foreground process
+The Foreground process are the one that requires user interaction during their execution like taking the input from the user and writing output onto the console (TTY). These process will be attached to Terminal (TTY) and will block until they complete execution.
+The output of these process will be directly written onto the Console/Terminal (TTY) as an STDOUT. If we close the terminal, the process would be exited/terminated.
+	
+For eg.. if we write a shell program that takes the input from the user and writes the output to the Terminal (TTY), it has to be executed as foreground process only as below.
+
+addNumber.sh
+-------------
+#!/bin/bash
+READ -p "A :" A
+READ -p "B :" B
+SUM=$[A+B]
+echo "SUM : $SUM"
+	
+chmod u+x addNumber.sh
+./addNumber.sh
+
+by default when we run a program, it will be launched as foreground process only blocking the terminal(TTY) allowing the user to pass the input and produes the output onto the TTY
+
+2. Background process
+There are few programs that doesnt requires user interaction, they dont take input from the user or doesnt produces output onto the TTY (STDOUT) directly. These programs might produce the output, but will not write onto the TTY rather might be written to an different destination, for eg.. to a File etc
+
+if these programs are executed as foreground process, they dont take any input from the user and produces output, but
+1. blocks the terminal and runs 2 processes unnecessarily
+	1.1 program itself
+	1.2 TTY that is running the program
+2. since these programs runs for longer amount of time, there is a chance where accidentally the terminal might be closed resulting in terminating the process itself.
+Instead we can run the above process as background process.
+	
+By default every process in linux will be executed as foreground process, then how to run a program as an background process?
+	
+printEvenNumbers.sh
+-------------------
+#!/bin/bash
+I=0
+while [ $I -lt 10000 ]	
+do
+	I=$[I+2]
+	echo "$I" >> /tmp/evennumbers.txt
+done
+
+chmod u+x printEvenNumbers.sh
+./printEvenNumbers.sh
+
+by default the process would be running as foreground process, to launch it as an background process use & at the endof the program while launching
+
+./printEvenNumbers.sh &
+& = indicates launch the process as background process
+
+
+Sometimes there can be programs that doesnt take any input from the user but produces the output to the Terminal (STDOUT). These programs has to be launched as foreground process, otherwise the output produced by these programs will be lost if we launch them as background process
+
+but there is no use of running these process as foreground since they dont take user input/no need user interaction apart from blocking the terminal. But if we launch them as background process output is gone.
+	
+how to launch such programs as background process and still capture the output of these program?
+linux has introduced nohup
+	
+	
+printEvenNumbers.sh
+-------------------
+#!/bin/bash
+I=0
+while [ $I -lt 10000 ]	
+do
+	I=$[I+2]
+	echo "$I"
+done	
+	
+nohup ./printEventNumbers.sh &
+nohup will capture the output produced by the program to TTY and writes into nohup.out file by default under the current directory.
+So that we can collect the output of the program from nohup.out file
+-----------------------------------------------------------------------------------------------------------------------------------
+Linux Text processing commands
+There are few text processing commands provided by the linux operating system through which we can perform the below operations on text content of a File like
+1. search for a specific text in a give text of information
+2. extracting the portion of data
+3. extracting few fields of data or information from given text
+4. merging 2 different text content together
+5. replacing/substituting the text content
+6. delete a portion of text
+this can be accomplished by using text processing command provided by linux
+There are multiple text processing commands provided by linux operating system, which serves for different purposes as below
+1. cut
+2. paste
+3. sort
+4. awk
+5. sed
+all these commands takes the input from the STDIN or file and performs the operation and generates the output
+
+1. cut
+------
+cut is a command that takes the data as an input from STDIN or file, breaks the data based on delimeter and extracts the fields of data and prints the output on to the STDOUT by default
+delimeter = means field separator
+
+products.txt
+-------------
+1001,LG 32inch LED television,LG,23000
+1002,Samsung Refregerator 160L,Samsung,34000
+1003,Bose 300 SoundBar, Base, 75000
+1004,Apple Watch6, Apple,32000
+	
+In the above file the delimeter is "," which indicates the field separator. Now each line in the file has #4 fields
+Now we can ask cut command to delimete the fields based on "," and extract specific fields/columns of data to be displayed
+
+For eg.. give me all the productNames in the file. 
+cut -d delimeter -f fieldNo filename
+
+cut -d "," -f 2 products.txt
+
+if we want to extract multiple fields from the file and display then we can use
+cut -d delimeter -f fieldNo1-filedNo2 filename
+
+The default delimeter if we dont specific is "TAB"
+-----------------------------------------------------------------------------------------------------------------------------------
+#2. paste
+paste is used for merging the contents of 2 different files based on a delimeter
+
+electronics.txt
+1,hairdryer,philips,1000
+2,apple watch6,apple,32000
+3,iphone14,apple,132000
+	
+electronics-inventory.txt
+10,GD83,B039
+5,GD928,B08
+3,GD98,B086
+
+we can merge the contents of the above 2 files using paste. paste will reads both the files and merges them line by line and produces an single output based on delimeter we specified
+
+paste -d delimeter file1 file2
+paste -d "," electronics.txt electronics-inventory.txt
+
+1,hairdryer,philips,1000,10,GD83,B039
+2,apple watch6,apple,32000,5,GD928,B08
+3,iphone14,apple,132000,3,GD98,B086
+-----------------------------------------------------------------------------------------------------------------------------------
+#3. sort
+sort is used for sorting the contents of a text in alphabetical order and produces the output onto the STDOUT
+
+names.txt
+bob
+jill
+jack
+adam
+mathew
+
+sort names.txt = produces the sorted names as output
+-----------------------------------------------------------------------------------------------------------------------------------
+#4. awk
+awk is an utility that is used by programmers in performing actions or operations on the text content as 
+1. print all te lines of text in a file
+2. extracts specific fields of data based on delimeter
+3. filter the data based on matching patterns
+4. apply actions on text content line by line like transformations etc
+
+syntax:-
+awk [options] 'selection-criteria {action}' file/textinput
+
+How does awk works?
+when we ask awk to perform operation by passing input file
+1. The awk reads the file line by line
+2. it applies the selection criteria to filter the line
+3. applies the action we specified 
+and generates the output onto the console
+
+awk has pre-defined variables to identify and process the text in a file
+1. NR = represents the current row it is processing
+2. NF = no of fields in the current row
+3. FS = field separator and by default the field separator is "space"
+4. RS = record separator and default record separator is "new line"	
+5. OFS = output field separator while displaying the output
+6. ORS = output record separator while displaying the output
+These are the pre-defined variables available implicitly, using which we can extract or format the output displayed by awk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

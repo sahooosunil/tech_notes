@@ -1,0 +1,102 @@
+How does docker runs the containers isolated from each other on the docker workstation?
+The docker inorder to run the containers isolated from each other on a machine, it requires lot of features from the underlying operating system. There are 3 main features of the linux operating system that docker uses inorder to run the containers isolated from each other
+
+1. linux namespaces
+2. cgroups
+3. union filesystem
+
+1. linux namespaces
+linux namespaces is a feature of the linux kernal that partitions the kernal resources so that one set of process of system will have different set of resources from the other process running on the kernal.
+	
+In other words, a namespace can be viewed as an logical partition within the operating system, where in the process that are running in one namespace can see a subset of resources and other processes that are running on another namespace sees altogether a different set of resources.
+	
+There are 6 types of namespaces are supported by linux kernel
+1. user namespace
+2. pid process id namespace
+3. network namespace
+4. mount namespace
+5. ipc namespace
+6. UTS UNIX time sharing namespace
+
+
+1. user namespace
+The user in one namespace can have a different set of previliges that the user in another namespace
+
+2. pid namespace
+A process id namespace assigns a set of PIDs to the processes that are independent from the set of PIDs of other namespace. The first process that is created in a new namespace has PID: 1 and all the subsequent process of that namespace has subsequent PIDs
+
+A process in one namespace can only see the other processes that are part of the same namespace, but cannot see any other processes of other namespace or even the host.
+The host can see all the processes across the namespaces of the machine.
+	
+3. network namespace
+A network namespace has an indepenent network stack. it has its own ip addresses, routing tables, connection tracking tables, firewall and other network related resources
+
+4. mount namespace
+A mount namespace has an independent list of mount points seen by the process in the namespace, which means the process of one namespace can see only the mount points within their namespace and cannot see the mount points of other namespaces or host.
+	
+5. UNIX Time-Sharing namespace
+allows a single system to appear to have different host and domain names to different processes.
+	
+6. IPC Namespace
+it has its own ipc resources. for eg.. POSIX and message queues.
+--------------------------------------------------------------------------------------------------------------------------------
+2. cgroups
+cgroups stands for control groups, 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

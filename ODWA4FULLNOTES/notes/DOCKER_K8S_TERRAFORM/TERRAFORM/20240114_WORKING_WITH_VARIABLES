@@ -1,0 +1,376 @@
+Working with variables in Terraform
+------------------------------------
+Variables are the place-holders in which we can store data or values. 
+Within a program instead of using the literal values, we can use variables in referring the values so that improves the readability and maintainability of the code. 
+Whenever we want to change the values instead of modifying the entire program we can quickly change the values of the variables which it gets reflected across all the places.
+  
+Like anyother programming languages terraform also supports using variables aspart of the terraform configuration files. 
+Let us understand how does variables helps us in keeping the terraform configurations maintainable
+
+We have written the below terraform file for provision an ec2 instance
+
+main.tf
+-------
+resource "aws_instance" "javaserver" {
+  subnet_id = aws_subnet.sailorsubnet.id
+  instance_type = "t2.micro"
+  ami = "ami-393894"
+  vpc_security_group_ids = [aws_security_group.sailorsg.id]
+  key_name = aws_key_pair.terraformkp.key_name
+}
+
+in the above terraform file we declared an ec2 resource to be provisioned with shape as "t2.micro", 
+but later on while the application is being moved to production we want to bump up the shape of the instance, 
+this can be done by modifying the terraform configuration file. each time we want to change the value we need to modify the terraform configuration which is error-prone. 
+along with that identifying and searching through the configuration and modifying the right value is going to take time and becomes complex
+
+Instead of hardcoding the values within the configuration files, we can use variables in terraform file, so that while writing the terraform file instead of hardcoding the values we can refer to the variables and while executing we can supply values for these variables.
+  
+So that we can quickly produce the infrastructure with different values being passed/attached to the terraform configuration in provisioning the infra across diff environment.
+  
+There are 3 parts are there in working with variables in terraform
+1. declaring variables
+2. refer the variables in the terraform configuration file instead of hardcoding the values
+3. pass/supply values to those variables during execution
+
+
+#1. How to declare variables in terraform?
+We can declare variables inside the terraform configuration file using variable block definition/declaration.
+  
+main.tf
+-------
+variable "variableName" {
+  type = dataType
+  description = "purpose/usage of the variable"
+  default = "default value"
+}
+  
+a variable declaration comprises of 3 parts
+1. type = type indicates the dataType, which is nothing but the type of the data we want to hold inside that variables. 
+When we supply the value for the variable during execution, terraform will validate the value supplied against the dataType and reports error if it is not supported.
+2. description = indicates the purpose or usage of the variable, just acts like documentation 
+3. default = incase while executing or applying terraform configuration if we have not supplied the value for the variable, 
+then the value will be assumed as the default value we configured while declaring it.
+
+description and default are optional to be configured while declaring variables, but the dataType is mandatory. Incase if we have not configured the default value while declaring variable, then while running the terraform configuration, it is mandatory to supply the value for the variables.
+    
+Following are the supported dataTypes for a variable declaration:
+1. string
+2. list
+3. map
+4. bool
+5. number
+6. set
+7. object
+
+Let us see few of the examples of declaring variables of each dataType:
+
+#1. list variable
+variable "cidr_blocks" {
+  type = list
+  description = "cidr blocks used in security groups"
+  default = ["10.1.1.0/24", "10.1.2.0/24"]
+}
+
+#2. map variable
+map holds key/value data
+
+variable "tags" {
+  type = map
+  default = {
+    Name = "javaserver"
+    Env = "dev"
+    Application="Sailor"
+  }
+}
+
+
+#3. object variable
+objects holds data within the attributes, so we need to define the definition of the object while declaring and populate default values as below.
+  
+variable "ec2instance" {
+  type = object({
+    instance_type = string
+    ami = string
+  })
+  default = {
+    instance_type = "t2.micro"
+    ami = "ami-3379494"
+  }  
+}
+
+#4. number variable
+variable "port_no" {
+  type = number
+  description = "port no"
+  default = 22
+}
+
+It is recommended to place the variable declarations outside the terraform configuration file rather than keeping them in the main configuration file. 
+usually the best practise is to declare variables in variables.tf file and place in the project directory itself.
+by looking at variables.tf anyone can understand what variables are being used aspart of the terraform provisioning.
+  
+  
+#2. How to refer these variables in terraform configuration file?
+variables.tf
+-------------
+variable "ec2instance" {
+  type = object({
+    instance_type = string
+    ami = string
+  })
+  default = {
+    instance_type = "t2.micro"
+    ami = "ami-238939944"
+  }
+}
+
+variable "tags" {
+  type = map
+  default = {
+    Name = "javaserver"
+    Environment = "Stage"
+  }
+}
+  
+main.tf
+--------
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
+
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance" "javaserver" {
+  instance_type = var.ec2instance.instance_type
+  ami = var.ec2instance.ami
+  tags = {
+    Name = var.tags['Name']
+    Environment = var.tags['Environment']
+  }
+}
+
+note: while declaring the ec2 resource, if we have not specified any vpc/subnet, it provisions under the default vpc and anyof the subnets within the region.
+--------------------------------------------------------------------------------------------------------------------------------------
+#3. How to supply the values to those variables while applying the terraform configuration?
+While declaring the variables in terraform file, if we have not configured default values for the variables, 
+while we are applying the terraform configuration, terraform CLI prompts for supplying the values for these variables interactively. 
+To achieve touch-less automation terraform supports passing the values for these variables non-interactive as well.
+  
+Incase if we have supplied the values for the variables at runtime (during execution), 
+the terraform ignores the default values we configured and executes/applies the configuration with supplied values only
+
+There are 4 ways we can supply the values for the variables while applying the terraform configuration
+1. using -var switch at the terminal while lauching the terraform CLI
+2. we can define values for these variables in *.tfvars files
+3. using *.auto.tfvars
+4. environment variables
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

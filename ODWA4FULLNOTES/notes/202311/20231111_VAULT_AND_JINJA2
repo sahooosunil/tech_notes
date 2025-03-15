@@ -1,0 +1,110 @@
+Ansible Vault
+--------------
+Ansible Vault is an CLI tool provided by ansible to encrypt the playbooks/inventoryFiles/vars_files for securing the sensitive data within them, so that these can be decrypted while executing using the ansible.
+    
+aspart of the playbooks/inventoryFiles/vars_files we might write credentials of the servers/sensitive data related to the fleet of the cluster. If these files are versioned and distributed across the team for development/delivery, then the critical/sensitive information pertaining to the production environments would be exposed to everyone and poses an security threat.
+    
+To overcome the above problem and secure these sensitive data ansible has provided ansible vault CLI tool. It helps us in encrypting the contents of the Files using AES256 encryption algorithm/standard so that we can store them on FileSystem or on SCM Repositories.
+    
+1. How to create an encrypted playbook/inventoryFiles?
+ansible-vault create playbook/inventoryFile
+
+2. How to encrypt an existing inventoryFile/playbook?
+ansible-vault encrypt playbook/inventoryFile
+
+3. How to view the contents of an encrypted playbook/inventoryFile?
+ansible-vault view playbook/inventoryFile
+
+4. How to execute an encrypted playbook or inventoryFile?
+There are 2 ways are there
+4.1 during development
+we can decrypt the playbooks or inventoryFiles using ansible-vault and pass them as an input to controlnode server asking to execute
+ansible-vault decrypt inventoryFile/playbook
+
+4.2 in production environment
+it is not recommended to decrypt the playbooks/inventoryFiles in production as they leave the copy of the decrypted files on the system and poses an security threat, instead we can ask ansible controlnode server itself to decrypt on fly during the execution within the memory and execute them using the below command
+
+ansible-playbook -i inventoryFile --ask-vault-pass playbook.yml
+
+since it is an interactive input in entering the password, we cannot achieve touchless automation. to overcome this problem we can write the password in an file and pass that as an input while executing the playbook. But there is an recommendation in keeping the password file
+
+1. write the password in a file
+2. keep it in the sameplace where we have the playbook file
+3. set the permissions as 0600, so that the owner can read/write and rest of the others dont have access, hence keeping it secured
+
+now pass this file as an input to the ansible-controlnode server asking him to use this password for decrypting the playbooks/inventoryFile while executing
+
+ansible-playbook -i inventoryFile --vault-password-file=passwordFile playbook.yml
+
+ansiblevault-playbook.yml
+---
+- name: ansible vault
+  hosts: all
+  vars_files: mysql_vars
+  tasks:
+    - name: create database on mysql
+      debug:
+        msg: "new database using login_user: {{mysql_login_user}} and password {{mysql_login_password}}"
+...
+            
+mysql_vars
+mysql_login_user=root
+mysql_login_password=welcome1
+
+
+
+handlers
+jinja2 templates
+ansible roles
+playbook execution strategies
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

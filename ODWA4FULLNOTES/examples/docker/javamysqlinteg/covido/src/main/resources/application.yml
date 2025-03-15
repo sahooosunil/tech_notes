@@ -1,0 +1,33 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: covido  
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://covidomysqldb:3306/covidodb
+    username: root
+    password: welcome1
+  jpa:
+    generate-ddl: true
+    show-sql: true    
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect    
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:        
+        - health    
+  endpoint:
+    health:
+      probes:
+        enabled: true
+              

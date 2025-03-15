@@ -1,0 +1,10 @@
+---
+- name: remotecopyplay
+  hosts: all
+  tasks:
+    - name: remotecopy
+      copy:
+        src: message.txt
+        dest: /tmp
+        remote_src: yes
+...

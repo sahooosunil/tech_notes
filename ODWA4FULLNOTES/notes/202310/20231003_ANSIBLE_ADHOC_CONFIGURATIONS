@@ -1,0 +1,144 @@
+How to test the ansible cluster is working or not?
+1. create an inventory file by declaring all the nodes in the cluster inside it as below
+ansible_workspace
+|-provisioners
+	|-sh
+		|-setupcontrolnode.sh
+		|-setupmanagednode.sh
+	|-sshkeys
+		|-ansible
+		|-ansible.pub
+|-inventory
+	|-hosts
+|-Vagrantfile		
+
+hosts
+------
+192.168.10.11
+192.168.10.12
+	
+ansible control node server by default uses id_rsa as the private keyfile to ssh into the managed nodes for executing an ansible module/playbook. But we have created the ssh key with filename as ansible (privatekey) / ansible.pub (public key), so we need to tell the ansible control nodeserver to use the ansible as an private keyfile to ssh on the managed nodes by defining an variable in the inventory file for each hosts as below
+
+hosts [inventory]
+-------
+192.168.10.11 ansible_ssh_private_key_file=~/.ssh/ansible
+192.168.10.12 ansible_ssh_private_key_file=~/.ssh/ansible
+
+2. to check whether the control nodeserver is able to ssh and execute the ansible modules are not let us execute an ansible adhoc command to ping all the managed nodes
+ansible all -i hosts -m ping
+
+-i = inventory file passed as an input
+-m = module
+
+The ansible should be able to ping all the managed nodes and should return a Pong! response
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Configuration
+----------------------
+During the time of installing the ansible on the machine, it creates a directory under /etc called "ansible", in which it places all the ansible related configurations inside it. 
+
+Within the /etc/ansible, there is an central configuration file located inside it called "/etc/ansible/ansible.cfg". it is the central configuration file in which most of the ansible related settings are being placed. If we want we can tweak or modify the default behavior of the ansible by changing this configuration file.
+
+Let us explore few of such configurations available:
+1. Ansible controlnode server ssh to the managed nodes on port: 22 by default. if we want to change the default port using which the control node server is connecting/ssh to the managed nodes we need to change a property in ansible.cfg file
+
+remote_port=22 change it to 2222 so that control node server tries to ssh onto the managed nodes using 2222 port.
+	
+2. Ansible Control NodeServer by default runs runs an ansible playbook/module on the managed nodes in parallel and the number of parallel nodes on which it executes the playbook/module is 5
+we can modify the parallel node executions by using a property: forks
+
+forks=5
+	
+3. We can change the default private_key_file being used for ssh into the managed nodes from id_rsa to a different file by setting a property in ansible.cfg as below
+private_key_file=~/.ssh/ansible
+
+4. Inorder to run a playbook/module by the ansible control node server, we need to pass the inventory information about the hosts that are there in the cluster. By default ansible control node server looks for this inventory file under /etc/ansible/hosts.
+So instead of we writing an inventoryFile and passing it explicitly using -i option, we can add our hosts inside the /etc/ansible/hosts file
+
+we can change the default inventory file by modifying an property in ansible.cfg as below
+inventory=/etc/ansible/hosts
+
+
+From the above we can understand, if we want to modify any of the configurations of ansible control node server globally for across all the nodes on the cluster we need to modify /etc/ansible/ansible.cfg file
+
+For our cluster we can change the default configurations in /etc/ansible/ansible.cfg as below
+[defaults]
+PRIVATE_KEY_FILE=~/.ssh/ansible
+FORKS=1
+REMOTE_PORT=22
+INVENTORY=/etc/ansible/hosts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

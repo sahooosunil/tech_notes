@@ -1,0 +1,172 @@
+Vagrant CLI Commands
+There are 10 vagrant CLI commands are there frequently being used
+1. vagrant init
+2. vagrant up
+3. vagrant halt
+4. vagrant destroy
+5. vagrant status
+6. vagrant suspend
+7. vagrant resume
+8. vagrant ssh
+9. vagrant reload
+
+10. global command
+vagrant global-status
+
+How does the vagrant bringup the virtual machine when we run vagrant up?
+1. downloads the vagrant boxfile that we have specified in Vagrantfile in the property config.vm.box and places that within the host machine under the location $VAGRANT_HOME\vagrant.d\boxes. it reuses the same box file in creating any number of virtual machines
+
+2. imports the vagrant boxfile in creating an virtual disk image file using which it provisions an virtual machine. Vagrant boxfile is an compressed file that would be uncompressed and imported as an vdi file for each virtual machine vagrant creates by placing the vdi file in ~/Virtualbox Vms/
+	
+3. brings up the virtual machine, during the time of booting up the virtual machine it creates an .vagrant directory inside the vagrant project directory into which it stores the metadata of machine like
+	1. unique id
+	2. machine name
+	3. networking configuration
+	4. sync folder configuration
+	5. virtual diskimage file usedfor the virtual machine
+	6. ssh keys for key-based authentication
+	
+4. it generates an public/private key and attaches the public key into the virtual machine and stores the private/public key into the .vagrant directory so that it can be used for ssh into the machine
+
+5. by default vagrant boots up the virtual machine with networking mode as : NAT with port forwarding configured on 22 port to support ssh access
+-----------------------------------------------------------------------------------------------------------------------------------
+1. sync folder
+during the development we want to share the files which have been developed on the host machine into the guest/virtual machine which is used as server environment. So that these files can be used inside the server environment/virtual machine for running/deploying the applications.
+	
+We can share the directories of the host machine to the guest machine through sync folders. we mount one of directory of the host machine into an specific location of the guest machine for eg..
+on the host we might create an directory project1 and this can be mounted onto the virtual machine under a location like /myproject, so that we can access the files/folders that are there inside the host machine directory project1 within the guest by going to /myproject directory
+
+all the hypervisor vendors supports sync folders or shared folders feature but the way we need to setup or configure these sync folders differ from hypervisor to another hypervisor. So vagrant has provided relevant configuration that can be used for mouting the shared folders from host to the guest irrespective of hypervisor provider we are using.
+	
+note: by default vagrant configures the project directory as an sync folder and mounts it on to the virtual machine under /vagrant directory, so that we can access all the files/folders project inside the virtual machine
+
+for eg..
+d:\work\
+|-wellness => /vagrant (guest machine)
+	|-src
+		|-main
+			|-java
+			|-resources
+	|-pom.xml
+	|-Vagrantfile
+	
+this wellness directory of the host becomes accessible within the virtual machine under /vagrant directory.
+	
+If we want we can additional define the sync folders by adding our own directories to be mounted to the virtual machine by writing the below configuration in Vagrantfile
+for eg... we have an directory on the host "d:\work\db", we can mount this directory into the virtual machine as "/dbworkspace" using the below configuration
+
+Vagrantfile
+------------
+Vagrant.configure(2) do | config |
+	config.vm.box = "ubuntu/jammy64"
+	config.vm.synced_folder "sourcedirectory", "guestmountLocation"
+end
+
+for eg..
+	config.vm.syncedfolder "d:\\work\\db", "/dbworkspace"
+	
+	
+java realtime tools batch (java framework batch)
+-----------------------------
+Monday, Wednesday, Friday = 8:30 PM - 9:30 PM
+Tuesday = 7:00 PM (Holiday)
+Thursday = Holiday
+Saturday/Sunday = 6:00 PM - 7:30 PM
+
+devops with aws batch students (free, no need to pay fees) (25 days)
+1. ANT (basics)
+2. MAVEN (fully) (1 week)
+3. git/svn (full) (full)
+4. sonarqube
+5. log4j/sl4j (introduction)
+6. junit (introduction)
+	
+	
+	
+
+	
+
+
+	
+	
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

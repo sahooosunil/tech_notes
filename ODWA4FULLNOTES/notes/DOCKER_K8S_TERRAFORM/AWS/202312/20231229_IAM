@@ -1,0 +1,155 @@
+IAM Service
+------------
+IAM stands for identity and access management service, it is a global service of the aws cloudplatform. It is used for delegating the access to the resources/services of an aws cloud account to other aws users or resources.
+  
+IAM Service provides the below services in managing the security 
+1. users
+2. groups
+3. policies
+4. roles
+
+1. users
+There are 2 types of users are there in aws cloudplatform
+1.1 Root user
+The root user is the aws account owner, who has created the aws account, he has unrestricted access to all the services of the aws cloud platform and by default has access to the resources of his account.
+  
+1.2 IAM user
+In an organization environment, they can be many teams across the business units or domains, they need aws services to host their applications.  having the root user cannot manage in providing the services/resources for all the projects in an organization. So an aws root user can create additional users for that aws account, to delegate access to the resources/services. These users that are created by the root user inorder to delegate the access are called "IAM users". The IAM users can be attached with policies granting/restricting the access permissions towards the resources/services of the account.  
+
+There are 2 types of access can be granted to an IAM user:
+1. management console access
+The IAM user can login into the aws cloud console and can manage the resources through GUI or web. In order to login into the management console, the IAM user must choose the login type as "IAM", upon choosing the IAM it prompts for 12 digit account number.
+  
+The #12 digit accountno is used for identifying the aws account and it is available only with the root user. The root user has to provide the #12 digit acountno to the IAM user along with username/password of the IAM user he has generated while creating that user.
+  
+Now the IAM user at the first login will be prompted for change password for security.
+  
+2. programmatic access
+The IAM users can access the cloud platform services through APIs exposed by the aws cloudplatform, he/she can write software programs in accessing the cloud services through these apis of the aws.
+  
+To authenticate and access the api services of the aws cloudplatform we need apikey/secret, in the software programs we built, we use the apikey/secret to authenticate and access the services or resources of the aws account.
+  
+There are advantages of apikey/secret:
+1. we can create different apikeys/secrets for an IAM user, in providing access to different programs, and we can revoke the access anytime for a specific program by simply deleting the keys.
+2. our account credentails are not compromised.
+  
+#2. Groups
+while adding an IAM user to the aws account, the root user can grant access to the services/resources of the account by attaching policies to the IAM user.
+  
+policies: polices are group of related permissions , that can be assigned to an user in granting access to the account services.
+  
+granting or binding policies to each IAM user individually takes lot of time and difficult to manage, instead we can put users of related roles into groups (developers, testers, deployers) and grant/bind policies at the group instead of the user level.
+  
+Note: an IAM user can be associated to multiple groups aswell.
+  
+#3 policies
+policies is a json language provided by aws cloudplatform, which groups multiple permissions to be granted on an aws resources/services
+
+There are 1000+ permissions are defined at a very granular level by the aws developers for managing each and every individual service/resource. While creating an IAM user or a group, we need to assign these permissions granting access to the resources/services, but browsing through these lengthy list of permissions in granting access is very difficult and takes lot of time.
+  
+instead aws developers pre-compiled list of relevant permissions that can be granted to a type of resource/service and created policies.
+For each type of service, the aws developers identified relevant permissions based on the type of access to be granted and created multiple policies for each resource type. For eg.. an ec2 instance the aws developers defined several policies as below.
+1. AWSEc2FullAccess
+2. AWSEc2ReadonlyAccess
+etc
+
+now depends on the type of access we want to grant to an user, we need to search throught he policies and assign them directly to the user or group. there are around 200+ policies are defined by the aws developers and made it available for usage.
+  
+These policies can be categorized into 3 types/levels:
+1. AWS Managed policies
+2. Customer Managed policies
+3. Inline policies
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

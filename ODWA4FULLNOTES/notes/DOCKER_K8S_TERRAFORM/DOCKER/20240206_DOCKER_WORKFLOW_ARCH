@@ -1,0 +1,50 @@
+docker workflow
+----------------
+docker workflow refers to how docker is being used for development and delivery of the software applications
+
+There are 2 ways docker is being used in the I.T world for development and delivery
+#1. developer writes the Dockerfile
+If the developers of the team are aware of docker technology, then organizations usually follow this process:
+
+since the developers are the once who developed the software applications, they know what platform softwares are required to run the application and how to run the application. So the developers by themself write the Dockerfile (docker image building instruction file) in packaging and running their application into an docker image and place this file aspart of the sourcecode of the application itself.
+
+Note: The devops engineers in an organization provides base docker images that contains common software packages/tools required for managing, monitoring and administring the application that runs in container. The developers are responsible for writing the image building instructionfile for packaging their application into docker image by extending from base docker images provided by devops engineers.
+
+upon the developers push their code into sourcecode repositories, the devops engineers are responsible for placing necessary automation in releasing the application across the delivery stages 
+
+#2. devops engineers fully owns the docker echo system:
+if the developers are not aware of the devops tools in the project, then developers are only responsible for developing the project, but they will not involve in docker related aspects.
+
+But inorder to package and run the application on a docker infrastructure, the devops engineers has to build/package the application along with dependent software packages/libraries, instructions for running the application, which is not know to them
+So developers has to provide necessary documentation enabling the devops engineers to know about how to run the application, and what libraries/software packages are required for them.
+
+based on that devops engineer are responsible for 
+1. writing image building instructions
+2. building the application binary into docker image
+3. release management activities in delivering the application across the environments.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

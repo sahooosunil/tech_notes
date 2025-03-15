@@ -1,0 +1,146 @@
+What is docker workflow?
+The docker workflow refers to how the docker is being used aspart of development and delivery of the software applications.
+There are 2 ways people are using docker in the Industry
+1. developers & devops engineers collaborate in developing and delivering the application
+The developer is responsible for writing the Dockerfile with image building instructions, and the devops engineer is responsible for implementing the automation in delivering the application on the docker infrastructure.
+	
+2. devops engineer is responsible end-to-end in carrying right from the development to the release/delivery of the application.
+The devops engineer itself is responsible for packging or building the application binary into docker image by writing image building instructions and even takes care of release management activites.
+------------------------------------------------------------------------------------------------------------------
+Docker Architecture
+-------------------
+The docker architecture has 5 components in it.
+1. docker engine
+2. docker cli
+3. docker registry
+4. image
+5. container
+
+1. docker engine (or) docker daemon
+The machine on which we installed the docker engine or docker daemon is called "docker workstation/host". The docker daemon or docker engine is the core component of the docker system, it takes care of pulling the docker images from the docker container registry and runs the packaged application inside the image out of an docker container on the docker host isolating it from other applications that are running on the same.
+	
+The docker engine takes care of allocating necessary system resources in running the docker containerized application in an isolated manner. It is responsible for managing the lifecycle of the docker containers:
+1. creating the containers
+2. destroying containers
+3. stop
+4. starting
+5. allocating the resources to the containerized application
+
+2. docker cli
+docker cli stands for command-line interface, it acts an interface through which we talk to the docker engine. It provides handful of commands through which we can interact with docker engine asking to 
+1. build images
+2. create containers
+3. stop
+4. starting
+5. destroying
+
+upon installing the docker on the machine along with docker engine, the docker cli also will be installed and configured to talk to the docker engine on that machine.
+	
+3. docker container registry
+it is an central repository where people can publish docker images and distribute across the environments on which we want to run the docker containers.
+	
+4. docker image
+it is an compressed file, pre-packaged with software application, dependent software packages and libraries along with instructions in running the application, that is passed to the docker daemon asking to run out of a container from it.
+	
+5. docker container
+docker container is nothing but a program under execution isolated from other programs on the docker host.
+--------------------------------------------------------------------------------------------------------------------------------
+operating system
+
+Linux operating system 
+1. Linux namespaces
+2. CGroups
+3. Union Filesystem
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

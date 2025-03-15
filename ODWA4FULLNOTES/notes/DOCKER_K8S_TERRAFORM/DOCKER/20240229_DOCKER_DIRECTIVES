@@ -1,0 +1,260 @@
+#3. ARG
+ARG is an directive used for passing the arguments as an input while building the docker image. We can define the ARG aspart of the Dockerfile and can pass the value for those arguments at the time of building the image.
+	
+Purpose:-
+The main purpose of the ARG is to avoid writing multiple Dockerfiles in creating different images of an application with subtle differences interms of software packages / instructions we install.
+	
+~/arg:/>
+|-Dockerfile
+
+Dockerfile
+-----------
+FROM ubuntu:24.04
+ARG JAVA_PKG_NM
+RUN apt update -y
+RUN apt install -y $JAVA_PKG_NM
+CMD ["/bin/bash", "-c", "java --version"]
+
+Now at the time of building the docker image we need to supply JAVA_PKG_NM argument. 
+docker image build -t arg:1.0 --build-arg JAVA_PKG_NM=openjdk-11-jdk .
+	
+We can assign default value for the ARG while declaring in the Dockerfile, so that if we didnt supply any value it takes the default value.
+ARG JAVA_PKG_NM=openjdk-11-jdk
+
+
+ARG before FROM
+----------------
+Always a Dockerfile must and should be started with FROM directive, unless we have an base image defined, we cannot execute any commands on top of it like RUN, CMD etc
+
+The only exception to this rule is ARG. ARG is the directive that can be written before the FROM directive, so that ARG value that is supplied can be taken as an input in the FROM directive in building the docker image from the base.
+	
+In-Short: The base image can also be parameterized along with hardware platform etc
+
+since ARG is about passing build time inputs, we dont need to really have any base image to capture the ARG values, and the purpose of allowing the ARG is to parameterize the BASE IMAGE as well, so ARG is allowed before FROM.
+	
+In case if the ARG is
+1. written before the FROM directive: it acts only as an input for FROM directive and after the FROM directive the ARG will be vanished/dis-appeared and will not be available for rest of the docker image build instructions
+
+2. written after the FROM directive: the scope of the ARG will be for the entire docker image build and can be used in any of the instructions we write in the Dockerfile
+
+
+~/argafterfrom:/>
+|-Dockerfile
+
+Dockerfile
+-----------
+FROM ubuntu:24.04
+ARG MYSQL_PASSWORD=mysqladm@007	#scope will be for the entire build
+RUN echo $MYSQL_PASSWORD > ~/mysqlconf
+CMD ["/bin/bash", "-c", "cat ~/mysqlconf"]
+------------------------------------------------------------------------------------------------------------------
+How can we pass ENV values as input while building docker image?
+ENV directive is used for defining environment variables within the docker image, so that these variables will be available to the containerized application while running the container.
+	
+There are 2 ways we can define ENV variables:
+1. by using the ENV directive within the Dockerfile
+2. we can pass the ENV variables at the time of running the docker container
+
+1. by using ENV directive within the Dockerfile
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENV JAVA_HOME=/usr/lib/jdk/
+ENV APP_VERSION=1.0
+	
+2. we can pass ENV variables dynamically while launching the container
+instead of hardcoding or defining the ENV variables staticly inside the Dockerfile we can pass them as input while lauching the container
+
+variables.env
+APP_VERSION=1.0
+DB_DRIVER_CLASS=com.mysql.cj.jdbc.Driver
+
+docker container run --env-file variables.env image:tag
+
+Can we parameterize the ENV values during the time of building the docker image?
+No, if we want to pass the input values at the time of building the image, we need to use ARG and if we want the values during the runtime of the container we need to use ENV
+
+since ENV are runtime container variables, those can be passed while launching the container using --env-file and ARG are image build time values, those can be passed using --build-arg
+
+requirement:
+I want values to be supplied as an input during the time of building the image and these values should be available while running the container as well, how to do this?
+
+We can achieve this by passing the values as build arguments while building the image and capture and store them as ENV inside the Dockerfile
+
+
+~/envandarg:/>
+|-Dockerfile
+
+Dokcerfile
+----------
+FROM ubuntu:23.04
+ARG RELEASE_NM
+ARG RELEASE_VERSION
+RUN echo "RELEASE_NM: $RELEASE_NM and RELEASE_VER: $RELEASE_VERSION" > ~/argvalues
+
+ENV RELEASE_NM=${RELEASE_NM}
+ENV RELEASE_VERSION=${RELEASE_VERSION}
+CMD ["/bin/bash", "-c", "echo RELEASE_NM : $RELEASE_NM and RELEASE_VERSION: $RELEASE_VERSION"]
+
+
+Now let us build the docker image by passing --build-arg 
+docker image build -t argenv:1.0 --build-arg RELEASE_NM=oxygen --build-arg RELEASE_VERSION=14 .
+	
+docker container run -it argenv:1.0 /bin/bash
+then cat the file ~/argvalues
+and run env inside the container.
+	
+ARG vs ENV
+----------
+1. ARG
+1.1 ARG is an directive used for defining build-time parameters, so we can pass the values for these arguments while building the docker image
+1.2 ARG is the only directive that can be written before the FROM to parameterize the base image or hardware platform to be used in building the image
+1.3 ARG values are only available during the build-time and will not be available while running the container
+
+2. ENV
+2.1 ENV is an directive that is used for defining environment variables within the Dockerfile, so that these variables will be available during the time of building the image and while running the container also
+2.2 ENV variables can be even parameterized or passed while running the docker container as runtime/dynamic values
+2.3 unlike ARG if we define ENV in Dockerfile it is available both during build/runtime as well
+--------------------------------------------------------------------------------------------------------------------------------#4. LABEL
+LABEL is a directive used for defining KEY=VALUE pair in Dockerfile, so that it acts as documentation for that image. When we build our application as a docker image and publish and distribute it through docker container registry, the people around the world should know the information about our image before using it like
+1. AUTHOR
+2. MAINTAINER
+3. ORGANIZATION
+4. VERSION
+5. LICENSING
+etc
+
+such information about our application/image can be embedded into the image as documentation through LABEL directive, so that the people who consumes our image can see these LABELS or documentation being written aspart of the image using
+docker image inspect image:tag
+
+so that all the LABELS we defined during the build are visible to the people.
+	
+~/label:/>
+|-Dockerfile
+
+Dockerfile
+-----------
+FROM ubuntu:24.04
+LABEL AUTHOR=jim
+LABEL IMAGE_VERSION=1.1.0
+LABEL LICENSING=Apache GPL 2.0
+	
+docker image build -t label:1.0 .
+now we can see these labels written onto the image by using
+docker image inspect label:1.0
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	

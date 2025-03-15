@@ -1,0 +1,47 @@
+What is networking mode in oracle virtualbox?
+Networking mode indicates how we wanted the virtual machine to be connected and exposed over the network. The oracle virtualbox supports 7 modes of networking
+
+1. Not Attached
+2. NAT
+3. NAT Network
+4. Bridge
+5. Internal Network
+6. Host-Only Network Adapter
+7. Generic Driver
+
+1. Not Attached
+The virtual machine is attached with the network adapter, but it has not been plugged-in into the network cable. Developers or test engineers can test the behaviour of the applications when the machine has been dis-connected from the network using Not Attached Mode.
+	
+2. NAT
+NAT stands for network address translation. It is an special type of network adapter that is created by the oracle virtualbox hypervisor and plug-ins the virtual machine to the network. The NAT port only allows outbound network traffic from VM to HOST or External network, but inbound traffic is not allowed towards the Virtual Machine
+
+NAT port isolates our Virtual Machine from other networks of computers. All the outbound traffic that is generated from the VM will be received by the NAT Port and it will copy the data packets from NAT port to the destination/target computer/network as if the data is generated and is being send from NAT/HOST itself.
+The Target computer never knows the source as VM thus making it more secured. The NAT port on the HOST machine is created with ip address: 10.0.2.0 and the vm will be assigned with the ip rage of the NAT port
+
+NAT supports port forwarding
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

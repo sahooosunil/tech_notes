@@ -1,0 +1,12 @@
+- name: loop thru list
+  hosts: all
+  vars:
+    groceries:
+      - grains
+      - pulses
+      - rice
+  tasks:
+    - name: show groceries
+      debug:
+        msg: "{{item}}"
+      loop: "{{groceries}}"  

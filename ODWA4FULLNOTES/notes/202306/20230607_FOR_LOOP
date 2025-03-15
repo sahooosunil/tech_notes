@@ -1,0 +1,208 @@
+how many types of loop control statements are there?
+There are 3 types of loop control statements are there
+1. while
+2. for
+3. until
+
+2. for loop
+for loop is an loop control statement that is used for repeatedly executing a block of code over a fixed list of values. There are 2 forms of for loop are there
+1. for loop over fixed list values
+2. counter based for loop
+
+1. for loop over fixed list values
+we pass a list of items as an input to the for loop asking it loop through those values in performing operation on each item.
+syntax:-
+for VAR in item1 item2 item3 item4.. itemN
+do
+	statements
+	statements
+done
+
+2. counter based for loops
+we can repeatedly execute a block of code for fixed number of times by using counter based loops. In counter based loops we have #3 parts
+
+1. counter variable initialization
+2. condition
+3. incrementation
+
+I=0 // initialization
+while [ $I -le 10 ] // condition
+do
+	I=$[I+1] // incrementation
+done
+
+we can write counter based loops using while, where we have counter variable initialized before the loop. then each iteration we check for condition and within the loop we increment the counter.
+	
+instead of using while loop we can use for loop also for implementing counter based loops 
+syntax:-
+	
+for((initialization;condition;incrementation))	
+do
+	statements
+done
+
+1.wap to print the N given numbers from 1 to N
+
+printNNumber.sh
+----------------
+#!/bin/bash
+read -p "N : " N
+for((I=1;I<N;I++))
+do
+	echo $I
+done
+
+wap to print sum of prime numbers between 1 to N
+N = 10
+2 3 5 7 = 17
+	
+2 3 4 5 6 7 8 9 10
+	
+I=3
+SUM=5
+	
+printSumOfNPrimeNumbers.sh
+--------------------------
+#!/bin/bash
+read -p "N :" N
+SUM=0
+for((I=2;I<=N;I++))
+do
+	IS_PRIME=0
+	for((J=2;J<=I-1;J++)) //verify the I is prime or not
+	do
+		REM=$[I%J]
+		if [ $REM -eq 0 ]; then
+			IS_PRIME=1
+			break
+		fi		
+	done
+	if [ $IS_PRIME -eq 0 ]; then
+		SUM=$[SUM+I]
+	fi
+done
+
+echo "sum : $SUM"
+-----------------------------------------------------------------------------------------------------------------------------------
+until loop
+until is also an loop control statement which is used for repeatitively executing a block of code until the condition is false. if the condition given is true, it breaks the loop
+so, an until loop is an reverse of while loop
+
+syntax:-
+until [ condition ]
+do
+	statements
+done
+
+here if the condition given is false, it enters into the loop and executes the block of code, if the condition is true, the loop will break
+	
+wap to print numbers sequential until user press (q) on the keyboard
+printNNumbers.sh
+#!/bin/bash
+F="N"
+I=1
+	
+until [ $F = "q" ]
+do
+		echo "$I"
+		I=$[I+1]
+		read -p "press (q) to quit: " F
+done
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

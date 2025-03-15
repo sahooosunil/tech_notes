@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqldeployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+      version: "8.4.0"
+  template:
+    metadata:
+      labels:
+        app: mysql
+        version: "8.4.0"
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.3.0
+          ports:
+            - name: mysqlport
+              containerPort: 3306
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "252Mi"
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+#          readinessProbe:
+#            exec:
+#              command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+#            initialDelaySeconds: 5
+#            periodSeconds: 2
+#            timeoutSeconds: 5
+#            failureThreshold: 3
+#          livenessProbe:
+#            exec:
+#              command: ["mysqladmin", "ping"]
+#            initialDelaySeconds: 30
+#            periodSeconds: 2
+#            timeoutSeconds: 5
+#            failureThreshold: 3
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlsecret
+                  key: password
+#          volumeMounts:
+#            - name: mysqlvolume
+#              mountPath: /var/lib/mysql
+#      volumes:
+#        - name: mysqlvolume
+#          persistentVolumeClaim:
+#            claimName: mysqlpvc
+
+
+
+

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sd
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      appName: sailor
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        appName: sailor
+        version: "1.0"    
+    spec:
+      containers:
+        - name: sailor
+          image: techsriman/sailor:1.0
+          ports:
+            - name: tomcatport
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /sailor/readiness.htm
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /sailor/liveness.htm
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "500M"
+            limits:
+              cpu: "1000m"
+              memory: "1024M"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0

@@ -1,0 +1,52 @@
+#1. development 
+Let us explore what are the new tools and technologies we need to use in speeding up the development activities
+1.1 understand the requirements inorder to develop the application
+1.2 choose the programming language based on the nature of the application
+1.3 setup the development environment with all the required softwares, tools and utilities, so that we can commence the development activities
+	1. infrastructure
+	2. operating system
+	3. language software
+	4. database server
+	5. application server
+	etc
+manually setting up the development environment takes lot of time and delays the development and delivery of the application and impacts the cost of building the application.
+to overcome the above problem we need to use new devops tools like virtualization.
+	
+Virtualization:
+	
+virtualization is an technology through which we can run multiple parallel isolated environments on the physical computer machine, so that we can effectively utilize the hardware resources of the computer
+The devops engineer can setup the development env in virtual machine and export it as an diskimage and distribute to all the members of the development team. The developers can quickly import the diskimage and create the development environment on their physical computers that saves huge amount of time.
+	
+Vagrant:
+Instead of setting up the virtual machine manually we can take the help of vagrant automation tool, to which we pass vagrant instruction file describing the machine we wanted, so that vagrant can quickly bring up the virtual machine
+
+
+1.4 choose the process model for developing the application
+process models are the guidelines or methodlogies provided by the experts in the software engineering world, that should be followed inorder to successfully develop and deliver the application
+1. waterfall model
+2. iterative/incremental model
+3. spiral model
+4. prototype model
+5. Agile methodologies, scrum model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

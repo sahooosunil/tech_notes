@@ -1,0 +1,123 @@
+What is DevOps, what is the purpose of it?
+Devops is an change in culture and adoption of new tools & technologies for fast paced application development and delivery
+The adoption of new tools and technologies has to be done at all the stages of development and delivery by everyone working in project
+
+developer
+1. understand the requirements to develop the application
+2. choose a programming language that is suitable for developing the application
+	2.1 java
+	2.2 python
+	2.3 .net
+	2.4 php
+	2.5 scala
+	etc
+3. setup the development environment by installing required softwares & tools like
+	3.1 programming language
+	3.2 development tools like ide 
+	3.3 database servers
+	3.4 application servers
+	etc
+it takes lot of time for setting up the development environment for the whole team, which delays the development/delivery of the application and impacts the cost of development/delivery aswell
+To overcome the problem, we need to adopt the devops tools like virtualization.
+virtualization:
+virtualization is an technology through which we can run multiple parallel isolated environments on a single physical server machine. The devops engineer can setup the development environment on a virtual machine and export it as an virtual disk image and distribute it to the whole team.
+	
+The developers has to import the diskfile to have the development environment running on his machine, which takes couple of minutes only, thus saving huge time and reducing the cost
+
+Instead of creating the virtual machine manually in setting up the development environment, the devops engineer can take the help of vagarant.
+Vagrant
+vagrant is an virtualization workflow automation tool, that takes care of creating virtual machines by reading the machine definition file, so that we can avoid manual process of creating the machine thus can save more time 
+
+4. choose the process model in developing the project
+There are several process models are available in the market
+1. waterfall model
+2. iterative or incremental model
+3. prototype model
+4. spiral model
+5. agile based scrum methodology
+
+the devops recommends us to use agile based scrum methodology for developing and delivering the software application
+
+scrum "principle"
+The basic principle on which the scrum works is fast-fail approach, let there be an failure while developing an software system, but let us have the failure at the earliest possible, so that the loss incurred will be minimal or negligeable
+
+It is impractical or impossible to gather the whole system requirements initially in building the software application. That is where scrum recommends us to understand and analyze the business system and define the scope or vision we want
+
+For eg.. we want to develop an food delivery application, so the vision is
+"develop an software system, that helps the people in browing and order food across the restauratnts near by them".
+	
+based on the vision the product owner captures the requirements and write them as product backlogs (backlogs means something under pending to finish)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,171 @@
+1. How to know the details of an exiting user of the linux operating system?
+id username
+id (user) gid (group) groups=(grp1, grp2)
+it provides uid of the user, gid of the the primary group and what other groups the user is associated with will be provided as an output
+
+2. How to find all the groups of a user?
+group username
+will shows all the groups the user is associated with
+
+3. How to know who are all the users are there in linux operating system?
+cat /etc/passwd
+
+4. How to know all the groups within the linux system?
+cat /etc/group
+
+5. How to create a new group within the linux operating system?
+groupadd groupName
+
+6. How to create a new group with specific gid?
+groupadd -g gid groupName
+
+7. How to create a new user with specific home directory location?
+useradd -m -d location -s shell username
+
+8. How to create an new user with specific uid?
+useradd -m -u uid -s shell username
+
+9. How to create an new user within an existing group as primary group rather than create an default group?
+useradd -m -s shell -u uid -g gid username
+if the gid we supplied is
+1. non-existing: then it creates a new group with groupName as username and gid as supplied gid
+2. existing: it directly creates the user by associating with the existing group rather than create a new group with username
+
+10. How to add an existing linux user into another group?
+usermod -aG grp1,grp2,grp3 username
+
+11. How to change the username of an existing user?
+usermod -l newusername oldusername
+-l = the loginname of the username
+
+12. How to delete an existing linux user?
+There are 2 ways are there
+1. userdel (core system linux command)
+2. deluser (ubuntu)
+
+1. The user we asked to delete will be deleted from the linux operating system
+2. The primary group of the user
+	2.1 has only one user
+	2.2 and groupName and the username is same
+	then the group also will be deleted along with user
+3. the home directory of the user will not be deleted, because there might be other users who might have access to the files/folders of the home directory
+
+13. How to delete the group?
+groupdel groupName
+if there are no users associated with that group, then the group will be deleted 
+
+14. How to change the passwordof an existing user?
+passwd username
+-----------------------------------------------------------------------------------------------------------------------------------
+15. How to change the uid of an existing user?
+usermod -u uid username
+
+16. How to reset the group of the user instead of adding a group?
+jack in groups grp1, grp2, grp3, we want to reset the groups in which jack is there and want to add him only into grp5
+
+usermod -G grp username
+note: this will not reset the primary group of the user
+
+17. How to remove an user from a group?
+gpasswd -d user group
+-----------------------------------------------------------------------------------------------------------------------------------
+sudoers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

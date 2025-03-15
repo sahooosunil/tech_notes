@@ -1,0 +1,10 @@
+---
+- name: lineinfile play
+  hosts: all
+  tasks:
+    - name: modify existing line in file
+      lineinfile:
+        path: /home/vagrant/mysqld.cnf
+        regexp: '^MYSQL_BIND_ADDRESS=.*'
+        line: 'MYSQL_BIND_ADDRESS=0.0.0.0'
+...

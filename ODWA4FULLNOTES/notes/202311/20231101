@@ -1,0 +1,184 @@
+There are 7 different levels at which we can declare variables in ansible
+1. ansible pre-defined variables at global settings
+2. inventory file
+	- pre-defined variables
+	- user-defined variables
+	2.1 global
+	2.2 host
+	2.3 group
+3. playbook variables 
+4. vars_files
+5. --extra-vars
+6. register variables
+7. ansible magic variables or ansible facts
+
+6. register variables
+---------------------
+register variables are used for capturing the output of execution of an module, so that it can be passed as input to another module within the playbook. register variables are dynamic variables that are created by the ansible controlnode server during the execution of the playbook
+
+the register variables are even used for debugging the execution of a playbook, where we can capture the interim output of execution of the playbook modules and print them.
+	
+write a playbook to capture the operating system name or logged-in user name of each managednode and print it
+
+registervars-playbook.yml
+---------------------------
+---
+- name: login username play
+	hosts: all
+	tasks:
+		- name: find loginuser
+			shell: whoami
+			register: loggedInUser
+		- name: print logged in user
+			debug:
+        msg: "{{loggedInUser.stdout}}"								
+...
+
+7. ansible magic variables or ansible facts
+---------------------------------------------
+How does the ansible controlnode server executes the playbooks on the cluster?
+When we pass the playbook as an input to the ansible controlnode server to execute, it performs the below actions in executing the playbook
+1. The playbook will be validated to verify whether it is syntactically correct or not and all the module declarations are valid or invalid. if there is an error found within the playbook, the control nodeserver immediately returns an error without executing the playbook
+2. if it is valid, the control node server picks one module after another from top to the bottom, transfer it over to the managednode over ssh connection by replacing all the variables with values defined and executes on each managed node one by one
+3. then transfers the output of executing the module on the managed node back to the control node server by deleting the module on from the managed node
+
+Many of the times we wanted to know the environment information of the managed node inorder to execute modules on it. We might need information like hardware configuration, networking or operating ssytem information of the managed node. For eg.. to install mysql server software package on a machine, the machine should meet minimal system requirements like cpu, ram and storage capacity. So while executing the modules on the managed nodes we wanted to check, whether it qualifies this requirement or not otherwise want to skip executing the playbook or module
+
+From the above we can understand we need to apply conditional logic before applying the modules or playbooks on the managed node, which requires env information about the managed nodes of the cluster.
+	
+The control nodeserver should be responsible in gathering the env information about the managed nodes before executing the playbooks on the managed nodes of the cluster and should make this information available for the playbook during execution
+
+How does the control nodeserver will gather the env information of the managed nodes and make it available during the playbook execution?
+When we pass a playbook for execution, post completion of the validation of the playbook, the control nodeserver implicitly executes an module/tasks called "gather_facts"	
+The gather_facts is an implicit module that will be executed by default as the first task for each playbook, this module is an python module/script that would be executed on all the managed nodes of the cluster before begining the execution of any of the modules in the playbook and stores this information and make it available while executing the modules of the playbook on the managed node.
+	
+These facts variables works same as ansible variables and we can refer them in playbook modules like anyother variables we use in playbook. Since we didnt declared these variables, rather these are populated or published and made available for playbooks automatically by the control nodeserver, these are called "Magic Variables"
+	
+Note:
+For a managed node to execute the modules we dont need python to be installed, but for executing gather_facts module, we need python to be installed on each managed node
+
+The gather_facts module takes considerable amount of time in gathering the env information of each managed node and store it for making it available for the playbook execution. If in case if we dont need env information about the managed nodes in the playbook we can turn-off the gather_facts module so that it can improve the performance in running the playbook
+
+---
+- name: no gather facts play
+  hosts: all
+	gather_facts: no
+	tasks:
+    - name: task1
+		  debug:
+        msg: verifying gather_facts module
+				
+in the above playbook there will be only one module will be executed because we turned-off gather_facts using gather_facts: no
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

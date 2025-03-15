@@ -1,0 +1,285 @@
+2. service module
+The service module can be used for stop, start, reload or restart an initd system service on the linux machine.
+	
+- name: taskName
+  service:
+    name: serviceName
+		state: started | stopped | restarted | reloaded
+		
+- name: taskName
+  service:
+    name: serviceName
+		enabled: yes | no
+		
+How to register an shell program as service using playbook?
+memmonitor.sh
+--------------
+#!/bin/bash
+
+while [ true ]
+do
+  AVAILABLE_MEM=$(free -h | grep Mem: | awk '{print $7}')
+  echo "Available Memory : $AVAILABLE_MEM" >> /tmp/mem.log
+  sleep 30s
+done
+
+memmonitor.service
+------------------
+[Unit]
+Description=Memory Monitoring Service
+After=network.target
+
+[Service]
+ExecStart=/home/vagrant/memmonitor.sh
+Restart=always
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+
+
+memmonitor-playbook.yml
+-----------------------
+---
+- name: memory monitoring service play
+  hosts: all
+	tasks:
+    - name: copy memory monitoring shellscript
+		  copy:
+        src: memmonitor.sh
+				dest: /home/vagrant
+				mode: 0554
+		- name: copy memory monitoring service unit file
+		  copy:
+        src: memmonitor.service
+				dest: /etc/systemd/system
+			become: yes
+		- name: reload services
+		  service:
+        name: memmonitor
+        state: reloaded
+			become: yes	
+    - name: enable memmonitoring service
+		  service:
+        name: memmonitor
+			  enabled: yes
+			become: yes	
+...
+-------------------------------------------------------------------------------------------------------------------------------------
+
+1. command modules
+ 1.1 shell
+ 1.2 command
+ 1.3 expect
+2. file modules
+ 2.1 file
+ 2.2 copy
+ 2.3 lineinfile
+3. package modules
+ 3.1 apt
+ 3.2 package
+4. system modules
+ 4.1 user
+ 4.2 service
+
+5. database modules
+The database modules provided several modules related to managing the databases like
+1. creating an schema/database
+2. adding/removing users from the database etc
+
+note:
+before using mysql database modules of ansible we have to do the below actions:
+1. we need to have mysql server installed on the machine
+2. should have python installed on the managed nodes
+3. python3-pymysql package should be installed
+
+1. How to create an database on remote mysql server host
+- name: create database
+  mysql_db:
+    name: databasename
+		state: present
+		
+2. How to add an user to the mysql server database
+- name: add mysql user
+  mysql_user:
+	  name: mysqlusername
+		password: password
+		state: present
+		priv: "*.*:ALL"
+		login_user: root
+		login_password: root
+		
+here login_user & login_password should be supplied so that mysql_user module can connect to the remote mysql server database as login_user with login_password to add a new user into the database
+--------------------------------------------------------------------------------------------------------------------------------------
+#1. install mysql server on the managed nodes
+1.1
+sudo apt update -y
+sudo apt install -y mysql-server-8.0
+			
+1.2. change the root user password by connecting to the sql server
+sudo mysql -uroot
+alter user 'root'@'localhost' identified with mysql_native_password by 'root';
+
+1.3. secure mysql server installation
+sudo mysql_secure_installation
+
+1.4. change the bind address from 127.0.0.0 to 0.0.0.0
+/etc/mysql/mysql.conf.d/mysqld.cnf
+restart
+
+1.5. create a user permitting him to login from remote machine
+sudo mysql -uroot -proot
+
+create user 'username'@'%' identified by 'password';
+grant all privileges on *.* to 'mysqladm'@'%';
+
+
+#2. install python
+by default ubuntu comes with python3 you can verify the python installation using
+python3 --version
+
+now install pip3
+sudo apt install python3-pip
+
+after installing pip3 install pymysql using below command
+pip3 install pymysql
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Variables
+Handlers
+Jinja2 Templates
+Ansible Vaults
+changed_when, failed_when
+loops & conditions
+ansible roles
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,258 @@
+OSI Model Layer protocol is used for transmitting or exchanging the data between computers/applications across the network irrespective of the hardware platform and the underlying operating system on which those are working on.
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+1. Application Layer
+Application Layer represents various application protocols that are being used by software applications to communicate with each other over the network. Between the network applications to communicate with each other they need standard messaging structure and semantics, which are being defined aspart of Application Protocols of Application Layer
+
+For various different types of applications there are different standard application protocols are defined
+1. Web Application = HTTP
+2. Mail Application = IMAP, POP, SMTP etc
+3. File Transfer Application = FTP
+
+1. HTTP
+HTTP Stands for Hypertext Transfer Protocol. HTTP is an application protocol that defines messaging structure and semantics enabling the software applications to exchange the Markup/WebPages over the network. 
+The Server-side application that follows http protocol rules in communicating is called "Web Server Application", and the client application is called "Web Client Application"
+	
+The Web Server application and the Web Client application communicates with each other by sending/receiving Http Request Message and Http Response Message.
+	
+The HTTP protocol defined standard operations that should be supported by both Server/Client applications inorder to communicate and perform operations on the Web Pages. There are 9 standard operations are defined by HTTP protocol
+1. GET    = GET is used for accessing the Resource from the Server
+2. POST   = POST is used for adding a new resource onto the Server 
+3. PUT    = PUT is used for updating an existing resource on the Server
+4. DELETE = DELETE an existing resource on the Server
+------------
+5. HEAD
+6. OPTIONS
+7. TRACE
+8. PATCH
+9. CONNECT
+
+out of the 9, #4 operations are being used in typical web applications for exchanging web pages. The Web Pages that are served by the Web Server over HTTP protocol are called "Resources"
+	
+The HTTP protocol has defined standard structure and semantics aspart of HTTP Request / Http Response messages as below
+1. HTTP REQUEST
+The HTTP REQUEST message is send by the client application requesting the Server to perform an operation. The HTTP Request message comprises of #3 parts
+
+[HTTP REQUEST]
+PROTOCOL/VERSION
+URI:
+METHOD:
+-----------------
+HEADER
+KEY=VALUE
+KEY=VALUE
+-----------------
+BODY
+
+
+For eg.. to request an existing resource on the Server like about-us.html, the client application can send an http request message as below.
+	
+http/1.1
+URI: /about-us.html
+METHOD: GET
+-------------------
+Accept: "*/*"
+Host: 192.168.1.10
+-------------------
+Body [not available for get request]
+
+For creating an new resource on the server lets say "contact-us.html", the client application sends the below request
+
+http/1.1
+URI: /contact-us.html
+METHOD: POST
+---------------------
+Accept: "*/*"
+Content-Type: text/html
+Content-Length: 2000
+Encoding: utf-8
+Host:  192.168.1.10
+----------------------
+<html>
+	<head>
+		<title>contact-us</title>
+	</head>
+	<body>
+		....
+	</body>
+</html>
+
+2. HTTP Response
+The Server upon completing the processing of the request, he construct the data that is computed aspart of HttpResponse message and returns to the client application. The http protocol has defined standard structure for Response Message that comprises of #3 parts aspart of it
+
+[HTTP RESPONSE]
+status
+----------------
+headers
+key=value
+key=value
+---------------
+Body
+
+status = indicates the type of the response the server is sending it back to the client. upon receiving the request, the server might process the request successfully or might fail in performing the operation, irrespective of it always the server will return the response only
+
+To let the client application know the response that is returned by the server is success response or failed response, the http procotol has defined standard status codes
+If the status code starts with
+2xx = indicates success message. which means the server has performed the operation successfully and is returning the success response to the client.
+	
+3xx = indicates redirect to request the client
+
+-> server1: index.html (moved from server1 to server2), now the server will send an response message containing the new URI pointing to server2 asking the client, can you send the request to the another server for accessing the resource.
+	
+4xx = indicates error at client side. 4xx indicates an error response, but the error has been caused because of the client itself.
+For eg.. there is no resource name "/party.html", but the client application send the GET request asking the server to send /party.html. 
+In this case the server will not be able to provide the resource aspart of the response since it is not available. So the server will send an error response saying page not found, and the reason for the failure is because of wrong request send by the client. Indicating the client-side error, the server returns status code: 404 (4xx)
+	
+5xx = indicates error at the server-side. which means upon receiving the request, the server while performing the operation might fail and returned the error response
+-----------------------------------------------------------------------------------------------------------------------------------
+2. Presentation Layer
+The Presentation Layer provides data to the lower layers of the OSI Model layer protocol in transmittable format. It performs 3 activities majorly
+1. Data Conversion
+Converts the character data that is passed by the Application Layer into bits/bytes or binary format based on the CharSet encoding standards, so that the data will become transmittable over the network
+
+2. Data Compression / De-compression
+data compression is a technic of reducing the size of the data by applying bit compression technics so that the data can be quickly transmitted over the network. On the receiver end, to build back the original data, it applies de-compression technic
+
+3. Data Encryption/Decryption
+Encryption = is an technic/mechanism using which we translate the data into another form that cannot be stolen/understandable by other people.
+Decryption = is an technic/mechanism using which the encrypted data will be build back to the original form by applying the reverse of the encryption
+
+When transferring the data over the network, there could be a chance where hacker/intruder might steal the data packet and understand the information that is originally transmitted that could create damage. To ensure all the data that is send over the network is secured and cannot be stolen by anyone we need to use encryption/decryption technics
+
+The presentation layer takes the job of performing encryption/decryption of the information, so that the information being exchanged is secured.
+	
+	
+	
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

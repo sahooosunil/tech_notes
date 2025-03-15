@@ -1,0 +1,211 @@
+Control Statements
+------------------
+Control Statements are used for controlling the flow of execution of an program, by default a program is executed from top to the bottom sequentially. If we want to change the default flow of execution of the program then we need to use Control Statements.
+	
+There are 2 types of control statements are there
+1. Conditional Control Statements
+2. Loop Control Statements
+
+1. Conditional Control Statement
+based on the conditional expression/evaluation we want to execute a block of code, then we need to use conditional control statements. There are 3 types are there
+1.1 if control statement
+1.2 if-else and if-elif-else control statement
+1.3 case/esac
+
+wap to find whether a given number is positive or negative number and print it?
+positiveornegative.sh
+----------------------
+#!/bin/bash
+read -p "Enter an non-zero number: " N
+
+if [ $N -gt 0] ; then
+	echo "$N is positive number"
+else
+	echo "$N is negative number"
+fi
+-----------------------------------------------------------------------------------------------------------------------------------
+3. if-elif-else-fi statement
+An conditional expression might lead to multiple possible outcomes, in which each outcome is mutually exclusive of another. 
+	
+if an expression is evaluated to only #2 possible outcomes like an number being an even or odd then we can write if-else control structure in executing the code.	
+	
+but incase if the expression results in multiple possible outcome as described below, then we cannot write if-else condition,	then we need to write several if conditions as shown below.
+age               
+infant           = 0 - 3
+kid              = > 4 && < 13
+teen             = > 12 && < 19
+adult            = > 19 && < 50
+middleage        = > 50 && < 65
+senior citizen   = > 65
+	
+if [ $AGE -ge 0 -a $AGE -le 4]; then
+	echo "infant"
+fi
+
+if [ $AGE -ge 4 -a $AGE -le 12 ]; then
+	echo "kid"
+fi
+
+if [ $AGE -ge 13 -a $AGE -le 19 ]; then
+	echo "teen"
+fi	
+... etc	
+here for every possible outcome we need	write one if conditional control statement. here if the AGE passed is matching with one outcome then the other would be matched since these are mutually exclusive.
+in this case writing multiple if conditional control structures would endup in comparing every condition even one of it has been passed which is unnecessary comparisions.
+if there are mutual exclusive outcomes are there instead of using multiple if control statements we can use if-elif-elif-else-fi ladder
+
+
+let us write the program to print the stage of a person based on the age.
+printPersonStage.sh
+-------------------
+#!/bin/bash
+NARGS=$#
+if [ $NARGS -ne 1 ]; then
+	echo "AGE is required"
+else	
+	AGE=$1
+	if [ $AGE -ge 0 -a $AGE -le 3 ]; then
+		echo "infant"
+	elif [ $AGE -ge 4 -a $AGE -le 12 ]; then
+		echo "kid"
+	elif [ $AGE -ge 13 -a $AGE -le 19 ]; then
+		echo "teen"
+	elif [ $AGE -ge 20 -a $AGE -le 45 ]; then
+		echo "adult"
+	elif [ $AGE -ge 46 -a $AGE -le 65 ]; then
+		echo "middle age"
+	else
+		echo "senior citizen"
+	fi	
+fi
+-----------------------------------------------------------------------------------------------------------------------------------
+write a program to calculate the tax applicable for the bill amount and print total amount to be paid?
+practice:	
+bill amount: 1000/- = 3%
+bill amount > 1000 && 10000 = 5%
+bill amount > 10000 && 50000 = 6%
+bill amount > 50000 = 9%
+	
+350
+350 * 3/100 = 1050/100 = 10.6 (tax amount)	
+total = 350 + 10.5 360.5
+	
+23000
+tax applicable = 6
+23000 * 6/100 =     1380.00	
+23000 + 1380 = 24380
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

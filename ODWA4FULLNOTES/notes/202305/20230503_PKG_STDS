@@ -1,0 +1,129 @@
+The operating system has standardized the packaging standard, to distribute an software application to the enduser/customer easily. As part of an packaged software there are 
+1. software application binaries
+2. metadata describing the application like
+	2.1 author
+	2.2 manufacturer
+	2.3 licensing
+	2.4 warranty & usage
+	2.4 version
+	2.5 supported platform
+3. entrypoint program information
+4. instructions in lauching the application
+
+In addition to the above the operating system has provided software package managers or installers that takes the packaged software as an input and installs them on the underlying operating system of the computer as below
+	1. extracts the packaged software application
+	2. copies the binaries into the FileSystem location of the computer
+	3. reads the instructions written in lauching the software application aspart of the packaged software
+	4. adds the entries into the software registry of the operating system, so that operating system can quickly look for the application information while launching it
+	5. creates an shortcut, helping the user to launch the application quickly
+	
+Why does different packaging standards and installers are provided by different operating systems?
+Each software application developed by the developer has to be compiled native to the operating system on which he/she wanted to execute, so the compiler generates the application binary specific to that operating system. So we need to distribute different copies of the application each per operating system, so inorder to identify which software binaries runs on which operating system, the operating systems vendors introduced their own packaging standards and for installing the softwares on the machine/operating system, based on that standard the respective installers/package managers are provided
+	
+For eg.. 
+	1. In Windows operating system
+		The packaging standards are:   .exe / .msi
+				package manager/installer: msi (microsoftware installer)
+	2. In Ubuntu operating system:
+		The packaging standards are:   .deb / .dpkg
+				package manager/installer: apt
+		
+What are the packaging standards and package managers available aspart of the linux operating system?
+when the software application has been compiled native to the linux operating system kernal, these application binaries produced works across all the distros of the linux operating system, since across all the distros the kernal is same.
+					
+Now to distribute the software, the developer has to package it, unfortunately the kernal of the linux operating system has not provided any packaging standard or package manager to install the software application, this resulted in difficulty in running the software applications on the linux operating system
+
+The distro vendors came up with different packaging standards of their own along with package managers based on their standards helping the enduser to easily use the software applications distributed by the developers on the respective linux distro
+					
+Debian distribution: .deb/.dpkg (packaging standard)
+	                   apt / dpkg are the package manager tools
+	
+Redhat distribution: .rpm (packaging standard)	
+	                   yum is the package manager tool
+	
+Arch distribution:  .pac (packaging standard)	
+	                  pacman is the package manager tool
+	
+Now the developer has to package the compiled software binary into different packaging standards based on each distro and should distribute it, to make it installable on each distro of the operating system (even though the underlying binary is same)	
+	
+So that enduser has to download the software based on the distro packaging standard and install it using that distro specific installer.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

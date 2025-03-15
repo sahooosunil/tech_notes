@@ -1,0 +1,69 @@
+Virtual Networking
+------------------
+The Virtual Machine we created through hypervisor provider should be connected to the network, unless it is being attached and accessible over the network, we cannot use the virtual machine similar to an physical computer.
+	
+Since the virtual machines are not physical machines, we cannot attach physical network adapters and we cannot plugin the machines to the network through physical cables etc. The Hypervisor engine that creates the virtual machine should be able to create an virtual network adapter and attach it to the virtual machine.
+	
+All the network traffic that routes to/fro to the virtual machine should pass through the virtual network adapter, which inturn should be managed by hypervisor engine in providing networking services to the virtual machines.
+	
+Every hypervisor provider during the time of creating the virtual machines allows us to define virtual network adapter and attaches them to the virtual machine, so that these machines can be plugged-in virtual to the network passing the network traffic for the machines.
+
+Oracle Virtualbox Networking
+---------------------------
+The oracle virtualbox hypervisor supports virtual network interface cards that emulates the physical network adapters and allows us to attach to the virtual machines we create through virtualbox.
+Per each virtual machine we can attach upto 8 network adapters.	 4 of them we can create/attach through virtualbox manager (gui tool), additionally we can attach 4 more adapters through virtualbox cli (command-line interface) tool.
+	
+The possible options over the network with which a virtual machine can communicate with is
+1. virtual machine to host / host to virtual machine
+2. virtual machine to another virtual machine on the same host machine
+3. virtual machine to external network and external network to virtual machine
+
+
+always an VM that is created should not be exposed and made accessible over all the possible combinations defined above, because that poses an security threat. So we wanted to restrict how the vm should be connected and accessible over the network. To achieve this the hypervisor provider provides networking modes
+
+A network mode defines to the hpervisor provider how we wanted the virtual machine to be accessible/exposed over the network. For each network adapter we attach to the virtual machine we need to tell the network mode of it specifiying how the adapter should be plugged into the network
+
+oracle virtualbox hypervisor provider supports 7 networking modes
+1. not attached
+2. nat
+3. nat network
+4. bridge
+5. internal network
+6. host-only network adapter
+7. generic driver
+
+A network mode defines how an virtual machine should be connected to the network.
+
+1. Not Attached
+The Virtual machine is attached with an network adapter, but it is disconnected or unplugged from the network. The developers/test engineers can use this network mode to test the behaviour of the application when the machine is unplugged from the network.
+	
+2. NAT
+NAT stands for network address translation protocol. 
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

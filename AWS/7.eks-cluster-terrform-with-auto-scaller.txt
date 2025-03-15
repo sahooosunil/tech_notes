@@ -1,0 +1,127 @@
+To enable **Cluster Autoscaler** for your EKS node group, follow these steps:
+
+---
+
+### **1. Update Terraform Configuration**
+Modify your Terraform **EKS module** to allow the Cluster Autoscaler to manage node scaling:
+
+```hcl
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "my-cluster"
+  cluster_version = "1.27"
+  subnet_ids      = module.vpc.private_subnets
+  vpc_id          = module.vpc.vpc_id
+
+  node_groups = {
+    default = {
+      desired_capacity = 3  # Start with a lower desired capacity
+      max_capacity     = 6  # Autoscaler will scale up to this
+      min_capacity     = 1  # Autoscaler can scale down to this
+
+      instance_types = ["t3.medium"]
+      key_name       = "my-key"
+
+      # Enable auto-scaling policies
+      create_launch_template = true
+      launch_template_tags = {
+        "k8s.io/cluster-autoscaler/enabled" = "true"
+        "k8s.io/cluster-autoscaler/my-cluster" = "true"
+      }
+    }
+  }
+}
+```
+
+---
+
+### **2. Deploy the Cluster Autoscaler**
+Use the official **Cluster Autoscaler** Helm chart.
+
+#### **Step 1: Add the Helm Repo**
+```sh
+helm repo add autoscaler https://kubernetes.github.io/autoscaler
+helm repo update
+```
+
+#### **Step 2: Deploy Cluster Autoscaler**
+Replace `<AWS_REGION>` with your region.
+
+```sh
+helm install cluster-autoscaler autoscaler/cluster-autoscaler \
+  --namespace kube-system \
+  --set autoDiscovery.clusterName=my-cluster \
+  --set awsRegion=<AWS_REGION> \
+  --set extraArgs.balance-similar-node-groups=true \
+  --set extraArgs.skip-nodes-with-local-storage=false \
+  --set extraArgs.skip-nodes-with-system-pods=false
+```
+
+---
+
+### **3. Annotate the Node Group**
+After Terraform applies the changes, run:
+
+```sh
+kubectl annotate nodegroup default \
+  "k8s.io/cluster-autoscaler/enabled=true" \
+  "k8s.io/cluster-autoscaler/my-cluster=true"
+```
+
+---
+
+### **4. Verify Autoscaler**
+Check if the **Cluster Autoscaler** is running:
+
+```sh
+kubectl get pods -n kube-system | grep cluster-autoscaler
+```
+
+Monitor logs:
+
+```sh
+kubectl logs -f deployment/cluster-autoscaler -n kube-system
+```
+
+---
+
+### **5. Test Scaling**
+To test if scaling works, deploy a high-replica workload:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stress-test
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: stress-test
+  template:
+    metadata:
+      labels:
+        app: stress-test
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ["sleep", "3600"]
+```
+
+Apply and check if new nodes are provisioned:
+
+```sh
+kubectl apply -f stress-test.yaml
+kubectl get nodes
+```
+
+---
+
+### **Summary**
+✔️ Updated Terraform to enable autoscaling  
+✔️ Installed **Cluster Autoscaler** via Helm  
+✔️ Annotated the node group  
+✔️ Verified and tested scaling  
+
+Now your **EKS cluster** can automatically scale nodes based on workload demand! 🚀

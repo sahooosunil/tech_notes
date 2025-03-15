@@ -1,0 +1,471 @@
+Database Management System
+Database Management System (DBMS) is an system software, that abstracts/hides the complexity in storing, accessing the data from the underlying Filesystem of the computer. The database takes care of storing the data onto the underlying Filesystem of the computer in an efficient way, so that it can accessed or manipulated easily. The developers of the software application dont have to write programming logic in persisting or retrieving the data from the Filesystem, rather they need to write the logic for talking to the database managmenet system asking him to perform the persistence operation.
+	
+There are lot of advantages of using the database management ssytem over the File-based persistency
+advantages:
+1. as databases eliminates the complex logic to be written by the developers in storing the data on the Filesystem of the computer, the applications can be developed very quickly and the cost of developing the application will comes down greatly
+2. databases are secured
+3. databases takes care of periodically backing up the data and incase of crash we can restore the data easily
+4. databases makes the data accessible over the network, so that we can store the data on a computer using database and access it from any other computer over the network
+
+There are different types of database management systems are there
+1. Hierarchial databases
+2. Network databases
+3. Relational database
+4. Object oriented database
+5. No-Sql or semi-structured database
+6. Object storage database
+
+out of the above 6, 3 of them are deprecated and not in use, currently there are only 3 databases that are popular used in the market
+1. relation database management system (RDBMS)
+2. no-sql or semi-structured database (AWS Auroradb)
+3. object-storage database (AWS S3 Buckets)	
+-------------------------------------------------------------------------------------------------------------------------------------	
+Relational database management system
+-------------------------------------
+
+What is persistency?
+permanently storing the data on the storage device of the computer is called "persistency"
+	
+How can we store the data permanently on the storage device of the computer?
+We can store the data interms of files, by organizing them into folders on the Filesystem of the computer.
+	
+There are lot of problems in developing the application programs in storing/processing the data interms of Files:
+1. developer has to write complex programming logic using the programming language instructionset in storing/retrieving the data on the Filesystem of the computer, due to which the time required for development will be high and the cost of developing the application increases.
+	
+2. performing data manipulation operations like inserting, updating and deleting the data on the Files of the Filesystem is very complex to program.
+	
+3. searching and randomly accessing the data from the Files using the application programs is very complex and might run into performance issues as well
+
+4. there is no security, anyone who has access to the computer can see/modify the data that is stored in the Files
+
+5. no back and recovery of data, the administrator has to manually take the backup copy periodically
+
+6. doesnt support transactionality
+
+7. we cannot access the data that is stored on the Filesystem remotely over the network
+
+From the above we can understand, building software applications in persisting the data on the Filesystem of the computer interms of Files is very complex and takes huge amount of time thus increasing the cost of development. To overcome these problems database management systems are introduced.
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Database Management System
+Database Management System is an system/platform software that abstracts/hides the complexity in storing & retrieving the data from the Filesystem of the computer. The developers dont have to write complex logic in persisting the data onto the Filesystem of the computer, rather they need to write programming logic in passing the data and talking the database management system, So the database takes care of storing/manging and retrieving the data automatically
+
+advantages:-
+1. eliminates complex logic to be written aspart of software programs in storing the data permanently, simple the applications has to talk to database
+2. high secured, unless the user is authenticated with the database, he/she cannot access the data
+3. searching, and randomly accessing the data would be quick, since database helps us in fetching the data
+4. backup and restoring the data incase of crash or corrupted will be supported
+5. remotely can access the data over the network
+6. supports transactionality
+from the above we can understand using databases the software applications can be developed quickly
+
+There are 6 types of databases are there
+1. Hierarchial databases
+2. Network databases
+3. Object oriented databases
+4. Relational databases
+5. No-sql database or semi-structured database
+6. Object storage database
+
+
+out of the above only 3 of them are currently being used/available in the market:
+1. relational databases
+2. no-sql or semi structured databases
+3. object storage databases
+
+
+relational database management system (RDBMS)
+The Relational database management system is the structured database that allows us to store the data interms of tables/records within it, all the database is being stored within the tables interms of records/rows. 
+	
+For each type of data we want to store in the database, we need to create one table. While creating the tables we need to delcare the columns of data along with their dataType indicating the data we want to store the in the table
+
+since the database knows in each table what fields/columns of data is being stored, we can always ask the RDBMS to search and retrieve the data for us.
+	
+Relational database management systems not only allows us to store the data interms of tables, they allow us to establish relationship between the data across the tables through primary key & foreign key
+
+primary key = primary key is an column within the table, that holds the data uniquely across all the records of the table. so primary key acts as an logic address for the records in the table using which we can establish relationship between the data
+
+foreign key = foreign key is an column defined in a table referring an another primary key column of another table inorder to establish the relationship between the records of data across the tables.
+	
+In a foreign key column of a table we cannot store any data, the data that is being persisted should be an existing data of another primary key column of a record
+--------------------------------------------------------------------------------------------------------------------------------------
+
+How to talk to the RDBMS?
+To talk to the relational database management system asking to perform operations, the RDBMS has provided an standard language called sql language. SQL stands for structured query language.
+	
+using sql queries we can ask the database to create tables, drop (delete) tables, insert a record of data into an table, update data or delete data or fetch/retrieve/get/select the data from the tables
+
+These SQL queries are classified into 4 Types
+1. Data definition language (DDL)
+create, drop, alter and truncate the database objects like tables, views etc
+
+2. Data Manipulation language (DML)
+inserting, updating or deleting the data within the tables
+	
+3. Data Control Language / Data Transaction Language (DCL/DTL)
+grant, revoke the permissions on the database objects
+commit/rollback data transactions
+	
+4. Data Query Language (SQL)
+for retrieving the data from database tables (select)	
+--------------------------------------------------------------------------------------------------------------------------------------
+basic sql query syntaxes:
+1. create a table
+CREATE TABLE TABLE_NM(COLUMN_NM1 DATA_TYPE primary key, COLUMN_NM2 DATA_TYPE, COLUMN_NM3 DATA_TYPE);
+
+2. insert data into table
+INSERT INTO TABLE TABLE_NM VALUES(COL1_VAL, COL2_VAL, COL3_VAL);
+
+3. retrieve or access the data from table
+SELECT * FROM TABLE
+
+To identify different groups of tables of different applications we need to create schema in the database. A schema is collection of related tables that can be used in an application
+
+create database hrDatabase;
+with the above we created an database which is nothing but schema only
+
+There are lot of database server softwares are provided by various different vendors in the market based on the principles of RDBMS. Few of opensource and others are commercial
+1. oracle database
+2. db2 (ibm)
+3. postgres
+4. ms-sql server (microsoft)
+5. mysql server (oracle#opensource)
+6. mariadb
+
+For connecting to the database server and perform operations we need to use database client tools. each database vendor provides their own client tools that should be used for connecting to their database servers, or there are third-party client tools using which we can connect to any database server software
+
+1. oracle database = sql developer (client-tool) / sql-plus (cli)
+2. mysql server database = mysql workbench (gui) / mysql-client (cli)
+3. postgres = pdadmin (gui)
+
+third-party tools
+1. toad
+2. dbviewer
+3. aqua data studio
+--------------------------------------------------------------------------------------------------------------------------------------
+How to install mysql server database on ubuntu linux operating system?
+MySql Server is an opensource database server software that is popuarly used by the people in the market
+
+#1. MySql Server 8 is an packaged software that is distributed aspart of the ubuntu repositories from ubuntu 20.04+
+sudo apt update -y
+sudo apt install -y mysql-server-8.0
+	
+when we install mysql server software along with that the msql-client cli utilities also will be installed on the machine.
+	
+
+upon installing the mysql server it comes with an default root user, which is administrator user of the database using which we can perform any operations on the database.
+with the default installation, the root user will be created with password as empty/blank, so that anyone can access the database on that machine which makes it insecure
+
+To make the databaase installation secured, the mysql server has provided an tool called "mysql_secure_instalation", which we need to run on the machine to secure the mysql server.
+The above tool will configure the database server by prompting few questions for securing the access as below:
+1. Do you want to enforce password validation: No
+2. Enter the root user password: root
+	Reenter the root password: root
+3. remove anonymous users: Yes
+4. Remote test databases: Yes
+5. Allow remote access to the root disabled: Yes
+6. Reload previliges: Yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

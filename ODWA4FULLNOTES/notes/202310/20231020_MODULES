@@ -1,0 +1,180 @@
+#1. Commands Category
+There are 2 popular modules are there under Commands Module category
+1. command module
+2. shell module
+
+The command/shell modules are used for execute an linux shell command on the managed nodes of the cluster. These 2 modules doesnt support idempotency, so that it is recommended to avoid these modules in implementation the software configuration management automation.
+There is an subtle difference between command and shell module
+1. command module = doesnt uses the shell capabilities, so that pipes, redirectors and $HOME like variables will not be available
+2. shell module = uses an shell only for executing the linux commands we supplied, so that we can use full capabilities of the shell.
+	
+1. command module
+1.1 execute an linux command on the managed nodes
+command: commandToBeExecuted
+
+1.2 execute the given linux command by changing to an specified directory
+command: commandToBeExecuted
+  args:
+    chdir: directoryPath
+	
+1.3 execute an given linux command when only the specified file/directory doesnt exists under the given path
+command: commandToBeExecuted
+  args:
+    creates: pathToFile
+		
+#2. shell module
+-----------------
+shell is another module used for executing an linux command on the managed nodes of the cluster and uses the linux shell for executing the given commands
+
+2.1 shell module with linux command 
+shell: commandToBeExecuted
+
+2.2 shell module to execute an linux command by switching into specified directory
+shell: commandToBExecuted
+args:
+  chdir: dir
+	
+2.3 shell module with creates option, which means if the specified file doesnt exist then only execute
+shell: commandToBeExecuted
+args:
+  creates: pathToFile
+	
+2.4 shell module with removes option, which means execute the linux command only when the given/specified file exists
+shell: commandToBeExecuted
+args:
+  removes: pathToFile
+	
+let us create an empty log file name app-date.log	under /tmp directory
+--------------------------------------------------------------------------------------------------------------------------------------
+expect shell utility
+--------------------
+expect is used for executing and interactive shellscript program non-interactively with pre-defined inputs being passed for achieving touchless automation
+
+
+addNumbers.sh
+-------------
+#!/bin/bash
+read -p "Enter A: " A
+read -p "Enter B: " B
+SUM=$(A+B)
+echo "Sum : $SUM"		
+		
+chmod u+x addNumbers.sh
+./addNumbers.sh
+Enter A: 10
+Enter B: 20
+Sum: 30
+	
+	
+
+sudo apt update -y
+sudo apt install -y mysql_server-8.0
+sudo ./mysql_secure_install
+
+/etc/mysql/mysqld.conf
+bind-address=0.0.0.0
+	
+
+installandconfiguremysql.sh
+sudo update -y
+sudo apt install -y mysql-server-8.0
+	
+sudo ./mysql_secure_install #non-interactively
+
+
+./installandconfiguremysql.sh
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

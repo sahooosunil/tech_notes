@@ -1,0 +1,137 @@
+CIDR
+----
+CIDR stands for classless inter-domain routing. In classfull ip addressing the network bits and the host bits are distributed over fixed octets, due to which we cannot create networks of varied/different sizes.
+	
+To overcome the problem with classfull ip addressing, the CIDR has been introduced.	In CIDR the network bits and host bits are computed based on the network requirement and are not fixed
+
+Since we cannot identify the network/host bits based on ip classes, the CIDR notation has been introduced in representing an ip address.
+	
+ip address: 192.168.12.24/23
+here /23 indicates the number of bits given to the network address
+From the above CIDR ip address we need to compute
+1. Subnetmask
+2. network address
+3. total hosts
+4. Min Ip and Max Ip
+5. Broadcast ip address
+
+How to compute the network address and subnetmask from the given cidr notation based ip address?
+1. within 32 bits of ip address enable 23 bits as '1' and compute the decimal equivalent to derive the subnet mask as below:
+
+11111111.11111111.11111110.00000000
+-----------------------------------
+	255.     255.      254.    0
+	
+subnetmask for the above ip address: 255.255.254.0
+	
+2. To compute the network address from the given ip address:
+	2.1 represent the ip address in binary format
+	2.2 represent the subnet mask in binary format
+	2.3 then do an bit wise AND operator and derive the bit values until the network bits allocated for that ip
+	
+192.168.12.24/23
+		
+ip:          11000000.10101000.0000110|0.00011000
+subnet mask: 11111111.11111111.1111111|0.00000000		
+	           -------------------------|-----------
+	           11000000.10101000.0000110|0
+	              192  .   168.    12.    0
+	
+network address: 192.168.12.0
+max hosts: 512 
+starting ip: 192.168.12.0
+ending ip: 192.168.13.254
+broadcast ip: 192.168.13.255
+	
+	
+	
+cidr ip: 173.158.11.11/21
+	
+subnetmask: 11111111.11111111.11111000.00000000
+	          ------------------------------------
+	            255.      255.     248.   0
+	
+subnet mask: 255.255.248.0
+	
+network address:
+ip:         10101101.10011110.00001|011.00001011
+subnetmask: 11111111.11111111.11111|000.00000000
+	          -----------------------|------------
+	            173.     158.    8   . 0
+	
+network address: 173.158.8.0
+max hosts: 2048-2
+min ip: 173.158.8.0
+max ip: 173.158.15.254
+broadcast ip: 173.158.15.255
+	
+
+1. how to setup a computer network?
+2. basic protocols	/ osi model layer protocol
+	2.1 Application protocols
+3. Network topologies
+4. Network devices
+5. ip addressing
+	5.1 classfull ip address
+	5.2 classless ip address
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

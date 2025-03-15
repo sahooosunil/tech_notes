@@ -1,0 +1,126 @@
+How to publish an docker image into the docker container registry (dockerhub)?
+We can build our own docker image out of our application on the docker host machine and publish into docker container registry, for doing this we need
+
+1. dockerhub account
+We need to signup for an dockerhub account and it is free
+
+2. we need to create an repository for publishing an image
+In a dockerhub account we need to create one repository per one image to be published. We can think of it as an github or any version control system.
+per each project inorder to colloborate and distribute the source code across the members of the team	we create one repository, similarly per each application/docker image to publish and distribute it to the others we need to create one repository
+
+The repository can be one of these 2 types
+1. private = apart from repository owner no one can pull/push the image unless the access permissions are granted
+2. public = it is open to the world.
+	
+The repository name pretty much represents the image name.	
+	
+3. login into the dockerhub account from docker cli
+docker login
+
+this prompts for username and password of your dockerhub account, upon successful authentication will login into your dockerhub account.
+	
+4. build an docker image on the docker host machine
+In order to build an docker image of our own, we need to write Dockerfile with image building instructions in it.
+4.1 make an directory representing the image we want to build for eg..
+mkdir $USER/jdk17
+inside this directory create a file with name "Dockerfile".
+	
+now inside the Dockerfile write the below image building instructions
+
+Dockerfile
+----------
+FROM ubuntu:24.04
+RUN apt update -y
+RUN apt install -y openjdk-17-jdk
+CMD ["/bin/bash"]
+
+4.2 be inside the $USER/jdk17 directory where we have Dockerfile and run the below command to build an image out of it
+
+docker image build -t jdk17:1.0 .
+
+upon completing this command we can verify the image has been created or not by using 
+docker image ls	
+
+5. Inorder to publish this image into docker container registry the image should be tagged with specific naming pattern.
+dockerhubid/repositoryName:tag
+
+for eg.. my dockerhub account id is "techsriman" and We created an repository named "jdk17", then the image name should be 
+techsriman/jdk17:1.0
+	
+let us re-tag the image we have created on the docker host.
+	
+docker image tag jdk17:1.0 techsriman/jdk17:1.0
+	
+now we can push the image using
+docker image push techsriman/jdk17:1.0
+--------------------------------------------------------------------------------------------------------------------------------
+How to build our own docker images by packaging our applications and dependent software packages and libraries inorder to run our application out of a container?
+upon developing the software application, build the application into binary executable. Now we can package the application along with dependent software packages/libraries and instructions in running application into an image by writing "Dockerfile".
+	
+Inside the Dockerfile we need to write image building instructions, by using which we package application binary, dependent software packages and libraries inside the image, these instructions that we write in building the docker image inside the "Dockerfile" are called "Docker Directives". By using the docker directives we are accomplishing #2 things
+
+
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

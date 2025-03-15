@@ -1,0 +1,111 @@
+What is DevOps, what is the purpose of it?
+Devops is an change in culture and adoption of new tools & technologies for fast paced application development and delivery
+The adoption of new tools and technologies has to be done at all the stages of development and delivery by everyone working in project
+
+developer
+1. understand the requirements to develop the application
+2. choose a programming language that is suitable for developing the application
+	2.1 java
+	2.2 python
+	2.3 .net
+	2.4 php
+	2.5 scala
+	etc
+3. setup the development environment by installing required softwares & tools like
+	3.1 programming language
+	3.2 development tools like ide 
+	3.3 database servers
+it takes lot of time for setting up the development environment for the whole team, which delays the development/delivery of the application and impacts the cost of development/delivery aswell
+To overcome the problem, we need to adopt the devops tools like virtualization.
+virtualization:
+virtualization is an technology through which we can run multiple parallel isolated environments on a single physical server machine. The devops engineer can setup the development environment on a virtual machine and export it as an virtual disk image and distribute it to the whole team.
+	
+The developers has to import the diskfile to have the development environment running on his machine, which takes couple of minutes only, thus saving huge time and reducing the cost
+
+Instead of creating the virtual machine manually in setting up the development environment, the devops engineer can take the help of vagarant.
+Vagrant
+vagrant is an virtualization workflow automation tool, that takes care of creating virtual machines by reading the machine definition file, so that we can avoid manual process of creating the machine thus can save more time 
+
+4. choose the process model in developing the project
+There are several process models are available in the market
+1. waterfall model
+2. iterative or incremental model
+3. prototype model
+4. spiral model
+5. agile based scrum methodology
+
+the devops recommends us to use agile based scrum methodology for developing and delivering the software application
+	3.4 application servers
+	etc
+
+Scrum principle works based on fast-fail approach, let there be an failure while developing the software application, but let us have the failure at the earliest so that the lose incurred would be minimal and negligeable
+
+It will not be possible to understand and analyze the requirements of the entire business system initially, that is where identify and gather the business requirement to the extent we can and define the vision or scope of the system we want to build
+
+For eg.. we can define a vision or scope as 
+"build an software application/mobile app that allows the customers to order food over online from their nearest restaurants"
+
+Now based on the scope we defined, we can capture the requirements of the system while we are progressing in building the application, based on feedback we can further derive more requirements to build the system, with this approach a complex business system can also be build progressively
+
+There are 3 roles of people would be there in SCRUM
+1. product owner
+2. scrum team
+3. scrum master
+
+1. product owner
+product owner is the person who defines the business system requirements for the team by setting up a goal/vision. These business requirements defined by the product owner are called "product backlogs"
+backlogs = things under pending or yet to work on
+
+2. scrum team
+The scrum team will be around 5 - 7 in size which includes all the roles of people like dev, qa, operational engineers, administrators etc working under one team. 
+	
+3. scrum master
+scrum master is not an technical rather he is the facilitator helping the team to achieve the goals and ensure the team adopts the scrum process. he is the first-point of contact in resolving any hurdles that are encountered by the team
+
+Sprint:
+The scrum team will build the software application in sprints. Sprint is the smallest/shortest duration of time where the scrum team build and deliver a product increment to the product owner
+The sprint duration would be between 1 - 4 weeks, and the duration would be decided at the begining of the project and would remain constant through out the project development and delivery
+
+5. develop the software system.
+To develop the software application collaboratively we need sourcecode management repository. There are lot of vendors providing various different sourcecode management repository systems like
+1. visual source safe
+2. wincvs
+3. perforce
+4. pvcs
+5. svn
+6. git
+7. rational clearcase
+etc
+
+to implement devops process and develop and deliver the application based on agile methodology, the better supported tool is "git".
+	
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

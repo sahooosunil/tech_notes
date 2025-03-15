@@ -1,0 +1,145 @@
+Here’s a more concise, clear, and structured version of your content while maintaining simplicity:
+
+---
+
+## **Types of Controllers in Kubernetes**  
+There are five main controllers in Kubernetes:  
+1. **ReplicaSet**  
+2. **Deployment**  
+3. **DaemonSet**  
+4. **Job**  
+5. **Service**  
+
+## **Deployment Controller**  
+The Deployment Controller automates application deployment and updates in a Kubernetes cluster. Instead of manually managing deployments and version rollouts, it ensures controlled updates to pods.
+
+**Example:**  
+If a running application (v1) needs an update (v2), the Deployment Controller handles the rollout efficiently using different deployment strategies.
+
+### **Deployment Strategies**  
+Kubernetes supports five deployment strategies:  
+1. **Recreate** – Deletes old pods before creating new ones (causes downtime).  
+2. **Rolling Update (Ramped)** – Updates pods gradually, minimizing downtime.  
+3. **Blue/Green** – Runs both old and new versions, switching traffic after testing.  
+4. **Canary** – Releases a small percentage of new versions before full rollout.  
+5. **A/B Testing** – Routes traffic based on conditions for controlled testing.  
+
+### **Recreate Strategy**  
+- Deletes all existing pods before deploying new ones.  
+- Causes downtime; best for development environments.  
+- Suitable when shared volumes prevent concurrent versions.  
+
+#### **Advantages:**  
+✔ Fast rollout in one step  
+✔ No additional infrastructure required  
+
+#### **Disadvantages:**  
+✘ Not suitable for production (downtime)  
+
+#### **Deployment Example (Recreate Strategy)**  
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailordeployment
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        appName: sailor
+    spec:
+      containers:
+        - name: sailor
+          image: techsriman/sailor:1.0
+          ports:
+            - containerPort: 8080
+```
+Create the deployment:  
+```bash
+kubectl create -f sailor-deployment.yml
+```
+
+#### **Viewing Deployment Details**  
+```bash
+kubectl get deployments
+kubectl describe deployment <deploymentName>
+```
+
+#### **Updating the Application Version**  
+```bash
+kubectl set image deployment/sailordeployment container=techsriman/sailor:2.0
+```
+or edit manually:  
+```bash
+kubectl edit deployment sailordeployment
+```
+
+#### **Viewing and Rolling Back Deployment Versions**  
+```bash
+kubectl rollout history deployment/sailordeployment
+kubectl rollout undo deployment/sailordeployment --to-revision=1
+```
+
+#### **Pausing and Resuming Deployments**  
+```bash
+kubectl rollout pause deployment/sailordeployment
+kubectl rollout resume deployment/sailordeployment
+```
+
+#### **Scaling Deployments**  
+```bash
+kubectl scale deployment/sailordeployment --replicas=4
+```
+
+---
+
+## **Rolling Update Strategy (Ramped)**  
+- Gradually updates pods one by one.  
+- Ensures zero downtime.  
+- Uses readiness probes to ensure new pods are ready before deleting old ones.  
+
+#### **Example Deployment (Rolling Update Strategy)**  
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sailordeployment
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2  # Max new pods at a time
+      maxUnavailable: 0  # Ensures availability
+  template:
+    metadata:
+      labels:
+        appName: sailor
+    spec:
+      containers:
+        - name: sailor
+          image: techsriman/sailor:2.0
+          ports:
+            - containerPort: 8080
+```
+
+---
+
+## **Blue/Green Deployment**  
+- Runs both old (Blue) and new (Green) versions in parallel.  
+- Traffic is switched to the new version after testing.  
+- Instant rollback if needed.  
+
+#### **Advantages:**  
+✔ Zero downtime  
+✔ Easy rollback  
+✔ Eliminates version conflicts  
+
+#### **Disadvantages:**  
+✘ Requires more infrastructure  
+✘ Hard to manage for stateful applications  
+
+---

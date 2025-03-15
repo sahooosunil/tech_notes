@@ -1,0 +1,99 @@
+File System
+File system is a mechanism or a technic used for organizing or managing  to store the data on the harddisk/storage device of the computer. every operating system vendor comes up with their own filesystem technics for efficiently storing the data on the storage device of the computer.
+	
+Linux FileSystem technics:
+1. ext
+2. ext2
+3. ext3
+4. ext4
+5. jfs
+6. xfs
+7. btrfs
+by default when we install the linux operating system, if uses the ext4 as an default file system technic in storing/organizing the data on the storage device of the computer. Linux uses Hierarchial File System technic for storing/managing the data
+
+Hierarchial = anything that is represented in parent/child relationship is called "hierarchial" (inverted tree). In hierarchial representations always starts with one root node only.
+In case of windows operating system, they dont use hierarchial filesystem technic, so we have multiple roots of storage which are called "drives" in windows file system technics (c:\, d:\, e:\ ...). now the user has to navigate through these drives to locate and use the files that are stored.
+	
+unlike windows, linux operating system uses hierarchial filesystem, which means there is always only one root of the file system and all the files/folders are stored under the single root only
+
+Linux FileSystem directories:
+when we install linux operating system on the computer, it creates an standardized directory structure on the harddisk of the computer organizing the files of the operating system and users.
+/(root)
+|-/bin   = The linux core commands resides inside this directory like (ls, mv, touch, etc)
+|-/boot  = boot loader and boot files are located
+|-/dev   = all physical drives are mounted on the /dev directory like usbs, dvds etc
+|-/etc   = configuration files pertaning to the installed programs/packages are placed here
+|-/home  = per each user of the linux operating system an subdirectory will be created under the /home directory granting the access to only that directory for that user. 
+|-/lib   = the shared libraries among the installed software packages are placed under lib directory
+|-/media = here the external media devices like dvds, usbs are mounted and will be made accessible from here 
+|-/mnt   = the external system / remote storage devices are mounted onto /mnt, in few linux distros even usbs/dvds and other physical devices are mounted onto /mnt
+|-/opt   = optional software packages are located here and installed and managed by package managers
+|-/proc  = 
+|-/root
+|-/sbin
+|-/tmp
+|-/usr
+|-/var
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

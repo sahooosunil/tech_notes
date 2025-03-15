@@ -1,0 +1,304 @@
+File Permissions
+----------------
+By default when a user has created file/folder on filesystem of the linux machine, the owner of the file has full access on that file/folder along with root/sudoer of the linux operating system.
+	
+In order to encourage/support collaborative working on the linux environment, along with enforcing security it should permit the user to grant access to a file/folder to other users of the linux operating system in a controlled way, that is where File Permissions are introduced
+
+How do we grant access to the File/Folder created by an user to other users of the operating system?
+Linux doesnt permits granting access to a file/folder to another linux user individually, because
+1. keeping track of which users are being granted what type of access on a file/folder is an tedious job
+2. managing the permissions individually is very difficult
+
+that is where linux has introduced groups, a user can grant access permission on a File/Folder to other group of users within the machine rather than individual
+
+Why does linux operating system creates an user with default group as username group?
+So that he/she created files/folders will be accessible by that user only and hence yeilds highest level of security
+
+Now to easily grant and manage permissions on a File/Folder, linux has categorized the users into #3 levels
+1. owner = the user who has created the file becomes the owner of the file (by default)
+2. group = the file will be created by associating with the group as primary group of the owner who has created. so all the users who belongs to the file group can also access the file given if the permissions are granted to the group
+3. others = others are the other linux users of the operating system who are not owner or neither part of the file group
+
+What type of operations we can be performed on a File/Folder?
+File:
+1. READ     = we can cat/see the contents of the file
+2. WRITE    = we can edit/modify the contents of the file
+3. EXECUTE  = it is not applicable for all types of files, if it is an program file, that contains instructions like shellscript or python or any executable program, then we need to grant execute permission on the file to run on the operating system
+
+Folder: 
+1. READ     = we can list the contents of the directory (ls)
+2. WRITE    = we can change the contents of the directory like creating new files, deleting existing files, copy or move etc
+3. EXECUTE  = we can change into the directory (we are allowed to cd into the directory)
+	
+From the above we can understand, linux permits us to grant permissions on a File/Folder for #3 categories of users operating system	
+1. owner
+2. group
+3. others
+indicating what permissions (read, write, execute) are allowed by these people
+
+For every file/folder that a user creates on the filesystem, the user dont need to assign permissions for owner, group and others on that file, rather linux will takes care of assigning default permissions for all the #3 levels for each file/folder we created thus by making the linux user life easy
+
+The default permissions to a File/Folder we created will assigned to all the #3 levels of users as below
+File:
+1. owner = rw-
+2. group = rw-
+3. others= r--
+	
+Folder:
+1. owner = rwx
+2. group = rwx
+3. others = r-x
+
+How to see the permissions of a file/folder that exists on the filesystem of the linux machine?
+ls -l = -l stands for long listing that displays the file/folder permission for all #3 levels of users as below.
+	
+sriman@odwa4ubuntu:~$ ls -l
+total 100
+drwxrwxr-x 6 sriman sriman 4096 Apr  2 21:03 app
+drwxr-xr-x 2 sriman sriman 4096 Mar 20 21:24 Desktop
+drwxrwxr-x 2 sriman sriman 4096 Mar 30 21:14 diffexmp
+drwxr-xr-x 2 sriman sriman 4096 Mar 19 21:11 Documents
+drwxr-xr-x 2 sriman sriman 4096 Mar 19 21:11 Downloads
+-rw-rw-r-- 1 sriman sriman   83 Apr  4 21:26 events.txt
+
+in the above output 
+1. The first character indicates the Type of the file
+d = directory
+- = regular file
+l = symlink
+b = block special file
+c = character special file
+p = pipe files
+s = socket file
+
+2. The next 9 characters indicates the permissions assigned to that file/folder
+1. The first 3 characters within the 9 characters from left indicates owner permissions
+2. The next 3 characters indicates permissions assigned to the group
+3. last 3 indiates for other users who are not part of the group nor owner
+r = read, w = write, x = execute permissions, an "-" hypen indicates that permissions is not given on that file to that specific users
+
+3. number indicates the hardlinks for that file/folder
+4. owner
+5. group
+6. size (in bytes)
+7. last accessed date
+8. file/folder name
+-----------------------------------------------------------------------------------------------------------------------------------
+How to grant access permissions on a File or Folder to other users of the linux operating system?
+By default when we create an user in linux operating system, the user will be created with default group as username group. For eg.. if we add an user called "bob" in linux operating system, the bob user will be created with group "bob" as primary group
+
+when bob has created an file quicknotes.txt, then linux will creates the file by associating the file with
+owner: bob
+group: bob
+so that only bob can access that file on the machine and rest of the users of the linux operating system becomes others on that file
+
+if we want to grant access on a File/Folder to specific group of users there are #2 options are there:
+1. while creating the user, add him into an group other than default group (username group), based on the team/group of users he works with closely
+For eg.. while creating the user bob, instead of associating him to the default primary group as "bob", create him directly under "devgroup" as his primary group, so that he/she created files/folders belongs to
+owner:bob
+group: devgroup
+others: all the other users of the linux operating system
+
+but it has its own implication, for each file/folder that is created by bob, those are open to access for all the devgroup of users which is not recommended in general
+
+2. Let the user be created with his own group like bob with primary group as bob, so that every file/folder he/she created by default becomes accessible to bob only
+So when bob has created an file for eg.. quicknotes.txt, then the
+owner: bob
+group: bob
+others: all the other users in the linux operating system
+
+in case if bob wants to permit devgroup users to access the quicknotes.txt file, then upon creating the file, bob can change the group of the file to "devgroup" so that he can grant access to a file/folder to specific group of users in a controlled way
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

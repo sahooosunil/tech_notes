@@ -1,0 +1,141 @@
+What is Linux operating system?
+Linux is an general purpose operating system that is opensource and free and sourcecode of the operating system is made available freely, anyone can modify the sourcecode and redistribute it, that is where linux is distributed under GNU License
+
+Linux is defined by its core component called "Kernal". Kernal interacts with the underlying hardware components of the computer.
+	
+How to use the Linux operating system?
+Inorder to use the Linux operating system, one has to install kernal/linux on the computer, installing the linux operating system is very complex, because it doesnt have any GUI interface (Graphical User Interface), the user has to run through bunch of commands in installing the kernal/linux operating system on the computer. upon installing aswell the only way we can interact with the operating system is through CUI (Character User interface) commands only, thus making linux difficult to use. So at its core linux cannot be called as "General Purpose operating system".
+	
+	
+There are group of people, infavour of opensource software stack, wanted to contribute and promote opensource software development/distribution, these people came forwared and formed a group called "GNU Project" and build lot of tools/utilities softwares that makes the linux operating system general user friendly like
+1. Graphical User Interface (KDE, GNome Desktop)
+2. Music Players
+3. Video Players
+4. Image Editors
+5. Browsers
+6. Office Tools
+etc
+
+So to work with Linux operating system, now the people should install linux kernal operating system on the computer, ontop of it we need to install the GNU project software like GUI, Browsers and other tools to make linux more user friendly and sophisticated to use.
+	
+Even though GNU project contributed to the linux operating system at a greater scale, still people find it difficult to use linux operating system, because linux has not distributed by packaging all the tools/utilities at one go, so people has to install the kernal software and ontop of it they need to download individual software utlities and install them, which is very difficult and time consuming job, so majority of the people stayed away from linux operating system
+
+To help us in solving this problem of using the linux operating system Linux distros has been brought into picture
+
+Linux Distros
+-------------
+Different groups and organizations came forward and build linux operating system with their own choice of software tools/utilities and configurations packaged and distributed with sophisticated operating system installers, so people can download the linux distros provided by these comparies and install them quickly and can use it.
+	
+There are 4 major linux distributions are available in the market (Linux Maintainers)	
+1. Arch
+2. Debain
+3. Redhat
+4. Slackware
+
+out of the above there are 2 distributions that are very popular in the market
+1. Debain
+1.1 Linux Mint 
+1.2 Ubuntu     
+1.3 Elementary OS
+1.4 Kali Linux
+
+2. Redhat
+2.1 Centos
+2.2 Fedora
+2.3 Redhat Enterprise Linux (commercial)
+	
+Even though there are many distributions of linux operating system are available, the kernal component is more or less same across all the distributions, each vendor has comeup with packaging their own set of tools/utilities and package management software and distributed linux operating system making it ease of use
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,90 @@
+File Permissions
+----------------
+Linux is an multi-user, multi-programming operating system that allows multiple users to use linux operating system in-parallel and share the system resources in performing the operation. 
+If multiple users are sharing the same physical system resources in performing the operations like creating files/folders or running programs, can one user created file/folder can be accessed by the other user of the same machine?	
+	
+If Linux permits a user created file/folder to be accessed by the other users of the operating system, then there is no point of having multiple users at all, so linux doesnt allows a file/folder created by one user to be accessible for other users of the same operating system for ensuring better security, thus by introducing File Permissions
+
+File Permissions:
+File permissions are meant for controlling the access to the file/folders created by one user from other users of the linux operating system.
+	
+By default when a user has created an file on the FileSystem of the linux operating system computer, the linux along with storing the data, it adds few more attributes of data to file for enforcing security like
+1. owner = the user who has created the file will be marked as owner of the file  
+2. group = the primary group of the user who has created the file 4.will used as group for the file
+3. created_on
+4. last_modified
+5. last_accessed
+as well
+
+Typically any one can perform #3 types of operations on a file/folder
+File:
+1. read    = reading the contents of the File
+2. write   = modifying or deleting the contents of the File or File itself
+3. execute = only applicable for program files not for data files, having execute permission only allows the program to run on the computer
+
+Folder:
+1. read = list all the contents of the folder (ls)
+2. write = allowed to create new folders/file or delete them inside it
+3. execute = we can execute cd (change directory) command on that directory, if not, we cannot enter into the directory
+
+
+by default when a user has created a file/folder, he/she will have full access to the file/folder created, along with that the root/sudoers can also access the files/folders of any other users of the linux operating system and they can manage them as well.
+
+If linux operating system doesnt permits the other users of the operating system to access the files/folders that are created by an user, then there is no collaborative support in working together and sounds like an limitation. So linux along with enforcing security should permit a user to grant access to the files/folders he created to other linux users in controlled way which is called "File Permissions"	in linux operating system
+
+How to grant access permissions on a File/Folder created by one user to other users of the linux operating system?
+granting the access to the file/folder by an user to other users of the linux operating system individually is a tedious job
+1. because linux operating system has to keep track of which user has been granted access to which file/folder with what permissions
+2. managing the permissions individually like granting/revoking is also difficult
+
+Linux to help us in organizing and managing the files/folders and their permissions easily, it has categorized the users into #3 levels
+1. owner = the user who has created that file can perform what operations on the file
+2. group = instead of granting access to the individual users, we can assign permissions to the group level indicating all the users who belongs to that group can perform what operations
+3. others = these are the linux users who are not owners nor belongs to the file group can perform what operations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

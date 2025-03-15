@@ -1,0 +1,12 @@
+---
+- name: jinja2 if play
+  hosts: all
+  vars:
+    user: joe
+    age: 24
+  tasks:
+    - name: generate voter report page
+      template:
+        src: voterreport.html.j2
+        dest: voterreport.html
+...

@@ -1,0 +1,194 @@
+How does the linux operating system allocates cpu to the processes of a Machine?
+Linux is an multi-user and multi-programming operating system, so it allocates the cpu to multiple processes based on the cpu scheduling algorithms. Linux operating system uses hybrid model in allocating the cpu to the process. it uses round-robin/time-sharing + priority based scheduling algorithms in allocating the cpu
+
+There are 2 types of processes are there in linux
+1. System process
+These process are launched by the operating system in system process space aspart of the bootup of the operating system. Most of the time these System processes are daemon process and would terminate only when we shutdown the operating system.
+	
+2. User Process
+These processes that are created by the linux user and are executed under under process space and managed by the user.
+	
+A process can be assigned with a priority between 0 - 139, in which the system processes are assigned with a priority between 0 - 99 and use process takes the priority between 100 - 139. We cannot modify the priority of a System process. 
+each user process will be created with a default priority as = 120 and linux will not directly permit us to modify the priority of an user process, because we might allocate a priority to the user process of the system process space that impacts the operating system performance
+
+How to change the priority of an user process?
+Linux has provided NI (nice value) through which we can change the priority of an user process. 
+PR = 20 + NI
+NI = -20 to +19
+	
+when we change the NI value of a process, the linux computes the priority for that process based on the NI value and assigns to that process.
+	
+How to change the nice value of a process?
+1. linux has provided an renice command utility through which we can change the nicevalue of a process, which will change the priority of the process
+renice -n nicevalue pid
+
+2. while launching the process itself we can specify the nicevalue with which the process should be launched as below
+nice -n niceValue command
+
+by default a process will be launched with default NI: 20. we cannot increase the priority of the process by changing the nice value unless you are  root or sudoer
+--------------------------------------------------------------------------------------------------------------------------------------
+How to stop an running process in linux?
+Upon launching a process, few times a process may become un-responsive or may not required to run any more, in such case we can terminate a process using kill
+
+kill pid = will sends an signal to the process asking to terminate
+kill -SIGNAL_NUMBER pid = indicates how a process has to be terminate
+
+kill -9 pid = terminate the process forcefully
+
+we can see the list of supported signals of the kill command by using kill -l
+if we dont specify an SIGNAL_NUMBER the default signal with which the kill sends the request is 15
+-------------------------------------------------------------------------------------------------------------------------------------
+Process Status (PS)
+How to find the current running processes of the linux operating system?
+we can see all the processes that are running in the linux operating system using top. top is an live command (task manager) and is used for monitoring the processes of the system.
+	
+instead of using the top we can use ps command to see the snapshot of running process of the linux system
+ps = process status
+ps = displays all the running process of the current user within the TTY (terminal)
+ps -a = displays all the process of all the terminals of the user
+ps -u username = displays all the process of a specific user only
+ps -e = displays everyones process of the linux system
+ps -f = shows all the columns
+ps -eo pid,ppid,ni,command 
+-e = everyones process and -o = output specific columns only
+--------------------------------------------------------------------------------------------------------------------------------------
+Foreground vs Background Process
+--------------------------------
+There are 2 types of process are there in linux operating system (even in general)
+1. Foreground process
+2. Background process
+
+1. Foreground process
+The foreground processes are the once that requires user interaction during their execution, these process takes the data as an input from the enduser during their execution and generates the output and writes them directly on to the Terminal (TTY). So these process are attached to the Terminal (TTY) and blocks the terminal until they finish execution
+
+For eg.. the below program takes the input from the user and generates the output onto the console
+fg.sh
+------
+#!/bin/bash
+READ -p "A: " A
+READ -p "B: " B
+SUM=$[A+B]
+echo "SUM : $SUM"
+
+
+by default when we launch any process on linux operating system, the process/program is launched as foreground process only block the TTY.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,58 @@
+CIDR [Class-less inter-domain routing]
+In an ip address we have 2 types of addresses
+1. Network address
+2. Host address
+
+To identify within the given ip address, what is the network address and host address the classfull ip addressing has been introduced. There are 5 classes of ip addresses are there like
+Class A = 8 bits network address, 24 bits host address
+Class B = 16 bits network address, 16 bits host address
+Class C = 24 bits network address, 8 bits host address
+
+in the above way the octets are evenly broken and distribtued across the ip classes. because of the octets are evenly distributed in ip classes we run into problems or limitations as described:
+
+We want to setup a network of 1500 hosts/computers into one network. Here we cannot use Class C because in Class C only 8 bits are allocated to host address, with 8 bits we can connect only 255-2 computers into one network. So to connect 1500 computers into one network we need to use Class B
+
+In Class B we have 16 bits for network & 16 bits are allocated for host address.
+So using 16 bits we can maximum connect 65535 computers/networks. That means we can setup 65535 networks	where in each network we can have 65535 hosts/computers connected within it
+
+But our requirement is we want to setup 75000 networks where in each network we want 1500 computers to be connected. Looks like we cannot setup 75000 networks/with 1500 hosts per each network using any of ip classes we have
+
+but if we look at closely for setting up 1500 computers in one network, we need only just need 11 bits. But when we use Class B ip address we have allocated 16 bits for host address out of which only 11 are under use and remaining 5 are being wasted.
+	
+if we can break the network and host bits appropriate to our requirement rather than even octets for eg.. here if we can assign 21 bits for network address and 11 bits for host address we can setup 75000 networks with each having 1500 hosts. To help us in distributing the network and host bits unevenly the CIDR (Class-less Inter-domain routing) has been introduced.
+	
+In-Short:
+CIDR
+Class-less inter-domain routing. In CIDR we dont allocate network and host bits based on ip classes. we distribute the network and host bits based on our requirement.
+Till now we are identifying within an given ip address, the network address and host address based on ip Class (A=8/24, B 16/16), now if we dont distribute network / host bits based on ip Class how to identify within the given ip address what is the network address and host address?
+	
+That is the reason CIDR notation has been introduced to represent how bits in a given ip address are assigned to network as below.
+	CIDR ip address notation = 192.164.23.45/21
+	
+Now let us understand based on CIDR notation how to derive what is the network address, host address and subnet mask of a given ip
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+

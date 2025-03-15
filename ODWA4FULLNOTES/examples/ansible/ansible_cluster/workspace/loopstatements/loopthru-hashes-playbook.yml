@@ -1,0 +1,16 @@
+---
+- name: loop through hashes
+  hosts: all
+  tasks:
+    - name: create list of files with attributes
+      file:
+        path: "{{item.filepath}}"
+        mode: "{{item.mode}}"
+        owner: "{{item.owner}}"
+        group: "{{item.group}}"
+        state: touch
+      loop:
+        - {filepath: "~/categories.txt", mode: '0644', group: 'vagrant', owner: 'vagrant'}
+        - {filepath: "~/kids.txt", mode: '0544', owner: 'vagrant', group: 'vagrant'}
+        - {filepath: "~/bedtime-stories.txt", mode: '0600', owner: 'vagrant', group: 'vagrant'}
+...

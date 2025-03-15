@@ -1,0 +1,219 @@
+Shellscripting operators
+-------------------------
+operators are the symbols associated with pre-defined meaning to perform operations, upon looking at the operators the shell interpreter understand what operations we are asking it to perform on the input data supplied.
+	
+There are various different types of operations we can perform using an computer like arithematic operations, relational operations, logical operations etc, for each of these types, there are special characters (operators) defined by the shell interpreter as below.
+	
+1. Arithematic operators = These are operators using which we can perform operations like addition, substraction, multiplication, division and modulus etc
+2. Relational operators = used for comparision of 2 inputs like greaterThan, lessThan, equalTo, notEqualTo etc for decision making
+3. Logical operators = used for joining multiple relational operations together like AND, OR and NOT
+4. String operators = To perform operations on the string data we use string operators. The operations like length, empty, equal
+5. File operators = to perform operations on the Files like isFile, isDirector, isExists, writable, readable, executable
+
+The shell interpreter has provided relevant operators (symbols) to perform all the above type of operations
+1. Arithematic operators
+1.1 + = addition
+1.2 - = substraction
+1.3 * = multiplication
+1.4 / = division
+1.5 % = modulus
+-----------------------------------------------------------------------------------------------------------------------------------
+2. Relational operators
+The relational operators can be applied on only numeric inputs for drawing the comparision between the values, and cannot be applied on string data
+1. -lt = less than
+2. -gt = greater than
+3. -le = lessthan or equal
+4. -ge = greaterthan or equal
+5. -eq = equalTo
+6. -ne = not equalTo
+
+always the outcome of applying the relational operators are true/false only
+-----------------------------------------------------------------------------------------------------------------------------------
+3. logical operators
+used for evaluating, by combining multiple relational expressions
+1. -a = and
+2. -o = or
+3. !  = not
+
+candidates= #schedule
+(candidate.graduation = 'engineer' or candidate.graduation = 'masters') and candidate.score > 8.5 then
+
+These operators are used on relational expressions to combine them and the result out of these operators also are evaluated to true/false only
+
+Truth Tables:
+1. AND
+-------
+REL1     REL2     OUTCOME
+ T        T          T
+ T        F          F
+ F        T          F
+ F        F          F
+ 
+2. OR
+------
+REL1     REL2     OUTCOME
+ T        T          T
+ T        F          T
+ F        T          T
+ F        F          F
+ 
+3. NOT
+------
+in case of NOT operator it is used for negating the outcome, for eg. if an expression has evaluated to TRUE, we can negate it to FALSE, using not operator
+
+RE    OUTCOME
+-------------
+T        F
+F        T
+-----------------------------------------------------------------------------------------------------------------------------------
+4. String operators
+used for performing string comparisions
+
+>  = greater
+<  = lessThan
+>= = greaterThan or equal
+<= = lessThan or equal
+== = equalTo
+-z = is zero length
+-n = is non-zero length
+-----------------------------------------------------------------------------------------------------------------------------------
+5. File operators
+used for performing operations on the Files/Folders
+1. -e = file/directory exists or not
+2. -f = is it an regular file
+3. -d = is it a directory or not
+4. -r = read permission
+5. -w = write permission
+6. -x = execute permission
+7. -c = character special file
+8. -s = size of the file is greaterThan zero
+9. -b = block special file
+10. -o = is he the owner of the file/folder or not
+11. -of = File f1 is older than f2
+12. -nf = File f1 is newer than f2
+-----------------------------------------------------------------------------------------------------------------------------------
+How to perform string operations using expr expression?
+We can use expr for perform string operations as well, there are 3 types of string operations are supported by expr as below
+1. length of the string
+2. substring in the given string
+3. comparing 2 given strings
+
+#1. length of the string
+wap to read passportNo non-interactively and print total characters in it?
+	
+printNCPassport.sh
+------------------------
+#!/bin/bash
+PASSPORT_NO=$1
+LEN=$(printf $PASSPORT_NO | wc -c)
+echo $LEN
+
+(or)
+	
+LEN=`expr length $PASSPORT_NO`	 = length is an pre-defined keyword or operator supported by expr
+echo $LEN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+

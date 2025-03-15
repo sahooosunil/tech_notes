@@ -1,0 +1,245 @@
+NACL rules
+----------
+NACL stands for "network access control list", it is an firewall setup at the subnet level, controlling the network traffic to the group of resources within the subnet. In case of NACL we need to configure inbound/outbound rules allowing the traffic towards the subnet resources or from the subnet resources to the other network.
+So we need to configure #2 types of nacl rules which are inbound and outbound rules. Nacl rules are created at VPC level and attached the subnet of the vpc restricting the network traffic.
+  
+By default for each vpc we create, aws creates an default NACL rules associating it to all the subnets of the vpc. The default nacl rules has inbound/outbound rules defined allow all the traffic from any source/destination.
+  
+
+NACL rules are stateless, that means nacl engine cannot memorize or keep track of a request and response by itself. For eg.. when our application within the subnet of resources sends an request to the external application over the network, the response that is returned by the external application will not be treated as an response, rather nacl engine treats it as an another request from external application to our subnet resource and will not allow unless we have inbound rule configured to allow it
+
+In-short: In nacl, to allow a request/response we need to configure 2 rules, both inbound/outbound as well.
+  
+since nacl is an firewall setup at network level, to ensure optimal performance in restricting the network traffic, nacl has been designed to be stateless.
+  
+  
+NACL rules are ordered, which means each rule that we define will be given an order no/rule no and based on the order in which those are configured, those are applied in restricting the traffic. A ruleno defined with "*" acts as default rule, and would be applied if none of the rules configured are matching with request.
+  
+The default nacl rules configured for each subnet at the vpc level are
+inbound
+1   all traffic  any port  0.0.0.0/0  allow
+*   all traffic  any port  anywhere   deny
+
+outbound
+1   all traffic  any port  0.0.0.0/0  allow
+*   all traffic  any port  anywhere   deny
+
+
+let us deploy an java web application on tomcat server
+java web application# maven
+
+There are 3 parts:
+1. setting up the aws infrastructure
+2. installing, configuring the softwares required (java11, maven, tomcat)
+3. building, deploying and running the application on the server (git repo, build, package:war and deploy tomcat server)
+--------------------------------------------------------------------------------------------------------------------------------------
+security groups
+security group is an firewall setup at the resource level, to enforce traffic restrictions on a specific resource. security groups are again created at vpc level and are enforced or attached to the resource on whom we want to apply
+
+unlike nacl rules, the security groups are stateful, which means the security group can keep track of the request/response. When the resource has sent an request, the incoming response for the request would be identified and allowed without having an inbound rule allowing the response. The security groups are not ordered like nacl
+
+There are #2 sets of rules we need to define allowing incoming/outgoing network traffic from/towards the resource
+1. Ingress = incoming network traffic rules
+2. Egress  = outgoing network traffic rules
+
+Ingress
+protocol   port   cidr   action
+
+Egress
+protocol   port   cidr   action
+
+The security groups are applicable only to few types of resources only
+1. ec2 instance
+2. loadbalancer
+3. rds service
+4. elastic beanstalk
+--------------------------------------------------------------------------------------------------------------------------------------
+1. How to install java onto the ec2 instance?
+sudo apt update -y
+sudo apt install -y openjdk-11-jdk
+
+2. install maven
+sudo apt install -y maven
+
+3. install git client
+sudo apt install -y git
+
+4. setup tomcat server on the ec2 instance
+4.1 create a new tomcat user
+sudo useradd -m -s /bin/bash tomcat
+
+4.2 download and setup the tomcat server as below
+1. sudo su tomcat
+2. mkdir /home/tomcat/middleware/
+3. cd ~/middleware/
+4. wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.83/bin/apache-tomcat-9.0.83.tar.gz
+5. tar -xvzf apache-tomcat-9.0.83.tar.gz
+6. rm apache-tomcat-9.0.83.tar.gz
+
+4.3 configure tomcat as an initd service
+tomcat.service [/etc/system/systemd]
+[Unit]
+Description=Apache Tomcat9
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=path
+Environment=CATALINA_HOME=
+  
+ExecStart=/startup.sh
+ExecStop=/shutdown.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+--------------------------------------------------------------------------------------------------------------------------------------
+#3. checkout and build the project
+mkdir ~/workspace
+cd ~/workspace
+git clone https://github.com/techsriman/airtelcare2.git
+
+cd airtelcare2
+mvn clean verify
+
+#4. copy the war file into the tomcat server deployment directory
+cp target/airtelcare2.war ~/middleware/apache-tomcat-9.0.83/webapps
+
+sudo systemctl restart tomcat
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

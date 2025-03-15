@@ -1,0 +1,205 @@
+vim
+visual editor improved and it is an text editor used for creating, modifying the text files.
+There are 3 modes are there in vim editor
+1. command mode
+2. insert/input mode
+3. exit mode
+
+What are the commands available in command-mode of vim editor?
+1. A = append the data at the end of the line
+2. a = append the data right to the cursor position
+3. I = insert the data at the begining of the line
+4. i = insert the data at the current cursor position
+5. o = open a new line below the current cursor position
+6. O = open a new line above the current cursor position
+7. yy = copy
+8. p = paste 
+9. u = undo the changes
+10. r = replace single character
+11. R = replace from the current cursor position
+12. S = replace the current line
+13. dd = delete line
+14. dw = delete word
+15. w = begining of the next word
+16. x = delete a single character
+17. b = begining of the current word
+18. e = end of the current word
+19. ctrl + f = page forward
+20. ctrl + b = page backward
+21. G = end of the file
+22. :linenumber = jump to the specified line in the file
+23. /phrase + enter = serach of the word in the given file
+press n = for next matching
+shift + n = for previous matching
+
+nano
+----
+nano is an another text editor that can be used for creating/modifying the text files and its an simple and easy to use editor
+
+ctrl + o = write/save the unsaved changes of the file
+ctrl + x = quite the file if there are any unsaved changes are there. it ask for confirmation (y/n)
+alt + e = redo
+alt + u = undo
+ctrl + k = cut the line
+ctrl + u = paste the line
+
+ctrl + w = search for a word in the file
+ctrl + \ = to replace a text phrase with different
+
+ctrl + c = display total lines and characters and shows we are at which line and character/column in the file
+ctrl + _ = jumpt to a specified line number and column
+alt + a = selection mode to mark the content
+alt + 6 = copy selected text
+-----------------------------------------------------------------------------------------------------------------------------------
+Packaging
+We wanted to send a bunch of files that are there on the Filesystem of our computer to an another user on another computer, the possible ways of sharing these files are
+1. use storage devices, copy the files into an pendrive or an external harddisk and carry it physically from one place to another 
+2. we can send these files over the email
+3. transfer them over the network from one machine to another using scp, ftp etc
+
+the quickest way of sharing the data between the computers is either through email or transfering over the network. If we want to send these files either through email or over the network, since there are bunch of files, sending them over the email or transfering over the network one by one takes lot of time.
+	
+we can group all theses files into a folder, but unfortunately folders are non-transferrable entities. So to help us in making the folders transferrable the packaging has been introduced.
+	
+Packaging is a technic of combining multiples files into one single file, so that it can sharable or transferrable easily. The linux has provided an utility called tar using which we can pack and unpack the files
+
+
+1. How to pack the files using tar?
+1.1 tar -cvf filename.tar directory/  = to package directory of contents
+1.2 tar -cvf filename.tar file1 file2 file3 = individual files can be packaged into a tar file
+
+tar stands for tape archieve used for packaging bunch of files into a single file with an extension .tar here
+1. -c = create
+2. -v = verbose = display an output onto the console about which files are you packaging
+3. -f = filename to be created while packaging
+
+2. how to unpack the contents of the tar file
+tar -xvf filename.tar
+the above command extracts the contents of the tar file
+-x = extract
+-v = verbose, show me the contents you have extracted by writing it as an output to the console
+-f = filename to be extracted
+
+3. how to see the contents of the tar file without extracting
+for eg..we packaged bunch of files into tar format and distributed to others. how can we see what files are there inside the tar file without extracting
+
+tar -tvf filename.tar
+-t = table of contents
+-----------------------------------------------------------------------------------------------------------------------------------
+compression
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,83 @@
+Docker Architecture
+-------------------
+There are 5 main components are there aspart of the docker architecture
+1. docker daemon or docker engine
+docker daemon or engine is the core component of the docker system, it takes care of pull the docker images from container registry and runs the packages applications of the image in a container isolated from other applications or programs running on the docker host.
+	
+2. docker cli
+it is an command-line interface provided by the docker, to help us in interacting with the docker daemon or engine asking him to create, stop, start and manage containers and images 
+
+3. docker container registry
+it is an repository where the docker images are published and distributed accross the envs
+
+4. container
+A running instance of an docker image, that is being kept isolated from other process on the docker host.
+	
+5. image
+docker image is nothing but a compressed file packaged with application binary, dependent software packages and libraries and instructions in running the application.
+-------------------------------------------------------------------------------------------------------------------------------
+How does the docker isolated the containers from others process that are running on the docker host?
+docker inorder to run multiple containers isolated from each other on a computer, it requires lot of features or capabilities of the underlying operating system. It requires lot of enhancements and new features to be added aspart of the linux operating system inorder to support containers. To make the containers work, there are lot of software gaints especially the Google LLC has contributed in adding new features into the Linux operating system.
+	
+There are 3 major features of the linux operating system are used by the docker engine inorder to run the containers isolated from each other
+1. Linux namespaces
+2. CGroups
+3. Union Filesystem
+
+1. Linux Namespaces
+Namespaces has bean part of the linux kernel since 2002, over the period of time more tooling and more namespace types have been added. The Real container support was added into the linux kernel only in 2013.
+	
+Namespaces are feature of the linux kernel that partitions kernal resources such that one set of processes sees one set of resources while another set of processes sees a different set of resources. The key feature of namespaces is that they isolate processes from each other.
+	
+There are 6 types of namespaces are added by the Linux operating system:
+1. user namespace
+2. process ID (PID) namespace
+3. network namespace
+4. mount namespace
+5. inter-process communication (IPC) namespace
+6. UNIX time-sharing (UTS) namespace
+
+1. user namespace
+A user namespace has its own set of userIDs and groupIDs for assignment to processes. A process can have root privilege within its user namespace, but may not have the same in another namespace
+
+2. PID namespace 
+A Process ID namespace assigns set of PIDs to processes that are independent from the set of PIDs in other namespace. 
+	
+3. network namespace
+A network namespace has an independent network stack: its own private routing table, set of ip addresses, connection tracking tables, firewall and network-related resources.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

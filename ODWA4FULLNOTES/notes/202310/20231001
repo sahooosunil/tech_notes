@@ -1,0 +1,87 @@
+How to setup the ansible cluster?
+While working with Vagrant in setting up the cluster, we need below things:
+0. generate an common public/private ssh keys on the windows host machine.
+	
+1. Control Node Server
+1.1 Copy private key into the ~/.ssh directory and change permission: 600
+1.2 Configuring Networking as private_network with virtualbox_intnet: "ansiblecluster"
+1.3 install ansible 
+
+2. Managed Nodes
+2.1 copy the public key
+
+ansiblecluster
+|-provisioners
+	|-sh
+		|-setupcontrolnodeserver.sh
+		|-setupmanagednodes.sh
+|-sshkeys
+	|-ansible
+	|-ansible.pub
+|-Vagrantfile
+
+Vagrantfile
+-----------
+
+Vagrant.configure(2) do | config |
+	config.vm.define "ansible_controlnode" do | acn |
+		acn.vm.box = "ubuntu/jammy64"
+		acn.vm.network "private_network", ip: "192.168.10.10", virtualbox_intnet: "ansible_cluster"
+		acn.vm.provider "virtualbox" do | acnvb |
+			acnvb.name = "ansible_controlnode"
+			acnvb.cpus=2
+			acnvb.memory=1024
+		end
+		acn.vm.provision "shell", path: "provisioners/sh/setupcontrolnodeserver.sh"
+		
+	end
+	
+	(1..2).each do | index |
+		config.vm.define "ansible_managednode_#{index}"	do | node |
+			node.vm.box = "ubuntu/jammy64"
+			node.vm.network "private_network", ip: "192.168.10.#{index+10}", virtualbox_intnet: "ansible_cluster"
+			node.vm.provider "virtualbox" do | nodevb |
+				nodevb.name="ansible_managednode_#{index}"
+			end
+		end				
+		node.vm.provision "shell", path: "provisoners/sh/setupmanagednodes.sh"
+	end
+end
+
+setupcontrolnodeserver.sh
+-------------------------
+#!/bin/bash
+sudo apt update -y
+sudo apt install -y software-properties-common
+sudo apt install -y ansible
+cp /vagrant/sshkeys/ansible /home/vagrant/.ssh
+chmod 600 /home/vagrant/.ssh/ansible
+
+setupmanagednodes.sh
+#!/bin/bash
+cat /vagrant/sshkeys/ansible.pub >> /home/vagrant.ssh/authorized_keys
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

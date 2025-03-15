@@ -1,0 +1,17 @@
+Vagrant.configure(2) do | config |
+    #global provisioner
+    config.vm.provision "installNetTools", type: "shell" do | prov |
+        prov.inline = "sudo apt update -y && sudo apt install -y net-tools"
+    end
+    
+    config.vm.define "databaseserver" do | db |
+        db.vm.box = "ubuntu/jammy64"
+        db.vm.network "private_network", ip: "192.168.10.11", virtualbox_intnet: "network1"
+    end
+    
+    config.vm.define "javaserver" do | jserver |
+        jserver.vm.box = "ubuntu/jammy64"
+        jserver.vm.network "private_network", ip: "192.168.10.12", virtualbox_intnet: "network1"
+        jserver.vm.provision "installJdk17", type: "shell", inline: "sudo apt install -y openjdk-17-jdk"
+    end
+end

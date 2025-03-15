@@ -1,0 +1,379 @@
+image building directives
+-------------------------
+1. FROM = to build our own image extending from base image
+2. ENV = to define environment variables aspart of the image, so that those are available while running the container
+3. ARG = parameterizing the docker image build process
+	3.1 ARG before FROM = to parameterize the base image, and this ARG will not be available after FROM directive
+	3.2 ARG after FROM = to pass the inputs in building the image and would be available through the Dockerfile
+4. LABEL = to add documentation into the image
+5. COPY = to copy files/folders from docker build context onto the image
+6. ADD = similar to COPY but allows us to download the files from an remoteURL onto the image
+7. RUN = to execute commands during the time of building the image, and the output of the RUN command would be written as a layer ontop of the image
+8. WORKDIR = set the directory path, from where all the docker directives should be executed from.
+-------------------------------------------------------------------------------------------------------------------------------
+1. VOLUME directive
+docker containers are by nature designed to be stateless, that means all the non-critical data can be written onto the container writable-layer which would not be persisted in the event of crash or upon destroying the container. There are reasons for designing docker containers as stateless
+1. scalability = since the docker images are read-only, we can quickly scale the docker containers to any extent
+2. crash replaceable = in the event of crash, we can replace a container with annother instance quickly since no data is persisted aspart of the container
+
+There are applications that generates lot of data during their execution and this data should be stored permanently and should be recovered incase of crash/destroy as well. 
+For eg.. there are database servers applications that can be packaged and run inside a docker container, the databases are meant to store the data permanently, but if we run these servers inside the container, the data would be written or persisted onto the container writable layer, which would be lost incase of crash or destroyed. 
+	
+So how to run these applications aspart of the docker container as statefull applications/containers without compromising
+1. scalability
+2. crash replaceable
+
+To run stateful applications inside the container, the docker has introduced docker volumes.
+There are 2 types of docker volumes are there
+1. bind mounts
+2. docker volumes
+
+
+1. bind mounts
+---------------
+Bind mounts are the directories of the host machine which are mounted to the directory locations of the container. So all the data produced by the containerized application will be stored on the bind mount, which is nothing but the storage location on the host machine filesystem directory.
+	
+So even the container has been crashed or destroyed, the data would not be lost and we can quickly re-spin another container attaching the bind mount onto the new container. 
+	
+advantages:-
+	1. Both the containerized application and the host can see/use the data since it is stored on the host machine filesystem and is mounted onto the container
+	
+dis-advantages:-
+	1. bind mounts works based on host filesystem, if the host platform is not compatible with the container platform, there is chance of data being non-compatible in storing or using it
+	2. bind mounts are slow in reading/writing the data when compared with docker volumes
+	3. The job of maintaining the bind mount directories on the host should be taken care manually by the ops engineer or docker engineer like
+		1. creating the bind mounts onto the docker host
+		2. periodically taking the backups of the bind mount directories
+		3. incase of crash of the docker host, the bind mounts has to be recovered manually
+		4. when moving from one docker host to another, the bind mounts should be migrated manually
+	which means the overall efforts of managing and maintaining the bind mounts is manually and tough job
+
+How to work with bind mounts?
+In order to work with bind mounts we need to 
+1. create an directory on the host machine filesystem, whereever you want the containerized application to write/store the data
+2. provide necessary permissions to the directory allowing the docker container to store the data
+
+There are 2 syntaxes of mounting the host machine directory onto the docker container at the time of lauching the container as a bind mount.
+1. -v or --volume (old syntax) = less readable
+-v sourcedir:targetdir:propagationsettings
+The propagation settings are optional and can take any of the 3 below values
+1.1 ro = readonly
+1.2 z = the bind mount becomes sharable and can be reused across the containers
+1.3 Z = the bind mount is private to the container, and cannot be reused across the containers
+
+syntax:-
+docker container run -v sourcedir:targetdir:propagationsettings image:tag
+
+
+For example we can create a directory on the docker host machine under location /u01/data 
+
+docker container run --name bm -v /u01/data:/data:z -it ubuntu:24.04 /bin/bash
+with the above command, we launch the container and we grab the bash terminal of the container interactively. 
+bash# touch /data/greetings.txt
+bash# echo "hey, bind mount" > /data/greetings.txt
+bash# exit
+
+now the container would be Exited then destroy the container using
+docker container rm bm
+
+upon exiting and removing the container, the container would be destroyed, but the data that is written on the bind mount would be persisted and can be mounted back onto a different container as below
+
+docker container run --name bm2 -v /u01/data:/data:z -it ubuntu:24.04 /bin/bash
+bash# cat /data/greetings.txt
+
+2. --mount (new style) = readable
+The --mount is an key/value pair, and is more readable form of mounting the bind mounts than using -v or --volume syntax
+
+syntax:-
+--mount type=bind,source=sourcedir,target=targetdir,propagationsettings
+
+propagation setting can be any one of the below value
+1. readonly
+2. shared
+3. private
+	
+docker container run --name bm3 --mount type=bind,source=/u01/data,target=/data,shared -it ubuntu:24.04 /bin/bash
+--------------------------------------------------------------------------------------------------------------------------------
+2. docker volumes
+------------------
+docker volumes are the internal storage locations managed by the docker engine into which a docker container can only read/write the data. In the event of crash the data would be persisted and can be reused in another container. It is the preferred mechanism of storing the data generated by the docker container over bind mounts.
+	
+	
+The docker engine internally uses storage drivers for reading/writing the data onto the docker volumes due to which there are several advantages are there
+
+advantages:
+1. docker volumes works across the platforms, so there is no data in-compatibility issues creeps up
+2. docker volumes are created, managed, backup and restored through docker cli
+3. The remote filesystem of another computer can be mounted as docker volume (nfs)
+4. docker volumes are more performant interms of i/o operations when compared with bind mounts
+
+How to work with docker volumes?
+There are 2 ways we can work with docker volumes
+1. we can manually create the docker volume on the host computer using docker CLI and can mount the volume onto the docker container while running using its volume name. This approach is called "Named Volumes"
+	
+2. We can directly declare VOLUME directive inside the Dockerfile, in this case the docker engine automatically creates the docker volume by generating hash of the volume and mounts it on to the docker container automatically.
+	
+Preferred Approach: Named Volumes
+
+1. Named Volumes
+How to create an docker volume manually using dockerCLI?
+1. docker volume create volumeName = creates an docker volume under default directory /var/lib/docker/volumes/volumeName (directory)
+2. docker volume ls = lists all the volumes on the docker host
+3. docker volume inspect volumeName = shows the details of the volume
+4. docker volume rm volumeName = deletes/destroys the volume
+
+How to mount the Named Volume onto the container?
+There are 2 syntaxes of mounting the volume are available while running a container
+1. -v or --volume 
+
+-v volumeName:targetDirectory:propagationSettings
+propagationSettings: ro (readonly), z (shared), Z(private)
+
+docker container run --name dcv -v volumeName:targetDirectory:z -it image:tag	command
+
+2. --mount
+--mount type=volume,source=volumeName,target=targetDirectory,propagrationSettings
+
+
+#2. declaring VOLUME directive
+we can work with docker volumes using VOLUME directive declared aspart of Dockerfile
+
+Dockerfile
+----------
+FROM ubuntu:24.04
+VOLUME ["/data"] #container instruction
+
+1. The above VOLUME directive is an container instruction by looking at it, the docker engine while launching the container automatically creates an docker volume on the host without a name but generates an hash and attaches to the volume to identify it
+2. Then mounts the volume onto the specified directory here: /data of the container
+--------------------------------------------------------------------------------------------------------------------------------
+How to copy a file/directory into a running container?
+while working with bind mounts, we can copy the files/folders into the bind mount directory location of the docker host, so that those will be accessing within the container under the mount location
+
+but while working with docker volumes these are internal storage locations managed by docker engine and we cannot copy the files of the host filesystem directly. Then how to copy files into the docker container while working with volumes?
+	
+docker cp sourcefile containerName:location
+--------------------------------------------------------------------------------------------------------------------------------
+#2. EXPOSE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+	

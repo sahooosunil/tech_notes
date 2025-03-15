@@ -1,0 +1,333 @@
+How does Terraform works?
+Terraform is an infrastructure as code automation tool, using which we can provisioning, manage and administering the infrastructure on the popular cloud platforms like AWS, Google Cloud Platform, Microsoft Azure or Oracle Cloud Infrastructure etc.
+  
+There are various different cloud providers are there, offers different types of services. To provision the infrastructure through automation, all of these cloud providers provides apis/sdks
+
+Terraform to support provisioning the infrastructure across these cloud providers, it has comeup with plugin-based architecture. Per each provider, it has written one provider plugin that contains respective logic for invoking apis/sdks of the cloud vendor in provisioning infra resources
+
+The devops engineer has to write Terraform configuration file by declaring provider resource declarations he/she wanted to provision on the cloud platform. These resource declaration are specific to cloud provider since the services/resources offered by each of them are different.
+  
+In the terraform configuration file we need to define 3 things:
+1. which provider platform we want to provision the infrastructure (provider plugin: version)
+2. cloud account (credentails : api key/secretaccess)
+3. resource declarations, using HCL language
+
+Now pass this terraform configuration file as an input to the Terraform CLI asking to plan and apply the resource declarations.
+1. Terraform CLI reads the terraform configuration file,  validates whether the configuration provider is valid or not, if not valid, it reports the error
+2. identifies the cloud provider on which we want to provision the infrastructure based on provider-block declaration and downloads the terraform provider plugin from terraform cloud and stores locally on the workspace directory
+3. passes the resource declarations to the provider plugin asking him to apply the configurations on the cloud providers
+4. The provider plugin internally takes care of invoking the respective provider api/sdk in provisioning the infrastructure
+--------------------------------------------------------------------------------------------------------------------------------------
+What are the components of the Terraform?
+There are 4 main components are there in Terraform
+1. Terraform CLI = The Terraform CLI providers handful commands in planning and applying the terraform configuration file. It reads the terraform file, validates and executes or invokes the provider plugin in creating the infra
+
+2. Terraform Configuration File = The Hashicrop has provided an standard language called "HCL" (Hashicorp language), using this language we need to write Terraform configuration file, declaring the resources that we want to provision in the cloud provider. The terraform configuration file is written with an extension of ".tf" 
+  
+3. Provider Plugin = Per each provider the terraform has written the programs in invoking the provider apis/sdks in provisioning the infrastructure. These bunch of programs written by the terraform are shipped to us as an provider plugin
+
+4. Coud Provider Api = its an programming interface exposed by the cloud provider enabling us to provisioning the infra through automation.
+  
+Can I provision the infrastructure across the cloud providers/platforms using Terraform?
+Yes, it works across most of the popular cloud providers, but we need to write the resource declarations within the Terraform configuration file,based on the cloud provider on which we want to provision in Infra.
+The workflow automation in provisioning the infra across the cloud providers is same, which working with Terraform.
+--------------------------------------------------------------------------------------------------------------------------------------
+How to setup the Terraform?
+We need to install the Terraform on the workstation or the controlnode machine from where we want to provision the infrastructure from. It is distributed as an single binary file that works across all the platforms. We need to download the binary distribution file and add to the System Path.
+  
+#1.   
+Inorder to provision the infrastructure on a cloud provider, we need an cloud account. since we are provisioning the infra on aws cloud platform using terraform, we need to setup an aws cloud account. To provision the infrastructure through apis/sdks of the aws cloud provider we need apiKey and secretaccess key for authenticating in granting the access to the cloud account services/resources.
+  
+There are 2 types of users are there in aws:
+1. root user
+2. aws IAM user
+
+upon setting up the aws cloud account, ***** we have the root user being created, but we should not create an apiKey and secret access key and use it for provisioning the resources, because the root user has unrestricted access to the cloud account services and resources which is volunerable.
+  
+create an separate IAM user with necessary permissions granting the access to the services and resources. Then generate apikey and secretkey for that user to use for provisioning the infra
+
+
+#2. How to pass the aws IAM users apiKey and secretaccess to the terraform CLI, letting it use for provisioning the resources on our cloud account?
+There are 3 ways we can pass the account information to the terraform CLI
+1. shared file approach
+2. through environment variables
+3. write the credentials inside the terraform file itself.
+  
+1. shared file approach
+We need to write the apiKey/secretkey in a shared credential file and place it in a specific directory so that it would pickedup by the terraform CLI during provisioning.
+1. create an .aws/ directory under the $USER_HOME directory on the control node server/workstation.
+2. create an file with name "credentials"  
+3. We may work across multiple aws accounts or multiple IAM users for an account, in provisioning the infrastructure for different projects or different business units. So instead of modifying the apiKey/secretkey in the credentials file, the cli tool supports profiles. Think of a profile as an environment.
+per each account or IAM user we define 1 profile in "credentials" file and we need to specify using which profile we want terraform to provision the infra
+
+~/.aws/credentials
+[default]
+aws_access_key=accesskey
+aws_secret_access_key=secret access key
+aws_region=ap-south-1
+  
+[work]  
+aws_access_key=accesskey
+aws_secret_access_key=secret access key
+aws_region=ap-south-1
+
+2. through environment variables
+before running the terraform CLI for provisioning the infra, we need to setup the apiKey and secretKey as environment variables. The terraform has provided pre-defined environment variables using which we need to define the credentials.
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+note: this is considered as the safest approach, because we dont share credentials anywhere
+
+3. write the credentials in the terraform configure file itself, where we define resource declarations
+we can write apiKey and secretaccess key directly inside the terraform file by writing provider block as below.
+
+provider "aws" {
+  access_key = ""
+  secret_key = ""
+}  
+
+This way of configuring the credentials is high-discouraged, because the terraform files are versioned into version control systems and will be distributed across all the members of the team, so that everyone knows the credentials
+-------------------------------------------------------------------------------------------------------------------------------------
+How to provision the infrastructure on aws cloud platform by writing terraform file?
+To provision the infrastructure using terraform, we need to write resource declarations in the terraform configuration file. There are 2 formats in which we can write terraform configuration file.
+  
+1. HCL  = HCL stands for hashicorp language, it has defined its own syntax and declarations to be used in writing the terraform file
+2. JSON = Terraform even supports declaring resources in JSON format
+
+it is preffered to write terraform configuration file using HCL format then JSON, The HCL is much compact and easy to write and read/understand.
+  
+There are 2 types of declarations are there in Terraform
+1. Resource declarations
+Resource declarations are the way through which we express or represent or ask the terraform to provision an specific type of the resource on the cloud provider.
+  
+2. Datasource declarations
+Datasource declarations are the way we ask terraform to query the existing resources that are already part of the cloud account. For eg.. we want to provision as ec2 instance on an existing subnet of a vpc, so here we need to fetch the information about the vpc/subnet of our account, this can be done by using datasource declaration.
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  

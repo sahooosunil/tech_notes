@@ -1,0 +1,114 @@
+Network domain
+---------------
+Aspart of the network domain, all the infrastructure resources like network, firewall, routers, gateways and internet lines are provided by the aws cloudplatform.
+  
+1. vpc network
+vpc stands "virtual private cloud" network, is used for creating isolated network of resources. vpc is created per aws account at region level and spans across all the availability zones of the region. 
+1.1 Per aws account, per each region = it is allowed to create max 5 vpc networks only (softlimit)
+1.2 by default all the resources within the same vpc can communicate with each other
+1.3 the resources across the vpc by default cannot communicate with each other, unless we establish vpc peering
+1.4 per each aws account, per each region one default vpc will be created by aws account
+
+usage:-
+In general vpcs are used isolating one group of resources from another like
+1. per each business unit or department to isolate resources among them we create separate vpcs per department
+2. to isolate resources of one project from another we create vpc per project
+3. per each environment into which we deploy the application, we create one vpc per one env
+
+2. subnet
+What is a subnet, what is the purpose of it?
+vpc is a large network that spreads across all the availability zones of the region. To further break down the vpc network into smaller group of networks and to apply different traffic restrictions and security on the resources the aws has introduced subnet.
+  
+To run/deploy an application, it may need lot of different groups of resources. These different groups of resources should be enforced with different types of traffic restrictions and security.
+For eg.. 
+  1. The database servers should be made accessible within the vpc network only
+  2. Loadbalancer or ec2 resources should be made accessible from public network
+  3. Few other resources might be accessed only from vpn network of the organization
+  
+by having all these different groups of resources in one vpc, we cannot enforce various different types of traffic restrictions, so we can break the vpc network into smaller networks, so that per each sub network we can enforce traffic restrictions and manage the resources easily within that subnetwork, that is where subnets are used.
+  
+1. A subnet is created within an vpc network and is scoped or created within the availability zone of the vpc region.
+2. it is recommended to create atleast 2 subnets across the AZs of the vpc to ensure high availability
+3. within a vpc we can create at max 200 subnets (softlimit)
+  
+What are the reasons for creating subnets?
+There are 2 main reasons for which we need to use subnets
+1. to enforce different traffic restrictions or security on different groups of resources we need to use subnets
+2. to distribute resources across the availability zones of the vpc we need to use subnets
+
+How to create a subnet?
+A subnet is created within the vpc of an availability zone. The resources within the subnet of the vpc  has the ip address assigned as within the range of the vpc network only, but no 2 resources of #2 subnets of the vpc will not overlap with each other. So while creating the subnet we need to specify
+1. vpc in which the subnet should be created
+2. choose the availability zone within in which the subnet should be created
+3. subnet name
+4. cidr notation defining the ip address range for that subnet.
+  
+  
+There are 3 types of subnets are there
+1. private subnet
+2. public subnet
+3. hybrid subnet
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

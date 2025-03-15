@@ -1,0 +1,183 @@
+How to restrict access to the sudoers allowing them to perform operations onbehalf of the root?
+The sudoers has provided aliases in enforcing restrictions on the sudoers access, there are 4 types of aliases are there
+1. User Alias
+2. Runas Alias
+3. Host Alias
+4. Cmnd Alias
+
+1. user alias
+if we want a specific list of users to grant sudoers access by enforcing restrictions on them then we can use User_Alias
+For eg.. we have joe, bob, greg, jack, we want to promote all of them as sudoers we can achieve this in 3 ways
+1.1 /etc/sudoers, make an entry for each user allowing them the sudoer access 
+1.2 create a group, associate all the 4 users to one group and make an entry for the group in /etc/sudoers file granting sudo access
+1.3 associate all of them to sudo group
+1.4 for each user create an file in /etc/sudoers.d directory with sudoer entry individually
+
+1.1, 1.4 = seems to be difficult and duplicated
+1.2 = these belongs to different groups, and dont want to create and associate into one group for the sake of sudoer access.
+1.3 = we want to restrict sudo access on all of these #4 people, and adding them to sudo group is not adviced
+
+The only way to solve this problem is using User_Alias, create an User_Alias with all the #4 people/users and grant sudo access to the Alias list of people as below
+/etc/sudoers
+
+User_Alias ALIAS_NAME=USER1,USER2,USER3
+ALIAS_NAME  REMOTE_HOST=RUNAS COMMAND
+
+In the above case we can create User_Alias as below
+User_Alias TEAM1_USERS_ALIAS=bob,joe,greg,jack
+
+TEAM1_USERS_ALIAS ALL=(ALL:ALL) ALL
+this means bob, joe, greg, jack has been granted sudo access from any host, on any user/group for executing any command
+
+2. Runas Alias
+if we want to allow sudoer to perform operations onbehalf of specific user/group only then we can use Runas_Alias
+for e.g.. we want to greg to grant sudoer access and grant him perform sudo operations onbehalf of only joe then we can use Runas_Alias
+
+Runas_Alias DEV_TEAM_ALIAS=joe,jack, %developergroup
+greg ALL=DEV_TEAM_ALIAS ALL
+
+
+3. Host Alias
+if we want to grant sudoer access from a specific list of host machines only then use Host_Alias
+
+Host_Alias REMOTE_HOST=192.168.1.10, 192.168.1.11
+greg REMOTE_HOST=(ALL:ALL) ALL
+
+4. Cmnd Alias
+we want to grant specific list of commands to be allowed to execute under sudo privilige then we can use Cmnd_Alias
+
+Cmnd_Alias PKG_MGR_CMNDS_ALIAS=/sbin/apt, /sbin/dpkg, /bin/tar, /bin/zip, /bin/unzip
+greg ALL=(ALL:ALL) PKG_MGR_CMNDS_ALIAS
+-----------------------------------------------------------------------------------------------------------------------------------
+Passwordless sudo access:
+
+How can bob perform operations using sudo?
+1. let the bob login into the machine
+2. then open terminal and run the command using sudo command
+
+sudo command args
+
+upon running the sudo command for the first-time after opening the terminal, the linux prompts for bob password as an additional measure of security
+
+but if we obsever he has been already authenticated while logging into the machine. So, it is a bit annoying that linux repeatedly ask for password of bob while running the sudo command, so we can turnoff this password prompt by configuring passwordless sudoers access as below
+
+bob ALL=(ALL:ALL) NOPASSWD:ALL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

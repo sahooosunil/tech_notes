@@ -1,0 +1,128 @@
+scope of services
+-----------------
+There are around 200++ services are offered by aws cloudplatform, these services are categorized into 3 different scopes based on their availability and accessibility
+1. Global
+2. Regional
+3. Availability Zone
+
+1. Global
+The services scoped to the global are accessible and available across all the regions of the AWS Cloudplatform. A change in any of these services/resources would be reflected across all the regions of the AWS cloudplatform.
+  
+Few of the examples of global scope services are:
+1.1 when we create an IAM user or modified an existing IAM user, it would be reflected across all the regions globally of that account.
+1.2 If we add an DNS Entry in Route53 service the route information would be propagated/reflected or modified across all the regions of the cloud account.
+  
+2. Regional
+The services that are scoped to the region level are only visible and accessible within the region under which those are provisioned or created. 
+For example:
+2.1 when we create a dynamodb table within ap-south-1 region, since it is scoped to the region level, the table will be visible and accessible within that region only.
+  
+2.2 if we create an S3 bucket, the bucket and the objects stored inside the bucket are accessible within the region only.
+  
+3. Availability Zone
+These are the services created and accessible within the AZs of the region only.
+For example, the ec2 instance will be created within the AZ of the region only.
+-------------------------------------------------------------------------------------------------------------------------------------- There are categorized into 7 core domains
+1. Networking
+2. Compute
+3. Storage
+4. Database
+5. Security (IAM)
+6. Messaging
+7. Developer Tools
+8. Monitoring
+
+
+How to provision an ec2 instance in aws cloud console?
+1. login into the aws cloud console.
+2. choose the region from the top right corner in where we want to create the ec2 instance
+3. goto services menu -> select compute and click on ec2
+4. in the ec2 dashboard, click on launch instance button 
+5. in the instance provision page enter the below details:
+  1. instance name
+  2. AMI (operating system) = ubuntu
+  3. shape: t3.micro (free-tier)
+  4. click on generate new keypair
+    4.1 a popup will be shown asking for keypair type (RSA, pem file)
+    4.2 upon create, it will allows us to download the keypair, store it in $USER_HOME/.ssh/ directory on windows/linux computer
+6. leave rest of the options as default
+    1. networking
+    2. storage
+    etc
+7. click on launch instance and navigate to instance list page, we should see our ec2 instance we provisioned in the list
+
+How to connect remotely to the ec2 instance?
+1. install gitbash software on the computer windows only
+2. open gitbash terminal
+3. copy the public ip address of the ec2 instance we provisioned from instance detail page
+4. goto gitbash terminal and enter the below command
+ssh -i identityFilePath  ubuntu@publicip
+         (keypair)
+      
+this command logs you into the ec2 instance, we can check by running commands like
+ls
+pwd
+etc
+
+note: upon using the ec2 instance, goto the instance list page, select instance and terminate by click on instance state->terminate option, so that we will not be charged
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

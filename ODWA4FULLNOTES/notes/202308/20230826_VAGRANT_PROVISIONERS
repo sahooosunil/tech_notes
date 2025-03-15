@@ -1,0 +1,260 @@
+vagrant provisioners
+---------------------
+we can setup the virtual machines using the default boxfiles that are distributed aspart of the vagrant cloud, but the machine may not be sufficient for running the application, because we need additional software libraries/packages and tools required for running the application. 
+    
+So upon provisioning the machine using vagrant, the developer/devops engineer has to manually install/configure the virtual machine environment to make it ready for usage. Manually setting up the virtual machine enviornment bounce back to the original problem which is going to take lot of time and prone to errors
+
+instead to quickly setup the server environment, the ops engineer can create an vagrant boxfile for the project and can distribute it to all the developers across the team.
+    
+But this approach also has quite a number of challenges:
+1. setting up the vagrant boxfile takes huge amount of time
+    1.1 ops engineer has to manually create an virtual machine environment with operating system and configurations required for making it as boxfile
+    1.2 install/configure software packages and libraries manually
+    1.3 export it as boxfile
+thus takes huge amount of time
+2. every time when there is change in software versions, patches, the ops engineer has to repeatedly setup the boxfile, so it is not one-time activity, rather it is repeatitive activity that involves huge efforts and time
+3. since it is repeatitive it could lead to errors
+
+Now instead of setting up the vagrant machine/boxfile manually by installing/configuring it, the ops engineer can write an automation scripts for installing/configuring the virtual machine envionment using
+1. shellscript
+2. python
+software configuration management tools:
+3. ansible
+4. chef
+5. puppet 
+etc
+
+but upon booting up the virtual machine, the ops engineer/developer has to manually run these automation scripts based on the respective technology in which those are implemented to make the env ready
+
+Instead of ops engineer/developer running these automation scripts manually upon the first-boot of the machine, we can configure these scripts as provisioners in Vagrant, so that it takes care of running these scripts automatically during the first-boot of the virtual machine.
+    
+Provisioners:
+The automation scripts that would be executed automatically by the vagrant, during the first-boot of the virtual machine to make the virtual machine envionment ready for use.
+    
+There are various different software configuration  management tools are available in writing automation scripts for installing/configuring the softwares like
+1. shellscript
+2. ansible
+3. puppet
+4. chef
+5. salt 
+etc
+
+To execute different automation scripts of different technology vagrant has provided multiple types of provisioners
+1. shell provisioner
+2. file provisioner
+3. ansible provisioner
+4. puppet provisioner
+5. chef provisioner
+etc
+
+There are 2 ways we can write/configure provisioners in Vagrantfile:
+1. inline provisioners
+2. block provisioners
+
+
+#1. inline provisioner
+Vagrant.configure(2) do | config |
+    config.vm.box = "boxfile"
+    config.vm.provision "provisionername", type: "shell/file/ansible", inline: "command"
+end
+
+for eg.. we want to install jdk11 during the time of provisioning the vagrant machine, this can be done by configuring provisioner as below.
+config.vm.provision "install jdk provisioner", type: "shell", inline: "sudo apt install -y openjdk-11-jdk"
+    
+#2. declaring provisioner without name
+config.vm.provision "type", inline: ""
+config.vm.provision "shell", inline: "sudo apt install -y openjdk-17-jdk"    
+    
+#3. declare inline-block provisioner:
+config.vm.provision "shell" do | prov |
+    prov.inline= ""
+    prov.inline= ""
+end
+
+#4. declare provisioner code in a external shellscript and configure it as provisioner as below
+installJdk17.sh
+---------------
+#!/bin/bash
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+
+
+config.vm.provision "installJdk17", type: "shell", path: "installJdk17.sh"
+    
+or we can configure it as block-level provisioner as below
+
+config.vm.provision "shell" do | prov | 
+    prov.path= "installJdk17.sh"
+end
+
+#5. multi-line script:
+config.vm.provision "provisionerName", type="provisionerType", inline: "$script=<<-SCRIPT
+    // shellscript
+    SCRIPT"
+--------------------------------------------------------------------------------------------------------------------------------------
+#1 When does the provisioners will be executed?
+By default the provisioners would be executed only in first-time booting the vagrant machine and in subsequent restarts/bootups of the vagrant machine, the provisioners will not be executed. But if we wanted to execute the provisioners even after the intial bootup of vagrant machine we can trigger them in 2 ways
+1. through command-line switch
+2. through vagrant configuration
+
+1.1. through command-line switch
+vagrant up = first-boot only the provisioner will be executed
+vagrant up --no-provision = even in the first-boot also the provisioner will not be executed
+vagrant up --provision = during the bootup always the provisioner will be executed
+
+1.2. through vagrant configuration
+In Vagrantfile we can specify the behaviour of how the provisioners has to be executed by writing an attribute called "run", that can take 3 possible values
+1. always = every reload/restart of the vagrant machine, the provisioner will be executed
+2. once   = only first-boot (default) [we can overrise this behaviour using command-line switch]
+3. never  = never executed (temporarily to disable)
+
+
+#2. we can specify a particular provisioner to be executed rather than all while launching the machine by using the below syntax
+
+Vagrantfile
+config.vm.provision "provisioner1", type: "sell", inline: "command1"
+config.vm.provision "provisioner2", type: "sell", inline: "command2"
+
+vagrant up --provision-with=provisioner2
+
+#3. File provisioner:
+The File provisioner is used for copying the files from the host machine to the guest machine directory.
+
+config.vm.provision "copyApp", type: "file", source: "sourceFile", "destination": "destinationLocationOnTheGuest"
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distributor-network-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      appName: distributor-network
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        appName: distributor-network
+        version: "1.0"
+    spec:
+      containers:
+        - name: distributor-network
+          image: techsriman/distributornetwork:1.0
+          ports:
+            - name: tomcatport
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 3
+...

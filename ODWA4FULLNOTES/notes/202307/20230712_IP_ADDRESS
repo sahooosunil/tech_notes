@@ -1,0 +1,46 @@
+ip address
+----------
+for every computer that is connected over the network requires an unique identification for accessing the computer over the network. An ip address acts an unique identification for a computer on a network, so that other computers can send/receive the data to our computer using the ip address.
+	
+if address is not permanent and is computed and assigned to a computer whenever it is connected to the network, that is the reason it is even called as logical address. 
+	
+How does an computer gets an ip address?
+There are 2 ways a computer will be assigned with an ip address
+1. static ip configuration
+2. dynamic ip configuration
+
+1. static ip configuration
+In a small group of computer network that comprises of 10-20 computers, the network administrator would configure and assign ip address to each computer on the network manually. He goes to the network adapter properties and configures the ipv4 properties as 
+1. ip address           = ip address to be assigned to the computer
+2. subnet mask          = used for classifying the ip class
+3. default gateway      = ip address of the switch
+4. preferred dns server = primary dns server to perform domain name resolution
+5. alternate dns server = alternate dns server to be reached incase of primary dns server unavailable
+
+thus enabling the computer to be available/accessible on the network. These ip addresses that are assigned to these computers manually are going to be fixed/static and will not be going to change over the period of time, even the computer restarts also the ip address of it remains same always on that network. The advantage of having static ip address is we can quickly access the other computers on the network directly by using their ip address
+
+2. dynamic ip configuration
+
+#500
+
+
+DNS Server = Domain Name Server is used for resolving an domain name to an ip address of the computer, so that we can access the application/services that are running on the computer using the domain name instead of remembering the ip address of that machine.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

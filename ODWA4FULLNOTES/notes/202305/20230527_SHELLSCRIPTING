@@ -1,0 +1,311 @@
+How to pass the data as an input non-interactively to a shellscript program?
+we can collect the data as an input within the shellscript program during its execution by using "read" instruction, which is called interactive inputs. But the problem with interactive inputs is the user who is running the shellscript program should be available at the machine to pass the inputs to the program when prompted through the runtime of the program.
+	
+usually at the time of launching the program/running the program itself we know with what values being supplied we want to execute the program, so if we can pass the values as an input while launching the program itself the user dont need to be available at the machine through the runtime of the application to pass any inputs in running the program through which we can achieve touchless automation.
+	
+interactive vs non-interactive inputs
+interactive: if the program is being used by an enduser, since he dont know which inputs are required to run the program it would be good to design the program to prompt inputs during execution so that enduser can supply them in running the program. So the enduser would feel easy to use it
+
+non-interactive: if we wanted to achieve touchless automation in running a program, usually the programs designed to be used by the administrators or any technical tools or technical users, then it is preferred or recommended to design the programs to pass non-interactive inputs
+
+How to develop the shellscript program to read the non-interactive inputs supplied during its execution?
+wap to find the perimeter of a rectangle?
+formula: 2(l+b)
+	
+when we are launching the program itself we can supply the input values to the program separated by space,these inputs values we supplied at the time of lauching program are called program arguments.
+	
+the shell interpreter upon receiving the program along with values as an input for execution, it understands the user wants to execute the program with those values being supplied as input, so to make those values available within the program, the shellinterpreter will assign these values to implicit/special variables starting with 1, 2, 3....n depends on the number of values we supplied.
+	
+within the shellprogram we can access these values using $1, $2 in the same sequence order in which those are supplied untill nth value.	
+	
+chmod u+x perimeterrectangle.sh
+./perimeterrectangle.sh 10 20 50 = program arguments
+	
+1,2,3...n 	
+	
+perimeterrectangle.sh
+---------------------
+#!/bin/bash
+
+L=$1
+B=$2
+PERIMETER=$[2 * (L + B)]
+echo "Perimeter : $PERIMETER"
+
+additionally few more special variables are created to access the number of arguments and access all of them at one shot as below.
+
+$0 = 	filename of the program
+$1 = first argument
+$2 = second argument
+.
+.
+.
+.
+$n = nth argument
+$# = returns the number of arguments we passed as an input to the program
+$@ = returns all the arguments we passed as an input
+$* = both $@ and $* are same 
+-----------------------------------------------------------------------------------------------------------------------------------
+How to write an arthimetic expression aspart of an shellscript program?
+By default when we write anything aspart of the shellprogram it could be a word or a character all of them will be interpreted as commands or data or symbol and will be executed. so if we write arthematic expression, the shellinterpreter will not treat or evaluate it as an expression.
+	
+For eg.. if we write a shellprogram to add #2 numbers as below
+#!/bin/bash
+A=10
+B=20
+SUM=$A+$B
+#the above command will be treated as a string and returns 10+20 when we print SUM value
+echo $SUM
+
+So we need to instruct the shell interpreter to treat the arithematic operators as expressions and evaluate them rather than treating as strings this can be done in #3 ways
+
+There are 3 ways or 3 syntaxes through which we can tell the shell interpreter to recognize or treat the expressions
+1. using expr keyword
+using the expr keyword we can let the shellinterpreter treat it as an expression rather than string sequence
+
+#!/bin/bash
+A=10
+B=20
+SUM=`expr $A + $B`
+echo $SUM
+
+The above way of writing arithematic expression is the old style of shellprogramming, there are 2 more ways of doing it
+
+2. using $(()) notation
+
+#!/bin/bash
+A=10
+B=20
+SUM=$((A+B))
+echo "SUM: $SUM"
+	
+3. using $[] notation
+this is the most simplified form of writing the arithematic expression rather than using $(())
+#!/bin/bash
+A=10
+B=20
+SUM=$[A+B]
+echo $SUM
+
+from the above we can understand the `expr`, $(()) or $[] is the notation we need to use to let the shell interpreter differentiate between expressions and string of characters/commands
+-----------------------------------------------------------------------------------------------------------------------------------
+Command Substitutions
+Command Substitution is used for collecting the output of an shellcommand within the shellprogram into an variable, so that it can be used for perform further operations using that output.
+	
+By default when the shell interpreter encoutered an shell command within the shellprogram, it executes it and writes the generated output onto the STDOUT or console directly. but if we want to collect the output of the command into a variable, so that it can be used for performing further operations, then we need to use Command Substitution
+
+syntax:-
+VARIABLE=$(shellcommand)
+$(())	 = arithematic expression
+$() = command substitution
+
+wap to collect first name and last name from the user and print total characters with in the fullname?
+	
+totalchars.sh
+--------------
+#!/bin/bash
+read -p "Firstname: " FIRSTNM
+read -p "Lastname: " LASTNM
+
+FIRSTNMC=$(wc -c $FIRSTNM)
+LASTNMC=$(wc -c $LASTNM)	
+	
+TOTALCHARS=$((FIRSTNMC+LASTNMC))
+echo "Total Chars: $TOTALCHARS"	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

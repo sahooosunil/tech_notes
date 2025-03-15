@@ -1,0 +1,106 @@
+docker workflow
+----------------
+docker workflow refers to how do we work with docker
+1. package
+After developing the software application, the developers or devops engineers has to containerize the application by packaging it into an docker image.
+	
+2. ship
+publish the docker image that has been built into docker container registry (like dockerhub), so that it can be distributed across
+
+3. run
+pull the docker image from docker container registry and run the container out of the image on the docker host.
+	
+docker workflow: build (package) -> ship -> run
+
+Let us explore how to run the docker container using dockerCLI on the docker host. To create/run an container we need a docker image. We dont need to always create our own docker image, 
+rather there are plently of pre-built and opensource docker images are published aspart of dockerhub,
+ so we can directly use these images from dockerhub in running the docker containers.
+	
+Inorder to pull/publish the images from dockerhub, we need to login into the dockerhub account from the dockercli using the below command
+docker login = it prompts for the username/password of the dockerhub account, which we need to provide to login and pull/publish the images into our account.
+	
+In the docker cli there are 2 types of cli-commands	are there
+1. container management commands = these are the cli commands used for creating/running containers, and managing them like seeing the status of the container, destroying, stop, start, restarting etc
+These commands always has a prefix of docker container <operation>
+
+2. image management commands = These cli commands are used for building images, managing them like listing, deleting, copying, publishing, pull etc
+
+	
+#1. how to run docker container interactively?
+docker container run -it image:tag command
+
+upon running the above command, the docker daemon checks for whether  the docker image we specified in running the container is available on the dockerhost 
+(in local cache) or not, if not downloads the docker image from dockerhub registry caches the image locally on the dockerhost and creates an container
+ out of the image and runs the container program, upon completion of the program the container will be terminated.
+	
+once the image is pulled and cached locally on the docker host, the docker engine can create any number of containers ontop of the same image, because docker images are read-only.
+
+By default when we launch a docker container out of an image using
+docker container run image:tag
+The docker engine creates/runs the docker container with default instructions that are packaged aspart of the docker image.
+	
+but if we want to run the container withour own instruction interactively, while launching the container instead of using default instruction of that image, then we need to use "-it" switch and pass the command that we wanted to execute on the container when it has been created from the image
+
+docker container -it image:tag command
+
+2. How to see all the running containers on the docker host?
+docker container ls
+
+CONTAINER ID   IMAGE          COMMAND      CREATED          STATUS          PORTS     NAMES
+0087d240f2f5   ubuntu:24.04   "bin/bash"   13 seconds ago   Up 12 seconds             priceless_burnell
+
+The docker cli displays the output in tabular fashion
+1. CONTAINER ID = for each container the docker engine creates, it assigns an unique id using which we can manage the container.
+2. IMAGE = image:tag using which image the container has been created
+3. COMMAND = command that is being executed on the container while launching the container
+4. CREATED = when does the container has been created
+5. STATUS = current status of the container
+6. PORTS = ports exposed by the container program
+7. NAMES = for each docker container, while launching the docker engine assigns an random/meaningful name, so that we can refer the container either using id or using friendly name
+
+3. how to see all the containers of any status on the docker host?
+The docker container ls command only shows the current running containers of the dockerhost. upon completing the execution of the docker container, docker daemon will not removes the container from the docker host, because the programmers may want to collect execution information about the container by reading the logs of the container, so this is the reason the docker daemon will not destroy/remove the container upon completion
+
+docker container ls -a
+
+CONTAINER ID   IMAGE          COMMAND      CREATED          STATUS                      PORTS     NAMES
+0087d240f2f5   ubuntu:24.04   "bin/bash"   9 minutes ago    Up 9 minutes                          priceless_burnell
+698c6e28dfe1   ubuntu:24.04   "bin/bash"   19 minutes ago   Exited (0) 18 minutes ago             tender_bhabha
+	
+4. how to remove an docker container?
+docker container rm containerid/containername
+
+
+5. How to remove all the stopped/terminated containers on the docker host?
+docker container prune
+will remove all the stopped/exited containers on the docker host.
+	
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

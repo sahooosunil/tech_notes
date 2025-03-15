@@ -1,0 +1,10 @@
+---
+- name: ansible vault play
+  hosts: all
+  vars_files: mysql_vars
+  tasks:
+    - name: create database on mysql server
+      debug:
+        msg: "create database using mysql_user: {{mysql_login_user}} and password: {{mysql_login_password}}"
+
+...

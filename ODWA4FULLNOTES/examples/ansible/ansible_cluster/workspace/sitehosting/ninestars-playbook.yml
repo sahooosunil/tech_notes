@@ -1,0 +1,7 @@
+---
+- name: static site hosting using roles
+  hosts: all
+  roles:
+    - apache2site
+...
+

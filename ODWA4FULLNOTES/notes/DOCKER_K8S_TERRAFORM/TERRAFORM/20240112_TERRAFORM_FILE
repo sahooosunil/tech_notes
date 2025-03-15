@@ -1,0 +1,400 @@
+#1. Resource declaration
+A resource declaration indicates/represents the resource we wanted to provision on the cloud platform. For eg.. if we wanted to provision an ec2 instance on the aws cloud platform, we need to write ec2 resource declaration describing the details of the instance we wanted the terraform to provision in the Terraform configuration file. These resource declarations differs from one cloud provider to another since the offer different types of services/resource.
+
+syntax:-
+resource "TYPE" "NAME" {
+  resource configuration written as key = value format
+}
+
+1. TYPE = The TYPE indicates the type of the resource we wanted to provision. the resource type will starts with cloudprovidername_resourceType
+for eg.. if we want to provision an ec2 instance on aws cloud platform, the resource type will be "aws_ec2", so that we can quickly identify the resource we are refferring from which provider.
+  
+2. NAME = The NAME we declared here doesnt refers to the resource name we wanted to create, rather it just an configuration name given to that block. using the NAME we can refer the resource in expressing the dependencies across the other resources
+
+For eg.. if we want to create an vpc with vpc name as "hrvpc" and within the vpc, we want to create an subnet called "hrpubsn". we can tell the terraform to create  the hrpubsn under hrvpc by referring the resource blocks as below.
+  
+resource "aws_vpc" "hrvpc" {
+  cidr = "10.1.0.0/16"
+  tags = {
+    NAME = "hrvpc"
+  }  
+}  
+
+resource "aws_subnet" "hrpubsn" {
+  vpc_id = aws_vpc.hrvpc.id
+  cidr = "10.1.1.0/24"
+  tags = {
+    NAME="hrpubsn"
+  }      
+}
+
+In the above aws_subnet resource we reffered vpc_id as aws_vpc.hrvpc.id, which is nothing but the way we express dependency between the resources.
+  
+When we apply the above terraform configuration file by passing it to the terraform CLI, the terraform will generate an acyclic graph representing the resources as nodes and their dependencies expressed as directional arrows to identify the resources should be creaed in which order.
+  
+  
+it would be impractical to memorize all the resource declarations or datasource declarations across all the cloud providers. so the terraform has provided rich documentation providing the details for each cloud platform with list of resources and datasource declarations.
+  
+here is the doc to aws cloud provider resources/datasources: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+--------------------------------------------------------------------------------------------------------------------------------------
+How to write the terraform configuration file in provisioning the infrastructure?
+We provision the infrastructure for deploying an application, so first let us derive what infrastructure resources are needed for deploying the application and make a list out of them.
+  
+for eg.. if we want to deploy fithealth2 application we need
+1. java server (tomcat)
+2. we dont want to deploy on multi-node, as right now we are not looking for HA or scalability. so we want to deploy on single-node instance.
+  
+Based on the above we can derive below list of resources we need for deployment
+1. vpc network
+2. public subnet
+3. security groups
+4. ec2 instance
+
+Now we want write the terraform configuration either within the project or we can create in a separate project. For now let us keep the infrastructure code aspart of the java project code itself for simplicity
+
+fithealth2
+|-src
+  |-main
+    |-java
+    |-resources
+    |-config 
+    [#all the configuration files that are needed for deploying/delivery of the application are placed here, these contents will not be packaged into the build artifact.]
+      |-terraform
+        |-write here the terraform configuration file
+    |-webapp
+      |-WEB-INF
+        |-web.xml
+|-pom.xml
+
+The Terraform configuration files are written with an extension as ".tf" only. The preffered name with which we need to write the terraform file is "main.tf". but we can write the file with anyname there is no restriction, the only rule of thumb is it should have an extension of ".tf"       
+  
+We can declare all the resource declarations in one single terraform configuration file like "main.tf" or we can modularize the resource declarations by distributing them into multiple terraform files as well.
+for eg.. we can create
+network.tf = here we can declare vpc, subnets, gateways etc
+compute.tf = security groups, ec2 instances, loadbalancers etc
+
+or else we can create one tf file for one resource declaration as well, but it would become difficult to identify and derive the resources and their dependencies when we scattered across multiple files.
+  
+  
+For one project, the relevant terraform configurations related to that project should be kept in one-single directory which is called "terraform project" directory. when we want to provision the infra for our project, we need to navigate into the terraform project directory and run terraform CLI from here.
+  
+The Terraform combines all the terraform configuration files we declared/written inside the project directory into one single terraform file and applies it at one-shot.
+  
+In addition to declaring the resources in the terraform file, we need to declare the provider plugin configuration and credentials to be used in provisioning the infra.   
+  
+if we have choose the shared-file approach in configuring the credentials first we need to write the below file
+~/.aws/credentials
+[default]
+aws_access_key=
+aws_secret_access_key=
+  
+d:\work\fithealth2:/>
+|-main.tf
+
+main.tf
+--------
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "~>5.0"
+    }
+  }
+}
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+resource "aws_vpc" "fithealth2vpc" {
+  cidr_block = "172.10.0.0/16"
+  tags = {
+    NAME = "fithealth2vpc"
+  }
+}
+resource "aws_subnet" "fithealth2pubsn" {
+  vpc_id = aws_vpc.fithealth2vpc.id
+  cidr_block = "172.10.1.0/24"
+  tags = {
+    Name = "fithealth2pubsn"
+  }
+}
+resource "aws_security_group" "fithealth2sg" {
+  vpc_id = aws_vpc.fithealth2vpc.id
+  ingress {
+    from_port=22
+    to_port=22
+    protocol="ssh"
+    cidr_blocks = ["172.10.0.0/16"]
+  }
+  egress {
+    from_port=0
+    to_port=0
+    protocol=-1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_key_pair" "fithealth2kp" {
+  key_nm ="javakp"
+  public_key = ""
+}
+
+resource "aws_instance" "fithealth2ec2" {
+  subnet_id =aws_subnet.fithealth2pubsn.id
+  vpc_security_group_ids = ["aws_security_group.fithealth2sg.id"]
+  instance_type = "t2.micro"
+  ami = "ami-833"
+  key_name = aws_key_pair.fithealth2kp.key_nm
+}
+
+
+How to run/apply the above terraform configuration to provision the infrastructure?
+1. goto the project directory where we have written the terraform configuration files. This directory is called terraform project directory
+
+2. terraform init
+when we run terraform init, the terraform CLI will gathers all the .tf files placed under the project directory, 
+including the sub-directories and merges them into one-single terraform configuration in-memory, 
+then validates the terraform configuration that is produced. if it is not valid, throws an error indicating the problem. 
+if the terraform configuration is valid, then goes to provider plugin declaration identifies which provider plugin to be used of what version and 
+downloads it from the terraform cloud and stores it locally within the terraform project directory under .terraform sub-directory
+
+From this we can understand for, each project it downloads once the provider plugin.
+  
+3. terraform plan
+terraform plan is a dry run by which we can easily identify upon running this terraform configuration what resources would be created/modified/deleted on the cloud account of the platform.
+When we run terraform plan, it connects to the cloud account and queries the existing resources of our account and compares the terraform configuration we provided and identifies the deltas from it based on which it derives
+1. how many resources should be provisioned newly
+2. how resources should be modified
+3. how many resources should be deprovisioned
+
+and provides an summary of the resources being created/modified/deprovision to us. 
+now we can validate whether the changes this configuration is going perform looks good or not before proceeding on applying it.
+  
+4. terraform apply
+executes the terraform configuration on the cloud provider to provision the infrastructure. and displays the results to us.
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

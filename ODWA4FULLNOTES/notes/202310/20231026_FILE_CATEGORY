@@ -1,0 +1,90 @@
+File Category
+1. copy module
+2. file module
+	2.1 new file
+	2.2 new directory
+	2.3 change the permissions of existing file/directory
+	2.4 symlinks
+	2.5 preserve timestamps
+	
+2.4 symlinks
+- name: create symlink
+		file:
+			src: /home/vagrant/library/music/melodies/90/retro.txt
+			dest: /home/vagrant/old_melodies.txt
+			state: link
+
+2.5 preserving the timestamps of a file or directory while using file module
+--------------------------------------------------------------------------------------------------------------------------------------
+
+3. lineinfile module
+if we wanted to edit or modify a single-line in an existing file we can use lineinfile module which is similar to sed in linux.
+	
+for eg.. we wanted to replace a line based on matching expression as below
+/etc/mysql/mysqld.cnf
+MYSQL_BIND_ADDRESS=127.0.0.1
+	
+sed -i 's/^MYSQL_BIND_ADDRESS=.*/MYSQL_BIND_ADDRESS=0.0.0.0/g' /etc/mysql/mysqld.cnf
+
+syntax:
+lineinfile:
+  path: locationOfTheFileToEdit
+	regexp: 'searchexp'
+  line: 'replacedcontent'
+		
+- name: replace bindaddress
+  lineinfile:
+    path: /etc/mysql/mysqld.cnf
+		regexp: '^MYSQL_BIND_ADDRESS=.*'
+		line: 'MYSQL_BIND_ADDRESS=0.0.0.0'
+
+
+#2. The other way we can use lineinfile module is, we can add/remove a line before or after the matching expression as shown below
+
+/etc/ssh/sshd.conf
+PermitEmptyPassword no
+ChallengeResponseAuthentication no
+
+we wanted to add a new line after PermitEmptyPassword no line with new line text as PasswordAuthentication yes
+
+the resulted file contents should look like below.
+/etc/ssh/sshd.conf
+PermitEmptyPassword no
+PasswordAuthentication yes
+ChallengeResponseAuthentication no
+
+
+- name: add newline
+  lineinfile:
+    path: /etc/ssh/sshd.conf
+		line: 'PasswordAuthentication yes'
+		insertafter: '^PermitEmptyPasswords.*'
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

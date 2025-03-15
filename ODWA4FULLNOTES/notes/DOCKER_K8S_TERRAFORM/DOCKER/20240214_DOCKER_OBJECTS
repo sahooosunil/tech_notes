@@ -1,0 +1,79 @@
+What are docker objects?
+There are 2 types of docker objects are there
+1. docker image
+2. docker container
+
+1. docker image
+The docker image is an compressed and packaged file containing application binary, dependent sofware packages and libraries, bins & libs along with instructions in running the underlying software application out of a container together is called "docker image".
+	
+The application developers usually writes the docker instruction file in packaging the application into an docker image. We need to publish and distribute them through docker container registry.	
+	
+The docker team has build and setup an docker container registry called "docker hub". Its a public registry where people around the world can publish and distribute their images. 
+	
+In order to publish our image into the docker hub we need to have an docker hub account	and we need to create one repository per one image to publish and distribute. There are 2 types of repositories are there
+1. private repository = private to the owner or the account holder, the images published here cannot be accessed by anyone unless the permissions are granted.
+2. public repository = The public repositories are open to the world, anyone can pull the image or modify the image that is placed in public repository
+
+For an organization to distribute their client/commercial applications as images, they need to use private repositories only.
+
+The images in the dockerhub can be classified into 4 categories or groups
+1. docker official images = These are the images that are created and distributed by the docker team.
+2. docker verified = These are the images built by the partners, and verified by the docker team and published into the dockerhub registry, hence these are trusted.
+3. Sponsored OSS (Opensource Software) = The docker inorder to promote opensource software, docker encourages partner teams to create images, which are verified by docker team and published into dockerhub registry. since these are verified by docker team, these are trusted images.
+4. Community images = These image are built by the unknown, means anyone around the world and published into dockerhub registry. These are not verified images and should be used at our own risk.
+
+#1.	
+What do you mean by docker images are layered and stackable?
+	(or)
+How are docker images are light weight?
+	
+#2. Why are docker images are read-only?
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

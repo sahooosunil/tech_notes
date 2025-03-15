@@ -1,0 +1,231 @@
+YAML
+----
+YAML stands for Yet another markup language (or Aint Markup language) means "not an markup language". YAML is an text-based data representation standard similar to JSON or XML, that is used for storing or representing the data. YAML allows us to store/representing the data by attaching semantics to the data along with boundaries of the data, so that everyone can interpret the information properly.
+	
+YAML supports below build-in or primitive datatypes:
+1. String
+Any sequence of set of characters of data is considered as String and we dont need to enclose it in double-quote.
+2. Number
+Any digits is considered as Number
+3. Boolean
+true, false, yes, no, TRUE, FALSE
+
+In addition YAML supports 2 data structures in representing scalar data
+1. Map   [Maps are similar to objects] = in which the data is represented as key: value pair
+2. Lists = similar to arrays in holding collection of values/objects
+
+1. Map
+Map is an key/value pair of data used for representing objects or a thing. The key & the value are separated by ":" and a space is manatory after the key: for representing the value
+
+for eg.. an account information in json/xml format can be represented in YAML as below
+XML:
+----
+<account>
+	<accountNo>ac003</accountNo>
+	<accountHolderName>Smith</accountHolderName>
+	<accountType>savings</accountType>
+	<ifscCode>ICICI00193</ifscCode>
+	<balance>100</balance>
+</account>
+
+JSON:
+{
+	"accountNo": "ac003",
+	"accountHolderName": "Simth",
+	"accountType": "savings",
+	"ifscCode": "ICICI000193",
+	"balance": 100
+}
+
+YAML:
+accountNo: ac003
+accountHolderName: Smith
+accountType: savings
+ifscCode: ICICI00394
+balance: 100
+
+#2. List
+List is nothing but an array or a collection of values
+
+XML:
+places.xml
+<places>
+	<place>Hyderabad</place>
+	<place>Banglore</place>
+	<place>Mumbai</place>
+	<place>Delhi</place>
+</places>
+
+JSON:
+["Hyderabad", "Banglore", "Mumbai", "Delhi"]
+
+YAML:
+- Hyderabad
+- Banglore
+- Mumbai
+- Delhi
+
+
+every YAML file starts with --- and ends with ... even though it is not mandatory to begin and end the YAMl file it is recommended. YAML files are saved with an extension of ".yaml" or ".yml"
+
+shopping.yml
+---
+- television
+- fridge
+- washer
+- dryer
+...
+---	
+- pulses
+- grains
+- wheat
+...
+----
+- body wash
+- body lotion
+...
+	
+by using --- and ... we can combine multiple YAMl documents into one single document shown above
+In an YML we can have write a combination of Map and Lists as well, let us explore few more examples
+
+	
+policy.json
+{
+	"policyNo": "p001"
+	"policyHolderName": "Adam",
+	"gender": "Male",
+	"dob": "10/01/1990",	
+	"mobileNo": "94849494",
+	"emailAddress", "adam@gmail.com",
+	"plan": {
+		"planNo": "PL002",
+		"planName": "Jeevan Abai",
+		"type": "Life Insurance",
+		"minAgeLimit": 18,
+		"maxAgeLimit": 65
+	},
+	"benefits": ["higher-maturiy", "80c relaxation", "accidental benefit", "disability coverage"]	
+}
+
+policy.YML
+---
+policyNo: p001
+policyHolderName: Adam
+gender: male
+dob: 10/01/1990
+mobileNo: 98848484
+emailAddress: adam@gmail.com
+plan:
+  planNo: pl002
+	planName: Jeevan Abai
+	type: Life Insurance
+	minAgeLimit: 18
+	maxAgeLimit: 65
+benefits:
+  - higher maturity
+	- 80c excemption
+	- accidental benefit
+	- disability coverage
+...
+
+
+tickets.json
+{
+  "pnrNo": "",
+	"trainNo": "",
+	"source":""
+	"destination":"",
+	"journeyDate": "",
+	"passengers": [
+		{
+			"passengerName": "",
+			"age": "",
+			"gender": "",			
+			"berth":"",
+			"coach": ""
+		},
+		{
+			"passengerName" : "",
+			"age":"",
+			"gender": "",
+			"berth":"",
+			"coach": ""
+		}
+	],
+	"status":  ""
+	"amount": 933
+}
+
+tickets.yml
+------------
+pnrNo: pc093
+source: hyd
+destination: blr
+trainNo: t9393
+journeyDate: 10/01/2023
+passengers:
+  - passengerName: p1
+	  age: 39
+		gender: Male
+		berth: 12
+		coach: B1
+  - passengerName: p1
+	  age: 39
+		gender: Male
+		berth: 12
+		coach: B1
+status: CNF
+amount: 9393
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

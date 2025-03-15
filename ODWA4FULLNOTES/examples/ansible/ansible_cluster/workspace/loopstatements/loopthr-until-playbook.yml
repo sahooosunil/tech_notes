@@ -1,0 +1,22 @@
+---
+- name: loop until
+  hosts: all
+  tasks:
+    - name: wait until program1 finished
+      find:
+        paths: /tmp/
+        patterns: 'program1.log'
+        recurse: false
+        use_regex: false
+      register: logstatus
+      until: logstatus.matched | float >= 1
+      delay: 1
+      retries: 10
+    - name: run program2
+      shell: "bash ~/program2.sh"
+      register: logoutput
+    - name: print log
+      debug:
+        msg: "{{logoutput}}"
+
+...

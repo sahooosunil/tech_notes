@@ -1,0 +1,142 @@
+Cloud Platform
+---------------
+on-demand delivery of computing resources to the world is called "cloud computing", the cloud providers offers 3 types of services
+1. IaaS
+2. PaaS
+3. SaaS
+
+1. IaaS 
+IaaS stands for "infrastructure as a service", where in all the computing, infrastructure resources like hardware, networking, routers, firewalls etc are provided aspart of IaaS layer, so that people can run their software applications on top of the Infrastructure
+advantages:-
+  1.1 flexible shapes in choosing the computer resources
+  1.2 flexible billing model
+    1.2.1 fixed billing
+    1.2.2 pay-per-usage
+  1.3 on-demand delivery of the computing resources with no long-term contracts or agreements
+  1.4 instantaneously the resources can be procured and can released
+  1.5 monitoring, backup, restore etc are managed by the cloud provider
+
+The cloud providers takes care of managing the lifecycle operations on the resources
+1. provisioning
+2. deprovisioning
+3. scale-up
+4. scale-down
+5. scale-out
+6. scale-in
+7. backup
+8. restore
+9. start
+10. stop
+11. restart
+
+2. PaaS
+PaaS stands for "platform as a service", to run the software applications we need additional software packages or libraries ontop of the operating system/infrastructure on the computer like
+1. programming language softwares
+2. database servers
+3. application server softwares
+etc
+
+upon provisioning the infrastructure, the devops engineers has to manually install, configure these middleware/platform softwares on top of the infrastructure to run the software applications. 
+Manually managing in installing and configuring these platform software or middleware software is very difficult and has several challenges:
+  2.1 we need to download the middleware software, procure licenses and install/configure them on the infra, it takes lot of time, special expertise is required in installing/configuring these platform software.
+  2.2 all the lifecycle operations like
+    1. scale-up/scale-down
+    2. scale-out/scale-in
+  should be handled manually in ensuring these platform software works
+  3. periodical backup and restoring these platform softwares is an on-going maintainance
+  4. updating, patching the platform software is very complex
+  5. monitoring the platform is an tedious job
+  6. we need a dedicated team of expertise who should be available 24/7 continously in managing to install, configure, monitor and maintain the platform software which incurrs lot of cost in managing them
+  
+Instead of we taking core of managing the platform software, we can use the PaaS layer of cloud provider.
+
+For eg.. if we need an database software for storing/retrieving the data in our software application, instead of we installing/configuring and maintaining on the infra manually, we can take the advantage of PaaS layer of the cloud provider. We need to request along with infra the database server software that we need, so that cloud providers takes care of 
+1. creating necessary infra
+2. installing and configuring the platform software we requested (database server) by procuring and downloading it
+3. monitors, manages and takes the periodical backup and restore in the event of crash of the database server (and the data)
+4. performs all the cloud lifecycle operations on the underlying paas software (database)
+  
+so that we can directly use the platform software (database) without worrying about how to maintain or manage it.
+-------------------------------------------------------------------------------------------------------------------------------------  
+#3. SaaS
+SaaS stands for "software as a service".
+  
+There are lot of pre-build Enterprise Software Solutions are there like:      
+1. SAP 
+2. Peoplesoft
+3. Salesforce 
+4. Workday
+5. Jira
+6. Siebel
+7. JDEdwards
+8. E-Business Suite
+
+The Enterprise organizations rather than building the software by their own in addressing the most common functional areas in running the business, they can use these pre-build software solutions in managing their business. But to use these solutions the organizations has to
+1. procure software license = licensing cost is too high (small and moderate companies cannot efford)
+2. download these enterprise softwares 
+3. setup infrastructure (compute machines, networking etc) [huge infra is required, very costly]
+4. we need administrators of that specific software (sap administrators, salesforce administrators) who has expertise on installing and configuring that enterprise software on the infrastructure [dedicated administrators, costly] [2-3 weeks]
+5. implementors = they add customization ontop of this software, so that it can be used in our business [15-20 days] [high cost]
+6. monitoring, maintaining and periodical backup and restoration has to be takencare
+
+purchasing the software licenses, installing, configuring and maintaining them is very costly and require lot of time and manpower resources in managing them, instead we can take use the SaaS layer of cloud provider.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

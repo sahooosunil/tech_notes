@@ -1,0 +1,329 @@
+How to compare the contents of 2 files?
+There are 2 bash commands are available for comparing the contents of any 2 given files
+1. cmp
+2. diff
+
+2. diff
+diff stands for difference. diff compares contents of 2 files line by line and displays recommendations using special symbols on how to make the 2 files identical
+1. a = add
+2. d = delete
+3. c = change
+4. < = refers the contents of the left file (file1)
+5. > = refers the contents of the right file (file2)
+
+#1 add	
+veg.txt
+---------
+brinjal
+potato
+onions
+
+lowpriceveg.txt
+---------------
+brinjal
+potato
+onions
+chillies
+
+diff veg.txt lowpriceveg.txt
+3a4
+> chillies
+after the 3rd line in veg.txt add the 4th line of lowpriceveg.txt and the 4th line is > chillies
+
+
+
+#2 delete
+wishlist.txt
+------------
+icecream
+donut
+pizza
+burger
+
+popularsnacking.txt
+-------------------
+icecream
+donut
+burger
+
+diff wishlist.txt popularsnacking.txt
+3d2
+< pizza
+delete the 3rd line in file1 (wishlist.txt), so that from 2nd line onwards both the files becomes identical
+
+#3 change
+-----------
+products.txt
+---------------
+lg led
+bose soundbar
+iphone14 pro
+pixel pro7
+
+deals.txt
+lg led
+bose soundbar
+iphone14
+pixel pro7
+
+diff products.txt deals.txt
+3c3
+
+< iphone14 pro
+---
+> iphone 14
+
+
+change the 3 rd line file1 (products.txt) with 3rd line in file2 (deals.txt)
+the line to be changed in left file < iphone14 pro, and the line in right file is > iphone14
+
+#4. multiple differences
+fruits.txt
+-----------
+grapes
+banana
+apple
+watermelon
+papaya
+jackfruit
+
+freshfruits.txt
+---------------
+grapes
+banana
+guava
+watermelon
+apple
+kiwi
+papaya
+jackfruit
+
+diff fruits.txt freshfruits.txt
+
+3c3
+< apple
+---
+> guava
+
+4a5,6
+>
+apple
+kiwi
+
+
+players.txt
+------------
+virat
+jadeja
+rohit sharma
+dhoni
+pant
+dravid
+sachin
+raina
+
+selectedplayers.txt
+-------------------
+virat
+pointing
+raina
+sachin
+pant
+ishan
+yuvraj
+
+2,7c2
+< jadeja
+< rohit sharma
+< dhoni
+< pant
+< dravid
+< sachin
+---
+> pointing
+
+8a4,7
+> sachin
+> pant
+> ishan
+> yuvraj
+-----------------------------------------------------------------------------------------------------------------------------------
+wc
+wc stands for word count, it is used for counting the number of characters, words and lines in a given file.
+
+wc filename = by default display lines, words and characters in the given input file
+we can use below switches in finding each of them or a combination of them
+
+wc -l filename = no of lines in given file
+wc -w filename = no of words in given file
+wc -c filename = no of characters in given file
+
+wc -lw filename = no of lines and words in given file
+-----------------------------------------------------------------------------------------------------------------------------------
+How to find the logged in user of the linux operating system?
+whoami = tells you the current logged in user of the linux operating system
+
+Linux operating system is multi-user operating system, that means multiple people can parallely login and use the computer at the same time.
+How to find who are all the users who are currently logged in into machine?
+who = shows us all the logged in users of the linux machine
+
+to verify the who command we can add one more user into the linux operating system by running the below command
+su - = switch as root user
+useradd joe -m -s /bin/bash -p welcome1
+
+if the password is not working, you can reset the password for a user using
+passwd username
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

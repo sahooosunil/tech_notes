@@ -1,0 +1,259 @@
+How many types of operators are supported by Shellscripting?
+There are 5 types of operators are provided by shellscript
+1. Arithematic operators
+2. Relational operators
+3. Logical operators
+4. String operators
+5. File operators
+
+1. Arithematic operators = used for performing arithematic operations like add, sub, mul, division, modulus etc
+1.1 + = add
+1.2 - = substract
+1.3 * = multiplication
+1.4 / = division
+1.5 % = modulus
+
+2. Relational operators = used for comparision of #2 inputs
+2.1 -lt = lessThan
+2.2 -gt = greaterThan
+2.3 -le = lessThan or equalTo
+2.4 -ge = greaterThan or equalTo
+2.4 -eq = equalTo
+2.5 -ne = not equalTo
+Note: These operators can be applied on integers or nuemaric types only
+
+3. Logical operators = used for joining multiple relational expressions
+3.1 AND = -a
+3.2 OR  = -o
+3.3 NOT = !
+	
+4. String operators = used for performing operations on the String data
+4.1 < = lessThan
+4.2 > = greaterThan
+4.3 <= = lessThan or equalTo
+4.4 >= = greaterThan or equalTo
+4.4 = = equalTo
+4.5 -z = zero or empty string
+4.6 -n = non-zero length
+
+5. File operators = used for performing file operations
+5.1 -e = file/folder exists
+5.2 -f = regular file
+5.3 -d = directory
+5.4 -r = read permission
+5.5 -w = write permission
+5.6 -x = execute permission
+5.7 -c = character special file
+5.8 -b = block special file
+5.9 -s = non-zero size
+5.10 -o = is the owner of the file
+5.11 -of = olderThan
+5.12 -nf = newerThan
+----------------------------------------------------------------------------------------------------------------------------------
+How to use expr in performing string operations?
+We can use expr for performing #3 types of string operations
+1. length of the string
+2. substring in the given string
+3. compare 2 given strings
+
+#1. Length of a give string
+LEN=`expr length $STRING`
+
+#2. extract substring from an given string
+For eg.. we have an bank accountno of 16 characters in length. The first #8 characters are BRANCH_CODE and next 8 characters are accountno, we want to read branchCode and accountNo from the given accountNo string
+
+FACCOUNT_NO=ICI0100198363897
+syntax:-
+	`expr substr $STRING START NOOFCHARS`
+	
+BRANCH_CODE=`expr substr $FACCOUNT_NO 1 8`
+ACCOUNT_NO = `expr substr $FACCOUNT_NO 9 8`
+
+wap to find the account_no and branch_code from an given Full Account No? Collect the Full Account No non-interactively within the application.
+	
+substrexpr.sh
+--------------
+#!/bin/bash
+F_ACCOUNT_NO=$1
+BRANCH_CODE=`expr substr $F_ACCOUNT_NO 1 8`
+ACCOUNT_NO = `expr substr $F_ACCOUNT_NO 9 8`
+
+printf "Branch Code: %s, Account No: %s" $BRANCH_CODE $ACCOUNT_NO
+-----------------------------------------------------------------------------------------------------------------------------------
+#3 how to compare 2 give strings using expr
+we can compare 2 given strings and check whether both are equal or not by using expr as below
+
+syntax:-
+	`expr "$STR1" : "$STR2"` 
+	1. returns 0 if all the characters are not matching.
+	2. if matching returns total character count of the string
+	
+wap to check whether #2 given strings are same or not
+cmpstr.sh
+---------
+#!/bin/bash
+STR1=$1
+STR2=$2
+
+CNT=`expr "$STR1" : "$STR2"`
+echo "match count : $CNT"
+----------------------------------------------------------------------------------------------------------------------------------
+1. What is shellscripting, why do we need to use it?
+2. How to write and execute an shellscript program, and how many ways are there?
+3. Variable declarations
+4. How many ways we can collect the input data into an Shellscript program?
+	4.1 interactive inputs
+	4.2 non-interactive inputs
+5. Arithematic expressions 
+	5.1 `expr`
+	5.2 $(())
+	5.3 $[]
+6. command substitutions 
+7. printf
+8. operators
+9. string operations using expr
+----------------------------------------------------------------------------------------------------------------------------------
+Control Statements
+Control statements are used for controlling the flow of execution of an shellscript program. By default the shell interpreter executes the instructions in a shellscript program from top to bottom sequential one after the another. But sometimes we may wanted to execute few/group of instructions based on some condition or may want to execute a bunch of instructions repeatitively.
+	
+This indicates we want alter the default flow of execution of the program, this can be done through the help of control statements.
+There are 2 types of control statements are there
+1. Conditional Control Statements
+	1.1 if conditional control statement
+	1.2 if-else (or) if-elif-else control statement
+	1.3 case/esac
+	
+2. Loop Control Statements
+	2.1 while
+	2.2 for
+	2.3 until
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

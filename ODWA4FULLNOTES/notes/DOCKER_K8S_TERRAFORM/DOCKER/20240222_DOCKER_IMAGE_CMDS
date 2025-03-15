@@ -1,0 +1,132 @@
+docker image management commands
+--------------------------------
+1. how to see all the docker images on the docker host?
+docker image ls
+
+2. How to see the details of the image?
+We can see all the details of an image like author/maintainer, licensing, created date, supported platforms, size, image instructions in lauching the container etc
+
+docker image inspect image:tag
+
+what is a tag?
+For each docker image along with image name, the tag to identify the version of the image will be associated to it. The tag can be alpha numeric, so it need not contain only numbers. For each image that is published, it will associate a default tag called "latest", which always points to the last published image.
+	
+While pulling the image from the docker registry, if we didnt specified a tag for the image, the default tag of the image that is pulled is image:"latest"	
+	
+So when we are building and publishing our own image, we need to associate our image along with a tag, latest tag as well. For eg.. if we are publishing an docker image rapido:1.0, then we need to tag rapdio:1.0 with latest tag as well, so that we can access the rapido:1.0 with rapido:latest as well. So that other users dont need to bother about what is the latest version of the image always for every image users tries to pull the latest version using image:latest
+
+3. How to retag or add an alias name to an docker image?
+We have an docker image with name tomcat:9.0, we want to bind one more name for the same image as tomcat_jdk11:9.0, so that we can access the same image with @2 names
+
+docker image tag existingimage:tag newimage:tag
+
+4. How to remove an docker image?
+removing an image means we are removing image only from our docker local host machine, not from container registry.
+	
+docker image rm image:tag
+when we run the docker image rm command to remove the image from docker host, if there are any existing containers created using the image, it produces an error, so we need to remove the containers before removing the image
+
+if we have created alias for an image for eg..
+	tomcat:9.0
+	tomcat_jdk11:9.0
+when we remove the docker image with one of the names, only alias will be untagged, the image will not be removed, unless we remove all the aliases of the image from docker host.
+		
+5. how to remove an image when there is an container associated with it?
+docker image rm -f image:tag
+-f stands for force
+
+6. how to remove all the unused images on the docker host?
+docker image prune
+if there are no containers associated with those images, then all of those images will be removed from the docker host
+
+7. How to export an existing docker image on a docker host into a tar?
+docker image save image:tag -o filename.tar
+
+-o stands for output filename
+
+The save exports the docker image into the -o output file we specified
+
+8. How to load an docker image from an existing .tar (docker image file?) of the local machine?
+docker image load -i filename.tar
+
+-i stands for input file
+
+9. how to pull the docker image from docker container registry onto a docker host?
+by default when we tried running a container out of the image by using
+docker container run image:tag
+
+the docker engine checks for the image already existing on the docker host (locally) or not, if not pulls the image from docker container registry.
+	
+if we want to pull the image without creating an container out of it, we can use the below command
+docker image pull image:tag
+--------------------------------------------------------------------------------------------------------------------------------
+How to publish the docker image into docker container registry?
+Inorder to publish or push an image into docker container registry, first we need to have an image on the docker host (local machine)	
+	
+For this
+	1. either we can build our own docker image out of an docker instruction file
+	(or)
+	2. we can pull an existing image from dockerhub and push it into our own docker repository that is created on dockerhub
+	
+For any of this first we need to have an docker hub account, and it is free and anyone can signup for an account, upon creating an account.
+
+1. login into the dockerhub account
+
+	
+	
+	
+
+
+
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

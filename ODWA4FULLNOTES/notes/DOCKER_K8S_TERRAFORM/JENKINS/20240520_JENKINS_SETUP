@@ -1,0 +1,1161 @@
+1. How to setup the Jenkins?
+To setup jenkins we need 1 Jenkins Master and 2 Slave Nodes to run the jobs. Let us create all of these 3 machines sing virtualization and Vagrant.
+  
+1. Let us create 3 virtual machines by using Vagrantfile. For this we need 2 Networking modes
+  1.1 Master Node
+  - Nat Network with Port Forwarding
+  - Private Network (Master and Jenkins Slaves to communicate with each other)
+  1.2 For Each Slave Node
+  - Nat Network (Public network access)
+  - Private Network (Master and Jenkins Slaves to communicate with each other)
+  
+Vagrantfile
+-----------
+Vagrant.configure(2) do | config |
+    config.vm.define "jenkinsmaster" do | jm |
+        jm.vm.box = "ubuntu/mantic64"
+        jm.vm.network "private_network", ip: "192.168.12.10"
+        jm.vm.network "forwarded_port", guest: 8080, host: 8081
+        jm.vm.hostname="jenkinsmaster"
+        jm.vm.provider "virtualbox" do | vb |
+            vb.cpus=2
+            vb.memory=2048
+            vb.name="jenkinsmaster"
+        end
+    end
+    %w{slavenode1 slavenode2}.each_with_index do | nodename, index |
+        config.vm.define nodename do | sn |
+            sn.vm.box = "ubuntu/mantic64"
+            sn.vm.network "private_network", ip: "192.168.12.#{index+11}"
+            sn.vm.hostname=nodename
+            sn.vm.provider "virtualbox" do | vb |
+                vb.cpus=2
+                vb.memory=2048
+                vb.name=nodename
+            end
+        end
+    end
+end
+
+goto the Vagrantfile directory and run vagrant up to create and start the virtual machines.
+
+2. Install Jenkins Master on the jenkinsmaster node above
+ssh into the jenkinsmaster node using : 
+vagrant ssh jenkinsmaster
+
+2.1 add the jenkins repository to the ubuntu source.list file by using the below command.
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+        
+sudo apt update -y
+
+2.2 install openjdk17
+sudo apt install -y openjdk-17-jdk
+
+2.3 install maven
+sudo apt install -y maven
+
+2.4 install jenkins
+
+sudo apt install -y jenkins
+Jenkins will be installed and configured as an initd.service, so we can check for the status of the jenkins install using 
+sudo systemctl status jenkins
+
+3. upon finishing the installation of the jenkins master we can access the jenkins console page by using the web browser as below
+http://localhost:8081/ (because we are doing port forwarding) 
+this will open the jenkins console
+
+4. In the first run, it prompts for password only. The jenkins has generated an password during the time of installation and will place it in initialAdminPassword file we can see the password using below command
+
+sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+copy paste the above password into the jenkins console, it prompts for installing suggested plugins, clck on it will begin the installation and then finally ask for setting up username/password to access the jenkins.
+--------------------------------------------------------------------------------------------------------------------------------------
+How to setup and add slave nodes to the Jenkins Master?
+  
+To setup the slave nodes and make them ready for adding them to the Jenkins Master, we need to install java and maven on each slave. As we are going to build and deloy java applications using these slave nodes, it is recommended to install them on each node.
+  
+#1.  
+vagrant ssh slavenode1 and slavenode2
+
+1. sudo apt update -y
+2. sudo apt install -y openjdk-17-jdk
+3. sudo apt install -y maven
+
+
+#2. 
+when we ask jenkins master to run a job, the master uses jenkins agent/slave node and connects over it using ssh and runs the job locally on the slave node.
+  
+So to add a machine as a jenkins slave node to the master we need to do the following:
+1. have an ssh user with public key on each slave node, so that we can pass this information to the master with pub/private key allowing master to ssh to the slaves
+
+by default for all the vagrant machines the ssh user is "vagrant" already available and vagrant generates pub/priv key which can be used directly.
+There are 2 ways we can add an Jenkins Slave nodes to the Jenkins Master.
+  
+#1. Through SSH:  
+to allow master to ssh into the slaves on "vagrant" user let us generate an pub/priv key on the master and copy/add the pub key to each slavenode under ~/.ssh/authorized_keys
+
+1.1 goto master node and run the below command
+ssh-keygen 
+this generates an ssh pub/priv key under ~/.ssh/ directory
+
+1.2 now add the public key onto each slave node under authorized_keys file of vagrant user.
+cat ~/.ssh/id_rsa.pub
+copy the ssh key from the master and goto each slave and add the public key
+
+upon adding the ssh keys check whether master is able to ssh onto each slaves using the private_network ip address and ssh key we generated.
+  
+2. on each slave node create an jenkins working directory and make sure the ownership of the directory will be the ssh user.
+slavenode1 & slavenode2
+
+sudo mkdir -p /u01/jenkins
+sudo chown vagrant:vagrant -R /u01
+
+3. add ssh credentials into jenkins master through console. So that jenkins can use these SSH key to connect to the slave nodes.
+goto dashboard > manage jenkins > manage credentials
+click on system scope > click on global credentials
+click on Add credentials (from top right)
+  
+choose credential type as : ssh username with private key
+and enter all the details and create an sshkey id by pasting cat ~/.ssh/id_rsa (private key) as private key
+
+4. goto dashboard > manage jenkins > manage nodes & cluster
+Then click on add new node 
+nodename: slavenode1 
+label:
+description:
+remote directory: /u01/jenkins (the directory we created above)
+connection method: choose via ssh (this options allows master to connect to the slaves via ssh and install agent software on the slave)
+host: ip address slave machine
+and choose credentials as the one we created above
+and host key verification : as not verified
+save
+
+This will add the agent node to the master, repeat the process for each node to be added to the cluster
+
+#2. through agent software connecting to the jenkins master
+Instead of using ssh, which only works for linux based machines, we can use agent software to establish communication between master/slave
+
+To do this first we need to install jdk on each slave node
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+
+
+goto dashboard > manage jenkins > Security
+goto Agents and TCP Port for inbound agents
+choose Fixed choice and enter the port: 50000
+this will allow the agents to connect to the jenkins master over 50000 port
+
+goto dashboard > manage jenkins > manage nodes
+click on new node
+nodename:
+description:
+label:
+executors: 3
+remote directory: /u01/jenkins
+launch method: through controller
+click on save
+
+now click on the agent we created above, and see the instructions on running the agent software on the slave node.
+Now SSH into each slave node one after the another and run the commands to download and connect the agent to the master.
+download the agent.jar into the $HOME directory  
+curl -OS http://jenkinsmasterip:jenkinsmasterport/agent.jar
+java -jar agent.jar -jnlpUrl -secret secrethash -workDir=/u01/jenkins
+This will connect the agent to the jenkins master
+--------------------------------------------------------------------------------------------------------------------------------------
+How to work with jobs in jenkins?
+There are 2 types of jobs are there in Jenkins
+1. Free-style project
+2. Pipeline
+
+
+1. Free-style project
+The free-style project job is an old method of creating an jenkins job. The job instructions we wrote in free-style project will be stored on the jenkins master store itself. We can perform the build activities in building the project using
+  1. checkout code from scm (pre-build)
+  2. build steps
+  3. postbuild activities (post-build)
+and create the free-style job
+
+upon building/executing the job, jenkins creates an #build, goto the build number and see thelogs of progress/results of the job.
+  
+There are several problems with free-style job
+1. As the free-style job instructions are written within the jenkins console and are stored aspart of jenkins master (database) itself there are plenty of problems with this approach:
+  1.1 we cannot collaborate the ci/cd development of the project
+  1.2 we cannot version
+  1.3 we cannot move the jobs across the env
+  1.4 we cannot use the IDE of our choice in doing ci/cd development
+  
+2. debugging the failures of the job executions in free-style project is very difficult, we need to rely on the logs generated by the jenkins which are quite lengthy and kills huge amount of time in isolating the problem
+
+To overcome these problems with free-style project, jenkins has introduced pipeline jobs
+
+#2. Pipeline
+There are 2 types of pipeline projects are there
+1. declarative pipeline
+2. scripted pipeline
+
+
+#1. declarative pipeline
+declarative pipeline are written in DSL language (domain-specific language) which is quite expressive and easy to understand and doesnt require any programming language knowledge to work with. Most of the time we rely on shellscript or Windows script + plugins in performing the actions.
+    
+The build steps are broken down into stages and each stage will have steps to perform action/operation
+
+syntax:-
+  
+pipeline {
+  agent {
+    label 'slave1'
+  }
+  stages {
+    stage('stageName') {
+      steps {
+        // instructions to be executed
+      }
+    }
+    stage("stageName") {
+      steps {
+        // instructions to be executed
+      }
+    }
+  }
+}  
+
+#2. scripted pipeline
+The scripted pipelines are advanced jenkins pipelines and are introduced initially aspart of the jenkins. Here we need to write groovy scripting aspart of the pipeline code. Since we write groovy script in building the project, we can leverage groovy language capabilities in writing powerful build scripts.
+  
+but the jenkins developers has to have a very strong knowlege on groovy programming to write scripted pipelines.
+  
+syntax:-
+node('agentNode') {
+  stage('stageName') {
+    // instructions
+  }
+  stage('stageName') {
+    // instructions
+  }
+}  
+--------------------------------------------------------------------------------------------------------------------------------------
+Jenkins Persistence
+
+With default installation of jenkins it stores the
+1. jobs
+2. build executions
+3. build logs
+4. credentials
+5. users
+6. roles
+etc in Files and Folders
+
+Jenkins uses File-based persistency in storing all this information. The Directories are created inside the JENKINS_HOME following the structure of java object model. Some data like console out or job logs are stored in plain-text files, and the configuration values are stored in property files.
+Majority of the structured data such as project, jobs, build records etc are stored in xml format using XStream.  
+-------------------------------------------------------------------------------------------------------------------------------------- Jenkins credentials
+Within the jenkins jobs/builds we quite often need to use credentials to connect to remote machines (ssh) or a database server or external system to perform some activity or operation.
+  
+For eg.. to pull the code from an scm repository like git, we need to use username/password of the scm repository. If we hardcode these scm credentials aspart of the jenkins job itself, then we would endup with security breach. Because everyone who has access to the jenkins jobs or logs will be able to see the credentials of the repository there by people might mis-use.
+  
+To overcome this problem jenkins has introduced credentials
+We can create credentials within the jenkins system, so that we can refer them aspart of the jenkins jobs. While creating the credentials we have few things to understand
+1. scope = while creating the credentials we need to specify the scope of the credentials to be used. for eg.. we can create credentials at
+1.1 server & node = these credentials cannot be referred in jenkins jobs only used within jenkins system only.
+1.2 server, node and childs = these credentials can be used aspart of the jenkins jobs
+
+by default all the credentials are stored in jenkins "system" and domain "global". if we want to differentiate credentials of our application/projects from others we can create our own domain and create credentials within our own domain.
+  
+2. id = every credential is identified by using id
+3. credential type = while creating the credential we need to choose the type of credential
+
+To create a credential we need to navigate to dashboard > manage jenkins > manage credentials
+--------------------------------------------------------------------------------------------------------------------------------------Jenkins Plugins
+Plugins are means through which we can add or enhance the functionality of the Jenkins system. We can integrate jenkins controller (master) with various build tools, cloud providers and analysis tools etc through the help of these plugins. The plugins are pre-built programs that sits on Jenkins System and are invoked by the jenkins controller aspart of the jenkins job execution. These Programs works with Jenkins system and invokes the external tools in carrying the build activities or action.
+
+  
+Jenkins developers has written lot of jenkins plugins, these plugins are distributed by the jenkins through jenkins repository. When we install plugins into the Jenkins, it downloads these plugins by connecting to the jenkins repository. In addition to the Jenkins team, there are lot of third-party and opensource contributors written nuemorous plugins and published them aspart of the jenkins repository. These can be used aspart of jenkins build for integrating with external tools.
+  
+How to install the Jenkins plugin?
+There are 2 ways we can install jenkins plugins onto the Jenkins master
+1. through repository online
+2. offline installation
+
+#1. through repository online installation
+The jenkins system has provided a tool called "Plugin Manager tool" which takes care of discovering, downloading and installing the plugins from jenkins repository.
+  
+We need to navigate in jenkins dashboard to
+dashboard > manage jenkins > plugins
+here it shows all the
+1. available plugins
+2. installed plugins
+3. updates
+etc
+using this tool we can install new plugins or can update existing plugins
+
+#2. offline installation
+Incase if we are not having access to the internet, we can download all the plugins along with their dependencies and upload them to the jekins plugin installation manager manually.
+  
+1. goto dashboard > manage jenkins > plugins > advanced settings > deploy plugin
+2. alternatively if we have access to the jenkins server/master node, goto JENKINS_HOME/plugins directory. inside that folder we will see *.jpi files these plugins.
+We can install our own plugins by downloading manually the *.hpi extension copy them into JENKINS_HOME/plugins directory by renaming them into *.jpi and restart jenkins
+--------------------------------------------------------------------------------------------------------------------------------------
+Jenkins System Configuration
+Jenkins System Configuration is nothing but the settings of the Jenkins Master that can be tuned or modified to change the behaviour of the Jenkins.
+We can modify these settings by navigating to dashboard > manage jenkins > system. here we can locate bunch of jenkins system settings like
+
+1. Jenkins Home
+2. By default we can run the jenkins jobs on the Master as well. But it is not recommended to schedule and run the jobs on the master as it impacts the overall Jenkins cluster performance. We can disable scheduling jobs on Master by changing executors property here
+3. In another way we can attach labels to the master and configure to schedule jobs on master only when we explicitly referred the master through the Label
+
+4. Jenkins Location (URL)
+5. Global Properties = We can add additional environment variables so that these will be available aspart of the builds
+6. Pipeline Configurations
+7. SMPT and Email Server settings to integrate and send emails about the build status
+etc
+--------------------------------------------------------------------------------------------------------------------------------------
+Global Tool Configuration
+There are tools like maven, git, gradle, ant etc are being used aspart of the pipelines or jobs. Instead of we installing these tools manually on each slave of the jenkins cluster we can have them configured or installed automatically through global tool configuration. So that these tools can be used aspart of the jobs/build
+
+
+when we are configuring the global tools we have #2 options
+1. install the tool on the slave nodes manually and configure them within global tool configuration to be used for builds
+2. add/configure these tools to be installed automatically aspart of the slave nodes
+
+For eg.. we can choose to use maven build tool by configuring it aspart of global tool configuration as below:
+1. install maven pipeline integration plugin 
+goto dashboard > manage jenkins > plugins > available plugins
+search for maven pipeline integration plugin and install it
+
+2. goto global tool configuration 
+dashboard > manage jenkings > tools
+Then scroll to the maven tool and add maven installation:
+enter maven name: for eg.. 3.6.9
+select install automatically from Apache Site and choose the version and save it.
+  
+This tool configuration will automatically takes care of installing the maven of the specified version on the slave node while running the pipeline
+
+pipeline:
+node("slave1") {
+  stage("mvn version") {
+    withMaven(maven: '3.6.9') {
+      sh '''mvn -version'''
+    }
+  }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+How to integrate jenkins with git repository?
+There are 2 ways we can integrate jenkins with git
+1. we can always can clone the git repository using git pat token
+2. through git webhooks
+
+1. clone/pull the code from the git repository within the jenkins job
+Whenever we trigger an jenkins job manually, the jenkins job will clone/pull the code from the git repository manually by using the pat token and will build the project
+
+2. git webhooks
+whenever the developer commits/merge the code into git repository, git server will automatically triggers jenkins pipeline job in building and deploying the code through git webhooks
+
+Let us understand how to deploy a project onto the test server
+
+install_and_deploy.sh
+-----------------------
+#!/bin/bash
+
+if [ ! -f /u01/middleware/apache-tomcat-10.1.24 ]
+then
+    sudo apt update -y
+    sudo apt install -y openjdk-17-jdk
+
+    sudo mkdir -p /u01/middleware
+    sudo chown ubuntu:ubuntu -R /u01
+
+    wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.24/bin/apache-tomcat-10.1.24.tar.gz -P /u01/middleware
+    tar -xzvf /u01/middleware/apache-tomcat-10.1.24.tar.gz -C /u01/middleware
+    rm /u01/middleware/apache-tomcat-10.1.24.tar.gz 
+
+    sudo cp /tmp/tomcat.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable tomcat.service
+    sudo systemctl start tomcat
+fi
+sudo systemctl stop tomcat
+rm -rf /u01/middleware/apache-tomcat-10.1.24/webapps/hangout*
+cp /tmp/hangout.war /u01/middleware/apache-tomcat-10.1.24/webapps
+sudo systemctl start tomcat
+
+tomcat.service
+--------------
+[Unit]
+Description=Tomcat 10
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+Environment=CATALINA_HOME=/u01/middleware/apache-tomcat-10.1.24
+Environment=CATALINA_BASE=/u01/middleware/apache-tomcat-10.1.24
+
+ExecStart=/u01/middleware/apache-tomcat-10.1.24/bin/startup.sh
+ExecStop=/u01/middleware/apache-tomcat-10.1.24/bin/shutdown.sh
+
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
+
+jenkins job code
+----------------
+mvn clean verify
+scp -i ~/.ssh/hangoutkp.pem -o StrictHostKeyChecking=no tomcat.service ubuntu@$TARGET_HOST:/tmp
+scp -i ~/.ssh/hangoutkp.pem -o StrictHostKeyChecking=no install_and_deploy.sh ubuntu@$TARGET_HOST:/tmp
+scp -i ~/.ssh/hangoutkp.pem -o StrictHostKeyChecking=no target/hangout.war ubuntu@$TARGET_HOST:/tmp
+ssh -i ~/.ssh/hangoutkp.pem -o StrictHostKeyChecking=no ubuntu@$TARGET_HOST 'sudo chmod u+x /tmp/install_and_deploy.sh'
+ssh -i ~/.ssh/hangoutkp.pem -o StrictHostKeyChecking=no ubuntu@$TARGET_HOST '/tmp/install_and_deploy.sh'
+--------------------------------------------------------------------------------------------------------------------------------------
+Working with Variables in Jenkins Pipeline
+
+variables are the placeholders in which we can store the values, so that we can use these variables across the pipeline script in which we declared. We can declare variables in jenkins pipeline using environment {} block using KEY=VALUE
+
+pipeline {
+  agent any
+  environment {
+    KEY=VALUE
+  }
+}
+
+How to use the variable that is declared within the pipeline script?
+we need to use "${variableName}" or env.variableName
+
+pipeline {
+  agent any
+  environment {
+    APP_NAME='hangout'
+  }
+  stages {
+    stage('showvariable') {
+      steps {
+        echo "${APP_NAME}"
+      }
+    }
+  }
+}
+
+There are lot of global variables or pre-defined variables are available aspart of the jenkins build, these variables can be accessed using keyword env. 
+For eg.. we can get the information about the current build status using env variables
+like 
+1. env.BUILD_NUMBER
+2. env.BUILD_ID
+3. env.JOB_NAME
+please refer in pipeline syntax: under Global Variable Reference section = to see list of all available variables aspart of an build
+--------------------------------------------------------------------------------------------------------------------------------------
+Working with parameters in Jenkins Pipeline project
+----------------------------------------------------
+Parameterizing the jenkins pipeline is nothing but passing the input values as an input to the pipeline job while triggerring it. So that the pipeline job uses these parameters/inputs supplied in performing the build operation
+
+
+Jenkins helps us in creating a nice form page for our pipeline projects to collect the data from the user who is launching the job like
+1. textboxes
+2. checkboxes
+3. select/choice
+4. file chooser
+etc
+
+upon launching the pipeline job, the user will be prompted for values by displaying an form page, so that he/she has to provide the values inorder execute the pipeline
+
+There are 2 ways we can configure parameters in jenkins pipeline job
+1. static parameter definition
+2. dynamic parameter definition through jenkins pipeline code
+
+#1. static parameter definition
+Through jenkins ui/console we configure parameters to be used for that project. These parameters are defined along while creating the pipeline project itself and stored in jenkins system persistence store.
+  
+The drawback with this approach is, when we are moving from the job from one env to another jenkins env, we need re-define the parameters manually while creating the job on new env.
+  
+The other solution is to export the jenkins job in current env and import in new env. But we might still have the issues while importing the job in new env, because of jenkins version mismatch
+--------------------------------------------------------------------------------------------------------------------------------------
+How to write the pipeline code aspart of the git repository using which execute the jenkins pipeline?
+Instead of writing the pipeline code within the jenkins console and have it persisted aspart of the jenkins master, we can write the pipeline code aspart of the git repository, and can configure the jenkins job to checkout the pipeline code from the SCM repository using which execute the pipeline
+
+The advantage with this approach is the same pipeline code can be reused across any environments without any rework. along with that all the other advantages of using scm repositories follows.
+  
+When we are writing the pipeline code aspart of the repository, we need to write the code aspart of an standard file called "Jenkinsfile", so that jenkins can identify the file in which we have written pipeline code to execute after check-out the repo.
+--------------------------------------------------------------------------------------------------------------------------------------
+  
+How many ways we can declare parameters in jenkins pipeline?
+There are 2 types of parameters are there
+1. static parameters = the static parameters are defined aspart of the jenkins console and would be persisted aspart of the job definition itself in jenkins master/persistent store, so when we are moving the job across the envs, we need to redefine these parameters.
+
+define parameter while creating the pipeline job within the jenkins console, through add parameter option
+
+How to access the parameter defined within the pipeline script?
+pipeline {
+  agent any 
+  stages {
+    stage('print parameter') {
+      steps {
+        echo "${params.parameterName}"
+      }
+    }
+  }
+}  
+  
+2. dynamic parameters
+these pipeline parameters are also being defined aspart of jenkins pipeline code itself and would be created upon launching the job. so when we are moving accross the envs, there is zero rework involved in recreating the parameter definitions
+
+within the pipeline code itself we need to declare the parameters of input we want to collect during the time of launching the jenkins pipeline job aspart of parameters {} block within the pipeline script
+There are keywords using which we can declare parameterTypes
+1. string = textbox
+2. choice = choice or select
+3. password = to collect password
+4. text
+5. booleanParam = radio
+
+pipeline {
+  agent any
+  parameters {
+    string 'JDK_VERSION'
+    choice choices: ['DEV','TEST','STAGE','PROD'], name: "BUILD_ENVIRONMENT"
+    password name: 'DB_PASSWORD', defaultValue: 'Welcome@1', description: 'database password'
+    text name: 'DESCR'
+    booleanParam name: 'DEPLOY', defaultValue: true, description: 'do you want to deploy the code on the target environment'
+  }
+  stages {
+    stage('print parameters') {
+      steps {
+        echo "java version: ${params.JDK_VERSION}"
+        echo "Build Env: ${params.BUILD_ENVIRONMENT}"
+        echo "Db Password : ${params.DB_PASSWORD}"
+        echo "Description: ${params.DESCR}"
+        echo "Deploy: ${params.DEPLOY}"
+      }
+    }
+  }
+  post {
+    always {
+      echo 'Finished!'
+    }
+  }
+}
+
+create the above pipeline code aspart of git repository and configure the pipeline job to be as declarative pipeline from scm
+--------------------------------------------------------------------------------------------------------------------------------------
+How to declare and use the credentials that are defined aspart of the jenkins system aspart of the pipeline?
+It is recommended to declare credentials aspart of the jenkins system credentials with an Id, so that we can avoid using clear-text credentials aspart of the jenkins pipeline code and can refer these credentials within it and makes it secure.
+  
+1. define a Username and Password credential under jenkins credential with an id: dbCredentials
+now we can access them within the pipeline as below:
+
+pipeline {
+  stages {
+    stage('access credentials') {
+      agent 'slavenode1'
+      environment {
+        DB_CREDENTIALS = credentials('dbCredentials')
+      }            
+      steps {
+        sh 'echo "DB_USERNAME: ${DB_CREDENTIALS_USR} and Password: ${DB_CREDENTIALS_PSW}"'
+      }
+    }
+  }  
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+Input Step
+----------
+InputStep is a way through which we can prompt the user asking to provide input dynamically during the time of executing an pipeline
+
+pipeline {
+  agent any
+  stages {
+    stage('input step') {
+      input {
+        message 'do you want to continue'
+        ok "Yes"
+      }
+      steps {
+        sh 'echo input step executed'
+      }
+    }
+  }
+}
+
+Input Step, prompting the user to pass data as input:
+Instead of displaying an dialog window prompting the user to proceed : Yes or no, we can even ask the user to pass values dynamically during a stage execution using InputStep as below
+
+pipeline {
+  agent any
+  stages {
+    stage('build') {
+      steps {
+        echo "building...."
+      }      
+    }
+    stage('inputStep with prompt value') {
+      input {
+        message 'enter ip address'
+        ok 'Yes'
+        parameters {
+          string(name: 'ipaddress', defaultValue: '0.0.0.0', description: 'Enter ip address to deploy')
+        }        
+      }
+      steps {
+        echo "ip address: ${ipaddress}"
+      }
+    }
+    
+  }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+when condition
+Based on an condition evaluated to be true/false, we want to make the decision of executing an stage or not, this can be done using when{} block defined aspart of an stage
+
+pipeline {
+  agent any
+  stages {
+    stage('when condition') {
+      input {
+        message 'env to be deployed:'
+        ok 'ok'
+        parameters {
+          string(name: 'env', defaultValue: 'development', description: "buildEnv:")
+        }
+        steps {
+          "deploying into development environment"
+        }
+        when {
+          equals expected: 'development', actual: "${buildEnv}"
+        }
+      }
+    }
+  }
+}
+--------------------------------------------------------------------------------------------------------------------------------------
+pipeline options
+pipeline options are used for configuring the behaviour of the pipeline builds
+
+pipeline {
+  agent any
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '3'))
+    retry(3)
+    timeout(time: 1, units ' SECONDS')
+    disableConcurrentBuilds()
+  }
+  stages {
+    stage('print') {
+      steps {
+        echo "finished"
+      }
+    }
+  }
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

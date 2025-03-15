@@ -1,0 +1,50 @@
+What is Virtualization?
+Virtualization is an technic/mechanism through which we can run multiple parallel isolated environments on an physical machine.
+	
+Why do we need to run multiple parallel/isolated environments on an machine?
+1. We can utilize the hardware resources of the physical machine effectively by keeping multiple environments running on one machine.
+2. We can lower the I.T infrastructure cost in developing / delivering the software applications within an organization
+
+How does virtualization works?
+Virtualization works based on hypervisor technology. Hypervisor engine takes care of partitioning/distributing the physical system resources of an machine across multiple operating system environments on one machine. There are 2 types of hypervisor engines are there.
+1. Software Hypervisor
+2. Hardware Hypervisor
+
+1. Software Hypervisor
+Software Hypervisor is an software that should be installed ontop of the host operating system of the computer. Using the software hypervisor we create virtual machines defined with cpu, memory and storage resources for each machine. For each virtual machine we defined, the hypervisor software creates an virtual harddisk file on the harddisk of the host computer.
+	
+This virtual harddisk file acts as an harddisk for virtual machine, into which we need to install operating system, software tools/utilities and programming language software etc to use that machine.
+	
+There are multiple software hypervisor providers are available in the market
+1. oracle virtualbox
+2. vmware workstation/fusion/desktop/ESxi
+3. parallelx
+4. microsoft hyper-v
+5. UTM
+etc
+
+The oracle virtualbox is the opensource virtualization/hypervisor engine that is available and popular in the market.
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

@@ -1,0 +1,65 @@
+Firewall
+---------
+Firewall is used for enforcing traffic restrictions on a computer or a group of computers over the network. using the firewall we can restrict other users/computer of the network to gain access to the programs/softwares that are running on our computer.
+	
+ubuntu operating system has provided iptables as an firewall software, but working with ip tables is a bit complex. So the ubuntu has provided an utility software called "ufw", which acts as an interface to work with ubuntu iptables firewall
+	
+ufw stands for "uncomplicated firewall".
+	
+The iptables and ufw utility is pre-packaged and pre-installed aspart of the ubuntu operating system itself, but by default ufw is disabled. So no network traffic restrictions are applied on the applications that are running on our computer
+
+1. To enable the ufw firewall we need to use
+sudo ufw enable
+
+2. To see the status of the firewall
+sudo ufw status
+
+3. To see the traffic rules enforced by the firewall
+sudo ufw status verbosed
+
+4. when we define a rule in the firewall, per each rule a rule# will be assigned and the rules are applied/enforces based on the order of the rule#
+So to see the rule# of the rules we defined in the firewall we need to use
+sudo ufw status numbered
+
+5. how to allow/deny network traffic to the programs of a specific portno
+sudo ufw allow/deny portno
+
+6. allow or deny network traffic to range of portnos
+sudo ufw allow/deny port1:port2/protocol
+
+7. allow/deny traffic from a sourceip address
+sudo ufw allow/deny from sourceip
+
+8. allow/deny traffic from a protocol
+sudo ufw allow/deny protocol
+
+9. how to delete an rule
+we should delete the firewall rule based on rule#
+sudo ufw delete rule#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

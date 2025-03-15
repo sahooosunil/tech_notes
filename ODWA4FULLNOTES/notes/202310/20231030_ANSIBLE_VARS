@@ -1,0 +1,256 @@
+Ansible Variables
+-----------------
+What are variables, what is the purpose of them?
+Variables are the placeholders or reserved memory locations in which we can store values. Instead of hardcoding the literals in a program, we can refer the variables to use the values for performing operations. So each time if we want to change the values with which we want to run the program, instead of modifying the program, we can modify the values assigned to the variables, so that the program becomes maintainable.
+	
+When we are working with ansible, we write playbooks to perform operations. The modules we declared in the playbook takes the values as an input to perform operations. Instead of hardcoding the values inside the playbook, we can pass the values as an input through variables in carrying out the automation. So each time when we want to change the values, instead of modifying the playbook we can assign/pass different	values to these variables while running the playbook automation
+
+There are various different levels at which we can define variables in ansible
+1. ansible variable (built-in or predefined variables)
+2. inventory variables
+		1. global variables
+		2. host-level variables
+		3. group-level variables
+3. playbook variables
+4. var_files in playbook
+5. vars from command-line
+6. register variables
+7. ansible facts or ansible magic variables
+
+
+1. ansible built-in or predefined variables
+These are the variables that are defined by the ansible system with pre-attached meaning towards them. By changing the values of these variables we can modify the behaviour of the ansible system on how it executes the automation
+
+Ansible Control Node server has preconfigured with default values for most of the settings. if we want to modify the behaviour of the control node server we need to create an ansible configuration file under /etc/ansible/ansible.cfg in which we can define the predefined variables with values
+
+1. forks
+2. private_key_file
+3. remote_port
+4. inventory
+etc
+
+
+2. inventory variables
+-----------------------
+if we want to apply the settings/configurations only to specific hosts or group of hosts while applying the playbook automation we can define them aspart of the inventoryFile. These pre-defined variables can be defined at host-level or group-level also
+
+pre-defined variables:
+1. ansible_connection=local/ssh
+ssh = the ansible control node server uses ssh protocol by default to connect to the managed nodes inorder to apply the modules/playbooks
+
+local = incase if we are applying the playbooks on the control nodeserver itself (not recommended), usually during the time of development. then we can let the control node to execute the playbooks locally by specifying the connection as local
+
+2. ansible_ssh_port
+3. ansible_user
+4. ansible_host = alias_name
+5. ansible_private_key_file
+6. ansible_ssh_password
+7. become
+8. become_user
+9. become_method
+
+we can define these variables within an inventory file either at host-level or group-level as shown below
+hosts
+------
+192.168.10.11 ansible_host=javaserver1 ansible_port=22 ansible_private_key_file=~/.ssh/javakp.pem become=yes
+
+(or)
+	
+at grouplevel as below
+hosts
+-----
+[javaservers]
+192.168.10.11
+192.168.10.12
+	
+[javaservers:vars]	
+ansible_port=2222
+ansible_private_key_file=~/.ssh/javakp.pem
+become=yes
+
+we can declare all of these variables in inventoryFile of yml format as well.
+	
+hosts.yml
+---------
+all:
+  hosts:
+    192.168.10.11:
+      ansible_port: 2222
+			ansible_user: root
+			ansible_private_key_file: ~/.ssh/dbkp.pem
+	children:
+    javaservers:
+      hosts:
+        192.168.10.12:
+        192.168.10.13:
+      vars:
+        ansible_port: 22
+				ansible_user: vagrant
+				ansible_private_key_file: ~/.ssh/javakp.pem
+				
+				
+
+along with defining built-in or predefined variables we can declare user-defined variables also in inventoryFiles
+
+hosts.yml
+all:
+  hosts:
+    children:
+      dbservers:
+        hosts: 
+          192.168.10.11:
+          192.168.10.12:
+        vars:
+          mysql_login_user: root
+					mysql_login_password: welcome1
+					mysql_dbname: gstoredb
+					
+mysqlcreatedatabase-playbook.yml
+---
+- name: create database play
+  hosts: dbservers
+	tasks:
+		- name: create database
+			mysql_db:
+				name: "{{mysql_dbname}}"
+				state: present
+				login_user: "{{mysql_login_user}}"
+				login_password: "{{mysql_login_password}}"
+...
+--------------------------------------------------------------------------------------------------------------------------------------
+How to pass dynamic values as an input to the playbooks while running the them?
+We can create playbooks by referring variables inside them	and can supply the values for these variables dynamically while launching the playbooks. There are 3 ways we can pass dynamic values as input while running the playbooks
+
+1. vars_files
+2. extra-vars (through command-line)
+3. variable declarations inside the playbook
+
+1. extra-vars
+while running the playbook we can pass dynamic values as input to the variables defined inside the playbook using extra-vars from command-line as below
+
+newuser-playbook.yml
+--------------------
+---
+- name: new linux user play
+	hosts: all
+	tasks:
+		- name: create linux user
+			user:
+			  name: "{{linuxuser}}"
+				uid: "{{uid}}"	
+				state: present
+				create_home: "{{create_home}}"
+				shell: "{{shell_type}}"	
+			become: yes			
+...
+				
+now while running the playbook we can supply the values for these variables through command-line switch --extra-vars as below
+
+syntax:-
+ansible-playbook -i inventoryFile --extra-vars var1=val1 --extra-vars var2=val2 --extra-vars var3=val3 playbook.yml
+
+ansible-playbook -i hosts --extra-vars linuxuser=joe --extra-vars uid=1010 --extra-vars create_home=yes --extra-vars shell_type=/bin/bash newuser-playbook.yml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

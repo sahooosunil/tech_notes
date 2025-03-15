@@ -1,0 +1,3 @@
+shellprogram: memmonitor.sh
+servicename: memmonitor
+servicefile: memmonitor.service

@@ -1,0 +1,137 @@
+How to see all the processes that are currently running on the linux machine?
+The linux operating system has provided an bash utility called top
+top = table of processes, that displays information about all the processes that are currently running on the operating system for a user along with their cpu & memory utilization
+
+1. PID
+2. USER
+3. PR
+4. NI
+5. VIRT
+6. RES
+7. SHR
+8. S
+9. %CPU
+10. %MEM
+11. TIME
+12. COMMAND
+
+what the possible statuses in which a linux process could exist?
+There are 6 possible statuses in which a linux process can exist
+1. D (Daemon) = background process that doesnt require user interaction during the execution are called "daemon". most of the system processes are daemon only
+2. S (Sleeping) = the process is kept under waiting state and has not assigned the cpu yet
+3. R (Running)  = cpu is allocated and the process is under execution
+4. T (Traced/Terminated) = process has completed execution
+5. I (Idle) = cpu is allocated, but waiting for i/o operation to be completed
+6. Z (Zombie) = a child process upon completion of execution would be marked as 'Z', to let the parent process gather the information from the child
+--------------------------------------------------------------------------------------------------------------------------------------
+What is the priority of a process?
+In an multi-user and multi-programming operating system, at anypoint of time multiple processes will be running on the operating system either in parallel or simultaneously. The operating systems to allocate the physical system resource like cpu to these processes in executing them simultaneously it uses cpu scheduling algorithms. There are several cpu scheduling algorithms are there
+
+1. Round-robin
+2. Time sharing
+3. shorted job first
+4. priority based scheduling
+5. largest job first
+etc
+
+The linux operating system uses hybrid model which is time sharing/round robin + priority based scheduling in allocating the cpu to the process.
+By default (RoundRobin/Timesharing) linux operating system allocates cpu for each process, for certain amount of time and switches to the another one. This goes util it reaches to the last process in the queue for execution and turns back to the first-one again allocating the cpu. 
+In addition to the above we can tell to the linux operating system to allocate more cpu to one of the process by increasing/changing the priority of a process. If the priority number of a process is less means it has more priority.
+	
+In linux operating system there are 2 types of process are there
+1. System process = System processes are the mandatory processes that are launched by the operating system during the bootup and runs under the system process space and would be terminated along with the operating system.
+	
+2. User process = These are the processes launched by the user of the linux operating system and executed under user space and can be managed by the user/owner of the process
+
+The priority of a process in linux operating system can be ranging from 0 - 139, within which the system process are launched under 0 - 99 and cannot be changed by the user. The user process are launched with priority between 100 - 139 only and can be modified by the user.
+
+by default when a user launched a process in linux operating system, it will be assigned with a default priority as "120". The linux operating system doesnt allow the user to change the priority of a process directly, because there is a change that user might allocate priority of a process overriding the system process space that might impact the operating system performance/behaviour
+
+So to allow us to modify the priority of a process in a controlled way the linux operating system has introduced NI (nice value). The priority of a process is computed based on the NI value.
+	
+PR = 20 + NI
+The valid range of a nice value exists between -20 to 19.  
+PR = 20 - 20 = 100 + 0 = 100
+PR = 20 + 19 = 100 + 39 = 139	
+The highest the NI value, the lowest is the process priority.
+	
+So, if we chang the NI value of a process, the linux operating system computes the PR for that process based on the nice value and assigns to the process.
+	
+How to change the priority of a process?
+Linux has provided an command called renice
+
+renice -n nicevalue pid = to change the priority of a process
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

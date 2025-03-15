@@ -1,0 +1,300 @@
+1. How to see the files and folders under the current directory?
+ls
+
+2. How to see the files and folders in specified directory?
+ls directoryName
+
+3. How to see the files and folders of the given directory along with their sub-directories as well?
+ls -R directoryName
+
+4. How to see the files and folders without color coding?
+ls --color=none
+
+5. How to create a directory along with the parent directories given in the path?
+mkdir -p directory1/directory2/
+	
+6. How to know in which shell we are in?
+echo $0
+
+7. how to switch between the shells in the terminal?
+shellname in the terminal to switch into a shell
+sh
+bash
+etc
+-----------------------------------------------------------------------------------------------------------------------------------
+1. How to identify the type of a file?
+usually a filename will be written with .extension and the extension is 3 characters in length indicating the type of the file to the operating system.
+.txt
+.jpg
+.bmp
+.mp4
+.mp3
+.mkv
+.exe
+etc
+by looking at the file extension operating system can understand what type of file it is and associate a program to open/use the file. For eg.. if we click on .pdf files, operating system opens the pdf files in PdfViewer software like acrobat reader etc.
+similar if we click on .doc or .docx files, then operating system opens the file in ms word software.
+	
+In case of windows operating system, it relies on file extensions to identify the type of the file to perform operation on it, but whereas in case of linux operating system, it doesnt depends on file extension or doesnt uses file extensions to identify the type of the file.
+The Linux operating system identifies the file type based on its contents only not based on the extension.
+	
+if we want to know the filetype for any given file linux has provided an shell command called file filename
+
+file filename
+shows the type of the file based on the contents of the file
+
+2. How to see the details of a file?
+The details of the file refers to 
+1. author
+2. last modified date
+3. permissions
+4. memory address location on the harddisk 
+
+stat filename
+
+3. How to remove an existing file?
+$HOME/
+|-garbage.txt
+rm garbage.txt
+
+rm filename
+rm stands for remove and is used for removing/deleting an existing file from the filesystem of the computer
+
+4. How to remove multiple files?
+$HOME
+|-file1.txt
+|-file2.txt
+|-file3.txt
+
+the linux shell commands takes multiple arguments separate by space and can work/act upon all the arguments at one shot. we can remove the 3 files under the $HOME directory by passing 3 filenames as an input to rm
+
+rm file1.txt file2.txt file3.txt
+mkdir dir1 dir2 dir3
+touch x y z
+
+5. How to remove a file forcibily?
+There are few files that are considered by the linux operating system as special files and when we try to remove them, it prompts for confirmation asking for deletion (y/n): by typing "y", linux will remove the file
+but if we dont want to ask for confirmation while deleting the file we can use -f switch asking linux to forcibily delete the file
+rm -f filename
+
+6. How to delete a filder/directory?
+There are 2 ways we can delete a folder or directory
+#1
+rmdir directoryName
+rmdir removes/deletes the directory given the directory is empty. if the directory is not empty, we should delete all the files/folders inside it before using rmdir
+
+for eg..
+$HOME
+|-tour
+  |-day1
+	  |-placesToVisit.txt
+		|-tickets.txt
+	|-day2
+		|-guide.txt
+we want to delete day2
+goto tour/day2 using cd $HOME/tour/day2
+rm tickets.txt
+cd ..
+rmdir day2
+
+it is safe to always delete the children first and then delete the parent, because we know what files/folders are deleted while deleting the directory
+
+but it looks like length process when we have lot of sub-directories and files inside a directory instead we can use approach#2
+
+#2. 
+rm -r directoryName
+here -r stands for remove recursively all the files/folders within the given directory along with the directory
+
+7. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

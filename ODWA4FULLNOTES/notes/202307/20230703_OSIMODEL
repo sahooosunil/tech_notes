@@ -1,0 +1,61 @@
+OSI Model Protocol
+OSI Stands for "open system inter-connection standard" is an protocol that enables any 2 computers/network applications to communicate with each other over the network, irrespective of the hardware platform or the operating system on which those are on. There are 7 Layers aspart of it
+
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+4. Transport Layer
+The Transport layer does 3 responsibilities
+1. Segmentation
+2. Flow control
+3. Error control
+
+1. Segmentation
+The transport layer takes the data from Session Layer and breaks the data into smaller packets, so that 
+1.1 we can avoid network congession in transferring large volumes of data
+1.2 can quickly retransmit the lost data over the network
+
+once the data has been broken down into smaller data packets, in each data packet, the portno of the receiving application that has to receive this data packet, along with sequenceno will be added, so that it helps in reordering the data at the receiver end to build the original message back are included.
+	
+segment = [data + portno + sequenceno]
+
+2. Flow Control
+Flow control takes the job of letting the sender application reduce the speed at which the data is being transmitted, so that the receiver application which is running on low-speed network can receive the data without any loss.
+	
+3. Error Control
+While transferring the data  segment over the network, there is a chance of lose of bits within the data that would result in transmitting corrupted data over the network. So that the receiver might have received the corrupted data.
+	
+The Transport layer does the job of error control, in detecting such loss/corrupted data segments over the network and enable them to retransmit 
+it uses different technics in detecting the corrupted data segments. for eg.. one such mechanism is checksum.
+	
+For each data segment that is being transmitted, the transport layer computes checksum value basedon the payload of the segment and attaches to the data segment and transmits over the network.
+At the receiver end, it recomputes the checksum value on the recieved data segment and compares with the original checksum to detect the corrupted segment
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

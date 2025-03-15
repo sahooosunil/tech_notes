@@ -1,0 +1,124 @@
+Network devices
+----------------
+Network devices are used for inter-connecting the computers on a network, there are 7 types of network devices are there
+1. Repeater
+2. Hub
+3. Switch
+4. Bridge
+5. Router
+6. Modem
+7. Firewall
+
+1. Repeater
+Repeaters are used for amplyfing or regenerating the signals and forward to the another computer on the network.
+	
+2. Hub
+Hub is an network device used for interconnecting computers in a Star topology network. Hub operates at the Physical Layer of the OSI Model protocol. Upon receiving the data on one port, the hub copies the data on to the other ports, thus forwarding/distributing the data to all the devices connected to it
+
+There are 2 types of hub devices are there
+1. Passive Hub = does requires power supply and it just copies the data to all the ports
+2. Active Hub = requires power supply, upon receiving the data on one-of the port, it amplyfies/regenerates the signals and forwards the data to all the ports/computers which are connected to it
+
+advantages:
+	1. easy to setup
+	2. cost of setting up the network is very less
+	3. quick to troubleshoot
+dis-advantages:-
+	1. less secured since it forwards the data to all the computers connected to it
+	2. network congession and bandwidth consumption in transferring the data is very high
+	3. poor performance
+	
+3. Switch
+Switch is an intelligent hub, that works at datalink layer of the OSI Model protocol. Switch internally maintains an datastructure called "mac address table", during the bootup it goes to every computer that is plugged-in/connected to the port of the switch and picks the mac address of the network interface card of those computers and stores them in the mac address table with
+	portno  mac address, listing which computer is connected to which port of the switch.
+		
+so that upon receiving the data, since switch works at datalink layer, it takes the destination computer mac address from the dataframe	and identifies in the mac address table, that computer is connected to which port, and forwards thedata to the specific port on which the computer is connected. So that the network congession and bandwidth consumption in transferring the data is very less and results in high performance network
+
+4. Bridge
+Bridge is another network device that is used for inter-connecting 2 different networks. Bridge also operates at physical layer of the OSI Model Protocol. The bridge device has only 2 ports into which 2 networks are plugged in. when the data has been received on one port, the bridge copies the data to the another port thus forwarding the data to another network
+
+The Bridge device is used in conjunction with Hub device in interconnecting 2 different Hub networks.
+	
+5. Router
+Router is an intelligent device than Bridge. Router is also used for inter-connecting various different networks together. Router operates at Network layer of the OSI Model protocol. Whenever the data packet arrives to the Router, it computes the network address from the ip packet it has received and forwards the data packet only to that corresponding network to which it belongs to
+
+A router maintains the routing table, in which the administrator configures the traffic patterns in controlling the flow of data between the networks.
+
+advantages:-
+	1. connected multiple networks together unlike bridge
+	2. no unnecessary bandwidth consumption and network congession thus resulting in high performance network
+	3. very secured, because the data packet will be delivered to the corresponding destination network only
+	4. control over transferring the data across the networks through route table
+dis-advantages:-
+	1. very costly
+	
+	
+	
+	
+Hub & Bridge = Gen#1 network devices, those are replaced by Switch & Routers respectively
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

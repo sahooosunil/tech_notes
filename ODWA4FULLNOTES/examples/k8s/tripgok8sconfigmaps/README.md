@@ -1,0 +1,1 @@
+# tripgok8sconfigmaps

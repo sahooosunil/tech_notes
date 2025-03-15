@@ -1,0 +1,112 @@
+7. ADD 
+ADD is an directive that works similar to COPY directive, but with subtle differences
+
+COPY:
+COPY is used for copying the files/directories from the docker build context into the docker image at the time of building the image.
+	
+ADD:
+ADD directive serves 2 purposes
+1. ADD can also be used for copying the files/directories from build context onto the image
+2. additional it can be used for downloading files from an remoteURL specified and add to the image
+
+So it will be useful for downloading any files like binary distributions software and add them onto the image at the time of building the image.
+	
+Let us try to run a java program using openjdk-17-jdk binary distribution inside the container
+~/adddirective:/>
+|-luckynumber
+  |-src
+	  |-main
+		  |-java
+				|-com
+					|-ln
+						|-main
+							|-LuckyNumberApplication.java
+			|-resources
+	|-target
+		|-luckynumber-1.0.jar
+	|-pom.xml
+	|-Dockerfile
+
+package com.ln.main;
+public class LuckyNumberApplication {
+	public static void main(String[] args) {
+		SecureRandom random = new SecuredRandom();
+		int n = random.nextInt(9);
+		System.out.println(n);
+	}
+}
+
+Dockerfile
+----------
+FROM ubuntu:24.04
+ENV JAVA_HOME=/u01/middleware/jdk-17.0.2
+ENV PATH=$PATH:$JAVA_HOME/bin
+ENV CLASSPATH=/u01/apps/luckynumber-1.0.jar
+
+RUN mkdir -p /u01/middleware/
+RUN mkdir -p /u01/apps
+ADD https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz /u01/middleware/
+RUN tar -xzvf /u01/middleware/openjdk-17.0.2_linux-aarch64_bin.tar.gz -C /u01/middleware/
+RUN rm /u01/middleware/openjdk-17.0.2_linux-aarch64_bin.tar.gz
+COPY target/luckynumber-1.0.jar /u01/apps/
+	
+CMD ["java", "com.ln.main.LuckyNumberApplication"]
+
+--------------------------------------------------------------------------------------------------------------------------------
+8. WORKDIR
+The COPY, ADD, CMD, ENTRYPOINT, RUN etc all of these directives works based on relative to the WORKDIR location. If we dont specify the WORKDIR location in the Dockerfile, the default WORKDIR location is "/". So all the directives by default works from "/" directory only.
+
+So rather than passing the directives with full or obsolute path while executing the commands, we can make use of WORKDIR directive.	
+
+FROM ubuntu:24.04
+ENV JAVA_HOME=/u01/middleware/jdk-17.0.2
+ENV PATH=$PATH:$JAVA_HOME/bin
+ENV CLASSPATH=/u01/apps/luckygen-1.0.jar
+
+RUN mkdir -p /u01/middleware/
+RUN mkdir -p /u01/apps/
+WORKDIR /u01/middleware/
+
+ADD https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-aarch64_bin.tar.gz .
+RUN tar -xzvf openjdk-17.0.2_linux-aarch64_bin.tar.gz 
+RUN rm -rf openjdk-17.0.2_linux-aarch64_bin.tar.gz
+
+WORKDIR /u01/apps/
+COPY target/luckygen-1.0.jar .
+	
+CMD["java", "com.ln.main.LuckyNumberApplication"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+DevOps is a change in culture and the adoption of latest tools and technologies in fast-paced application development and delivery of the software application
+
+Why do we need to develop and deliver the applications quickly?
+1. we want to lower the IT infrastructure and development cost
+2. ahead of the competitors in the market
+3. to increase the ROI for the customers for longitivity of the business
+
+How does devops helps us in achieving fast-paced development/delivery?
+To understand this let us explore what are the stages of development and delivery of an application, what are the practices people are following in building and delivering the applications in the current model
+
+What are the stages in developing and delivering an software application?
+There are 3 stages in which an application will developed and delivered to the customer/production
+1. development
+developers develops the application in development environment, upon developing the application, they push the code into sourcecode management repository, so that the whole code can be delivered to the qa for testing.
+Before delivering the code to the qa engineers for testing, the developer by himself has to verify the code he has written is working properly or not without any errors, this process of verifying the code by the developer himself is called "unit testing". upon completion of the unit testing he has to push the code to sourcecode repository
+
+2. qa
+quality assurance engineers will verify the delivered code by the developers in qa environment. during the process of testing the code, if there any errors or not working as expected, those are reported to the developers as bugs.
+Now the developer has to modify the code and fix the bugs reported by the qa and push the code changes again to sourcecode repository.
+Again the code will be deployed/delivered into qa environment, and the qa engineers has to reverify the code
+This whole process will continue to exists until the qa engineers find zero bugs in the application, this process is called "qa cycle"
+
+3. delivery
+once the qa has ceritifed the code now the operational engineers has to deliver the code into production environment so that customers can use the application
+
+The whole process is called stages of delivery of the application
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

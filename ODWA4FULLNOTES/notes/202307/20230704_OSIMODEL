@@ -1,0 +1,135 @@
+OSI Model Layer protocol
+-------------------------
+OSI Stands for open system inter-connection standard, it is an protocol that enables the computers/applications to communicate with each other over the network irrespective of hardware platform or operating system on which those are running on. It has 7 layers
+
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+1. Application Layer
+Application Layer comprises of various different application protocols that should be used by software applications to exchange the data over the network in an understandable format. The Application protocols defines message structure and semantics that should be followed by the software applications inorder to communicate with each other
+
+2. Presentation Layer
+The Presentation Layer presents the data to the lower layers of the OSI Model in transmittable format. It does 3 major responsibilities
+1. Data Conversion
+2. Data Compression/Decompression
+3. Data Encryption/Decryption
+
+3. Session Layer
+End to End application communication will be takencare by the Session Layer. There are 2 responsibilities performed by the Session Layer
+1. Authentication & Authorization = It keeps track of the authentication & authorization information of the client applications/users allowing them to access the application
+2. Session Management 
+	2.1 keeps track of the data packets that are transmitted between the sender and receiver application
+	2.2 reorder the data packets at the receiver end based on the sequenceno
+	
+4. Transport Layer
+There are 3 responsibilities 
+
+1. Segmentation = breaking the data into smaller data packets and for each data packet attach portno of the receiver application along with sequence no that helps in reconstructing the message at receiver end 
+data Packet + portno + sequenceno = segment
+
+The data is broken down into segments for 2 reasons
+1. To avoid network congension in transmiting large volumes of data
+2. to retransmit quickly the lost data packets
+
+2. Flow control
+instructing the sender application to slow down in transmitting the data, incase if the receiver application is running on slow-speed network, so that the loss of data due over the network transmission can be avoided.
+
+3. Error control
+during the transmission of the data packets over the network, they might be corrupted during the transmission due to various different reasons. 
+Error control is a mechanism through which the transport layer identifies such data packets that got corrupted at the receiver end, so that those can be put for retransmission
+
+5. Network Layer
+Network layer is responsible for transferring the data from one network computer to another computer of a different network. The network layer performs 3 responsibilities
+1. Logical Addressing
+2. Routing
+3. Path Determination
+
+1. Logical Addressing
+The Network layer takes the data segment from transport layer and attaches the source/destination computer ip addresses indicating the sender & receiver computers which is called "logical addressing"
+	
+2. Routing
+The network layer identifies the destination network to which the data packet should be routed based on the destination computers ip address
+1. it takes the ip address of the destination computer within the data packet
+2. computes the network address and host address from it
+3. based on the network address it determines the data packet should be moved to which network and routes it to the appropriate network.
+This process of identifying the right network to which the destination computer belongs to and routing it is called "Routing"
+	
+	
+3. Path Determination
+There are multiple paths in which a data packet can be routed from source computer to destination computer across the networks, Then network layer identifies the ways in which the data packet can be send from source to the destination computer and computers the shortest path based on traffic and distance so that the packet can be delivered to destination computer.
+	
+This process of identifying the path through which the data is being moved across the networks is called "Path Determination".
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

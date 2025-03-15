@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foodiesdeployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      appName: foodies
+      env: test
+  template:
+    metadata:
+      labels:
+        appName: foodies
+        env: test
+        version: "1.0"
+    spec:
+      containers:
+        - name: foodies
+          image: techsriman/foodies:2.0
+          ports:
+            - name: tomcatport
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /foodies/actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            timeoutSeconds: 15
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /foodies/actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
+            failureThreshold: 3

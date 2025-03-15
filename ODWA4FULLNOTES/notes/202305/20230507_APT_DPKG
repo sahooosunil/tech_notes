@@ -1,0 +1,177 @@
+How to install the software packages aspart of the ubuntu operating system?
+The ubuntu operating system has provided #2 tools
+1. apt  = advanced packaging tool is an package manager through which we can browse, search, download and install the packaged software from the repositories
+
+2. dpkg = debain package manager is an installer through which we can install the .deb file that is download onto the operating system
+
+
+How does the apt tool knows the information/address location of an software repository?
+The location/address of the software repositories are stored in ubuntu operating system under the filesystem location of /etc/apt/sources.list file or under /etc/apt/system.d/ directory
+
+what is the format in which the software repositories are added in the /etc/apt/sources.list
+deb [arch=cpuArch] repositoryURL version category
+
+How to add an software repository into the ubuntu operating system?
+There are 2 ways are there
+1. we can manually edit the /etc/apt/sources.list file using the text editor like nano or vim and need to add an new entry into the file in the specific format
+
+2. instead of adding the new repository entry manually into the file, which could lead to syntax errors, we can use apt-add-repository tool for adding the new repository
+
+sudo apt-add-repository reposityURL
+
+How to ensure the communication between the linux machine through apt tool to the software repositories are secured?
+To ensure secured communication between the client machine using apt tool and the ubuntu software repositories, the gpg keys (gnu privacy guard)	are introduced. these are public/private encryption keys through which all the communication that takes place between the repository server and the client machine are encrypted/decrypted for security
+
+The gpg key is distributed by the repository vendor, we should install the key on to the local machine before communicating with the remote repository
+
+1. then create a keyrings directory
+sudo install -m 0755 -d /etc/apt/keyrings
+
+2. downloading the gpg key and write to a file
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	
+3. grant read permission for all the users of the linux machine
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+
+4. now add the repository into the source.list file by referring the above download key
+deb [arch="amd64" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy Main
+
+
+after adding the repository URL to the sources.list or sources.list.d/ directory we need to update the local cache of the repository with latest entries by running
+sudo apt update -y
+-----------------------------------------------------------------------------------------------------------------------------------
+There are lot of commands provided aspart of apt tool for browsing, searching and installing the software packages onto the ubuntu operating system machine
+
+1. sudo apt update -y = updates the local repository cache with the new entries from the remote repositories
+2. sudo apt install packageName = to install a software package onto the machine, it ask for confirmation before installing. if you want an non-interactive installing use -y option
+3. sudo apt upgrade = it checks for the new versions of the installed software packages are available, if available then upgrades all of them to the latest
+4. sudo apt search packageName = we can search for an specific software package using apt search
+5. sudo apt list --upgradable = show the list of software packages for which the latest verions are available to be upgraded on the machine
+6. sudo apt upgrade packageName = will upgrade a specified package to the latest if available
+7. sudo apt remove packageName = will uninstall the software package that has been installed on the machine. but may not cleanup the configuration files and the download software package file
+8. sudo apt purge packageName = will uninstall the software package along with the configuration files that has been created during the install including the .deb file that has been downloaded and cached locally
+9. sudo apt autoremove = removes the unused software packages or libraries from the machine
+-----------------------------------------------------------------------------------------------------------------------------------
+In older version of ubuntu there are 2 package manager tools are there and there is no apt tool available
+	1. apt-cache = refreshing the software package repository
+	2. apt-get = installing, upgrading the software packages on the machine
+
+the people using the ubuntu operating system find it complex in using these 2 tools and they should know when to use which tool. so in the latest version of the ubuntu operating system, these 2 tools are merged into one with all the common features of them as apt tool
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

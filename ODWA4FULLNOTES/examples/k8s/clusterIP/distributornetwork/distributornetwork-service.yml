@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: distributor-network-service
+spec:
+  type: ClusterIP
+  selector:
+    appName: distributor-network
+    version: "1.0"
+  ports:
+    - port: 8080
+      targetPort: 8080

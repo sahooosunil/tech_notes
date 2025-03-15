@@ -1,0 +1,153 @@
+grep
+if we want to search within the file for text matching then we need to grep. by default grep will output all the matching lines within the text file, but there are other plenty of options are available
+1. grep "text" filename
+2. grep -R directory "text" = recursively
+3. grep -n "text" filename = print line number
+4. grep -w "text" filename = wholeword match
+5. grep -o "text" filename = output only matching words
+6. grep -i "text" filename = ignoreCase
+7. grep -c "text" filename = count of matching text
+8. grep -digit "text" filename = print before after specified number of lines around the matching line
+9. grep -Adigit "text" filename
+10. grep -Bdigit "text" filename
+11. grep -v "text" filename = inverted match
+-----------------------------------------------------------------------------------------------------------------------------------
+working with text editors
+Text editors are helpful or used for creating new files or viewing the contents of existing files or modifying or deleting the contents of an file.
+There are 2 types of text editors are available in linux operating system
+1. gui 
+The default text editor that is shipped as part of ubuntu distribution is "gedit" in addition we can install several other third-party editors as well like
+1.1 brackets
+1.2 atom
+etc
+
+2. non-gui
+most of the time we run linux in head-less mode (non-gui), so the gui text editors are of no use, so linux operating system has provided non-gui text editors helping us in editing, creating or viewing the contents of the files in CLI (CUI) mode. There are several non-gui text editors are available out of which the 2 most popular editors almost available in any distribution is
+1. vi
+2. nano
+
+1. vi
+The most popular and available editor by default in majority of the linux distros is vi. vi stands for visual editor and more improved version of the vi is vim, it has more options than vi
+
+vi is an classic editor which is not friendly to use, so a improved version on top of vi is build called "vim" vi improved has more options to make it user friendly.
+	
+majority of the linux distros directly ships vim editor in their latest versions, but if we dont find vim editor on the operating system we can install the vim editor by using the below commands
+
+1. switch as an root user
+su -
+prompt for password: 
+
+2. run the below commands to install
+apt update -y
+apt install -y vim
+-----------------------------------------------------------------------------------------------------------------------------------
+How to work with vim editor?
+There are 3 modes are there in vim editor
+1. command mode
+2. input mode
+3. exit mode
+
+1. command mode
+In command-mode every keypress on the keyboard is taken as an command and performs relevant operation on the contents of the file. by default when we open the vim editor, it opens in command mode. at any point of time if we want to return back to the command mode we need to press esc key on the keyboard
+
+2. input mode
+In the input mode we can write the data onto the file by typing the keys on the keyboard. Inorder to enter intothe input mode we need to press "i" key on the keyboard
+in vim this mode is called "insert" mode
+In case of vi we need to mandatorily type "i" letter on the keyboard to enter into input mode, where as in vim editor if we press any key other than command key on the keyboard, the editor automatically goes to insert mode
+
+In case of vi we cannot move the cursor to the left, right, top or bottom using arrow keys when we are in input mode, the arrow keys also taken as input and inserts the data into the file. So we need to mandatorily goback to command mode to move the cursor between the characters or lines
+instead if we use vim editor, we can navigate through the lines of the file even in insert mode also using arrow keys. After entering the data into the file if we want to go back to the command mode we need to press esc key on the keyboard
+
+3. exit mode
+after entering the data into the file either we can save the contents or discard contents of the file and exit by entering into exit mode. To enter into exit mode we need to goback to command mode by pressing esc key, then type ":" on the keyboard so that the editor enters into exit mode
+
+once we are in exit mode we have few options to save or quit from the editor
+w = write/save
+q = quit
+wq = write and quite
+
+once we open the file modify it, we cannot quite from the editor until we write the changes and quit, but incase if we want to quit from the editor without saving the contents then we need to enter
+:q! = means quit without saving the contents
+
+
+To open an existing file with the vim editor we need to type vim filename, if the file already exists on the disk it opens the contents of it otherwise it creates a blank file allowing us to write the contents into it.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

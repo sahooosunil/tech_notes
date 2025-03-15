@@ -1,0 +1,167 @@
+How many ways we can add a user into linux operating system?
+There are 2 ways are there in which we can add users to the linux system
+1. useradd
+2. adduser
+
+#1. useradd
+useradd is the linux core system command provided aspart of the /sbin directory and is available in almost all the distros of the linux. when we tried adding/creating an new user into the linux operating system using useradd command, the below things will takes place
+1.1 it creates an new group with groupName sameas the username by generating an gid for the group
+1.2 it creates an new user with the given username associating the user with group it has created above, while creating the user it generate the uid for the user automatically
+1.3 it doesnt prompts for the password while adding the user, so that user will be created with no password
+1.4 the default home directory for the user will not be created
+
+so we cannot login directly using the user we have created above, because he dont has an password and home directory to create new files or modify if any.
+	
+The only way we we can login into the above user is by using su username. This can be done by only an root user or a sudoer.
+	
+What is the purpose of adding such an user without password/home directory and even the user cannot login directly into the machine?
+Usually while working in production environments, to have the applications running with high security/access control restrictions, it is advised/recommended to run each program in a separate user other than the root/sudoer so that the program gets executed isolated from rest of the programs and the system resources and hence making it more secured
+
+since here we are creating an user only for running a program in isolated manner, such user doesnt need to be granted direct access to the machine, rather root/sudoer would switch to this user in running, monitoring and managing the program.
+	
+even after switching to the new user, there is an limited usage, since he doesnt have his own home directory, so he cannot create/modify the files/folders
+
+if we wish to have the user created with home and password aswell we need to do few more things after adding the above user manually, to make him access the machine directly
+1. be as a root user only
+2. goto the /home directory
+3. create an new directory under the /home directory with name as username of the user we created above for eg.. if the new user we have created is "bob" then create an new directory under /home directory as mkdir /home/bob
+4. now change the group and the owner of the newly created directory to bob user and bob group by running the below command
+chown bob:bob /home/bob
+5. reset the password for the user bob by running the below command
+passwd bob = it prompts for the new password to added for the bob user
+
+upon doing all the steps manually the bob user will be able to access the linux machine directly.
+	
+	
+Instead of we performing the above steps in creating and making the user accessing the machine manually, there are switches provided aspart of the useradd command that can be used for creating the user with home directory and password as well.
+useradd
+-m = indicates create home directory for the user (this creates the default home directory for the user under /home)
+-d location = if we dont specify the location, default home directory location will be /home/$USER only, but incase if we wish to change the home directory location then we can use -d switch
+-p password = creates the user directly with the supplied password (by default useradd command expects the password to supplied as encryptedpassword during creation)
+-s shell = the default shell with which the user will be created is "sh" if we want to change the default shell of the user we need to use -s /bin/bash (bourne again shell)	
+	
+From the above we can understand to add an user into linux directly we need to perform below steps
+useradd -m -s /bin/bash bob
+passwd bob = to set the password for user
+
+From the above we can understand, creating a new user into the linux operating system using useradd is a little tedious process and should perform quite a number things manually. To overcome the above problem the ubuntu distro has provided an utility called adduser
+
+1. switch to the root user 
+2. run adduser command
+# adduser james
+Adding user `james' ...
+Adding new group `james' (1005) ...
+Adding new user `james' (1005) with group `james' ...
+Creating home directory `/home/james' ...
+Copying files from `/etc/skel' ...
+New password: 
+BAD PASSWORD: The password fails the dictionary check - it is based on a dictionary word
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for james
+Enter the new value, or press ENTER for the default
+	Full Name []: James
+	Room Number []: 23
+	Work Phone []: 938930484
+	Home Phone []:  
+	Other []: 
+Is the information correct? [Y/n] y
+-----------------------------------------------------------------------------------------------------------------------------------
+1. how to know the details of an user we have created or any user on the machine?
+id
+the id command displays the current logged in user information as 
+uid=1002(joe) gid=1002(joe) groups=1002(joe)
+
+it shows what is uid, and primary group of the user with which he has created and what are all the other groups in which this user is associated will be displayed by this command.
+	
+we can even pass the username of the user for whom we want to get the details about as below.
+id username
+
+2. how to see a user is in which groups?
+groups username
+the above command shows all the groups to which he is associated
+without supplying the username, it shows the groups of current logged in user
+
+3. how to create an user with an different home directory location other than the default /home/$USER?
+useradd -m -d /directoryPath -s shell username
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

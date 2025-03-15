@@ -1,0 +1,97 @@
+Docker Architecture
+-------------------
+There are 3 main components are there
+1. docker engine
+The docker engine forms the core of the docker system that takes care of running/managing the docker containers out of the docker image. It has been further broken down into 3 more sub-components
+
+1.1 docker daemon = it is an http endpoint used by the users or clients to interact with the docker system (or) it acts as an interface to communicate between the users/clients and the docker engine.
+
+1.2 containerd = It is the component build by the docker team, that performs multiple activities as below
+	1. building and packaging the docker images out of the docker image instruction file (Dockerfile)
+	2. it published and pulls the docker images from the docker container registry
+	3. converts the docker images into oci specification images and pass it as an input to the underlying runc asking to spawn the container from it.
+
+1.3 runc = it is the low level component written in c language library, that takes care of reading oci specification image and talks to the underlying operating system in creating, managing and running the containers on the infrastructure.
+
+2. docker cli = It is an command-line utility that is used by the users inorder to interact with the docker engine through docker daemon.
+	
+3. docker container registry = place where people publish and distribute docker images to the world or across environments.
+-------------------------------------------------------------------------------------------------------------------------------
+What are docker objects?
+There are 2 types of docker objects are there
+1. docker images
+2. docker containers
+
+1. docker image
+A file packaged and compressed with software application, dependent software packages & libraries, bins & libs that enables the container to communicate with the underlying docker engine along with instructions written inside, which are required for running the software application all put together is called a "docker image"
+	
+What do we achieve through docker images?	
+Usually the application developers upon building their application, will package the application into docker image and distribute it by published into docker container registry. 
+Through the help of docker image we can achieve "shippable containers" or we can achieve abstraction in delivery of the software application. 
+Neither the enduser nor the devops/ops user doesnt need to know the details of the software application that needs to be delivered or executed, all the things that is needed for running the software application is packaged aspart of the docker image, out of which he can quickly spawn a container for running the application which is called "abstraction in delivery of the application"
+	
+in-short: we can achieve delivery abstraction of an application through docker images.	
+	
+How to distribute the docker images?
+The docker images are published and distributed through docker container registry. One of the docker container registry, that is  setup and made available publicly by docker team is "docker hub". People around the world can create an account, bake their docker images and publish them into docker hub, so that these can be distributed to the whole world.
+	
+To publish an docker image into the docker hub registry, we need to create an repository per each image. A repository is nothing but a place where we can store an image.
+In the docker hub there are 2 types of repositories are there
+1. public repository
+The image that is published into the public repository is open to the world.  any one can search, discover the image and 
+download and use it or even anyone can modify the image as well.
+per dockerhub account, we can create any number of public repositories.
+	
+2. private repository
+The images that are published into private repositories are not discoverable or searchable by anyone. To use the image or modify the image one require an access grant towards the image repository. Organizations can make use of private repositories to publish their commercial project artifacts and keep them private from others.
+per dockerhub account, we can create 2 private repository freely. Incase if we wish to create more private repositories we need to purchase licensing plan
+
+There are lot of docker images are created and published by various people around the world into dockerhub registry. These images can be categorized into 4 groups
+1. docker official images
+2. docker verified
+3. Sponsored Opensource Software (Sponsored OSS)
+4. Community Images
+
+
+
+
+
+	
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

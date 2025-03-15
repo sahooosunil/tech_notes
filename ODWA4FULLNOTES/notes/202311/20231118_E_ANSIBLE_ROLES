@@ -1,0 +1,101 @@
+Ansible Roles
+-------------
+When we are working with complex automations in achieving the desired state of the system, we need to write lot of software configuration management logic. Building it from the scratch takes lot of time and requires huge testing efforts in certifying the code we have written.
+    
+In an typical organization environment, across the projects the software packages/configurations to be made for each project could be same, that results in repeatitive efforts of producing the same software configuration management code and results in duplication.
+    
+Instead of repeatitively building, can we reuse the automation code we produced across other projects by distributing them, so that we can reduce the efforts and complexity in building and testing them?
+Yes, Ansible allows us to reuse the playbooks of one project into another project by using import_playbook module declaration. But there are lot of problems in reusing the playbooks through import_playbook module as defined below.
+    
+1. Aspart of the code automation we might comeup with writing several artifacts like playbooks, vars_files, jinja2 templates and someother configuration files. We need all of these resources to be available inorder to execute/apply that automation. But there is no standard way these resources can be packaged, so that they can be distributed to others for reusing.
+    
+2. different developers organizes the playbooks, vars_files, jinja2 templates  and other configuration files into different directory structure. So when distributed, understanding these resources and reusing them is very complex.
+    
+3. while reusing the playbooks or code automations that are distributed, we need pass the values for the variables that are defined inside them. identifying what variables are declared to pass the values in using them is very complex. we need to run through the others code in deriving them.
+    
+From the above we can understand reusing the playbooks across the projects has several challenges, to overcome these problems ansible has provided Ansible Roles.
+    
+Ansible Roles
+-------------
+Ansible Roles are standardized and organized way of developing playbooks or ansible automations that can be distributed to others, so that people can reuse these roles quickly in accomplishing the automations
+
+Ansible roles has defined an standardized directory structure into which we need to organize the files of our automation. There are 7 directories into which we organize the playbook/ansible automation in distributed them to the other people.
+    
+rootdirectory (role)
+|-default
+   |-main.yml
+|-tasks
+   |-main.yml
+|-handlers
+   |-main.yml
+|-files
+|-templates
+|-meta
+  |-main.yml
+|-vars
+  |-main.yml
+  
+A role must be created with alteast one of these directories and if we dont have any files in other directories, those can be ignored. In every directory a default file called main.yml will be there except for files and templates directory.
+In the main.yml we need to write respective code required for achieving the automation    
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

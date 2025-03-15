@@ -1,0 +1,143 @@
+**Pod Object in Kubernetes**
+
+A **Pod** is the smallest deployable unit in Kubernetes, consisting of one or more containers that share the same execution environment.
+
+Pods provide a way to run multiple related containers together while sharing common execution attributes such as:
+1. **Network** - All containers in a Pod share the same IP address and network namespace.
+2. **Storage** - Pods can share storage volumes.
+3. **Lifecycle** - Containers in a Pod start, stop, and get restarted together.
+
+### Creating and Running a Pod
+To create a Pod, define a Pod specification (YAML file) and deploy it to the Kubernetes cluster.
+
+#### Example Pod Specification:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: apache2pod
+spec:
+  containers:
+    - name: apache2
+      image: ubuntu/apache2:latest
+      ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+```
+
+### Kubernetes Pod Management Commands:
+1. **Create a Pod:**  
+   ```sh
+   kubectl apply -f apache2-pod.yml
+   ```
+2. **View running Pods:**  
+   ```sh
+   kubectl get pods -n default
+   ```
+3. **Describe a Pod:**  
+   ```sh
+   kubectl describe pod podName
+   ```
+4. **View logs:**  
+   ```sh
+   kubectl logs podName
+   ```
+5. **Get extended information:**  
+   ```sh
+   kubectl get pods -o wide
+   ```
+6. **Delete a Pod:**  
+   ```sh
+   kubectl delete pod podName
+   ```
+   OR
+   ```sh
+   kubectl delete -f apache2-pod.yml
+   ```
+7. **Port-forward a Pod:**  
+   ```sh
+   kubectl port-forward podName hostPort:containerPort
+   ```
+   Example:
+   ```sh
+   kubectl port-forward apache2pod 8080:80
+   ```
+
+---
+## ReadinessProbe and LivenessProbe
+Kubernetes provides two types of health checks:
+
+### 1. **ReadinessProbe**
+- Ensures traffic is only routed to Pods that are fully initialized and ready.
+- Uses an endpoint (e.g., `/actuator/health/readiness`).
+
+### 2. **LivenessProbe**
+- Detects if an application is stuck or unresponsive.
+- Uses an endpoint (e.g., `/actuator/health/liveness`).
+
+#### Example:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: roadsterpod
+spec:
+  containers:
+    - name: roadster
+      image: techsriman/roadster:1.0
+      ports:
+        - name: http
+          containerPort: 8080
+      readinessProbe:
+        httpGet:
+          path: /actuator/health/readiness
+          port: 8080
+        initialDelaySeconds: 5
+      livenessProbe:
+        httpGet:
+          path: /actuator/health/liveness
+          port: 8080
+        initialDelaySeconds: 5
+```
+
+---
+## Resource Management
+To prevent overuse of CPU and memory, specify resource requests and limits.
+
+#### Example:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: roadsterpod
+spec:
+  containers:
+    - name: roadster
+      image: techsriman/roadster:1.0
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "512Mi"
+        limits:
+          cpu: "1000m"
+          memory: "1024Mi"
+```
+
+### **CPU and Memory Units:**
+- **1 core** = **1000m (millicores)**
+- **Memory Units:** MiB, GiB
+
+---
+## Pod Lifecycle
+A Pod goes through multiple states:
+1. **Pending** – Waiting for resources.
+2. **Running** – At least one container is running.
+3. **Succeeded** – Containers have exited successfully.
+4. **Failed** – One or more containers exited with an error.
+5. **Unknown** – State cannot be determined.
+
+---
+### Conclusion
+Pods are the foundation of Kubernetes workloads. By defining Pod specifications properly, using health checks, and managing resource limits, we can run applications efficiently in Kubernetes clusters.
+

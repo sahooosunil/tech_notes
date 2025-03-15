@@ -1,0 +1,98 @@
+What is devops?
+Devops is an change in culture and adoption of new tools and technologies so that we can accomplish fast paced application development and delivery
+
+What is change in culture?
+The change in culture refers to rather than the 3 roles of people developer, qa and operational engineers working in 3 different teams, devops recommends the whole to be part of one single team which is called "devops" team, so that we can avoid silos (communication gaps)	and coordination issues between the people and can strive for whole success in delivering the application
+
+In addition to the above we need to adopt new tools & technologies to speed up the development and delivery aspects of the application at every stage of development and delivery
+
+#1. development phase
+1. gather the requirements and understand to develop the software application
+2. choose the programming language that better suites for the nature of the application
+3. setup development environment with all the required softwares and tools to develop the application like
+	1. infrastructure
+	2. operating system software
+	3. programming language software
+	4. develop tools & utilities 
+	5. database servers
+	6. application servers
+	etc
+	
+at an average to setup one machine with all the required tools and softwares an ops team might take around 2-3 weeks of time. In addition due to system crashes or system upgrades again an individual member of a team requires around 10 more days in the middle of the project. by taking these into account for a team of 5 - 7 members a project requires around 150 person days for setting up the development environment, which contributes to the overall increased cost of project development and delays the delivery of the application
+
+How to overcome the above problem in setting up the development environments?
+The Devops recommends us to adopt new tools and technologies like virtualization
+
+What is virtualization?
+Virtualization is an technology through which we can create multiple parallel isolated environments on a physical computer system, so that we can effectively utilize the hardware resources of the computer.	
+	
+Virtualization works based on hypervisor engine that sits ontop of operation system of the physical server computer	and the hypervisor tool distributes the hardware resources of the physical computer to the virtual machines making the work
+
+There are lot of hypervisor software are available in the market like
+1. oracle virtualbox
+2. hyperv
+3. vmware (desktop|workstation|fusion)
+4. parallelx
+
+The devops engineer using the virtualization technology will setup an virtual machine in which he will install all the softwares and tools that are required for developing the project and exports that machine as an vdi file. once it has created, the devops engineer distributes the vdi file to all the members of the development team
+
+all that it takes for the developers to have the development environment on their machines is just import the disk image on their physical computer, so that in couple of minutes the development environment will be ready for use. 	
+due to this we can bring down the huge cost incurred in setting up the development env and time as well
+
+
+Vagrant
+--------
+To setup the virtual machine manually an devops engineer needs around 10 - 15 days of time, once he has setup the virtual machine he can export and recreate multiple virtual machines for all the developers of the within couple of minutes.
+But still the operational engineer has to spend considerable amount of time in setting up the virtual machine, instead of manually setting up he can take the help of vagrant
+
+vagrant is an virtualization workflow automation tool, we can write vagrant instruction file in which we can describe the information about the virtual machine we wanted to create and pass it as an input to vagrant, that creates the virtual machines wihtin couple of minutes so that we can avoid even 10 - 15 days time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

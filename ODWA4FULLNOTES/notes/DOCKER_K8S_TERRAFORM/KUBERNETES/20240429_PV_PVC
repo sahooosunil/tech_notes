@@ -1,0 +1,229 @@
+What is persistent volume and persistent volume claim?
+The stateful applications generates data during their execution, by default the data would be written onto the container writable layer and would not be survived in the event of pod crash. So inorder to have the data being persisted/survived incase of pod crash kubernetes has provided persistent volumes and persistent volume claims
+
+Incase of docker we have docker volumes that are created on docker host onto which the containerized application can write the data and would be persisted/survied incase of container crash, but these volumes are local to the docker host only.
+	
+unlike that incase of kubernetes environment, we need the volumes to be global and should be made accessible across the worker nodes of the cluster, so that incase of a pod crash and has been replaced by an another pod on any of the worker nodes of the cluster, the same persistent volume can be mounted on to the pod.
+	
+There are different types of persistent volumes supported by kubernetes
+1. local
+2. aws ebs
+3. efs/nfs
+4. icsci
+etc
+please refer to this link for complete list of volume types: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+
+few are globally accessible and few or local volumes local to the workernode on which those are created.
+	
+The responsibility of gathering the required resources, in creating the persistent volume is taken care by the kubernetes administrator and it is made available to the cluster. Through persistent volume the kubernetes developer is being abstracted from the concept of how to setup the storage resources in creating the persistent volume. all that developer needs is an persistent volume to claim and use it aspart of the pod application
+
+
+once the kubernetes administrator has setup the persistent volume which requires storage resources, the developer has to claim that volume by using persistent volume claim.
+	
+There are few attributes we need to declare while creating persistent volume:
+1. storageClassName = indicates the type of storage to be created on the cluster
+2. accessMode:
+   1. ReadOnly           = only the pods can read the data from this volume
+	 2. ReadWriteOnce      = only one pod can read/write the data on to the volume
+	 3. ReadWriteMultiple  = multiple pods are allowed to read/write the data at the same time
+3. capacity = storage size to be assigned for the persistent volume
+
+How to define the persistent volume?
+local-pv.yml	
+------------
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: localpv
+spec:
+  storageClassName: local
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /Users/sriman/data    
+...
+		
+mysql-pvc.yml
+--------------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysqlpvc
+spec:
+  storageClassName: mysqlstorage
+  accessMode:
+    - ReadWriteOnce
+	resources:
+    requests:
+      storage: 1Gi
+	 
+	 
+mysql-pod.yml
+-------------
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysqlpod
+spec:
+  container:
+    - name: mysql
+		  image: mysql:8.3.0
+			ports:
+        - name: mysqlport
+				  containerPort: 3306
+					protocol: TCP
+			env:
+        - name: MYSQL_ROOT_PASSWORD
+				  valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+							key: password
+			volumeMounts:
+        - name: mysqlvolume
+				  mountPath: /var/lib/mysql
+	volumes:
+    - name: mysqlvolume
+		  persistentVolumeClaim:
+        claimName: mysqlpvc
+
+
+mysqlsecret.yml
+----------------
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysqlsecret
+type: kubernetes.io/basic-auth
+stringData:
+  username: root
+  password: root  
+--------------------------------------------------------------------------------------------------------------------------------
+Service
+Service is adding an network to the pods of the Kubernetes cluster. By default a pod is accessible within the node on which it has been created and these pods has few characteristics:
+
+1. A pod will not be recovered upon crash
+2. each pod is assigned with empheramal ip address, so that upon crash and recovery the new pod will be assigned with a different ip address
+
+So how to make the pods:
+1. accessible by other pods on the cluster without worrying about the ip addresses being changed
+2. expose the pods to the external world
+3. loadbalance the traffic across the pod instances/replicas on the cluster
+
+we can achieve all of these aspects by using the help of service. A service acts as an discovery engine and loadbalancer in routing the traffic across the pod replicas on the cluster.
+	
+There are 5 types of services are there:
+1. ClusterIP
+2. NodePort
+3. LoadBalancer
+4. Ingress
+5. Headless Service
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

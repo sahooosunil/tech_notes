@@ -1,0 +1,75 @@
+What is an operating system, what is the purpose of it?
+operating system is an system software through which we can achieve hardware portability in building the programs that can work across various different hardware platforms in the market
+
+The operating system provides its own instructionset which is also referred as "system routines". Now the users of the operating system should write the programs or instructions using operating system provided system routines and pass it to the underlying operating system. The operating system internally makes use of Hardware instruction Translators (HIT) in translating operating system instructions into machine instructions and passes to the underlying machine to perform operation. The program once written using the operating system instructionset works across various different hardware architectures
+
+In addition to that, operating system provides tools and utilities in creating an sophisticated environment for the users enabling them to use the hardware of the computer easily
+
+operating systems helps us in achieving hardware portability, so that a program written once using an operating system instructionset works across any hardware platform, but a program written using an operating system instructionset will not work with another operating system, the programs are not portable across operating system vendors. To overcome the above problems high-level programming languages are introduced.
+	
+There are problems with writing the programs using operating system instructionset or system routines:
+1. The programs written with an operating system instructionset is not portable across the operating system platforms.
+2. the operating system provided system routines are not user friendly
+	2.1 the instructions provided are difficult to memorize
+	2.2 the syntaxes we need to follow in writing the programs are quite complex to user
+thus making the people difficult to write programs using operating system instructionset
+
+To overcome all these challenges the high-level programming languages are introduced like
+1. c
+2. c++
+3. java
+4. .net
+5. python
+6. scala
+7. groovy
+8. ruby
+9. php
+10. kotlin
+etc
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

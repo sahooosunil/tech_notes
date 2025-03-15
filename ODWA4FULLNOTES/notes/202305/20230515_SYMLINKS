@@ -1,0 +1,177 @@
+What are symlinks, what is the purpose of them?
+Symlinks are the pointers to the original files or directories on the Filesystem. There are 2 types of symlinks are there
+1. softlink
+softlink is an link file that holds the reference or location of the original file inside it. 
+	
+ln -s locationOfTheOriginalFileorDirectory softlinkName
+how to know whether a file/directory is an symlink or not?
+ls -l 
+it shows us the longlisting indicating the first character as "l", as link file
+
+	
+2. hardlink
+hardlink is an another reference pointing to the inode of the original file
+ln locationOfTheOriginalFile hardlinkName
+
+What is the difference between a Softlink and an Hardlink?
+1. Softlink
+	1.1 Softlink can be created for both a File or an Directory of the FileSystem.
+	1.2 The Softlink file has different File permissions than the original file. By default when we create the Softlink, it will be created with full permissions (rwxrwxrwx). These permissions are applicable only to the link file and doesnt reflects in accessing the original file. while accessing the original file through softlink, it is made accessible based on permissions of the original file only. So the permissions of the softlink file cannot be changed since there is no impact of accessing the original file through it. But it will change the permissions of the original file upon changing the permissions of the softlink	
+	1.3 The Softlinks can be created for the files/directories across the Filesystem
+	1.4 The inode address of the softlink and the original file are different
+	1.5 if the original file has been renamed, moved or deleted the softlink will be broken
+		
+2. Hardlink
+	2.1 Hardlinks can be only created for the Files but cannot be created for directories
+	2.2 Hardlinks has the same permission of original file
+	2.3 Hardlinks can be created only for the Files of the local filesystem only.
+	2.4 The inode address of hardlink file and the original file are same
+	2.5 even we modify the original file, delete or rename, the hardlink will not be broken
+-----------------------------------------------------------------------------------------------------------------------------------
+Utility commands
+
+1. How to find the user in which we are executing the shell commands?
+whoami
+
+2. how to find the logged-in user of the linux operating system?
+logname
+
+3. How to get the list of users who are currently logged-in to the linux machine?
+who
+	
+4. How to know the name of the operating system?
+uname
+
+uname -a = prints all the information of the linux operating system
+
+lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 22.04.2 LTS
+Release:	22.04
+Codename:	jammy
+
+cat /etc/os-release 
+PRETTY_NAME="Ubuntu 22.04.2 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.2 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy
+
+5. How to find the hostname of the linux computer?
+hostname = gives the name of the computer
+hostname -i = loopback ip address (usually: 127.0.0.1)
+hostname -I = all the ip addresses currently assigned to the computer
+
+6. How to change the name/hostname of the computer?
+The linux will store the hostname of the computer under /etc/hostname , we can modify the hostname of the computer by changing this file
+
+1. sudo vim /etc/hostname = modify the name
+2. hostnamectl set-hostname sriman
+
+7. How to find all the network adapters and their physical and logical address of the adapters on a computer?
+in windows we can get all the network adapters and their ip/mac address using ipconfig and ipconfig /all
+
+in linux we need to install an software package net-tools to list down all the network adapters and their address
+sudo apt update -y
+sudo apt install -y net-tools
+
+we need to use ifconfig
+
+8. How to check whether a remote computer is accessible or not?
+ping ipaddress
+
+9. how to list down all the hardware devices attached to our computer?
+lshw
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		

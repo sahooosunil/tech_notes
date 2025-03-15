@@ -1,0 +1,113 @@
+What is Ansible Inventory file, how to write the Ansible inventory file?
+The ansible control node server is stateless, which means it dont have any of the information pertaining to the managed nodes of the ansible cluster. So inorder to apply the code automation like executing an module or a playbook on the nodes of the cluster, the ops engineer has to provide the list of managed nodes	on the cluster by writing inventoryFile.
+	
+The default inventory file the ansible control node server looks at is /etc/ansible/hosts.
+In this file we need to declare the list of hosts/managed servers on whom we wantedto apply the modules/playbooks. So that while executing the modules/playbooks the control node server looks into the default inventoryFile for applying the automation
+
+Instead of using default inventoryFile we can create our own inventoryFile with list of managed nodes defined inside it and pass it as an input using -i switch while running an playbook/module
+
+ansible [group] -i inventoryFile -m module -a args
+
+There are 2 formats/ways in which we can write inventoryFile
+1. INI Format
+2. YAML Format
+
+1. INI Format
+In INI format each host/managed server should be defined in a new line as shown below.
+$USER_HOME/dbhosts
+192.168.10.11
+192.168.10.12
+	
+2. YAML Format
+$USER_HOME/dbhosts.yml
+all:
+  hosts:
+    192.168.10.11:
+    192.168.10.12:
+
+ansible all -i ~/dbhosts.yml -m ping
+
+
+In an organization they can be lot of machines which are allocated to different projects, always we dont wanted to apply the code automation across all the servers within the organization. So instead of using default inventoryFile it is recommended to write project specific inventoryFile and pass -i in passing that inventoryFile while executing an module/playbook
+
+For a given project we might have allocated lot of servers, so even we create project specific inventoryFile it may not help us. because we dont wanted to apply code modules always on all the nodes of the project, rather we wanted to apply code automation on different subset of computers within the project
+To apply automation on subset of computers of the project, we can define groups of similar type machines on which we can apply code automation easily
+There are 2 default groups are there in every inventoryFile
+1. all group
+2. ungrouped
+
+1. all group = all the hosts in the inventoryFile will be part of all group
+2. ungrouped = if there is a host/server not being part of any group, then it is assinged to ungrouped.
+	
+$USER_HOME\hosts1 [INI File]
+192.168.10.11
+[dbservers]
+192.168.10.12
+192.168.10.13
+[tomcatservers]	
+192.168.10.14
+192.168.10.15
+	
+in the above INI file we have total 4 groups
+1. all which has all the hosts from 192.168.10.11 to 192.168.10.15
+2. ungrouped = it has only one hosts: 192.168.10.11
+and rest of them are dbservers and tomcatservers each with #2 hosts defined inside them.
+	
+How to define groups in YAML file?
+all:
+  hosts:
+    192.168.10.11:
+		192.168.10.12:
+    children:
+      javaservers:
+        hosts:
+          192.168.10.13:
+          192.168.10.14:
+      dbservers:
+        hosts:
+          192.168.10.15:
+          192.168.10.16:
+
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

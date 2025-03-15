@@ -1,0 +1,67 @@
+Here are **20 most commonly used Docker commands**, categorized for easy reference.  
+
+---
+
+## 🔹 **1️⃣ Container Management Commands**  
+Commands to create, run, stop, and remove containers.  
+
+| Command | Description |
+|---------|------------|
+| `docker run -d -p 8080:80 --name mycontainer nginx` | Run a container in **detached mode** with port mapping. |
+| `docker ps -a` | List **all** containers (running & stopped). |
+| `docker stop mycontainer` | Stop a running container. |
+| `docker rm mycontainer` | Remove a stopped container. |
+| `docker logs mycontainer` | View container logs. |
+
+---
+
+## 🔹 **2️⃣ Image Management Commands**  
+Commands to manage Docker images.  
+
+| Command | Description |
+|---------|------------|
+| `docker pull nginx` | Download an image from Docker Hub. |
+| `docker images` | List all available images. |
+| `docker rmi nginx` | Remove an image. |
+| `docker build -t myapp:latest .` | Build an image from a **Dockerfile**. |
+
+---
+
+## 🔹 **3️⃣ Volume & Network Management Commands**  
+Commands to manage storage and networking in Docker.  
+
+| Command | Description |
+|---------|------------|
+| `docker volume create myvolume` | Create a named volume. |
+| `docker volume ls` | List all volumes. |
+| `docker network create mynetwork` | Create a custom **bridge** network. |
+| `docker network ls` | List all networks. |
+
+---
+
+## 🔹 **4️⃣ Container Access & Debugging**  
+Commands to inspect, access, and debug running containers.  
+
+| Command | Description |
+|---------|------------|
+| `docker exec -it mycontainer sh` | Open a shell inside a running container. |
+| `docker inspect mycontainer` | Get detailed information about a container. |
+| `docker stats` | Show real-time resource usage of containers. |
+
+---
+
+## 🔹 **5️⃣ Docker Compose & System Cleanup**  
+Commands for managing multiple containers and cleaning up unused resources.  
+
+| Command | Description |
+|---------|------------|
+| `docker compose up -d` | Start multiple containers from `docker-compose.yml`. |
+| `docker compose down` | Stop and remove all containers in a `docker-compose.yml`. |
+| `docker system prune -a` | Remove **all unused** containers, images, volumes, and networks. |
+
+---
+
+### 🚀 **Bonus Tip:**  
+Use `docker --help` to explore more commands!  
+
+Would you like to see real-world usage examples for any of these? 🚀

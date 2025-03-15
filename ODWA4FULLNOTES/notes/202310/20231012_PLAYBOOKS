@@ -1,0 +1,53 @@
+Playbook
+--------
+To perform an software configuration management automation on the fleet or managed nodes of the cluster we need to execute bunch of ansible modules in a specific sequence order by orchestrating them. Collect the output of one module and pass it as an input to another module, and based on the outcome of a module we need to execute the next set of modules. Manually executing these modules on the managed nodes of the cluster would be very difficult and time consuming job and tough to memorize. Instead we can declare all of these modules along with their inputs defined inside an playbook, so that ansible control node server reads these module declarations and execute them by orchestrating on the managed nodes of the cluster.
+	
+To ensure these module declarations are readable and understandable by the control node server, we need define them in YAML format in the playbook file. The ansible developer/devops engineers will declare all the modules to be executed or applied on the managed notes to achieve the desired state of the system in playbook file and pass it as an input to the control node server
+
+since the playbooks are written in structured format attached with semantics, the control node server can read these module declarations and execute them on the managed nodes
+
+For one automation to be applied on the managed nodes is called a "play". In a playbook we can define multiple plays. Each play represents a group of modules/tasks that should be executed on the managed nodes to achieve the desired state of the system
+
+For a project to setup/deploy we might have to perform multiple automations like
+1. install java and tomcat server
+2. install and configure an mysql server database
+
+These 2 are the automations that can be orchestrated into 2 plays in a playbook, so that we can choose to apply which play on which managed of the cluster. These 2 plays can be written either in 1 playbook yml file as 2 documents or we can write in 2 playbook yaml files seperately. 
+	
+	
+Friday = no sessions at all
+Saturday = morning no sessions / evening (regular tools class) / 
+Sunday = all classes regular (morning 6-7 / 7-8 / 8-9 / evening 7 pm)	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+

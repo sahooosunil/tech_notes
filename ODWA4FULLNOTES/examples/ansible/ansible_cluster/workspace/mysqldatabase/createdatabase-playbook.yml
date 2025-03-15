@@ -1,0 +1,22 @@
+---
+- name: create database play
+  hosts: all
+  tasks:
+    - name: create mysql database
+      mysql_db:
+        name: gstoredb
+        state: present
+        login_user: mysqladm
+        login_password: welcome1
+    - name: copy schema sql
+      copy:
+        src: schema.sql
+        dest: /tmp/
+    - name: create tables
+      mysql_db:
+        name: gstoredb
+        state: import
+        target: /tmp/schema.sql
+        login_user: root
+        login_password: root
+...

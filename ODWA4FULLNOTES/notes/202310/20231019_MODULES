@@ -1,0 +1,146 @@
+How does ansible output the execution of a playbook on the ansible managed nodes?
+The Ansible control node server displays the status per each task execution of the playbook, indicating the status of the task execution on each managed node on the cluster. upon completion of the execution of the playbook it displays Play Recap indicating the number of tasks resulted each statuses.
+	
+There are 7 possible statuses in which as task could exist upon its completion
+1. ok
+2. changed
+3. unreachable
+4. failure
+5. skipped
+6. ignored
+7. rescued
+--------------------------------------------------------------------------------------------------------------------------------------
+Ansible Modules
+Ansible Modules represents an task or unit of work that should be performed on the managed nodes of the fleet servers. These modules are written in Python language and they take data as input through arguments and produces the output along with status of the execution in json format.
+	
+Ansible modules are pre-built and are distributed aspart of the ansible distribution by the ansible developers, in addition there are lot of 	developer communities and third-party organizations contributing in developing and distributing the ansible modules through ansible repositories because of popularity of ansible.
+	
+There are plenty or un-ending list of modules are available in market that can be used aspart of the playbook automation. it is very difficult to locate/identify and use the modules of our choice out of the huge list of modules. So to help us in quickly identifying and locating ansible has grouped similar type of modules into categories, so that we can browse them through categories and understand their info to use it.
+	
+https://docs.ansible.com/ansible/2.9/modules/modules_by_category.html
+
+As there are lot of modules provided aspart of ansible, we cannot memorize these modules and their arguments in using them, so the best way to use these modules is browsing through documentation. Atleast we should be able to memorize the most frequently used modules of ansible for jumpstart development
+
+The Ansible has provided an CLI tool called ansible-doc that can be used for browsing the documentation of any module in ansible. for eg..
+ansible-doc -l = list down allthe modules that are shipped aspart of the ansible distribution
+ansible-doc modulename = shows the documentation of that module
+
+
+Let us explore few popularly used ansible modules based on categories:
+1. Commands Modules:
+Under the Commands category there are 2 modules that are popular being used:
+1. command
+2. shell
+
+The shell/command modules are used for executing any linux commands on the managed nodes of the cluster. The control node server simply connects to the managed nodes over ssh and transfers and executes the command we supplied on the remote machine shell and gathers the output and returns.
+	
+Looks like we can perform any automation by using these 2 modules in the ansible, but it is not recommended to use these modules for performing software configuration management, because these modules doesnt support idempotancy.
+	
+	
+Both Command/Shell modules are used for executing an linux shell command only, then why do we need #2 modules for the same?
+There is an subtle difference	between these 2 modules
+1. command module =  it doesnt uses the shell capabilities while executing the shell commands on the managed nodes, so we cannot use features of shell like (pipes) | and redirectors (>, <, >>, <<)
+	
+2. shell module = by default is uses /bin/sh for executing the linux commands. So we can use both pipes and redictors.
+	
+1.1 Command Module:
+--------------------
+
+1.1.1 execute a given command
+command: commandToExecute
+for eg..
+command: echo "hi"
+	
+1.1.2 execute the given command by changing into the directory specified
+command: commandToBeExecuted
+  args:
+    chdir: directory
+		
+1.1.3 execute the given command only when the specified file or directory doesnt exists under the given path
+command: commandToBeExecuted
+  args:
+    creates: pathToFile
+
+
+command: touch ~/profile.txt
+  args:
+    creates: ~/profile.txt
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,172 @@
+File Permission
+---------------
+How to change the ownership of an File/Folder that is created on the Filesystem of the linux operating system?
+File/Folder:
+sudo chown user:group FileName/FolderName
+sudo chown -R user:group folder/
+	
+
+How to grant access permissions to a specific set of users in the linux operating system?
+1. by default when we create an user in the linux operating system he will be created with default group as username group so that he will be the owner/group of the file and all the users of the linux operating system becomes others to the File
+
+2. In case if we want to grant access permission to a specific group of users of the operating system to that File/Folder:
+	2.1 create a new group with those users to whom we want to grant access (if the group doesnt exist)
+		sudo groupadd groupName
+	2.2 associate the users to that newly created group
+		sudo usermod -aG groupName username
+	2.3 change the ownership of file to the new group
+	sudo chown owner:group file/folder
+	
+now we can grant access permission on that file/folder to those group of users using chmod
+
+always when a user created a File/Folder on the filesystem of linux operating system, the linux creates the file/folder with default permissions assigned to them for owner, group and others 
+
+How to change the access permission on an existing File/Folder of a linux machine?
+The linux has provided an shell utility	called "chmod" stands for change mode (mode of access), means permissions to a file/folder
+There are 2 ways chmod allows us to set/change the permissions on a File/Folder:
+1. octal notation
+2. symbolic notation
+
+1. octal notation
+For each permission we wanted to grant, the chmod has given an weighted number as below.
+	1.1 READ (r) = 4
+	1.2 WRITE (w) = 2
+	1.3 EXECUTE (x) = 1
+when we are setting the permissions on a File/Folder we need to specify the permissions for all the #3 levels owner, group and others. Based on permissions we want to grat, calculate the sum of the weight numbers for each of these levels and pass it as an input to chmod asking to set the permission
+
+few points:
+1. always while using octal notation, we need to set the permission on a File/Folder for all the #3 levels
+2. chmod with octal notation will reset the existing permissions with the new one we passed
+
+ls -l ~/quicknotes.txt
+-rw-rw-r-- sriman devgroup quicknotes.txt
+
+when we change the permissions for the above file using chmod octal notation, it will remove the existing permissions and sets the new ones we passed 
+
+sudo chmod 511 ~/quicknotes.txt
+ls -l ~/quicknotes.txt
+-r-x--x--x sriman devgroup quicknotes.txt
+
+2. symbolic notation
+for setting the file permissions using symbolic notation chmod has provided few symbols indicating permissions and levels
+permissions:
+r = read
+w = write
+x = execute
+
+levels:
+u = owner 
+g = group of the file
+o = others
+
++ = add permission
+- = remove permission
+= = reset the permission
+
+in symbolic notation:
+1. we can add/remove or reset the permissions to a specific level (owner, group or others) on the File or folder
+2. we dont need to set the permissions for all the #3 levels always like octal notation
+
+syntax:-
+	sudo chmod levelsymboxpermission,levelsymbolpermission file/folder
+	sudo chmod u=rw,g=r,o=r quicknotes.txt = this will grant read,write permission to the owner of the, read permission to group and others on the file
+	
+	for eg.. now if we want to grant write permission also to the group of users
+	sudo chmod g+w quicknotes.txt
+	this will add write permission to the existing permission on the file for those group of users, here if we see we are not passing permissions for all the three
+-----------------------------------------------------------------------------------------------------------------------------------
+How does the default permissions would be assigned to a File/Folder by the linux operating system?
+always when we create a File/Folder on the Filesystem of the linux operating system, the linux operating system would not enforce us to set the permissions, rather it would assign the default permissions on a File/folder by itself
+
+How does linux derives the default permissions
+umask = user mode access file mask
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

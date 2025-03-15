@@ -1,0 +1,97 @@
+qa engineers:
+roles and responsibilities of the qa engineer in developing and delivering an software application
+qa engineer is responsible for testing whether the application is working asper the requirement or not. In order to test the application the qa engineer has to run the application by passing possible set of inputs and verify the system is producing the right output or not
+
+To perform the testing, the qa requires qa environment, the developer has to provide all the information about, what softwares or tools required for running the application to the qa engineer.
+The qa engineer has to take the help of ops engineers in setting up the env and deploying and running the application to test the application.
+	
+once the env is ready the qa engineers has to begin testing the application by
+1 preparing test plan
+2 write testcases in what possible scenarios has to be verified for certifying the application
+
+upon preparing the test cases the qa engineer has to begin testing the application with all the pre-identified or created testcases and mark them as passed / failed.
+If there are failures those has to be reported as bugs to the developer, and this process continues until we reach to zero bugs.
+	
+operational engineers:
+roles and responsibilities of operational engineers in developing and delivering the application:
+The presence of operational engineer is much broader and begins right from the development and involved through the phases until the delivery of the application and even post production aswell
+
+1. during the development phase:
+during the development operational engineer has to provide infrastructure and install/configure software packages on to the machine of the developer, so that developer can begin developing the application
+
+In addition to this the ops engineers are responsible for providing various different tools for facilitating the collaborative application development like
+ 1. sourcecode repositories
+ 2. artifactory servers
+ etc
+ 
+2. during the qa phase: 
+The operational engineers are responsible for creating/setting up the qa environment, thereby which the qa can conduct the testing of the application
+
+3. during the delivery phase:
+The operational engineer has to coordinate between multiple teams in understanding the deployment or delivery requirements of the application like
+ 1. talk to business owner to understand user patterns and the traffic towards the application
+ 2. talk to architects of the application to understand tools/libraries and their minimalistic requirement needed for running them on the machine
+based on this the operational engineers has to calculate the infrastructure resources required for running the application on the production environment.
+There are several activites carried by the operational engineers during delivery like
+1. procuring the infrastructure resources 
+2. networking
+3. enforcing network securing by setting up various different network devices like firewalls etc
+4. installing and configuring the softwares, database servers and application servers needed for running the application
+5. install operating system software on those machines
+6. take the code from sourcecode management repositories and build the code using the build tools so that it produces binary executable.
+7. run the application on the production environment and make it accessible to the world
+8. monitor and manage the application on the production
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

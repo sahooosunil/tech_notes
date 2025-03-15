@@ -1,0 +1,4 @@
+---
+# defaults file for apache2site
+server_name: ninestars.com
+site_dir: ninestars

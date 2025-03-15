@@ -1,0 +1,45 @@
+Here’s a refined and concise version of your explanation while keeping it simple and clear:
+
+---
+
+### **4. DaemonSet**
+A **DaemonSet** ensures that a specific Pod runs on all (or some) Nodes in a cluster. This is useful for applications that need to be present on every Node, such as:
+
+1. **Log collectors** (e.g., Fluentd, Logstash)  
+2. **Monitoring agents** (e.g., Prometheus Node Exporter)  
+
+A DaemonSet acts as a **reconciliation loop**, ensuring a Pod is always running on each worker node. It has **high precedence** over other workloads—regardless of available capacity, the DaemonSet Pod will be scheduled first.  
+
+- **New Node?** DaemonSet automatically schedules the Pod on it.  
+- **Node removed?** DaemonSet cleans up the Pod automatically.  
+
+### **Example: Deploying a DaemonSet**
+Below is a sample **DaemonSet spec file** to run Solr on all worker nodes.
+
+#### **solr-daemonset.yml**
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: solr-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: solr
+  template:
+    metadata:
+      labels:
+        app: solr
+    spec:
+      containers:
+        - name: solr
+          image: solr:9.6.8
+          ports:
+            - name: solr-port
+              containerPort: 8983
+              protocol: TCP
+```
+
+**Example Use Case:** ELK Stack (Elasticsearch, Logstash, Kibana) often uses DaemonSets to ensure log collectors are running on every node.
+
+---

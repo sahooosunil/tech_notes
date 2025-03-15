@@ -1,0 +1,211 @@
+packaging
+we can package contents of a folder or multiple files into one single file that can be easily distributable over the network or through email etc. The linux bash has provided tar utility
+
+tar = tar stands for tape archive 
+options:
+-c = create
+-v = verbose
+-f = filename
+-x = extract
+-t = table of contents
+
+1. How to package the files into an tar?
+tar -cvf filename.tar directory/
+tar -cvf filename.tar file1 file2
+
+2. How to extract the tar file?
+tar -xvf filename.tar
+
+3. How to see the contents of a tar file?
+tar -tvf filename.tar
+
+tar doesnt compress the contents of the file, its only used for packaging group of files into 1 single file
+-----------------------------------------------------------------------------------------------------------------------------------
+
+compression
+------------
+if we want to compress the contents of the files we need to use compression, the tar packaging will not reduce the contents of the original files.
+	
+Linux bash has provided an utility called "gzip/gunzip"	which are used for compression and un-compression of the file contents. In linux we cannot directly compress the bunch of files, first we need to package the files into single file using tar, then only we can compress the contents of the tar file using gzip and gunzip
+
+For eg.. if we have an directory containing below files
+images/
+|-flowers.jpeg
+|-sunset.jpeg
+|-kids.jpeg
+|-garden.jpeg
+
+we cannot compress the above directory contents directly, first we need to package them into an tar file, then we can compress the contents of the tar file.
+
+1. tar -cvf images.tar images/
+now we can compress the contents of the images.tar using gzip as below
+2. gzip images.tar
+the gzip produces an images.tar.gz and we dont have anymore the "tar" file on the system.
+	
+If we want to uncompress and unpack the files, we need first gunzip files into tar back and then we need to extract the tar file
+1. gunzip images.tar.gz
+this produces images.tar
+
+2. tar -xvf images.tar
+will extract the tar into images/ directory
+
+
+we directly package, compress and uncompress and unpack the files using tar with -z switch as below.
+1. tar -cvzf filename.tar.gz directory/ = this command will pack and compress the file contents at one shot
+2. tar -xvzf filename.tar.gz = will uncompress and unpack the contents of the file at one shot
+here we dont need to use 2 utilities
+-----------------------------------------------------------------------------------------------------------------------------------
+tr
+--
+what is tr, what is the purpose of it?
+tr is used for performing 3 types of operations on a text contents
+1. replace a single character in a given string
+2. we can delete a single character in a given string
+3. we can apply transformations on the entire string passed as an input
+
+#1. replace a single character within the given string
+echo "Good Morning" | tr "M" "m"
+	
+the above tr command replaces "M" with small "m" and generates the output as Good morning. it searches in the given string all the occurences of the single character and replaces with the another character
+for eg..
+echo "Good Morning" | tr "o" "O" = then it searches for all the occurences of "o" and replaces with "O"
+output: GOOd MOrning
+
+#2. delete an character in the given string
+echo "Good Morning" | tr -d "o"
+it finds all the occurences of "o" and removes it in the given string
+
+Gd Mrning
+
+#3. we can apply transformations on the entire string passed using tr
+there are lot of build-in transformations are available 
+1. :upper:
+2. :lower:
+3. :space:
+4. :digit:
+5. :alnum:
+
+1. echo "Good Morning" | tr "[:lower:]" "[:upper:]" = GOOD MORNING
+2. echo "Good Morning"| tr "[:space:]" -   = Good-Morning
+3. echo "Avatar2" | tr "[:digit:]" 3        = Avatar3
+4. echo "p1sswor4#123" | tr "[:alnum:]" "*" = *******#***
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

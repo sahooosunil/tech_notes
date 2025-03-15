@@ -1,0 +1,42 @@
+Networking
+----------
+Networking is a technic or a process through which we can inter-connect computers together, so that the software applications that are running on the computer can communicate with each other over the network.
+	
+To allow any 2 computers to communicate they need to be inter-connected with an physical transmission line. For inter-connecting the computers over an network cable, the computer must have
+1. Each computer should have an Network interface card (nic) also called as network adapter attached to the computer, enabling the computer to plugin into the wire. 
+2. To inter-connect both of these computers with a wire we need an network cable with RJ45 socket attached to it. so that the wire can be plugged-in to both the computer NIC cards.
+So that the physical bits of data can be transmitted between those 2 computers.	
+
+For the modern computers, the network interface card is installed as a chip/in-built directly onto the motherboard of the computer, so that we dont need to additionally plugin any nic device externally. By default every computer comes with one network adapter/card, incase if we want more network adapters, we can buy external network interface card and plugin into the motherboard of the computer.	
+A computer can have any number of network interface card attached to it, based on the number of computers it wants to connect to.
+	
+	
+How does the data will be exchanged over the network between the computers?
+whenever a computer is sending the data over the network, by default the data reaches to all the computers that the computed has been connected with. but if we wanted to send the data to a specific computer on the network, for each computer on the network we need identification that acts as an address of the computer, so that we can send the data to that specific computer.
+	
+For each computer connected to the network we have 2 types of identifications or adresses
+1. ip address
+2. mac address
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

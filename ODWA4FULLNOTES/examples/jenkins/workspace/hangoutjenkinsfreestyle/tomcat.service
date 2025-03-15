@@ -1,0 +1,19 @@
+[Unit]
+Description=Tomcat 10
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+Environment=CATALINA_HOME=/u01/middleware/apache-tomcat-10.1.24
+Environment=CATALINA_BASE=/u01/middleware/apache-tomcat-10.1.24
+
+ExecStart=/u01/middleware/apache-tomcat-10.1.24/bin/startup.sh
+ExecStop=/u01/middleware/apache-tomcat-10.1.24/bin/shutdown.sh
+
+Restart=always
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target

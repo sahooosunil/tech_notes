@@ -1,0 +1,125 @@
+ip address
+-----------
+ip address is an logical address assigned to the computers network adapter, upon connecting to the network.
+There are 2 versions of ip addressing schema are there
+1. ipv4 addressing = ipv4 addressing is of 32-bit in length
+2. ipv5 addressing = ipv6 addressing is of 128-bit in length
+
+with an ipv4 addressing schema of 32-bit in length we can connect 4.1 billion computers onto the network, by looking at the number of devices being connected to the network in todays world, we might quickly run out of addresses, so to overcome this problem ipv6 addressing schema has been introduced.
+	
+both of these addressing schemas are currently under use, but over the period of time, the ipv4 addressing schema will be deprecated/removed.
+	
+ipv4 addressing
+----------------
+ipv4 address is of 32-bit in length which means 2^32 possibilities of computers can be connected over the network. from 2^32 we can generate numbers ranging from 0 - 4.1 billion which means we can assign sequence numbers from 0 - 4.1 billion as ip addresses.
+	
+But ip address is not sequence in nature, rather these are hierarchial in nature. Hierarchial is anything that is represented as a parent and child relationship.
+We use hierarchial representations to establish group in exbhiting the related entities together.
+	
+	
+So if the computers are assigned sequence number as their ip address, we cannot identify related group of computers and we can manage them. for eg.. in a organization we might have several different departments like
+1. hr
+2. finance
+3. employee
+4. administration
+all these people are working in different groups and are part of an network, if we want to enforce traffic restrictions on who can access what systems on the network for eg..
+1. an administrator can access all the computers on the network
+2. a finance/hr team can access all the employees computers but they cannot access each of the them either or even administrator computers
+3. employess cannot accessany other computers of any group
+
+if we have given ip address as a sequence number we cannot identify which computer belongs to which group and cannot enforce restrictions. So to help us in group the computers to be part of one network, the ip addressing has been designed to be hierarchial in nature.
+	
+Now we lets say if the computers in the organization are assigned with an ip address as below.
+	
+											 192 (organization)
+												|
+											 168 (banglore)
+												|
+	     --------------------------------------
+				10        20            30        40
+	      |(emp)     |(finance)    |(hr)     |(admin)
+    ----------	 -------        ----    -------
+    1  2  3  4   1  2  3        1  2    1  2  3
+	
+employee computer: 192.168.10.1 	in the org, of banglore campus within employee group computer #1
+
+now using the hierarchial addressing model we can easily identify a computer belongs to which group of network and can enforce traffic restrictions on a group/network of computers from others easily.
+for eg.. 192.168.30.* (hr group) => 192.168.10.* (allow) = Route configuration on router 
+
+
+The 32-bit length ip address has been broken down into 4 equal octets. so the ipaddress has 4 8-bit portions
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

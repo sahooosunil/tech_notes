@@ -1,0 +1,56 @@
+1. gather the requirements to build the application
+2. choose the programming language based on the nature of the application
+3. setup the development environment by installing required software packages & tools
+	adopt devops tools:
+		- virtualization
+		- vagrant
+4. choose the process model that supports rapid application development and delivery
+	1. waterfall model
+	2. iterative/incremental model
+	3. spiral model
+	4. prototype model
+	5. agile based scrum methodology
+devops recommends to use scrum methodology so that we have faster feedback loop and frequent delivery of the application increments
+5. For collaborative application development use sourcecode management repository, there are lot of sourcecode management repository products are provided by various different vendors in the market
+	1. visual source safe
+	2. wincvs
+	3. perforce
+	4. pvcs
+	5. svn
+	6. git
+devops recommends to use git as an sourcecode management repository for better collaboration and faster delivery of the application
+
+6. upon developing the code, the developer cannot release the code to the qa for further testing, he/she is responsible first-in place for unittesting the code before the code is released to the qa
+
+the developer has to perform unittesting of the code manually.
+	1. run the program/application he has developed
+	2. pass the possible inputs to the application
+	3. verify the program is producing the expected outcome or not
+if passed, move to the next test scenario/testcase for testing all the possibilities
+if failed, fix the code by modifying and again perform the unit testing covering all possibilities
+
+The developer should not only verify the code he has written, additionally he has to test all the other related functionalities to verify the system is in tact
+The amount of time the developer is spending in unittesting the code is quite high
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

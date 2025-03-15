@@ -1,0 +1,217 @@
+What are variables, why do we need to use them?
+variables are the placeholders or the named memory locations in which we can store the values. wherever we need the value instead of using it directly we can refer the variable value within the program
+
+avoid literals being used in a program because we run into maintainance problems, whenever we need to change the literal value we need to gothrough line by line within the program and identify where we have used the literal and change the value which is an tedious job and difficult to maintain so avoid literals and use variables only
+
+How to declare variable in shellscript program?
+VARIABLE_NM=VALUE
+it is recommended to write the variable names using capital letters
+
+How to refer the variable value within the shell program?
+$VARIABLE_NM = so that shell interpreter understands its not command to be executed rather we are referring a variable to use its value.
+	
+usingvars.sh
+------------
+#!/bin/bash
+A=10
+B=20
+SUM=$[A+B]
+MUL=$[A\*B]
+SUB=$[B-A]
+DIV=$[B/A]
+
+echo "SUM : $SUM, SUB: $SUB, MUL: $MUL, DIV: $DIV"
+-----------------------------------------------------------------------------------------------------------------------------------
+How to collect dynamically the inputs while executing the shellscript program?
+if we want to execute a program with different inputs for several times, instead of modifying the variable values in running the program , we can let the program collect the input interactively during its execution which is called "interactive inputs" in shell program.
+	
+To collect the interactive inputs from the user during execution, the bash has provided an instruction called "read", that can be used for collecting the input data from the keyboard
+let us modify the above program to collect the data from the user during execution
+	
+userinputs.sh
+-------------
+#!/bin/bash
+echo "Enter A:"
+read A
+echo "Enter B:"
+read B
+SUM=$[A+B]
+MUL=$[A\*B]
+SUB=$[B-A]
+DIV=$[B/A]
+
+echo "SUM : $SUM, SUB: $SUB, MUL: $MUL, DIV: $DIV"
+	
+when we use echo to print an message, always echo prints an newline at the end of the message, leaving the cursor to the nextline. insead of using echo we can use -p option to print the message before reading in read command as below
+-p = stands for print or prompt
+
+read -p "Enter a :" A
+read -p "Enter b :" B
+
+the advantage with read is it doesnt prints newline at the end of the message, so that the cursor stays on the same line.
+-----------------------------------------------------------------------------------------------------------------------------------
+1. wap to take the radius of a circle and print the area of it
+area = pi * r * r (pi = 3.14)
+	
+circlearea.sh
+-------------
+#!/bin/bash
+PI=3.14
+read -p "enter radius :" RADIUS
+AREA=$[PI*RADIUS*RADIUS]
+echo "AREA: $AREA"
+-----------------------------------------------------------------------------------------------------------------------------------
+How to collect or pass the data non-interactively in a shellscript program?
+we can write a shellprogram to collect the input data dynamically at runtime during its execution by using "read" instruction, but the problem with interactive inputs are the user must and should be available at the computer to pass/provide interactive inputs in running the program.
+For eg.. in the below program.sh it is prompting for 3 inputs during its execution at different times while it is executing it. Now the user has to be available throughout the program execution time waiting for the program to prompt for user input thus making the user block at the machine without letting him perform any other operation.	
+	
+program.sh
+-----------
+read -p "fileType:" FILE_TYPE
+#300 lines instructions --> 5 minutes
+
+read -p "directoryLocation:" DIR_LOC
+#400 lines instructions --> 10 minutes
+find $DIR_LOC -name "$FILE_TYPE" -exec rm -rf {} \;
+
+read -p K
+
+here during the time of running/launching the program, the user knows with what values as input he wanted to execute the program, in such a case if we can design the shellprogram to take the inputs non-interactively while launching the program itself we can unblock the user from that machine and let the program executes touchless, this is called "touchless automation" 
+	
+	
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+developer:
+1. understand the requirements provided by business owner inorder to build the application
+2. choose the programming language in building the software application
+3. setup the development environment with all the tools required for developing the application like
+	3.1 programing language software 
+	3.2 ide and development tools
+	3.3 database servers
+	3.4 application servers
+4. choose the process model that helps or provide guidelines for developing and delivering the application
+	1. waterfall model
+	2. iterative or incremental model
+	3. spiral model
+	4. agile methodologies
+5. To support collaborative application development use an sourcecode management repository
+	1. vss
+	2. wincvs
+	3. git
+	4. svn
+	5. perforce
+6. choose an build tool that helps in building and packaging the application
+7. perform the unittesting to certify the application is running, so that it can be delivered to the qa engineers for further testing.
+	

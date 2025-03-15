@@ -1,0 +1,17 @@
+How to setup an Elastic Container Registry on aws cloudplatform?
+ECR stands for Elastic container registry, it is an managed service offered by the AWS Cloudplatform. We dont need to provision or manage the container registry, it is server-less or self-managed by the aws cloudplatform, all that we need to do is just create an repository for each docker image we want to publish into it.
+	
+There are 2 types of repositories are there
+1. private repository = only the IAM user who has necessary policies attached can only access this repository
+2. public repository = anyone can access, pull/push the images into the repository
+
+per each docker image we want to publish we need to create one repository in ECR. To publish and pull the images from these repositories we need to login into ecr registry, if it is an private repository. 
+	
+We need to create an IAM User attached with policy (either at user-level or group-level)	with policy: AmazonEC2ContainerRegistryFullAccess
+
+goto elastic container registry and click on get started or create repository. 
+	1. private repository : with a name
+	2. goto the repository and click on view push commands. It provides commands for login, pull and push into the repository
+
+aws ecr get-login-password --region regionName | docker login --username AWS --password-stdin registryURL
+

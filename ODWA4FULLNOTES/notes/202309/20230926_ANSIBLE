@@ -1,0 +1,81 @@
+Python
+Python is an high-level platform independent scripting language. It has rich set of modules/libraries that can be reused in quickly building the software applications. Never the programmer has to write programming logic in performing the operations, as there is always an module available for reuse. Python is heavily used for writing administrative scripts in configuring and managing the server-side software.	
+	
+There are lot of advantages of using python language in performing software configuration management automation:
+1. Python is an high-level programming language with lot of features in it, we can leverage the language features in quickly writing the software programs in acheving the software configuration management automation.	
+2. It is an platform independent programming language, so once the code is written in python, that can be executed on any platform
+3. it has error handling/management capabilities built into the language, that allows us to write better programs in failure handling aswell.
+4. in-built logging support is available in python, so that we can easily debug the scripts
+5. the rich setof modules/libraries of the python makes us quickly build automation scripts
+
+dis-advantages:-
+1. need strong programming language basics and has to learn python programming to work with, thus making it complex to use
+2. idempotancy is still difficult to achieve, still the ops engineers has to write complex conditional logic in determining the desired state of the system to perform the operation
+3. keeping track of the software packages and configurations being applied on the infrastructure is very complex and python doesnt support state management
+4. orchestrating the code modules in achieving the automation is highly complex
+
+
+To install and configure the software packages on the infrastructure we wanted to accomplish the automation with below requirements:
+1. no complex programming logic to be written in implementing the software configuration management automation
+2. platform independent
+3. idempotancy
+4. logging capabilities
+5. exception/error handling/management capabilities
+6. state management, through which we could be able to keep track of which fleet machines are installed with which software packages and configurations of what versions
+7. complex code automations should be easier to orchestrate
+
+That is where software configuration management tools are introduced. There are lot of software configuration management tools are available in market either as opensource or commercial distributions 
+1. Chef
+2. Ansible
+3. Puppet
+4. Salt
+
+These software configuration management tools works based on #2 architectures
+1. Push-based architecture
+1.1 Ansible (opensource)
+1.2 Ansible Tower (push/pull) (commercial)
+1.3 Puppet
+1.4 Salt stack
+
+2. Pull-based architecture
+2.1. Chef
+2.2. Ansible Tower
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,121 @@
+Docker Compose
+--------------
+
+Docker Compose is used to run multiple containers as a single service. For example we have an java webapplication that requires rediscache, elastic search and database for running it, we can create one file which would start all of these docker containers as a service without the need to start each container separately
+
+advantages:-
+1. simplified control: docker compose allows us to define and manage multiple containers in one single YAML file. So it simplifies the complex task of orchestrating and coordinating various containers/services making the job easier
+
+2. using docker compose we can replicate the process of running the containers accross the environments easily.
+	
+3. docker compose configuration files can be easy to share thus supporting collaborating development in a team. 
+	
+4. docker compose caches the configuration used to create a container so that when we restart the service that has not been changed, compose reuse the existing container rather than creating new containers thus reducing the time and supports rapid development
+
+5. docker compose support variables in compose configuration file, so that we can customize and make the compose portable acorss the environments.
+	
+How to install the docker compose?
+upon installing the docker-desktop for windows/mac/linux by default it will have docker-compose installed in it we can start directly using it.
+	
+docker-compose version
+
+How to run an application using docker compose?
+	
+Inorder to run an docker containerized application using docker compose
+1. we need to have our application being packaged into docker image and should available either in local repository of the docker workstation or should be available to pulled from docker registry
+2. we need to write docker-compose.yml by defining the containers with their configurations to start them.
+	
+docker-compose.yml
+------------------
+---
+version: ''
+services:
+  covidodb:
+    image: mysql:5.7.2
+		restart: always
+		environment:
+      - MYSQL_DATABASE=covidodb
+			- MYSQL_ROOT_PASSWORD=welcome1
+		networks:
+      - covido_ntwk
+		volumes:
+      - covidovol:/var/lib/mysql/
+			- ./db/covidodb.sql:/docker-entrypoint-initdb.d/covidodb.sql	
+	covido:
+    image: covido:1.0
+		networks:
+      - covido_ntwk
+		ports:
+      - 8080:8080
+networks:
+  covido_ntwk
+	  driver: bridge		
+...
+
+docker compose up
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+ 

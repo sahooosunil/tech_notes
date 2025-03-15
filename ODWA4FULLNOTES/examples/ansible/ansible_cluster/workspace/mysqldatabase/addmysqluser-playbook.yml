@@ -1,0 +1,13 @@
+---
+- name: add new user
+  hosts: all
+  tasks:
+    - name: create mysql user
+      mysql_user:
+        name: gstoreuser
+        password: welcome1
+        state: present
+        priv: '*.*:ALL'
+        login_user: root
+        login_password: root
+...

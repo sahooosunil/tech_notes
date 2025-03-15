@@ -1,0 +1,88 @@
+Storage domain
+--------------
+all the storage related services are provided aspart of the storage domain. There are 6 services are there in storage domain
+1. S3 Storage
+2. Elastic Block Storage (EBS)
+3. Elastic FileSystem (EFS)
+4. Amazon S3 Glacier
+5. Snowball
+6. AWS Storage Gateway
+
+1. S3 Storage
+S3 stands for simple storage service, it is an object storage database provided by aws cloudplatform, for storing any type of objects withit like audio, videos, images, documents (xls, pdf, .docx, .ppt) etc and can be accessed from anywhere.
+  
+S3 is an managed service, and server-less similar to DynamoDb. it is used for various purposes like
+1. static webhosting
+2. data-streaming pipelines
+3. storing and distributing objects
+
+For each object we store in S3 it generates an unique identifier, so that using the id we can access and manage the object inside. The objects can be stored and organized by keeping them into buckets.
+  
+Buckets are the way through which we group related objects together and can enforce the access restrictions on these objects. We can imagine or map an bucket to an folder/directory on the Filesystem.
+While creating bucket, the name of the bucket should be unique among the other buckets that are created on the aws cloudplatform. 
+  
+So from the above we can understand, to store the objects of data in S3, we need to create one bucket. By default when we create a bucket in S3 Storage service, the public access to the buckets and its objects are disabled. It means the people/clients needs to authenticate in accessing/managing the objects  inside the bucket.
+  
+  
+We need to enable access to the buckets and objects explicitly. There are 2 ways we can enable access to the objects and buckets
+1. acl      = access control list
+2. policies = bucket policies through which we can control the access to the objects/buckets
+
+1. acl = acl stands for access control list and it is the old/deprecated mechanism for enforcing traffic restrictions on the buckets and objects and it is not recommended by the aws itself.
+
+2. policies
+instead of using acls we can attach policies both at bucket-level and object-level to grant access. it is recommended to use policies over acl in granting the access.
+
+There are 2 types of policies are there
+1. IAM policies    = created at the account level and can be entitled to a resource granting the access to a user. 
+sid
+version
+actions
+effect
+resource
+principle (optional)
+
+2. bucket policies = bucket policies are directly defined and attached to the storage bucket. these cannot be reused.
+
+For eg.. we want all the users to access any of the buckets in the cloud account, but for one of the bucket we dont want to grant access.
+This can be achieved by writing #2 policies
+1. IAM policy = allowing everyone to access all the buckets of the account
+2. Bucket-level policy = to the bucket on whom we want to restrict access define the policy denying the access
+
+5 buckets = #5 users you want to grant similar permissions
+
+
+
+
+
+
+  
+  
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

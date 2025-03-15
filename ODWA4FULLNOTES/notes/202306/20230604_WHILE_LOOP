@@ -1,0 +1,231 @@
+Loop control statements
+if we want to execute a block of code at an point within the program repeatedly for certain noof times or based on an condition then we need to use loop control statements
+There are 3 types of loop control statements are there
+1. while
+2. for
+3. until
+
+#1. while loop
+while is an loop control statement, that executes repeatedly a block of code until the condition has been true. once the condition becomes false, then control breaks out of the loop and continue to execute rest of the lines of program.
+	
+syntax:-
+while [ condition ]
+do
+	block of code
+done
+
+if we want to repeatedly execute a block of code for n number of times, rather than a condition, such types of repeatitive execution of the code are called counter based iterations/loops. These n occurences can be achieved using
+1. counter variable = to keep track of how many number of times the block of code has been executed.
+2. condition        = condition to verify the counter has reached to desired number of iterations or not
+3. incrementation   = incrementation for counting the loop executions
+
+let us write a program to print good morning for "5" times
+printmessage.sh
+#!/bin/bash
+I=1 // counter
+N=5    //condition
+while [ $I -le $N ]	
+do
+	echo "Good Morning"
+	I=$[I+1] // incrementation
+done
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to print N numbers from 1 to N sequential on the console
+
+printNNumbers.sh
+----------------
+#!/bin/bash
+read -p "N :" N
+I=1
+	
+while [ $I -le $N ]	
+do
+	echo " $I"
+	I=$[I+1]
+done
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to print all even numbers between 1 to N
+for eg.. if we enter N = 10, then print all the even numbers between 1 to 10 as 2, 4, 6, 8, 10
+	
+printeven.sh
+------------
+#!/bin/bash
+I=2
+read -p "N :" N
+
+while [ $I -le $N ]
+do
+	printf "%d\t" $I
+	I=$[I+2]
+done
+
+(or)
+	
+printeven.sh
+#!/bin/bash
+I=1
+read -p "N : " N
+while [ $I -le $N ]
+do
+	REM=$[i%2]
+	if [ $REM -eq 0 ]; then
+		echo "$I"
+	fi
+	I=$[I+1]
+done
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to print N multiplication table from 1 to 10
+for N=2
+1x2 = 2
+2x2 = 4
+3x2 = 6
+4x2 = 8
+5x2 = 10
+6x2 = 12
+7x2 = 14
+8x2 = 16
+9x2 = 18
+10x2 = 20
+	
+printTable.sh
+#!/bin/bash
+I=1
+read -p "N : " N
+
+while [ $I -le 10 ]
+do
+	MUL=$[I*N]
+	printf "%d x %d = %d\n"$I $N $MUL
+	I=$[I+1]
+done
+----------------------------------------------------------------------------------------------------------------------------------
+wap to print fibinocci series upto N
+fibinocci series means: next number is the sum of previous 2 numbers
+1 1 2 3 5 8 13 21 34...N
+
+fibinocci.sh
+#!/bin/bash
+read -p "N :" N
+PN=0
+CN=1
+NN=1
+echo $NN
+while [ $NN -le $N ]
+do
+	echo  $NN
+	PN=$CN
+	CN=$NN
+	NN=$[PN + CN]
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

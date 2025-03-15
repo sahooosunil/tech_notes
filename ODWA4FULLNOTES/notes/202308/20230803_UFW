@@ -1,0 +1,109 @@
+How to register a shellscript program as Service in initd system?
+	
+memory monitoring program
+
+memorymonitoring.sh [/usr/bin]
+#!/bin/bash
+while [ true ]
+do
+	date >> memorymonitoring.log
+	free -h | grep -w "Mem:" | awk '{print $2 $7}' >> /var/memorymonitoring.log	
+	sleep 120s
+done
+
+How to configure the above shellscript program as Service?
+memorymonitoring.service [/etc/systemd/system]	
+[Unit]
+description=service for monitoring and logging the memory usage 
+after=Network.target
+
+[Service]
+ExecStart=/usr/bin/memorymonitoring.sh
+Type=simple
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+
+systemctl is an utility used for register, stop, start, monitoring and managing the services in the initd system. superuser command and needs sudoers previlige to use it
+
+1. sudo systemctl daemon-reload
+2. sudo systemctl start serviceName
+3. sudo systemctl stop serviceName
+4. sudo systemctl restart serviceName
+5. sudo systemctl disable serviceName
+6. sudo systemctl enable serviceName
+7. sudo systemctl list-units
+
+
+
+
+sudo systemctl daemon-reload = loads the service definition files from the predefined locations
+sudo systemctl start serviceName = starts the service, but will not register it to work upon bootup of the operating system, we need to do sudo systemctl enable serviceName, thus register the service/enables the service to be executed based on the runLevel we configured automatically
+-----------------------------------------------------------------------------------------------------------------------------------
+Firewall
+Firewall can be either an Software that is embedded within the operating system of the computer or can be an hardware that sits on the network, used for enforcing the traffic restrictions on to the computers or a group of computers over the network
+Using the firewall we can restrict other users of the network to gain access to the programs that are running on our computer.
+	
+Most of the popular operating systems provides firewall as an inbuilt software package for securing the access to the computer. The ubuntu operating system has provided iptables as firewall software.
+ufw = "uncomplicated firewall"		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

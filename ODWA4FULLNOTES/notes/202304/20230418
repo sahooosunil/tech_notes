@@ -1,0 +1,83 @@
+What is sudoer?
+we can grant permission to any user of the linux operating system to execute superuser commands onbehalf of the root user by granting sudo access to the user using sudoers
+
+sudo = super user do, so an user who has been promoted as an sudoer can execute any linux commands as a root using sudo command
+
+How to make an user as an sudoer?
+There are 3 ways are there
+1. /etc/sudoers file
+2. /etc/sudoers.d directory
+3. sudoers group
+
+1. /etc/sudoers file
+In the linux operating system there is an configuration file under /etc directory called "sudoers" in which we can write the configuration information promoting a user/group as a sudoer
+There are 2 sections are there in this file
+1. user section = to promote an user as sudoer
+2. group section = to promote a group of users as sudoers
+
+1. user section
+we can promote an user as a sudoer using the below entry under the user section
+username ALL=(ALL:ALL) ALL
+
+1. ALL = indicates user is allowed to grab the sudoer access from any location
+2. ALL = indicates can run commands as all users
+3. ALL = indicates can run commands as all groups
+4. ALL = indicates these rules applies to all commands
+
+by default the /etc/sudoers file is accessible to the root user only as read-only file
+1. because only the root should be allowed to promote a user as an sudoer
+2. it has been made as read-only to avoid direct modifications into the file because any syntax errors in the file while modifying it leads to loss of sudo access for all the users of the linux
+
+How to safely modify the sudoers file?
+The linux has provided an utility visudo using this root user can safely modify the sudoers file
+
+
+
+
+visudo
+default = /etc/sudoers
+
+modify
+=save 
+it checks for syntax of the changes
+/etc/sudoers.tmp
+mv /etc/sudoers.tmp /etc/sudoers
+
+1. visudo, why to use it for editing /etc/sudoers
+2. ALL=(ALL:ALL) ALL
+3. how to promote an linux user as a sudoer
+4. executing any command onbehalf of any user means what?
+5. executing any command onbehalf of any group means what?
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

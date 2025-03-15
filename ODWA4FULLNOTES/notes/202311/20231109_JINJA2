@@ -1,0 +1,167 @@
+1. loop thru simple list
+
+- name: loop thru list
+  hosts: all
+  vars:
+    groceries:
+      - grains
+      - pulses
+      - rice
+  tasks:
+    - name: show groceries
+      debug:
+        msg: "{{item}}"
+      loop: "{{groceries}}"        
+          
+2. loop thru hashes
+write a playbook to create linux users with the given properties
+
+- name: loop thru hashes
+  hosts: all
+  vars:
+    users:
+     - {user: "bob", uid: 1010, group: "devopsgroup", shell_type: "/bin/sh", create_home: "yes"}
+     - {user: "greg", uid: 1011, group: "devopsgroup", shell_type: "/bin/bash", create_home: "no"}
+     - {user: "mike", uid: 1011, group: "devopsgroup", shell_type: "/bin/sh", create_home: "yes"}
+  tasks:
+    - name: create linux users
+      user:
+        name: "{{item.user}}"
+        uid: "{{item.uid}}"    
+        group: "{{item.group}}"
+        shell: "{{item.shell_type}}"    
+        create_home: "{{item.create_home}}"    
+      become: yes
+      loop: "{{users}}"
+      
+3. loop through register variables
+ls -l /vagrant/workspace
+drwxrwxrwx 1 vagrant vagrant    0 Oct 22 03:00 basicplaybook
+drwxrwxrwx 1 vagrant vagrant    0 Nov  4 01:00 changed_when
+drwxrwxrwx 1 vagrant vagrant    0 Oct 20 01:13 commandmodule
+drwxrwxrwx 1 vagrant vagrant    0 Nov  7 01:06 conditionalstatements
+drwxrwxrwx 1 vagrant vagrant    0 Oct 22 03:00 expectplaybook
+drwxrwxrwx 1 vagrant vagrant    0 Oct 21 01:15 expectshell
+drwxrwxrwx 1 vagrant vagrant    0 Nov  3 01:16 failed_when
+drwxrwxrwx 1 vagrant vagrant    0 Oct 26 01:21 filecategory
+drwxrwxrwx 1 vagrant vagrant    0 Oct  9 01:27 groups
+drwxrwxrwx 1 vagrant vagrant    0 Oct  9 01:18 inventoryFile
+drwxrwxrwx 1 vagrant vagrant 4096 Nov  9 00:53 loopstatements
+drwxrwxrwx 1 vagrant vagrant    0 Oct 29 02:23 mysqldatabase
+drwxrwxrwx 1 vagrant vagrant    0 Oct 28 01:00 pkgmodules
+drwxrwxrwx 1 vagrant vagrant    0 Oct 20 01:17 shellmodule
+drwxrwxrwx 1 vagrant vagrant    0 Oct 28 11:47 systemmodule
+drwxrwxrwx 1 vagrant vagrant    0 Nov  1 01:24 variables
+
+failed_when = is found or not
+found or not_found
+
+---
+- name: loop thru register variable
+  hosts: all
+  vars:
+    search_input: failed_when
+    source_dir: /vagrant/workspace/
+  tasks:
+    - name: list files/folders
+      shell: ls -l "{{source_dir}}" | grep "{{search_input}}"
+      register: resultlist
+    - name: show result
+      debug:
+        msg: "{{item}}"
+      loop: "{{resultlist.stdout_lines}}"              
+
+4. loop until condition
+eg: wait until the app is up to access it
+
+- name: loop thru until condition
+  hosts: all
+  tasks:
+    - name: start tomcatserver
+      service:
+        name: "tomcat"
+        state: "started"
+      become: yes
+    - name: wait until the application status is Ready
+      get_url:
+        url: "http://localhost:8080/istore/health"
+      register: "app_status"        
+      until: "{{app_status.stdout = OK}}"      
+      retries: 10
+      delay: 10
+    - name: debug
+      debug:
+        msg: "app is ready for accessing"
+            
+5. loop through dictionaries            
+dictionaries are the key/value pairs we want to iterate through
+dictionaries contains random key/value pairs, so we cannot iterate through these items as we dont know the keyname to access the value in each item. 
+So we are converting these random key/value pairs into items as {key: '', value: ''} using the ansible filter dict2items and looping through them.
+            
+---
+- name: loop thru dictionaries
+  hosts: all
+  vars:
+    groceries:
+      rice: 25kg
+      dal: 5kg
+      flour: 2kg
+  tasks:
+    - name: loop thru dictionary
+      debug:
+        msg: "{{item.key}} and {{item.value}}"
+      loop: "{{groceries | dict2items }}"        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      

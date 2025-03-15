@@ -1,0 +1,371 @@
+Kubernetes (k8s)
+Kubernetes is an container cluster manager, it takes care of distributing containerized applications on a cluster of computers, scheduling, monitoring and scaling the containerized applications.
+	
+While working on containerized applications, running them on a cluster of computers has lot of problems:
+1. distributing the containerized applications on a network of computers is very difficult.
+2. keeping track of which containers are running on which nodes of the cluster is very difficult.
+3. patching and upgrading the containers are very difficult, we need to identify the nodes of the cluster where these containers are running by manually SSH into those notes, stop the running containers and rollout the new versions of them. To avoid downtime we need to choose an rollout strategy as well.
+4. monitoring and replacing the crash containers is a continous job and requires a dedicated support/monitoring team.
+5. keeping track of the resource capacity and their utilization and incase if their resource consumption is high on a node, we need to migrate those containers onto an another suitable node
+6. scaling the containerized applications based on the workloads
+
+all these aspects of scheduling, monitoring and managing the containerized applications over the cluster of machines manually is seems to be very difficult, to overcome the above problems/challenges in managing the containerized applications we need to use Kubernetes (k8s)
+	
+There are 4 major components are there in Kubernetes (k8s)
+	1. Master Node or Control Plane
+	2. Worker Node
+	3. Kubectl
+	4. etcd
+	
+1. Master Node or Control Plane
+The Kubernetes Master Node or Control Plane is the central component of the Kubernetes Cluster, it takes care of scheduling, managing and monitoring the containers across the workernodes of the cluster
+Within the Control Plane or Master, it has 3 more sub-components in it
+1.1 Api Manager
+1.2 Scheduler
+1.3 Controller Manager
+
+
+1.1 Api Manager
+Api Manager acts as an front-end or interface through which we communicate with the control plane or the kubernetes engine. Api Manager is built as HTTP/REST Endpoints using which we can interact with the kubernetes control plane
+There are 2 major activities performed by the Api Manager
+a) validates the spec file that is passed aspart of the request
+b) authenticates and authorizes the requests that are being received
+
+1.2 Scheduler
+upon receiving the request, the api manager persists the spec into the etcd and forwards the request to the scheduler. The scheduler does the job of communicating with the Kubelet processes that are running on each workernode across the cluster. It identifies an appropriate worknode suitable enought for running the pod, and handovers the job of running the pod on the workernode to the kubelet process.
+	
+1.3 Controller Manager
+The Controller Manager is an daemon or background process, that always ensures to bring the cluster to its desired state. There are 5 types of controllers are there
+1. ReplicaSet Controller = The ReplicaSet controller does the job of running desired number of pod replicas are running on the cluster.	
+2. DaemonSet Controller = It ensures an pod is running always across all the nodes of the cluster
+3. Service  = discovers the running pods on the cluster based on pod labels and groups them and expose them over the cluster. It takes care of loadbalancing the requests receives across the pods of the cluster.
+4. DeploymentSet Controller = used for upgrading or patching the pods based on the upgrade or rollout strategy
+5. Job Controller = Helps us in running one-time operation on the nodes of the cluster
+
+2. Worker Node
+Kubernetes Worker Node can be an Physical server / Virtual machine / Cloud Instance that is attached to the Kubernetes Master or Control Plane, on which the pods are scheduled for execution
+There are 3 major components to be installed on each worknode in order to register with Control Plane and Schedule pods for execution on them
+1. Container Runtime 
+A WorkerNoder must be installed with an containerization engine, so that the containerized applications can be executed on them. For eg.. we can install docker on the workernodes to run docker containers on them
+
+2. Kubelet
+Kubelet is a process that runs on each workernode of the cluster. The Kubelet process acts as an agent, through which the control plane or master will communicate with the workernode. The Master Node schedules a pod for execution on the cluster by handovering the job to the kubelet process. There are several activities performed by the kubelet process
+1. Kubelet grathers the information about the running pods on the workernode and their statuses and reports it to the Control Plane when requested
+2. It takes the job of running the pods on the workernode
+3. through the help of kubelet process only the control place will determine whether a Worker node has enought computing capacity for scheduling an pod for execution or not
+
+3. Kubeproxy
+Kubeproxy enables the traffic to the external network for a pod on the cluster
+
+#.3 Kubectl
+Kubectl is an cli tool provided by Kubernetes through which we can communicate with the api manager (or) Control Plane. It helps us in administering, monitoring and managing the kubernetes cluster
+
+#4. etcd
+etcd is an key/value pair database where all the kubernetes objects information will be stored
+--------------------------------------------------------------------------------------------------------------------------------
+How to install kubernetes cluster?
+There are multiple ways of setting up the kubernetes cluster
+1. on-premise with physical server machines
+2. through virtual machines
+3. minikube 
+4. aws eks cluster
+5. docker-for-desktop 
+
+AWS EKS Cluster
+---------------
+The AWS Cloud Platform has provided an service called EKS stands for "Elastic Kubernetes Cluster", it is an managed service provided by aws cloudplatform to host kubernetes on AWS. The AWS Cloudplatform EKS Service itself takes care of provisioning master/control plane, workernodes and setup the Cluster with CNI Network and installing necessary components on each worker node like
+1. container runtime (docker)
+2. kubelet
+3. kubeproxy 
+
+There are lot of advantages of using EKS Cluster over the on-premise Kubernetes cluster
+1. We dont have to setup the kubernetes cluster manually, rather with a few clicks of buttons the AWS itself takescare of setting up the cluster for us
+2. High Availability of the cluster is guaranteed, as AWS takes care of provisioning the worker nodes across the availability zones of the region
+3. High availability of control plane is also taken care by AWS itself. 
+4. Monitoring the Kubernetes cluster, tracking the health of the worker nodes, incase if any of the worker nodes are crashed, those are replaced with healther nodes will be taken care by EKS itself
+5. The AWS itself takes care of scaleout/scale-in the cluster capacity/size based on the load on the cluster, so that we never run out of cluster capacity
+
+How many ways we can provision an EKS cluster on AWS Cloudplatform?
+There are 3 ways we can provision an EKS cluster on AWS Cloudplatform
+1. through management console = we can manually configure or setup eks cluster through cloud console
+2. ekscli interface = ekscli is an command-line tool provided for quickly setting up the eks cluster on our cloud account
+3. through iac tools = we can use terraform, ansible, cloudformation etc for setting up the eks cluster 
+
+Let us understand how to setup the EKS Cluster through management console
+There are 2 parts are there in setting up an eks cluster on aws cloudplatform
+1. control plane or master node
+2. worker nodes
+
+There are 3 topologies are there in setting up the eks cluster
+1. both controlplane and workernodes on public subnet = used in dev environments, but not recommended for production deployments as it poses security risk
+2. master or controlplane on public subnet and worker nodes on private subnet = used in organization env, allowing the people in teams to manage the cluster directly. Not recommended for production workloads
+3. both control plane and worker nodes on private subnet only = highly recommended for production usage
+
+Let us setup the eks cluster with option#2, which is control plane on public subnet and worker nodes on private subnets
+
+Networking:
+#1. create an vpc
+vpcname: quicktoolsvpc
+cidr: 10.1.0.0/16
+	
+#2. create 2 public subnets and 2 private subnets for provisioning control plane and worker nodes
+ensure we distribute these public and private subnets across the availability zones for high-availabibility
+
+1. quicktoolspubsn1 10.1.1.0/24
+2. quicktoolspubsn2 10.1.2.0/24
+3. quicktoolsprivsn3 10.1.3.0/24	
+4. quicktoolsprivsn4 10.1.4.0/24	
+	
+#3. provision internet gateway and attach to vpc 
+internet gateway: quicktoolsig
+attach to: quicktoolsvpc
+
+#4. route table for routing the public network traffic through the internet gateway
+routetable: quicktoolsigrt
+subnet association: quicktoolspubsn1, quicktoolspubsn2
+route: 0.0.0.0/0 -> quicktoolsig
+
+Provision EKS Cluster [Control Plane]:
+#1. create role
+The EKS Cluster or Master Node takes care of provisioning, installing the workernodes based on the configuration we provided. To let the eks cluster manage the workernodes we need to attach an IAM Role to the Master Node while provisioning. So let us first setup an IAM Role, so that we can assign to the Master while provisioning
+
+1. Goto IAM Policies and services and choose create role
+2. Select Category Type: EKSCluster
+3. add the policy as EKSClusterPolicy into the role and create it
+
+#2. create cluster
+goto elastic kubernetes service and click on create cluster
+1. cluster name: quicktoolseks
+2. choose the vpc: quicktoolsvpc
+3. choose the way you want to host the cluster (topology): (Master: public subnet, Workernodes : private subnet)
+4. Attach Role we have created above
+click on create cluster
+
+upon creating the cluster, it setup or provisions only control plane without workernodes, now we need to setup the workernodes
+
+Setting up Workernodes:
+1. To setup the workernodes we need to create an IAM Role and should attach to each workernode while provisioning
+goto IAM policies and choose to create a new role
+Choose Category: EC2
+Policies:
+1. AmazonEKSWorkerNodePolicy
+2. AmazonEKSContainerRegistryReadOnly
+3. AmazonEKS_CNI_Policy
+create role
+
+2. goto the eks cluster we have created above and click on add NodeGroup
+We can think of a NodeGroup as equivalent to ASG. The NodeGroup takes care of provisioning the workernodes and attach to the EKS MasterNode.
+Within the NodeGroup we need to specify the Workernode configuration:
+1. shape of the workernodes 
+2. min, max, initial worker nodes
+3. scale-out/scale-in thresholds
+4. subnets
+
+The NodeGroup based on the above configurations takes care of provisioning and managing the worker nodes automatically
+--------------------------------------------------------------------------------------------------------------------------------
+How to setup the kubectl on the ubuntu platform?
+documentation: https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html	
+
+1. create an directory under $USER_HOME
+mkdir $USER_HOME/bin
+
+2. navigate into the $USER_HOME/bin directory
+cd $USER_HOME/bin
+
+3. download the kubectl binary
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.0/2024-01-04/bin/linux/arm64/kubectl
+chmod +x ./kubectl
+export PATH=$HOME/bin:$PATH
+
+optional: add the PATH to the bashrc
+echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
+
+kubectl version --client
+
+
+	
+How to add the kubeconfig to workstation to access the eks cluster using kubectl
+run the below command:
+aws eks update-kubeconfig --region region-code --name my-cluster
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

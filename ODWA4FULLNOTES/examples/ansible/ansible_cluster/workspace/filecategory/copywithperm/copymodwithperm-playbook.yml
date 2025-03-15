@@ -1,0 +1,14 @@
+---
+- name: copy with perm
+  hosts: all
+  tasks:
+    - name: copy file with owner, group and permissions
+      copy:
+        src: file1.txt
+        dest: /tmp/
+        owner: bob
+        group: bob
+        mode: 0654
+        remote_src: yes
+      become: yes
+...

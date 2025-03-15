@@ -1,0 +1,232 @@
+1. How to know type of the File?
+file filename
+
+2. How to know the details of a File?
+stat filename
+
+3. How to delete a file from the File System?
+rm filename
+
+4. How to delete special files forcibility?
+rm -f filename
+
+5. How to delete the directory?
+There are 2 ways are there
+1. rmdir directory = directory must be empty before using rmdir
+2. rm -r directory = it recurrsively deletes the contents of the directory along with the directory
+-----------------------------------------------------------------------------------------------------------------------------------
+working with copy and move commands
+
+1. cp stands for copy and it is used for copying files/folders from one location to another location on the FileSystem. The source files/directory will not be moved, rather it would be only copied
+
+How to copy a File from one location to another location?
+$HOME
+|-shop
+  |-fruits
+	  |-bananas.txt
+|-kitchen
+	
+let us copy bananas from $HOME/shop/fruits/bananas.txt to kitchen directory
+
+cp sourcefile destinationDirectory/
+1. goto fruits directory and copy bananas.txt into kitchen as below
+cd $HOME/shop/fruits/
+cp bananas.txt ../../kitchen
+
+2. be in $HOME directory and copy using full paths to both location
+cp shop/fruits/bananas.txt kitchen/
+	
+2. How to copy the directory from one location to another location?
+$HOME
+|-store
+	|-products
+		|-groceries
+			|-dal.txt
+			|-salt.txt
+		|-kitchenappliances
+			|-tools.txt
+			|-vessels.txt
+|-warehouse
+
+cp only copies the files from one location to another location. but cp doesnt work on directories, if we want to copy the directory and its contents from one location to another location we need to -R switch (Recursively) along with cp to copy the directory contents
+
+1. we want to copy the contents of the products directory into warehouse, but not products directory itself
+cp -R "$HOME/store/products/*" $HOME/warehouse
+
+2. now we want to copy contents of the products directory along with products directory also into warehouse, then we need to use -R
+cp -R $HOME/store/products/ $HOME/warehouse
+-----------------------------------------------------------------------------------------------------------------------------------
+Redirection operators
+Every bash command takes the input from STDIN and writes the output to STDOUT, if we want to redirect the input/output of a bash command we can use redirection operators.
+There are 2 types of redirection operators are there
+1. < = input redirector operator, to redirect the input source for a command
+2. > = output redirector operator, to redirect the output of a linux command to a different destination other than STDOUT
+
+How to write an output to an STDOUT directory?
+echo "message"
+instead of writing the output to an STDOUT we can redirect the output into a file using > redirector operator
+echo "message" > filename
+if the given destination file already exists with data, the > operator overwrites the contents of the file.
+
+we can use >>, it will appends to the existing file rather than replacing the contents of an existing file
+echo "hi" > greetings.txt
+echo "good morning" > greetings.txt
+cat greetings.txt = good morning (only), because > will replace or overwrites the contents of an existing file
+
+to avoid this we can use >> operator as below
+echo "hi" > greetings.txt
+echo "good morning" >> greetings.txt
+cat greetings.text = hi
+                     good morning
+										 
+How to create a file with data, by reading the data from the STDIN?
+how to interactively read the data as an input from the user and write to a file?
+	
+cat < filename = reads the data as an input from given file and writes to the STDOUT
+cat = by default when we dont pass an filename or input redirector the cat reads the data from STDIN and writes to STDOUT
+
+cat > filename = here the cat reads the data from STDIN since we didnt supplied filename as an argument, and writes the data onto give filename since we used output redirector operator
+
+
+how to copy the contents of one file into another file without using cp?
+cat < file1 > file2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

@@ -1,0 +1,221 @@
+firewall
+---------
+
+ufw stands for "uncomplicated firewall". its an interface/tool through which we can manage the iptables firewall software on the ubuntu operating system. ufw is packaged/distributed and installed aspart of the ubuntu distribution.
+	
+by default the ufw firewall is disabled, we need to explicitly enable it for restricting the network traffic
+1. enable ufw
+sudo ufw enable
+
+2. how to see the status
+sudo ufw status
+
+3. to see the traffic rules enforced
+sudo ufw status verbose
+
+4. to see the rule# of the rules defined in the firewall
+sudo ufw status numbered
+
+5. allow/deny traffic to the programs runinng on a specific port
+sudo ufw allow/deny portno
+
+6. to a range of ports of a protocol
+sudo ufw allow/deny port1:port2/protocol
+
+7. allow/deny traffic from a specific sourceip address
+sudo ufw allow/deny from sourceip
+
+8. allow/deny traffic for a specific protocol
+sudo ufw allow/deny protocol
+
+9. how to delete a rule
+sudo ufw delete rule#
+-----------------------------------------------------------------------------------------------------------------------------------
+SSH (Secure Shell)
+SSH stands for secure shell, SSH is used for accessing the shell of a remote computer.
+	
+Why do we need to access the shell of an remote computer over the network?
+In an organization they will be lot of computers being setup in an network and is used by the employees of the organization. The System administrators has to manage, administrator, monitor, install or troubleshoot these computers that are used by the employees.
+	
+For the administrator to perform the administrative activies on these computers, he/she needs to be physically available at that machine	to carry out the activities. many of the times these machines are distributed across the branches or geographies and having the administrator physically available all the time to manage these computers is quite difficult and even time consuming job as well.
+	
+So the only way the administrators can access and perform operations on these computers is through the remote access over the network, this can be done using SSH.
+SSH is widely used protocol to access the cloud machines of the cloud provider.
+---------------------------------------------------------------------------------------------------------------------------------	
+How does SSH works?
+Through SSH we gain access to the shell of the remote computer, so that we can perform operations on the remote computer by issuing the linux commands to the remote computer shell.
+In order for SSH to work, we need to have an SSH Server program installed on the remote computer, whom we wanted to access. The system administrator has to have an machine installed with SSH client program onthe same network of the remote computer.
+	
+using the SSHClient program the administrator connects to the SSH Server program of the remote computer over the network, upon establishing the connection he/she issues an linux/shell commands to the SSHClient program, that transfers these commands over the network to remote SSH Server program.
+The SSH Server program executes the commands on the shell of the remote computer and captures the output and returns back to the SSHClient program, so that the client programs displays that as an output of the command to the administrator thus virtually giving an feel of accessing the remote computer itself.
+	
+
+	
+Before SSH there used to be an protocol called "telnet"	through which we can gain access to the shell of the remote computer. The problem with telnet is all the information that is exchanged between the client/server program is plain/text format thus making it higly insecured. So to overcome the problem with telnet SSH has been introduced.
+	
+What makes the SSH secured?
+SSH uses cryptographic technics in exchanging the information between the server/client program over the network, thus making it secured. one of the cryptographic technic is encryption/decryption. Encryption/Decryption is a technic of writing the information into another format, that other people cannot understand unless they Decrypt it using the secret key that is used for encryption.
+	
+Encryption and decryption works based on encryption key. using the encryption key we encrypt the data into another format, so that no one can understand the data. The receiver of the information needs to have the key to decrypt the data. The SSH works mainly on Encryption/Decryption technic only, so the better the key is the information will be more secured.
+	
+There are various key generation algorithms are there that can be used for generating strong encryption keys. These key generation algorithms generates keys based on various different mathematicaly operations and keys that are generated seems to be unique from another.
+	
+There are different key generation algorithms are available as below.
+	1. RSA
+	2. SHA
+	3. AES
+	4. DES
+	etc
+	
+SSH uses 3 types of Cryptographic technics in securing the communication between the client/server program
+1. Symmetric Encryption 
+A single key is used for encrypting/decrypting the data between both the parties for exchanging the data, which is called "Symmetric Encryption".
+	
+2. Asymmetric Encryption
+In Asymetric Encryption there are 2 keys are there. one is private key and another one is public key. The data that is encrypted using the public key can be decryptable using the private key only
+
+3. Hashing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	

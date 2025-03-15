@@ -1,0 +1,89 @@
+How can 2 different programs that are running on 2 different machines can communicate with each other over the network?
+The programs who wishes to communicate over the network requires portno. The portno is an logical address assigned by the operating system of the computer to a program to identify it over the network and communicate with it
+
+So when it comes to programs communicating over the network, we can classify these programs into 2 types
+1. Server program = The Server program opens the port allowing the client applications to connect to it and communicate with it in using the data/functionality being served
+
+2. Client program = Client program connects to the Server program by using the ip address and the portno of the server program in accessing the data or functionality served by the server program
+
+Does any program that wishes to be communicated by the other programs over the network can open a portno to allow others to communicate with it?
+Any program that is running on a computer should not be allowed to open a portno, because through that program all the system resources/data will be exposed to the world posing an security risk/breach. Firewall is an software that is installed on the operating system of our computer which will control the programs to open the portno on a machine.
+	
+Whenever program requested the operating system to open a port or connects to our program over the network, the operating system immediately goes to the Firewall asking whether the program should be allowed to open the port or allowed for communication or not, the firewall either blocks or allows the operating system to permit the program based on various factors like
+1. is the application is trusted vendor application
+2. is the other programs are within the trusted ip address range or not
+etc
+----------------------------------------------------------------------------------------------------------------------------------
+How does the data is being exchanged between the Client/Server programs over the network?
+The Client/Server programs cannot directly exchange character data over the network we can only represent signals (on/off) over the electronic medium, so exchanging/transmitting the character data over the physical channels is not possible. That is where the programs who wishes to exchange the data over the network channel has to convert the data into bits and bytes format. So these programs has to use CharSet encoding standards like ASCII, utf-8, utf-16 etc in encoding the data into bits/bytes so that it can be transported over the network interms of signals. The program at the receiver end has to receive the data interms of signals and decode it back into Characters using the same charset encoding standards, then only the programs can exchange the data over the newtork.
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

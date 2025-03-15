@@ -1,0 +1,24 @@
+How to host an static web application?
+Web Application is used for distributing/publishing information about the business/organization or an entity to the world. A business organization can document/write the products and services they offer in a File and distribute it to the people around the world over the internet
+
+The customers/people around the world has to download these Files and open them to read the information. But the textual representation of information may not be effective and will not help the users in reading / understanding the information about our business.
+	
+So how to provide the information about an business and their services to the world in an representation format that can be easily understandable and effective. That is where HTML Language has been introduced.
+	
+HTML Stands for hyper-text transfer language, it is introduced by WWW (world-wide web consortium), to help businesses/people to document and publish their information to the world in an effective mannger.
+HTML language provides bunch of pre-defined tags using which we need to write the information that would be presented in formatted manner. The basic structure of HTML document is
+
+<!DOCTYPE html> #starts of the document/page
+<html>
+	<head>
+		<title>HTML Page</title>
+	</head>
+	<body>
+		<h2>Electronics Products</h2>
+		<p>
+			Labour day sale upto 60% OFF on all the electronic products, enjoy great shopping!
+		</p>
+	</body>
+</html>
+
+

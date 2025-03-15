@@ -1,0 +1,179 @@
+docker container registry (dcr)
+docker container registry is used for publishing/distributing the docker images across the environments. The docker team has provided "dockerhub" as a container registry, that can be used for publishing and distributing the images
+
+The dockerhub offers #2 types of repositories
+1. public repositories = open to the world, which means anyone can publish or pull the images from these public repositories
+2. private repositories  = only the repository owner can publish/pull the images, unless granted rights to the others
+
+there are lot of problems in using dockerhub as an container registry in an organization environment:
+1. organizations cannot publish their confidential and private client/customer projects packaged into docker images into dockerhub public repositories
+2. aspart of the organization network security policies and restrictions all the employees may not have access to the public internet, so we cannot use dockerhub as a container registry in such environment
+3. due to massive number of workstations in the organization connecting, publishing/pulling the images from dockerhub registry, there will a huge amount of network congession/traffic and bandwidth consumption will be encoutered due to which there is  poor performance in building the applications/delivering
+
+To overcome all these problems in an organization env, the organizations can have their own private container registries hosted within the corporate network proxying the public registries.
+	
+There are lot of third-providers offerring the container registry software like
+1. jfrog jcr (jfrog container registry)
+2. nexus
+etc
+
+How to setup jfrog jcr registry?
+1. provision ec2 instance on public subnet of a vpc network
+instance name: jfrogjcrec2
+instance shape: t2.medium
+subnet: public subnet
+ami: ubuntu
+security groups: allow http/https 80/443 access publicly
+
+ssh into the ec2 instance
+
+2. install openjdk 17
+sudo apt update -y
+sudo apt install -y openjdk-17-jdk
+
+3. install jfrog jcr registry on ubuntu operating system using ".deb" file distribution as below.
+URL: https://jfrog.com/download-jfrog-container-registry/
+# To determine your distribution, run lsb_release -c or cat /etc/os-release
+# Example:echo "deb https://releases.jfrog.io/artifactory/artifactory-pro-debs xenial main" | sudo tee -a /etc/apt/sources.list;
+wget -qO - https://releases.jfrog.io/artifactory/api/gpg/key/public | sudo apt-key add -;
+echo "deb https://releases.jfrog.io/artifactory/artifactory-debs {distribution} main" | sudo tee -a /etc/apt/sources.list;
+sudo apt-get update && sudo apt-get install jfrog-artifactory-jcr
+
+4. run the jfrog artifactory using
+sudo systemctl start artifactory
+
+5. install apache2 server to act as proxy redirectory for https
+sudo apt install -y apache2
+
+enable the proxy/ssl modules:
+-----------------------------
+sudo a2enmod proxy
+sudo a2enmod proxy_http
+sudo a2enmod proxy_balancer
+sudo a2enmod lbmethod_byrequests
+sudo a2enmod ssl
+	
+6. generate an SSL certificate using https://zerossl.com/
+follow on-screen instructions in generating an SSL certificates for 90 days
+
+7. create an virtual hostconfiguration file proxying the traffic to jfrog artifactory server
+sudo nano /etc/apache2/sites-available/registry_quicktools.conf
+
+<VirtualHost *:80>
+  ServerName registry.quicktools.net
+	ProxyPreserveHost on
+	ProxyPass / http://127.0.0.1:8082/
+	ProxyPassReverse / http://127.0.0.1:8082/
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName registry.quicktools.net
+	ProxyPreserveHost on
+	SSLEngine on
+	SSLCertificateFile       /etc/ssl/certificate.crt
+	SSLCertificateKeyFile    /etc/ssl/private.key
+	SSLCertificateChainFile  /etc/ssl/ca_bundle.crt
+	ProxyPass / http://127.0.0.1:8082/
+	ProxyPassReverse / http://127.0.0.1:8082/
+</VirtualHost>
+
+sudo systemctl reload apache2
+sudo systemctl restart apache2
+--------------------------------------------------------------------------------------------------------------------------------
+
+How to access the jcr artifactory server from docker host?
+1.need to authenticate with our jcr registry using below 
+docker login registry.quicktools.net
+
+2. How to pull the images from our own docker container registry?
+docker image pull artifactoryServerURL/remoteRepositoryName/dockerImage:tag
+
+
+3. How to push the images into the docker container registry?
+first tag the image in the format of artifactoryServer/localRepositoryName/dockerImage:tag
+for eg..
+docker tag foodies:1.0 repo.dockerartifactory.com/repo.dockerartifactory-local/foodies:1.0
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

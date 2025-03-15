@@ -1,0 +1,79 @@
+OSI Model Protocol
+There are 7 Layers exists aspart of OSI Model protocol
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer
+6. Datalink Layer
+7. Physical Layer
+
+1. Application Layer
+Application layer defines set of rules/guidelines, interms of defining the messaging structure and semantics using which any 2 software applications exchange the data over the network
+
+There are several network applications are there that provides various different services to the world like
+1. Web Application
+2. Email Applications
+3. File Transfer applications
+
+These applications provides most common services that are used by everyone around the world. For these applications to communicate over the network, they need to define their own Application Protocols defining the messaging structure/semantics enabling the communication between client and server programs.
+	
+Since these applications are commonly being used by everyone around the world, instead of defining their own protocols, the Standard Application Protocols are provided by the Internate Organization for each type of application
+
+1. Web Applications
+Web Applications exchange HTML Markup/Web Pages over the network. The business organizations describe the business services they offer to the customers aspart of the Web Pages and distribute them to the world over the network.
+	
+For distributing these Web Pages over the network we need Server application and Client Application to communicate with the Server and access the Web Pages and render the information. For these Server/Client application to communicate with each other over the network in exchanging the Web Pages we need Standard Application Protocol, that is where HTTP Protocol has been introduced
+
+HTTP Protocol stands for Hypertext Transfer Protocol, used for exchanging the Web Data/Web Pages over the network between the Client/Server applications. Since it is an application protocol, it defined Messaging Structure and semantics enabling the applications to exchange the Web Data over the network.
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

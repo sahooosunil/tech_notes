@@ -1,0 +1,693 @@
+Jar = Java Application archive
+-------------------------------
+
+An java application that is developed by the developer can be distributed in 2 ways
+1. library/dependency
+2. application
+
+1. library/dependency = across the projects we are building, they could be common functionality that could exists. if the developers of the application are building the functionality from the scratch, it takes huge amount of time/cost for development of the application instead if people identifies such common functionality that could exists across the projects and build those functionalities and distribute as libraries, then people can reuse the functionality through libraries in quickly building and delivering the application
+
+java supports reusability by allowing the java components to be distributed as libraries and reused them in other applications, that is the core/true strength of java programming language
+
+There are plenty of libraries that are distributed by various different people around the world are there, most of them are opensource libraries and few of them are commercial also available, so the people can reuse these libraries in speeding up the development and lowering the cost of building the application.
+	
+So an java application can be distributed as an library to be reused by other people in building another java application
+
+2. application
+upon developing the java application, the developer has to deliver the application to the enduser, so that enduser can use that application aspart of his business in serving the business services to the customers, in such case the java application is distributed as an application rather than library
+
+In both the above cases, the java application is packaged as an Jar and distribtued either as an library or application.
+	
+	
+1. How to distribute the java application as an library?
+When delivering any java application whether it is an library or an executable application, we need to delivery the bytecode of the application only. There are several reasons to it
+
+Reasons for distributing the bytecode only:
+1.1 An organization/individual retains the ownership of the sourcecode of an application he has built most of the time unless it is an opensource application for which the sourcecode is freely distributable.
+1.2 even thought we deliver/distribute the sourcecode	the other users will not be able to use it, since it is not executable. again the other developers has to compile and has to build the bytecode (.class files) out of it inorder to use it. most of the time the application/library we build may dependent on someother libraries, which may not be know to the others and often find it complex to compile and use the application. 
+	
+From the above we can understand, distributing an java application is always meant to be delivering the bytecode of the java programs only.
+	
+How to delivery the bytecode of the application?
+Aspart of any java application whether it is an application/library contains bunch of .class files placed inside an directory. these set of class files cannot be distributable or deliverable/transferrable either across the network 	or through any other wire medium. So to make these classfiles/bytecode of the application transferrable we need to package into an single packaged file.
+	
+So we can compress the directory contents of an .classfiles into an zip/compressed format and can be distributed to the others. But there are lot of problems with this approach
+problems in distributing zip files:
+1. different operating system platforms has different zip/compression standards thus making the java application not portable across the platforms
+2. both the parties who are delivering and receiving has to have an zipping utilities being used to compress/uncompress these packaged files to use them
+
+
+so to overcome the above problems java has introduced its own packaging standard called "Jar". 
+	
+Jar stands for java application archieve, a jar is nothing but an compressed file attached with additional metadata describing the information about the application. Jar has many benefits over the zip files
+
+1. jar is an platform independent packaging standard defined by java platform, which is portable across all the operating systems.
+2. java itself has provided jar utility aspart of jdk distribution, so that developers can quickly build jar out of the application there are developing without the need of an external zipping utlities/tools
+3. upon delivering the jar, inorder to use it we dont need to uncompress it rather we can directly add the jar to the CLASSPATH of the application, so that jvm can directly read the bytecode from the jar packaging itself.
+	
+thus making the jar packaging light weight, easily distributable and quickly usable.
+	
+
+Let us create an library jar and use it in another application below:
+
+1. java library project
+~/javaworkspace
+	|-easytax
+		|-src
+			|-com
+				|-taxhelper
+					|-tools
+						|-TaxEstimate.java
+					|-service
+						|-TaxService.java						
+		|-bin
+			|-com
+				|-taxhelper
+					|-service
+						|-TaxService.class
+
+TaxService.java
+----------------
+package com.taxhelper.service;
+
+public class TaxService {
+	public double taxApplied(String expenditureType, double amount) {
+		double taxAmount = 0.0;
+		double taxPercentage = 0;
+		
+		if(expenditureType.equals("restaurant")) {
+			taxPercentage = 18;
+		}else if(expenditureType.equals("clothing")) {
+			taxPercentage = 15;
+		}
+		taxAmount = (amount * taxPercentage) / 100;
+		return taxAmount;
+	}
+}
+
+TaxEstimate.java
+----------------
+package com.taxhelper.tools;
+public class TaxEstimate {
+	public double getTaxApplicable(String transactionType) {
+		double taxApplicable = 0.0;
+		
+		taxApplicable = new SecuredRandom().nextDouble(22);
+		return taxApplicable;
+	}
+}
+
+2. compile the above code
+goto the project directory
+~/javaworkspace/easytax$ javac -d bin src/com/taxhelper/service/TaxService.java
+~/javaworkspace/easytax$ javac -d bin src/com/taxhelper/tools/TaxEstimate.java
+
+
+3. to distribute the above application as an reusable library we need to package into an jar file as  below
+To package an application as an jar, the java has provided jar tool aspart of jdk
+1. goto the project directory
+then run the below command
+
+~/javaworkspace/easytax$
+jar -cvf easytax.jar -C bin .  = here -C stands for change to bin directory and run the command
+
+-c = create
+-v = verbose (display the output of running the command)
+-f = filename to be generated
+now distribute the above jar to the other people, so that they can reuse.	
+	
+	
+	
+#2. java application
+
+~/javaworkspace
+	|-easyshop
+		|-src
+				|-com
+					|-easyshop
+						|-service
+							|-OrderService.java
+						|-run
+							|-EasyShopApplication.java (#Main)
+		|-bin
+		|-lib
+			|-easytax.jar
+			
+OrderService.java
+-----------------
+package com.easyshop.service;
+import com.easytax.service.TaxService;
+import java.util.*;
+
+public class OrderService {
+	public double getEstimatedAmount(List<String> products) {
+		TaxService taxService = new TaxService();
+		double orderAmount = new SecureRandom().nextDouble(10000);
+		
+		double taxAmount = taxService.taxApplied(orderAmount, "clothing");
+		return taxAmount + orderAmount;		
+	}
+}
+
+
+EasyShopApplication.java
+--------------------------
+package com.easyshop.run;
+import com.easyshop.service.OrderService;
+
+class EasyShopApplication {
+	public static void main(String[] args) {
+		OrderService orderService = new OrderService();
+		double finalAmount = orderService.getEstimatedAmount(Arrays.asList(new String[]{"32 Inch Led Tv", "Apple Watch SE2"}));
+		
+		System.out.println("final amount : " +finalAmount);
+	}
+}
+
+2. to run the application, we need to compile
+But to compile the OrderService as it is using TaxService.class, we need to set the CLASSPATH pointing to the Jar file where that class is there for compiling, so that java compiler will locate the class for compiling our class
+	
+additionally while compiling EasyShopApplication class, as it is using OrderService again java compiler needs the location of class file of OrderService class which is bin directory
+	
+so to compile the above application, we need to set the classpath to #2 things
+1. easytax.jar
+2. bin/ directory
+
+
+export CLASSPATH=~/javaworkspace/easyshop/lib/easytax.jar:~/javaworkspace/easyshop/bin
+~/javaworkspace/easyshop$
+javac -d bin src/com/easyshop/service/OrderService.java
+javac -d bin src/com/easyshop/tools/EasyShopApplication.java
+
+3. to run the application also we need to set the CLASSPATH to both jar and bin directory so that jvm can locate the classfiles within the jar and application classes from bin and execute it
+
+export CLASSPATH=~/javaworkspace/easyshop/lib/easytax.jar:~/javaworkspace/easyshop/bin
+java com.easyshop.run.EasyShopApplication
+
+
+What is the structure of an Jar file, how does the contents of the Jar file looks?
+	
+project.jar
+|-META-INF
+	|-manifest.mf [Manifest stands for information, which holds the information about the jar like author, license, version etc]
+|-package
+	|-.class
+-------------------------------------------------------------------------------------------------------------------------------------
+#2. How to deliver an java application as an executable jar rather than library jar?
+		
+bankingkiosk (application)
+|-src
+	|-com
+		|-kiosk
+			|-service
+				|-BranchLocator.java
+				|-AtmLocator.java
+			|-run
+				|-KioskApplication.java
+|-bin
+
+BranchLocator.java
+--------------------
+package com.kiosk.service;
+public class BranchLocator {
+	public String locateBranch(int zipCode) {
+		return "Near old city road, 2 Lane";
+	}
+}
+
+AtmLocator.java
+----------------
+package com.kiosk.service;
+public class AtmLocator {
+	public String locateAtm(int zipCode) {
+		return "Inside Inorbit Mall";
+	}
+}
+
+KioskApplication.java
+---------------------
+package com.kiosk.run;
+
+public class KioskApplication {
+	public static void main(String[] args) {
+		System.out.println("Choose Services:");
+		System.out.println("1. Atm Locator \n2. Branch Locator");
+		Scanner scanner = new Scanner(System.in);
+		String choice = scanner.nextLine();
+		String address = null;
+		
+		if(choice.equals("1")) {
+			AtmLocator atmLocator = new AtmLocator();
+			System.out.println("zipcode :");
+			String zipCode = scanner.nextLine();
+			address = atmLocator.locateAtm(Integer.parseInt(zipCode));
+		}else {
+			BranchLocator branchLocator = new BranchLocator();
+			System.out.println("zipcode :");
+			String zipCode = scanner.nextLine();
+			address = branchLocator.locateBranch(Integer.parseInt(zipCode));
+		}
+		System.out.println("Nearest address :" + address);		
+	}
+}
+
+2. compile the above code
+To compile KioskApplication class, we need to set the classpath pointing to the AtmLocator and BranchLocator class files since it is using it.
+	
+export CLASSPATH=~/javaworkspace/bankingkiosk/bin
+
+goto ~/javaworkspace/bankingkiosk
+javac -d bin src/com/kiosk/service/AtmLocator.java
+javac -d bin src/com/kiosk/service/BranchLocator.java
+javac -d bin src/com/kisok/run/KioskApplication.java
+
+3. now package the application as an Jar and deliver it to the customer
+~/javaworkspace/bankingkiosk/
+jar -cvf kisok.jar -C bin .
+	
+generates the kiosk.jar
+
+since it is an executable application we are delivering, the end user has to run the java application. To run the application the enduser has to do the below things:
+1. set CLASSPATH pointing to the Jar file letting the jvm pick the .class files of our application from the Jar
+
+~/banking/kiosk.jar
+export CLASSPATH=~/banking/kiosk.jar
+
+2. run the java application by passing main classname as an input to the jvm
+java com.kiosk.run.KioskApplication
+
+incase if our application requires external jars also as dependencies, then the enduser has to add all the jars to the CLASSPATH and run the application
+
+There are lot of difficulties in delivering an java application as an normal jar file:
+The enduser is not an java programmer, he is not aware of anything related to java technology
+1. he may not know what is CLASSPATH, how to set the CLASSPATH pointing to the Jars in running an application
+2. The enduser dont know what are dependencies, which are all the dependencies he has to use in running the application and how to construct the CLASSPATH pointing to all the dependencies in running the application
+3. he dont what is the Main class and the fqn of the class in lauching the application
+	
+from the above we can understand, anyone to use java application seems like should know java unless otherwise they canot be able use the application
+
+
+To help delivering the java applications easy to the enduser, java platform has introduced executable/application jars.
+The developers while packaging and delivering the java application, the embedded along with bytecode, the executable information aspart of it which is called "self-executable" jars. 
+The enduser just need to run the Jar file without knowing any information about the application, the jvm reads the executable information from the jar itself and launches the application
+
+jar
+|-META-INF	
+	|-manifest.mf
+		|-Main-Class: fqnMainClass
+|-packages
+	|-.class files
+		
+to make an executable jar, the developer has to add an Main-Class: attribute pointing to the fqn classname of Main class and package it inside the jar. Now enduser inorder to run the java application he has to quickly run the command as beow
+
+java -jar jarName.jar
+
+How to package the above application as an executable jar?
+	
+bankingkiosk (application)
+|-src
+	|-com
+		|-kiosk
+			|-service
+				|-BranchLocator.java
+				|-AtmLocator.java
+			|-run
+				|-KioskApplication.java
+|-bin
+|-manifest.txt
+
+manifest.txt
+Main-Class: com.kiosk.run.KioskApplication
+Class-Path: ./jar1.jar
+(enter)
+	
+~/javaworkspace/bankingkisok$ jar -cvfm kiosk.jar manifest.txt -C bin/ .
+here -m = stands for generate the manifest file contents by taking the file we passed as an input
+--------------------------------------------------------------------------------------------------------------------------------------
+What is an distributed web application?	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

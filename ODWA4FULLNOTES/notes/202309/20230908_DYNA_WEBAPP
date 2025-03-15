@@ -1,0 +1,308 @@
+How many types of web applications are there?
+There are 2 types of web applications are there
+1. static web application
+2. dynamic web application
+
+1. static web application
+An static web application contains static resources like html pages, images, audio, video etc that would be used for documenting/describing the information about the business/entity for which it has been created. These static resources are distributed over the network using http as an application protocol through the help of web servers. The clients will be accessing the static resources using web browser client software. 
+These applications will not take any data as an input from the enduser in computing or performing operation and dispatching an dynamic response. always the application distributes the static web pages to the enduser which why these are called "static web applications"
+	
+2. dynamic web application
+In case of dynamic web application along with having static resources like html pages, audios, vidoes or images, the applications contains application programs that has relevant business logic in taking the input data from the enduser over the network through http protocol, perform operation, computes the response interms of web pages and dispatches the response back to the client over the network
+
+So per each request, that is send by the client, the response returned by the application would vary/change, which is why these applications are called "dynamic web applications".
+
+In these applications to perform operations by taking the user input, we need to write programs using an programming language like
+1. java
+2. .net
+3. python
+4. php
+etc
+
+To handle the network & protocol aspects of receiving and dispatching the request/response, these application should be deployed on the web servers. If we are developing these application using java as an backend, then we need to use the java language supported web server like
+1. Tomcat
+2. Weblogic Server
+3. WebSphere Server
+4. JBoss Wildfly Server
+5. Glassfish
+6. Jetty
+7. Netty
+8. Undertow
+etc
+
+The process of placing the application or registering the application with these web servers is called "deployment".
+--------------------------------------------------------------------------------------------------------------------------------------How does the structure of the web application project looks like in java?
+
+[standard directory structure of an web application project in java]
+project
+|-src
+	|-*.java
+|-WebContent
+	|-html
+	|-jsp
+	|-images
+	|-css
+	|-js
+	|-fonts
+	|-icons
+	|-audio
+	|-video
+	|-WEB-INF (protected directory)
+		|-lib
+		|-web.xml
+|-build		
+	|-classes
+		|-*.class
+	|-dist
+		|-*.war
+		
+
+WEB-INF/ = is the protected directory of an web application, all the resources placed within the WEB-INF directory will not be made downloadable/accessible directory to the client by the web server. 
+all the resources in the WEB-INF/ directory are dynamic resources / configurations internal to the project,these should not be distributed to the enduser
+
+lib/ = jar files which are reusable libraries using which the application is being developed
+web.xml = web.xml stands for web application deployment descriptor, it holds information about all the components/dynamic programs of the application. The webserver reads this configuration file to identify the program to be executed for a given client request
+
+How to deploy the java web application on the java web server?
+The java web application should be packaged into an War file, so that it can be deployed on the java web servers.
+	
+War = stands for web application archieve, it is similar to Jar file only, but has different directory structure inside it.
+Inside a Jar we always package *.class files only along with META-INF/manifest.mf describing the details of the application.
+	
+where as in an web application, along with java programs (.class files), we have other resources as well
+1. static resources
+2. dependent libraries 
+3. configuration files (web.xml)
+	
+inside a jar we cannot package another jar and requires an different packaging standard to accomodate all of the above, so java has introduced war packaging standard.
+	
+[structure of an war file]	
+projectname.war
+|-*.html
+|-*.jsp
+|-*.css
+|-*.js
+|-*.images
+|-*.fonts
+|-icons
+|-WEB-INF
+	|-classes
+		|-*.class
+	|-lib
+		|-*.jar
+	|-web.xml
+	
+	
+How to package an war file?
+
+1. compile the java source code in the project by adding all the jars to the classpath
+2. then place all the class files inside the build/classes directory
+3. representing the structure of an war file, create directory structure in dist directory of the project
+	
+4. copy all the static resources in the WebContent directory of the project into dist/project directory
+5. copy all the jars inside the WebContent/WEB-INF/lib into dist/project/WEB-INF/lib
+6. copy web.xml from WebContent/WEB-INF/web.xml into dist/project/WEB-INF/
+7. copy all the *.class files from build/classes into dist/project/WEB-INF/classes 
+
+project
+|-src
+	|-*.java
+|-WebContent
+	|-html
+	|-jsp
+	|-images
+	|-css
+	|-js
+	|-fonts
+	|-icons
+	|-audio
+	|-video
+	|-WEB-INF (protected directory)
+		|-lib
+		|-web.xml
+|-build		
+	|-classes
+		|-*.class
+	|-dist	
+		|-project
+			|-WEB-INF
+				|-classes
+				|-lib
+8. goto the project directory and use jar utility to package the application into war file as below.
+jar -cvf project.war .
+			
+	
+jar utility takes the contents we gave as an input and packages inside it as "jar" or "war" extension, based on we are creating jar or war, we need to create appropriate directory structure representing those packaging standards and pass it as an input to jar utility
+
+	
+3. Deploy the application onto the web server
+To deploy it on the web server we need to choose and setup web server software. Here we are choosing apache-tomcat server. 
+Let us understand steps in setting up the apache tomcat server
+
+
+1. apache tomcat server is distributed as an binary distribution, so we need to download the apache tomcat server which is distributed as an tar.gz file
+~/$ wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.13/bin/apache-tomcat-10.1.13.tar.gz
+
+2. extract the tar.gz file using tar utility
+gunzip apache-tomcat-10.1.13.tar.gz
+tar -xvf apache-tomcat-10.1.13.tar
+
+now the file will be extracted into ~/apache-tomcat-10.1.13 directory
+
+3. below is the directory structure of the tomcat server
+~/apache-tomcat-10.1.13
+	|-lib	
+	|-conf
+	|-webapps (deployment directory) #every web server has its own deployment directory in which we need to place our application (War)
+	|-bin
+		|-startup.sh
+		|-shutdown.sh
+		
+4. upon placing the war file into the deployment directory of the tomcat server we need to run startup.sh file to start the tomcat server.
+and to stop the server we need to run shutdown.sh
+
+we run the above shell files from any where on the machine if we set the PATH to the tomcat/bin directory
+
+to ensure the tomcat server runs right from the start of the machine until shutted down, we need to register it as an service in initd system.
+	
+
+
+
+
+busenquiry
+|-src
+|-WebContent
+	|-WEB-INF
+		|-lib
+		|-web.xml
+|-build
+	|-classes
+	|-dist
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

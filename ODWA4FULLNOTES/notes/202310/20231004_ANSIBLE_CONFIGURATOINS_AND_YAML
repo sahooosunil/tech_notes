@@ -1,0 +1,399 @@
+How to run the ansible adhoc module ping on all the managed nodes of the ansible cluster?
+ansible all -i hosts -m ping
+
+Ansible Configuration
+We can customize the ansible configurations by creating an configuration file under /etc/ansible/ansible.cfg file. These settings or configurations we make/create in this configuration file will be effected globally across the nodes of the cluster.
+	
+1. remote_port=22 
+if we want to change the default ssh port 22 to an different port in connecting the control node server to managed node we need to change this property
+2. private_key_file=pathKeyFile
+by default ansible tries to use id_rsa private keyfile to ssh into managed nodes, if we want to use an different ssh private key in connecting to the managed nodes we need to modify this property
+3. fork=5
+indicates the number of managed nodes on whom ansible control node server executes the module/playbook in-parallel. default is 5
+4. inventory=/etc/ansible/hosts
+it is the default inventory file in which ansible looksup for managed nodes for executing the modules/playbook
+
+For the complete list of configuration properties available to be used in configuring the ansible, please refer to this reference site: https://docs.ansible.com/ansible/latest/reference_appendices/config.html#ansible-configuration-settings-locations
+--------------------------------------------------------------------------------------------------------------------------------------
+
+There are 4 different programming models/methodologies are there
+1. logical programming
+2. functional programming
+3. object-oriented programming
+4. imperative programming
+
+In case #1, #2, #3 the developer has to write programmatic logic in accomplishing the desired state of the system or outcome. Incase of imperative programming we dont write programming logic rather we define what we need, so that the underlying platform or engine will be able accomplish the desired state of the system or outcome.
+
+Ansible support imperative programming in implementing the software configuration management automation, so we dont need to be an programmer to work with Ansible.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+What are data representation standards, why do we need them?
+An software application or program requires data as an input to perform operation and produces the desired output. 
+How to pass this data as an input to the software program?
+
+#1 Natural Language
+Begin humans we can write the data as in natural language of text of characters in a File and can be passed as an input to the software program, so that it should read the data interpret the human language in which we represented the information and should perform the operation and produce the desired or expected outcome.
+
+But software programs doesnt have such an intelligence of interpreting the natural language data to perform operation using it. So we cannot use Natural language as an medium of input for the software applications
+
+Not everything that we have represented in the File is acting as an input, there are only certain fields of data that are only required for the software application to perform the operation. So instead of representing the data in natural language if we can pass only those fields of data as an input, then program can much easily understand and process the data
+
+How to pass those fields of input to the software program, so that it can interpret and use the data to perform operation?
+To help us in representing and passing the data as an input to the programs the data representation standards or formats are introduced. There are several data representation formats are available as below
+1. csv
+2. xml
+3. json
+4. yaml
+
+
+
+1. csv (comma separated value) data format
+csv stands for comma seperated values of data, the software programs inorder to perform the business operation requires fields of data as an input. These fields of data can be represented in an csv format by separating each field by using "," as an delimeter
+
+For eg.. for an banking application inorder to transfer the funds from one account to another account we need to pass the data as an input to the application this can be done in csv format as below
+
+data:
+ac1001,ac2001,2000,To Friend
+
+Looks like csv is the quickest/easiest form of representing the fields of data, and can be passed as an input to the software programs. The software developers can build the software programs in quickly reading/interpreting these fields based on "," and can use it for performing the operation.
+	
+But there are lot of dis-advantages are there with csv format
+1. Along with the data, the semantics of the data is missing. (Semantics: meaning/information of the data) by looking at the above data people dont have any clue about what is ac1001, is it fromAccout or toAccount or address cannot be understood. So there is always a chance people might mis-interpret the data by looking at it.
+	
+2. the data is not structured or well-defined boundaries are missing. For eg.. we cannot easily identify the boundaries of each filed where it starts from and where it is ending given if the field itself contains ","
+	
+So inorder to overcome the problems with csv other data representation standards are introduced.
+	
+2. XML
+XML stands for eXtensible markup language. Markup language means anything that is built out of tags "<></>" is an Markup language. That is the reason HTML is also an Markup language. XML is not an programming language, we cannot build programs using XML rather it is an data representation standard/format language that is used for representing the data
+
+All the data that we represent in XML should be enclosed within the tags. There are #2 types of tags are there 
+1. opening tag <>
+2. closing tag </>
+there are no pre-defined tags are there, we can represent anything within the tag to define the meaning of the data. We can write/represent any amount of data within the XML document, but all the data must and should be enclosed in tags only.
+	
+Every XML must and should start with one starting tag which is called "Root" element of the XML and all the other elements/tags should be inside the Root tag only
+
+
+<person>
+	<id>37</id>
+	<fullname>robin</fullname>
+	<age>23</age>
+	<gender>Male</gender>
+	<mobile-no>9193938494</mobile-no>
+	<email-address>robbin@gmail.com</email-address>
+	<address>
+		<address-line1>4/4-21A</address-line1>
+		<address-line2>Robert Williams St</address-line2>
+		<city>Austin</city>
+		<state>Tx</state>
+		<zip>30939</zip>
+		<country>USA</country>
+	</address>
+</person>
+
+As we enclose the data between the tags, we can identify the boundaries of the data. In addition the tags attaches the semantics of data as well. So XML allows us to representing the data with well-defined semantics attached to along with that the data represented in XML is structed format. So there is zero chance of mis-interpreting the data in an XML document.
+	
+There are plenty of advantages with XML as below.
+1. Well-defined semantics are attached with the data and the information represented is structured so that there is no chance of mis-interpreting the data exists. So that always the accuracy at which the programs are going to perform the operation would be very high
+2. XML not only allows us to represent the data in structured/semantic format, it even allows us to represent relationship between the data by writing them hierarchially
+3. since XML is an character/text-based representation standard, it is inter-operable. The same XML document is protable across all the platforms.
+	
+XML has its own dis-advantages as well:
+1. XML is too verbosed, more than the data the data sourrounding the data is more. which means it takes more time to represent the data in XML and occupies more storage as well.
+10 gb of data XML format = 90% of the 10gb is tags describing the data	
+
+2. In order to represent the data or use the data in XML, one should have knowledge on XML language that makes the people find complex to use it
+3. since it is hierarchial data representation model, building software programs around that data in processing them is very complex. Developers has to write complex programming logic in parsing/interpreting / extracting the data from XML to use for performing operations.
+4. As XML represents the data in hierarchial model, the hierarchial representations takes more memory/cpu for processing the data, so these are not suitable for handling large volumes of data
+So XML is only suitable for representing smaller chunks of data with limited processing requirements.
+	
+3. JSON
+JSON stands for javascript object notation, it is also an text-based data representation standard that allows us to represent or store the data in structured format attached with well-defined semantics to the data. There are #2 data structures in which JSON allows us to represent the data
+1. Object
+2. Arrays
+
+1. Object
+any entity can be represented in a object format by defining it as an bunch of key/value pairs in curl brackets. For eg.. we want to represent an address object that can be done in JSON as below
+
+object syntax:
+{
+	"key": "value",
+	"key": "value"
+}
+JSon supports string, numbers, boolean, null types. In case of numbers and booleans we dont need to write value in double-quotes.
+	
+{
+	"addressLine1": "4-4/24A",
+	"addressLine2": "Robert Williams Street",
+	"city": "Austin",
+	"state": "TX",
+	"zip": 93393,
+	"country": "USA"
+}
+
+2. Arrays
+Arrays are collection or group of similar type of values kept together. Arrays are used for applying an piece of logic repeatedly on a group of values.
+	
+Syntax:
+["value1", "value2", "value3", "value4"]
+The data can be represented with an combination of these 2 data structures as well and can be nested one inside the another.
+	
+{
+	"employeeNo": 9383,
+	"employeeName": "Peter",
+	"dob": "10/02/1990",
+	"gender": "Male",
+	"address": {
+		"addressLine1": "4-4/24A",
+		"addressLine2": "Robert Williams Street",
+		"city": "Austin",
+		"state": "TX",
+		"zip": 93393,
+		"country": "USA"
+	},
+	"skills": ["java", "servlets", "jsp", "spring framework"]
+}
+
+advantages:-
+	1. since the JSON supports representing the data interms of objects and arrays we can easily read the data and process them in software applications by holding the data in objects/arrays structures in the programming language. This is the major advantage when compared with XML
+	2. no hierarcial representation of data, so all the complexities in programming the data are gone
+	3. very less amount of cpu and memory is being utilized in processing the data
+	
+dis-advantages:-
+	1. its still too verbosed, but not as much as XML
+	2. to represent the data in JSON document there are lot of punctuations like {}, [], ":",  etc that makes the people hard to use it.
+To overcome the problems with JSON YAML has been introduced.
+	
+YAML 
+YAML stands for Yet (Ain't) another markup language which means am not an markup-language. it is an another text-based data representation standard used for storing and representing the data which is similar to XML/JSON languages.
+YAML also stores or represents the data in structured format attached with semantics to the data. YAML greatly relies on intendation to represent the data 
+
+DataTypes in YAML:
+YAML supports build-in primitive datatypes as below
+1. String
+Any sequence of set of characters is considered as String. To represent a string we dont need to enclose them in double-quotes.
+2. Number 
+any digits are consiered as nubers
+3. Boolean
+true, false, TRUE, FALSE, yes, no etc
+
+YAML supports 2 types of data structures
+1. Map is not but an object type data structure only
+2. Lists for holding collection of values
+
+XML:
+
+<bus>
+	<bus-no>c93</bus-no>
+	<rta-registration-no>TS 01 BB 0393</rta-registration-no>
+	<bus-type>Volvo</bus-type>
+	<capacity>32</capacity>
+	<color>Red</color>
+</bus>
+
+JSON:
+{
+	"bus-no": "c93",
+	"rta-regstration-no": "TS01 BB 0393",
+	"bus-type": "Volvo",
+	"capacity": 32
+	"color": "Red"
+}
+										 
+YML:
+bus-no: c93,
+rta-registration-no: TS01BB 2903,
+bus-type: volvo,
+capacity: 32,
+color: red										 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

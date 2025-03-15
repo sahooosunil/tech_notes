@@ -1,0 +1,92 @@
+What are protocols, why do we need them?
+protocols defines set of rules or guidelines that should be followed by the programs/computers inorder to effectively communicate over the network
+
+To help us in exchanging the data over the network, OSI Model Layer protocol is introduced.
+	
+OSI Model Layer
+---------------
+OSI Stands for open system inter-connection standard, it is a protocol that helps any 2 different computers or programs to communicate with each other over the network irrespective of the hardware platform or the operating system on which they are running. The OSI Model Layer protocol comprises of both Application Protocol and Transport protocol defined aspart of it that helps us in achieving end-to-end application communication over the network
+
+The OSI Model layer protocol defines 7 layers aspart of it
+1. Application Layer
+2. Presentation Layer
+3. Session Layer
+4. Transport Layer
+5. Network Layer 
+6. Datalink Layer
+7. Physical Layer
+
+Each of these layers defines their own packet (bunch) of rules, The commuication takes places starting at the Application Layer at the sender size, and flows down through all the layers sequentially from top to the bottom where each layer takes the data from the above layer performs some operation and produces the data/output and passes to the bottom layer
+In the same way at the receiver side the transmission takes place from bottom to the top, where the physical bits data that is transmitted over the communication channel will be passes as an input to Physical Layer that performs certain operation and moves the up the data to the DataLink Layer there by which the data flows all the way through up to the Application that is running on the Reciever computer
+
+The OSI Model Layer protocol should be followed/adopted by the Network applications, that wishes to communiate over the network, network devices and even the physical media channels as well.
+		
+1. Application Layer
+Any 2 software applications inorder to communicate with each other in exchanging the data between them in an understandable format, they need to define set of rules, or messaging standards that is agreed by both parties inorder to achieve effective communication between them
+
+These set of rules, messaging standards defined by the applications and agreed by them inorder to have the communication takes place between those applications are called "Application Layer" protocol
+
+What is Network program or distributed program?
+The software programs that are accessible over the network are called Network programs or even called as Distributed Programs, since they distribute the data/functionality over the network to the other applications.
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

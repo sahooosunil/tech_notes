@@ -1,0 +1,99 @@
+AWS Architecture
+----------------
+AWS Architecture refers to how does the AWS Cloudplatform has been spread across and is offering the cloud services to the world
+
+#1. AWS Region
+AWS Region is an geographical location from where AWS Cloudplatform is oferring the cloud computing services to the world. There are around 32 different geographical locations which are called regions from where AWS Cloudplatform is spread across and is offerring the cloud services.
+  
+AWS region is not a country, rather it is geographical location/place within a country from where it is offerring the services from. For eg.. in US the AWS has 5 different regions from which there are operating and providing the services like
+
+There are 3 main reasons why AWS has comeup with regions in offering cloud services:
+1. to avoid network latency in using the computing services
+2. based on the local govt policies and privacy potections
+3. pricing
+
+upon logging into the AWS Cloud console, we need choose the region from the top right corner, to be used in provisioning the resources/services from.
+  
+#2. Availability Zone (AZ)
+Availability Zones are nothing but group of data centers offered within the region. 1 AZ means 1 data center within the region. For each region AWS ensures atleast 2 AZ are provided. The main reason for AWS to introduce/provide AZs is for High Availability.
+  
+The Availability Zones are meant for high availability of services or resources within the region. The AWS recommends us to host the resources/services for our application across the AZs of the region, so that if one availability zone crashes there is a guarantee the other AZ  would be available and the application would not go down entirely.
+  
+AWS Cloudplatform choose these AZs carefully by evaluating various conditions like
+1. power availability
+2. climatic conditions
+3. cyclones
+4. tornados
+etc
+
+so that the likeliness of all the AZs of a region going down is very very less. These Availability Zones are inter-connected with high-speed dedicated leased internet lines, so the experience of distributing the services across the AZs will be equal to running the services in 1 AZ itself.
+  
+#3. Edge Locations
+Edge locations are the mini datacenters co-located across the regions of the cloud platform. These edge locations offers shared/global services to the customers around the world like
+1. Cloud Front
+2. Route53
+etc
+
+The purpose of the edge locations is to reduce the network latency in distributing the services.
+  
+  
+1. region (geographical locations within a country)
+2. availability zone (data centers spread across the regions )
+3. edge locations (mini-datacenters setup around the regions to serve the shares services quickly)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

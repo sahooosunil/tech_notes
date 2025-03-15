@@ -1,0 +1,49 @@
+1. Why containerization, why not virtualization?
+2. When to use virtualization & containerization?
+3. How does containerization technology or docker runs the containerized application in isolated from other applications/containers on the docker host?
+4. Docker Architecture
+5. What is OCI Specification standard, how does docker adopted open container initiative specification?
+6. Docker objects
+7. Why docker images are layered and stackable?
+8. Why docker images are read-only?
+-------------------------------------------------------------------------------------------------------------------------------
+How to install the docker?
+docker supports both windows/linux operating system. In the early releases of docker there is no support of running docker on windows operating system environment, since it requires additional features like namespaces, cgroups and union filesystem. Later on Microsoft has hardly worked in bringing up the additional features required for running docker on windows platform.
+	
+From windows 10 professional and above versions the support of running docker is available. The docker has shipped an tool called docker-desktop-windows that can be installed on windows10 professional to run docker containers.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

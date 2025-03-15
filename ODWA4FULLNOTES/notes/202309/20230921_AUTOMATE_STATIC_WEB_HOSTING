@@ -1,0 +1,158 @@
+d:\work\workspace
+|-groovin
+  |-images
+	|-icons
+	|-js
+	|-fonts
+	|-css
+	|-*.html
+|-toyland
+  |-images
+	|-icons
+	|-js
+	|-fonts
+	|-css
+	|-*.html
+|-Vagrantfile
+|-sh
+	|-hostsite.sh
+|-config
+	|-default.conf
+	
+vagrant up
+
+	
+#1. provision the virtual machine
+
+Vagrantfile
+-----------
+Vagrant.configure(2) do | config |
+	config.vm.box = "ubuntu/jammy64"
+	config.vm.network "forwarded_port", host: 80, guest: 80
+	
+	config.vm.provision "file", source: "config/default.conf", destination: "/tmp/"
+		
+	config.vm.provision "file", source: "groovin", destination: "/var/www/"	
+	config.vm.provision "file", source: "toyland", destination: "/var/www/"	
+	
+	config.vm.provision "shell", path: "hostsite.sh", args: ["groovin" ,"groovin.com"]
+	config.vm.provision "shell", path: "hostsite.sh", args: ["toyland" ,"toyland.com"]
+end
+
+#2. default.conf
+<VirtualHost *:80>
+	ServerName :DOMAIN_NM:
+	DocumentRoot /var/www/:SITE_DIR:
+</VirtualHost>
+
+hostsite.sh
+------------
+#!/bin/bash
+
+function checkAndInstallApache2() {
+	local APACHE2_INSTALLED_STATUS = $(dpkg -s apache2 | grep "Status:" | cut -d ":" -f2)
+	if [ $APACHE2_INSTALLED_STATUS == " install ok installed" ]
+	then
+		local APACHE2_ACTIVE_STATUS = $(sudo systemctl status apache2 | grep "Active:" | cut -d ":" -f2 | awk '{print $1}')
+		if [ $APACHE2_ACTIVE_STATUS != "active"]
+		then			
+			return 100
+		else
+			echo "apache2 server is installed & active, so proceeding for site deployment...."
+		fi
+	else
+		sudo apt update -y
+		sudo apt install -y apache2
+		local APACHE2_INSTALL_STATUS = $?
+		if [ $APACHE2_INSTALL_STATUS -ne 0 ]
+		then			
+			return 200
+		fi
+	fi
+	return 0	
+}
+
+function checkSiteDirectory() {
+	if [ ! -e "/var/www/$SITE_DIR" ]
+	then
+		return 400
+	fi
+	return 0
+}
+
+function createVirtualHostConfigAndEnableSite() {
+	sudo cp /tmp/default.conf /etc/apache2/sites-available/$SITE_DIR.conf
+	sed -i 's/:DOMAIN_NM:/$DOMAIN_NM/g' /etc/apache2/sites-available/$SITE_DIR.conf
+	sed -i 's/:SITE_DIR:/$SITE_DIR/g' /etc/apache2/sites-available/$SITE_DIR.conf	
+	sudo a2ensite $SITE_DIR
+	sudo systemctl daemon-reload
+	sudo systemctl restart apache2
+}
+
+#Main Block
+NARGS=$#
+if [ $NARGS -ne 2 ]
+then
+	echo "error: site directory and domain name are required for hosting the website!"
+	exit 300
+fi
+SITE_DIR=$1
+DOMAIN_NM=$2
+
+checkAndInstallApache2()
+CHECK_INSTALL_APACHE2_STATUS=$?
+if [ $CHECK_INSTALL_APACHE2_STATUS -eq 100 ]
+then
+	echo "error: apache2 server is down, start it and re-run the provisioner script to host the application"
+	exit 100
+elif [ $CHECK_INSTALL_APACHE2_STATUS -eq 200 ]	
+then
+	echo "error: error while installing the apache2 server, please check the logs to resolve"
+	exit 200
+else
+	echo "Apache2 Server installed successfully"
+fi
+
+checkSiteDirectory()
+CHECK_SITE_DIR_STATUS=$?
+if [ $CHECK_SITE_DIR_STATUS -eq 400 ]
+then
+	echo "error: $SITE_DIRECTORY not found under /var/www, stopping the deployment"
+	exit 400
+elif [ $CHECK_SITE_DIR_STATUS -eq 0 ]
+	echo "$SITE_DIR is available under /var/www"
+fi
+
+createVirtualHostConfigAndEnableSite()
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

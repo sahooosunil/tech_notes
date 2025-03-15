@@ -1,0 +1,241 @@
+**ConfigMaps in Kubernetes**
+
+### What is a ConfigMap, and why is it needed?
+Every application interacts with external resources like databases, cache servers, and messaging systems. Managing their configurations efficiently is crucial.
+
+### Common Approaches to Configuration Management
+1. **Hardcoding in Source Code** (Not recommended)
+   - Requires rebuilding, repackaging, and redeploying for every change.
+   - High maintenance effort and cost.
+
+2. **External Configuration Files (XML, JSON, YAML, Properties)**
+   - Needs custom code to read configs.
+   - Difficult to maintain in clustered deployments.
+
+3. **Centralized Configuration Server**
+   - Tightly couples applications with the server.
+   - Requires redeployment if the config format changes.
+
+### Kubernetes Solution: ConfigMaps
+Instead of embedding configurations in the application, Kubernetes allows passing configurations dynamically through environment variables.
+
+### How to Provide Configurations in Kubernetes?
+1. **Define in Pod Spec** (Not recommended)
+   - Requires modifying the spec file for every change.
+   - Not reusable across applications or environments.
+
+2. **Use ConfigMaps** (Recommended)
+   - Stores configurations separately in the cluster.
+   - Can be accessed across nodes and pods.
+   - Supports three ways to use ConfigMaps:
+     - As **environment variables**
+     - As **command-line arguments**
+     - Through **ConfigMap API**
+
+### Example: Creating and Using a ConfigMap
+#### ConfigMap Definition (`corona-guidelines-configmap.yml`)
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: guidelinesconfigmap
+  labels:
+    appName: corona
+data:
+  oxygenLevels: "80"
+  quarantine: "20"
+  liters: "3"
+  temperatureLevels: "101"
+```
+
+#### Applying ConfigMap
+```sh
+kubectl create -f corona-guidelines-configmap.yml
+```
+
+#### Using ConfigMap in a Pod (`corona-pod.yml`)
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: coronapod
+  labels:
+    appName: corona
+spec:
+  containers:
+    - name: corona
+      image: techsriman/corona:1.0
+      ports:
+        - containerPort: 8080
+      env:
+        - name: guidelines.oxygenLevels
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: oxygenLevels
+        - name: guidelines.liters
+          valueFrom:
+            configMapKeyRef:
+              name: guidelinesconfigmap
+              key: liters
+```
+
+---
+
+## **Kubernetes Secrets**
+### What are Secrets?
+Kubernetes Secrets store and manage sensitive information like passwords, SSH keys, and API tokens securely.
+
+### Why Not Store Secrets in ConfigMaps?
+- ConfigMaps are not encrypted.
+- Anyone with access to ConfigMaps can read sensitive data.
+- Kubernetes Secrets provide a more secure way to handle confidential information.
+
+### Important Notes About Secrets
+- Stored in Base64 encoding (not encrypted by default).
+- Can be secured using external vaults like HashiCorp Vault.
+- Supports built-in secret types:
+  - **Opaque** (arbitrary data)
+  - **Basic-auth** (username/password)
+  - **TLS** (SSL certificates)
+  - **SSH keys**, **Docker credentials**, and more.
+
+### Using Secrets in Pods
+Like ConfigMaps, Secrets can be used:
+1. As **environment variables**
+2. Mounted as **files**
+3. Directly used by Kubernetes components (e.g., pulling images from a private registry)
+
+By following best practices, ConfigMaps and Secrets allow flexible and secure configuration management in Kubernetes environments.
+----------------------------------------------------------------------------
+### **Mounting a ConfigMap as `application.yml` in a Spring Boot Container inside a Pod**  
+
+Instead of embedding database properties inside your Spring Boot image, you can use a **Kubernetes ConfigMap** to mount `application.yml` dynamically. This keeps your configuration external and allows easy updates.
+
+---
+
+### **Step 1: Create a ConfigMap with `application.yml` Content**  
+
+First, define a ConfigMap that contains your MySQL database properties.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  application.yml: |-
+    spring:
+      datasource:
+        url: jdbc:mysql://mysql-service:3306/urotaxidb
+        username: root
+        password: welcome1
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      jpa:
+        hibernate:
+          ddl-auto: update
+        show-sql: true
+```
+
+> **Note:** Ensure the indentation is correct, as `application.yml` is whitespace-sensitive.
+
+---
+
+### **Step 2: Mount the ConfigMap as `application.yml` in the Container**  
+
+Modify your Pod definition to mount the ConfigMap as a file inside the Spring Boot container.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: urotaxi-pod
+spec:
+  containers:
+    - name: urotaxi
+      image: techsriman/urotaxi:1.0
+      ports:
+        - containerPort: 8080
+      volumeMounts:
+        - name: config-volume
+          mountPath: "/config"  # Mount path inside the container
+          subPath: application.yml
+  volumes:
+    - name: config-volume
+      configMap:
+        name: mysql-config  # Name of the ConfigMap
+```
+
+---
+
+### **How It Works**  
+- The **ConfigMap** contains `application.yml`.  
+- Kubernetes **mounts it as a file** inside `/config/application.yml`.  
+- Spring Boot automatically loads the config if you set:  
+
+  ```sh
+  java -jar app.jar --spring.config.location=/config/application.yml
+  ```
+
+> You can modify the container's entrypoint in the Dockerfile or Deployment to use this.
+
+---
+
+### **Step 3: Verify the Mounted ConfigMap**  
+
+After deploying the pod, **check if the file is mounted** inside the container:
+
+```sh
+kubectl exec -it urotaxi-pod -- ls /config
+```
+
+View the contents:
+
+```sh
+kubectl exec -it urotaxi-pod -- cat /config/application.yml
+```
+
+---
+
+### **Using this in a Deployment (Recommended for Production)**  
+For production, use a **Deployment** instead of a Pod:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urotaxi-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: urotaxi
+  template:
+    metadata:
+      labels:
+        app: urotaxi
+    spec:
+      containers:
+        - name: urotaxi
+          image: techsriman/urotaxi:1.0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/config"
+              subPath: application.yml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mysql-config
+```
+
+---
+
+### **Advantages of Using a ConfigMap for `application.yml`**
+✅ **Decouples configuration from code** (no need to rebuild the image for config changes).  
+✅ **Allows updates without redeploying the app** (`kubectl apply` will update the config).  
+✅ **Keeps sensitive data separate** (you can store secrets in a Kubernetes Secret instead).  
+
+Would you like to integrate this with Secrets for storing MySQL credentials securely? 🚀
+

@@ -1,0 +1,121 @@
+There are 3 ways in which we can create the objects on the kubernetes cluster using kubectl
+1. imperative commands
+2. imperative object configuration
+3. declarative object configuration
+
+1. imperative commands
+We dont have to write the kubernetes spec file in creating the objects, rather kubectl itself has provided handful of commands that takes arguments as inputs in creating the objects.
+	
+advantage: quickly we can create objects on the cluster
+dis-advantage: since the spec file is created onfly by the kubectl, we cannot reuse in recreating the objects in future.
+	
+2. imperative object configuration
+In imperative object configuration, for each type of resource/object we need to write an spec file describing the object and pass it as an input to the kubectl asking him to perform the operation like create or delete
+
+airtel2-pod.yml = in this spec file we need to define the information about the pod object.
+	
+now pass it as an input to the kubectl asking him either create or delete as below:
+kubectl create -f airtel2-pod.yml
+kubectl delete -f airtel2-pod.yml
+	
+3. declarative object configuration
+To run an application on kubernetes cluster, we need to create lot of objects on the cluster. For each type of object we need write resource spec or manifest file. These objects are having dependency with each other, for eg.. an pod object has to be created before an replicaset object, so we need to derive the order of dependencies between these objects, manually pass these manifests as an input to the kubectl asking to creating objects in specific order one after the other. It takes lot of time and hard to memorize the dependency order in which these objects should be created.
+	
+Instead of creating these objects manually one by one, we can place all of these resource spec or manifests under one project directory
+covido
+|-manifests
+  |-pod.yml
+	|-replicaset.yml
+	|-service.yml
+	
+pass the directory as an input to the kubectl asking to apply these manifests on the cluster. The kubectl takes care of deriving the dependency order in which these objects should be created and performs the operation automatically.
+	
+kubectl apply -f covido/manifests
+kubectl delete -f covodi/manifests
+--------------------------------------------------------------------------------------------------------------------------------
+Let us understand how to create different kubernetes objects by writing resource/manifest files 
+
+1. pod
+
+
+container = 1 isolated application
+
+2 applications = 2 docker images
+|-2 containers 
+
+that has few common dependencies 
+1 network
+resources files/mounts/volumes
+lifecycle (start/stop)
+	
+1 application = docker volumes
+2 application
+
+pod1.yml
+- container1:
+- container2:
+
+
+pod - 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

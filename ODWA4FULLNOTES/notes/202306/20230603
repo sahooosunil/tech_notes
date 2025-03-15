@@ -1,0 +1,521 @@
+nested-if control statements
+----------------------------
+within an if conditional control statement we need to write one more if condition, which is called nested-if control statements.
+	
+wap to compute the tax payable by an individual based on the gross income earned.
+if person = single and gender = male
+	500000 = 10%
+ >500000 - <800000	= 20%
+ >800000            = 30%
+but the gender = female	
+ 	500000 = 8%
+ >500000 - <800000	= 18%
+ >800000            = 28%		
+	
+if person = married and gender = male or female
+	500000 = 7%
+ >500000 - <800000	= 17%
+ >800000            = 27%
+	
+computetax.sh
+#!/bin/bash
+read -p "Gross Income : " GI
+read -p "Gender : " GENDER
+read -p "Marital Status : " MS
+TAX_AMT=0
+if [ $MS = "SINGLE" ]; then
+    if [ $GENDER = "MALE" ]; then
+        if [ $GI -gt 0 -a $GI -le 500000 ]; then
+            TAX_AMT=$(echo "($GI*10)/100" | bc)
+        elif [ $GI -gt 500000 -a $GI -le 800000 ]; then
+            TAX_AMT=$(echo "(500000*10)/100 + (($GI-500000)*20)/100" | bc)
+        else
+            TAX_AMT=$(echo "(500000*10)/100 + ((300000*20)/100) + (($GI-800000)*30)/100" | bc)
+        fi    
+    else #FEMALE
+        if [ $GI -gt 0 -a $GI -le 500000 ]; then
+            TAX_AMT=$(echo "($GI*8)/100" | bc)
+        elif [ $GI -gt 500000 -a $GI -le 800000 ]; then
+            TAX_AMT=$(echo "(500000*8)/100 + (($GI-500000)*18)/100" | bc)
+        else
+            TAX_AMT=$(echo "(500000*8)/100 + ((300000*18)/100) + (($GI-800000)*28)/100" | bc)
+        fi
+    fi
+else #MARRIED
+    if [ $GI -gt 0 -a $GI -le 500000 ]; then
+            TAX_AMT=$(echo "($GI*7/100" | bc)
+        elif [ $GI -gt 500000 -a $GI -le 800000 ]; then
+            TAX_AMT=$(echo "(500000*7)/100 + (($GI-500000)*17)/100" | bc)
+        else
+            TAX_AMT=$(echo "(500000*7)/100 + ((300000*17)/100) + (($GI-800000)*27)/100" | bc)
+        fi
+fi
+echo "Tax Amount : $TAX_AMT"
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to compute the bill amount with applied GST tax?
+PRODUCT CODE: P3389
+CATEGORY: clothes, electronics, fashion, jewellery
+quantity: 4
+PRICE: 19000
+	
+clothes=12%
+electronics=18%
+fashion=23%
+jewellery=28%
+	
+case/easc
+---------
+There are 3 types of conditional control statements are there
+1. if
+2. if-else (or) if-elif-else-fi 
+3. case/esac
+
+#3. case/esac statement
+case is also an conditional control statement like if only, based on a conditional expression we want to execute block of lines of code this can be achieved using case aswell
+
+There is an difference between if condition and case even though both are conditional control statements only
+1. if: in case of if we can execute a block of code based on the conditional expression build over a range of values for eg.. if the Gross Income is between 0 to 50000 execute this block of code
+
+2. case: but whereas incase of case statement, it always matchines with only one outcome it cannot be written over a range of values.
+In-short: to the case the input value is always matched with the bunch of possibilities listed to determine the block of execution.
+
+From the above we can think of if control structure is more powerful than case, because case doesnt support range of input comparisions. But still it is recommended to use case only in matching the give input over possibility of values, because it is optimized by performance in picking up the block of code to be executed.
+	
+For e.g..
+
+1. IDLY = 25
+2. DOSA = 45
+3. POORI = 35
+4. BONDA = 30
+
+item: 4
+quantity: 2
+amount:?
+	
+read -p "item : " ITEM
+read -p "quantity: " QUANTITY
+
+if [ $ITEM -eq 1 ]; then
+	AMT=$[25*QUANITTY]
+elif [ $ITEM -eq 2 ]; then
+	AMT=$[45*QUANTITY]
+elif [ $ITEM -eq 3 ]; then
+	AMT=$[35*QUANTITY]
+elif [ $ITEM -eq 4 ]; then
+	AMT=$[30*QUANTITY]
+else
+	echo "invalid item"
+fi
+echo "Amount : $AMT"
+
+in the above program there are 4 conditional evaluations has been taken place when the user entered the item as 4 to make the right choice out of the available.
+	
+instead of using if control statement if we use case/esac this program will be executed with 1 comparision itself as below
+#100 possible outcomes, then if control statement requires in worst case #100 comparisions to determine the right block of code. whereas in case of case control statement it takes only 1 comparision irrespective of how many choices or possibilities are there
+	
+syntax:
+case INPUT in
+1)
+	statement1
+	statement2
+	;; 
+2)
+	statement3
+	statement4
+	;;
+3)
+	statement5
+	;;
+*) 
+	default statements
+esac
+
+The above program can be better written as below.
+	
+#!/bin/bash
+read -p "item:" ITEM
+read -p "quantity: " QUANTITY
+AMT=0
+case $ITEM in
+1)
+	AMT=$[25*QUANTITY]
+	;;
+2)
+	AMT=$[45*QUANTITY]
+	;;
+3)
+	AMT=$[35*QUANTITY]
+	;;
+4)
+	AMT=$[30*QUANTITY]
+	;;
+*)
+	echo "wrong item"
+esac
+echo "Amount : $AMT"
+-----------------------------------------------------------------------------------------------------------------------------------
+wap to display the fortune based on the month in which the person is born?
+JAN=Jelous always
+FEB=Fun
+MARCH=Innocent
+APRIL=Intelligent
+MAY=Sheep
+JUN=Hardworking
+JULY=Easy Going
+AUG=Freedom
+SEP=Shy
+OCT=Anger
+NOV=naughty
+DEC=decent
+
+funnymsgs.sh
+#!/bin/bash
+read -p "Birth Month : " MONTH
+case $MONTH in
+"jan")
+	echo "jeleous"
+	;;
+"feb")
+	echo "ferocious"
+	;;
+"march")
+	echo "melodeous"
+	;;
+"april")
+	echo "Intelligent"
+	;;
+"may")
+	echo "makeup"
+	;;
+"june")
+	echo "hardworking"
+	;;
+"july")
+	echo "easy going"
+	;;
+"august")
+	echo "Lazy"
+	;;
+"sep")
+	echo "Shy"
+	;;
+"oct")
+	echo "Anger"
+	;;
+"nov")
+	echo "Naughty"
+	;;
+"dec")
+	echo "Decent"
+	;;
+*)
+	echo "fool"
+esac
+-----------------------------------------------------------------------------------------------------------------------------------
+How many types of control statements are there?
+There are 2 types of control statements are there
+1. conditional control statements
+based on a condition, we want to execute a block of code which can be accomplished using conditional control statements. There are 2 types of conditional control statements are there
+	1.1 if control statement (if-elif-else, if-else etc)
+	1.2 case/esac statements
+	
+2. loop control statements
+if we want to execute a line/block of code repeatedly over n number of times or until an condition is met at a point within the program execution, we can accomplish it using loop control statements
+For e.g.. i want print an "good morning", and "have a good day!" messages over 5 times in the program, we can accomplish it by repeatedly writing the code as below.
+
+echo "Good Morning"
+echo "Have a nice day!"
+echo "Good Morning"
+echo "Have a nice day!"
+echo "Good Morning"
+echo "Have a nice day!"
+echo "Good Morning"
+echo "Have a nice day!"
+echo "Good Morning"
+echo "Have a nice day!"
+	
+but there are lot of problems in the above approach:
+The code is being duplicated over several times within the program, due to which we run into lot of problems:
+1. if we want to make a change in the code, for eg.. instead of have a nice day, we want to display good day. then we need to modify the code across all the places whereever we are writing "have a nice day"
+2. more changes in code takes more time 
+3. more changes in code has high chances of bugs
+4. the cost of maintaining the application is high, because more time required to modify
+so avoid repeatedly writing the same code within the program, instead use loop control statements
+
+Loop control statements are used for executing a block of code repeatedly without duplicating the code for several times. There are 3 types of loop control statements are there
+1. while
+2. for
+3. until
+
+let us explore each of them:
+1. while loop
+while loop is an control statement that is used for executing a block/line of code repeatively based on the condition. if the condition provided is evaluated to true, it repeats the block of code execution otherwise quites from the loop
+
+syntax:
+while [ CONDITION ]
+do
+	statements
+done
+statements
+statements
+
+here if the condition given is true then it executes the block of code written between do-done and again evaluates the condition in each iteration, executes util the condition becomes false. If false it comes out of while loop and continues to execute the next lines of code
+
+counter based while loop:
+if we want to execute a block of code for n number times, then we can use a counter variable to count no of times we executed, and in each execution we can increment the counter and can break the loop once we meed desired number of executions
+1. Counter variable
+2. condition
+3. incrementation
+
+if we want to print "Good Morning" message for 3 times we can do this as below
+
+#!/bin/bash
+I=1
+while [ $I -le 3 ]
+do
+	echo "Good Morning"
+	I=$[I+1]
+done
+echo "bye!"
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

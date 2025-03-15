@@ -1,0 +1,357 @@
+How many networking modes are supported by vagrant?
+Vagrant supports 3 networking modes
+1. forwarded_port
+2. private network
+3. public network
+
+1. forwarded_port
+forwarded_port is equal to NAT with port forwarding in virtualbox networking. By default a virtual machine is provisioned by the vagrant with default networking mode as forwarded_port only, because to allow the host machine to SSH onto the guest/vm
+
+Vagrantfile
+------------
+Vagrant.configure(2) do | config |
+    config.vm.box = "ubuntu/jammy64"
+    config.vm.network "forwarded_port", guest: 80, host: 8080
+end
+
+when we configure the forwarded_port, new network adapter will not be added to the virtual machine, rather onto the default network adapter that is attached, it adds an additional port forward configuration.
+        
+2. private network
+A private network in vagrant is map to host-only network adapter in oracle virtualbox networking. There are multiple options available in configuring the private network
+2.1 DHCP Enabled
+2.2 static ip
+2.3 static ip with closed network
+
+2.1 DHCP Enabled
+config.vm.network "private_network", type: "dhcp"
+
+by enabling the dhcp, the ip addresses to the vms are generated dynamically
+
+2.2 static ip
+config.vm.network "private_network", ip: "192.168.10.11"
+    
+we can configure an static ip address for the virtual machines so that the ip would be persisted/fixed even after restarts/reboots. this would help in deploying the applications that runs across the vms to refer each other using fixed ips
+
+2.3 static ip wth private network
+config.vm.network "private_network", ip: "192.168.10.12", virtualbox_intnet: "networkname"
+    
+here in addition to the static ip we defined an network of our own, so that the machines that are connected to the same network only can communicate with each other.
+    
+#3. public_network
+The public network in vagrant can be mapped to bridge network in the virtualbox hypervisor. The public network is an open network that allows access to the virtual machine from anywhere
+There are multiple configuration options are available in public network
+1. default network adapter
+2. static ip
+3. specific physical network adapter to be bridged
+
+1. default network adapter
+Here the ip address for the virtualmachine is generated automatically and default network adapter of the host machine will be used for establishing the bridge network
+
+config.vm.network "public_network"
+    
+2. static ip
+instead of assigning an dynamic ip we can configure an static ip address to be assigned to our virtual machine through this option
+
+config.vm.network "public_network", ip: "192.168.10.20"
+    
+here too the default network adapter of the host is used for creating the bridge.
+    
+3. specific network adapter of the host
+in this option we can specify which network adapter of the host machine should be used for creating the bridge network
+
+How to find what are the network adapters available on the host machine and their names?
+we can use ipconfig /all command on the windows host to list all the network adapters available along with their names
+
+config.vm.network "public_network", ip: "192.168.10.12", bridge: ["Wireless Network adapter"]
+note: incase if we are configuring the static ip, it should be within the same network range of the host-network adapter we are bridging.
+--------------------------------------------------------------------------------------------------------------------------------------
+How does Vagrant SSH is working?
+    
+In order to SSH into any machine we need to have
+1. openssh server to be installed and running
+2. there should be an linux user on the machine, associated with public_key allowing us to ssh onto the machine onbehalf of that user
+3. to perform administration operations when provided key-based authentication access, he should be configured with passwordless sudoers access
+
+then on the client computer from where we want to ssh, we need public/private key then we can use SSH client utility to ssh into that machine using the username and public/private keys
+ssh -i privateKeyFile username@ipaddress
+
+
+When we provision an machine with Vagrant, we have 
+1. not installed openssh server 
+2. have not created an linux user, associated with public_key
+3. havent configured that user with passwordless sudoers access
+then how are we able to SSH into the vagrant machine?
+    
+Because:    
+Vagrant uses vagrant boxfiles in provisioning the virtual machines, these boxfiles are prepackaged templates that are pre-installed with
+1. operating system
+2. preconfigured operating system user (vagrant/vagrant)
+3. promoted the user as passwordless sudoer
+4. pre-installed openssh server
+5. seeded default public/private keys to facilitate ssh access in the first boot
+6. pre-configured the network mode: NAT with port forwarding: guest: 22, host: 2222    
+then exported it as vagrant boxfile
+
+so that when vagrant is creating the virtual machine with the vagrant boxfiles, these machines will be booted with default configurations as specified.
+    
+here in the above if we observed vagrant boxfiles are pre-backed with default public/private keys hence making them insecured, so while first-time when it is booting up the virtual machine, vagrant generates an new public/private key per each vagrant machine. Stores these pub/priv keys into the vagrant project directory under .vagrant 
+
+and connects to the virtual machine with default keys, replaces the default public key for vagrant user with generated public key and starts the machine.
+    
+when we type vagrant ssh, this command internally goes to .vagrant directory of the project picksup the private keyfile it has stored and ssh into the virtual machine through port_forward configuration using the below command
+
+ssh -i .vagrant/private_key -P 2222 vagrant@127.0.0.1
+    
+    
+    
+How many networking modes/configurations are supported by Vagrant?
+There are 3 modes supported by vagrant
+1. forwarded_port
+2. private_network
+3. public_network
+
+3. public_network
+public_network maps to bridge network in oracle virtualbox hypervisor provider, and there are 3 configuration options are there
+3.1 default network adapter
+config.vm.network "public_network"
+    
+(it should be assigned within the network range of host network adapter we are bridging)    
+3.2 static ip
+config.vm.network "public_network", ip: "192.168.0.12" 
+
+3.3 specific network adapter of the host
+config.vm.network "public_network", ip: "192.168.10.11", bridge: ["network adapter"]
+
+How does vagrant SSH works?
+In order to SSH into any linux machine we need below things:
+1. openssh server should be installed/running on the machine
+2. one linux user should be associated with public_key allowing the users to ssh onto the machine remotely onbehalf the user
+3. if it is an key-based authentication, we should configure the user to have passwordless sudoers access
+4. network mode should permit the machine to be accessible
+
+even though we dont install any/configure SSH for an vagrant machine manually still using vagrant ssh we are able to SSH into the virtual machine, how?
+    
+The vagrant to facilitate SSH access to any virtual machines provisioned through vagrant, they build/pre-package the vagrant boxfiles with below things:
+1. operating system
+2. openssh server is installed
+3. creates an linux user with default username/password as vagrant/vagrant
+4. grant passwordless sudoers access to the vagrant user above
+5. seed/associate an default public key with the vagrant user
+6. configure networking mode as NAT with port forwarding as guest:22 , host: 2222
+then packaged them as boxfiles and distributed to us
+
+when we provision the virtual machine using vagrant boxfiles, these machines will be created with pre-installed/preconfgured ssh server with user configuration settings. 
+while booting the virtual machine for the first-time vagrant ssh into the virtual machine with private key of the default public_key and replaces the public key with newly generated pub/private key pair and stores the pub/priv key into the .vagrant folder of the project directory
+--------------------------------------------------------------------------------------------------------------------------------------
+How to work with a different hypervisor provider in vagrant?
+    
+There are several hypervisor providers are available in the market like oracle virtualbox, hyperv, vmware fusion/desktop/enterprise etc. using the vagrant we can provision the virtual machines with most of the popular hypervisor providers. but by default vagrant works with oracle virtualbox hypervisor provider. current it supports provisioning the virtual machine with oracle virtualbox min version: 5.1
+    
+if we install along with oracle virtualbox any other hypervisor provider on our machine, still vagrant uses oracle virtualbox only for provisioning the machine ignoring the other hypervisor provider.
+    
+How to change the default hypervisor provider being used?
+There are 2 ways we can change the default hypervisor provider
+1. global configuration
+we can change the default hypervisor provider globally at the host-level using an environment variable as 
+set VAGRANT_DEFAULT_PROVIDER=vmware_desktop
+so that whenever we run vagrant up it looks for vmware desktop hypervisor provider on the host to provision the virtual machine
+
+
+2. virtual machine specific configuration
+Instead of changing for hypervisor globally for all the machines of the host, if we want to change the hypervisor for specific machine we can do so by passing --provider switch while brining up the machine as below.
+    
+vagrant up --provider=vmware_desktop
+
+note: once an virtual machine has been provisioned with an hypervisor provier we cannot change the machine to work on different provider, we need to destroy and recreate the machine
+--------------------------------------------------------------------------------------------------------------------------------------
+How to work with provider customizations in vagrant?
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,134 @@
+
+## **Persistent Volume (PV) & Persistent Volume Claim (PVC)**  
+Kubernetes provides **Persistent Volumes (PV)** for stateful applications to retain data across pod restarts.
+
+- **Persistent Volume (PV):** Cluster-wide storage managed by admins.  
+- **Persistent Volume Claim (PVC):** Storage request by an application.  
+
+### **Types of Persistent Volumes:**  
+1. Local  
+2. NFS  
+3. iSCSI  
+4. EBS (AWS)  
+
+### **PV Attributes:**  
+- **storageClassName** – Defines storage type.  
+- **accessModes:**  
+  - ReadOnly  
+  - ReadWriteOnce  
+  - ReadWriteMany  
+- **Capacity** – Defines storage size.  
+
+---------------------------
+
+Here’s an improved and concise version while keeping it simple:  
+
+---
+
+### Persistent Volume (PV) & Persistent Volume Claim (PVC)  
+
+By default, containerized applications write data to the container's writable layer, which is lost if the pod crashes. To persist data across pod restarts, Kubernetes provides **Persistent Volumes (PVs)** and **Persistent Volume Claims (PVCs)**.  
+
+#### How It Works  
+In Docker, **volumes** are created on the host machine, ensuring data persists even if the container restarts. However, these volumes are local to a specific node.  
+
+In Kubernetes, volumes need to be **accessible across nodes** so that if a pod crashes and is rescheduled on a different node, it can still access the same data. Persistent Volumes (PVs) enable this by providing storage that can be mounted by pods.  
+
+#### Types of Persistent Volumes  
+Kubernetes supports various PV types, including:  
+1. **Local** (node-specific storage)  
+2. **AWS EBS** (block storage for AWS)  
+3. **EFS/NFS** (shared file storage)  
+4. **iSCSI** (networked block storage)  
+
+Some volumes are **global** (accessible across nodes), while others are **local** (specific to a node). [See the full list here](https://kubernetes.io/docs/concepts/storage/persistent-volumes/).  
+
+#### Persistent Volume & Persistent Volume Claim  
+- **PVs** are provisioned by the cluster administrator, abstracting storage management from developers.  
+- **PVCs** allow developers to request and use storage without handling the underlying setup.  
+
+#### Key Attributes of a PV  
+1. **storageClassName** – Specifies the type of storage.  
+2. **accessModes**:  
+   - `ReadOnlyMany` – Multiple pods can read.  
+   - `ReadWriteOnce` – Only one pod can read/write.  
+   - `ReadWriteMany` – Multiple pods can read/write.  
+3. **capacity** – Defines storage size.  
+
+---
+
+### Example YAML Definitions  
+
+#### Persistent Volume (PV)  
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: localpv
+spec:
+  storageClassName: local
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /Users/sriman/data
+```
+
+#### Persistent Volume Claim (PVC)  
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysqlpvc
+spec:
+  storageClassName: mysqlstorage
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+```
+
+#### Pod Using PVC  
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysqlpod
+spec:
+  containers:
+    - name: mysql
+      image: mysql:8.3.0
+      ports:
+        - name: mysqlport
+          containerPort: 3306
+          protocol: TCP
+      env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: password
+      volumeMounts:
+        - name: mysqlvolume
+          mountPath: /var/lib/mysql
+  volumes:
+    - name: mysqlvolume
+      persistentVolumeClaim:
+        claimName: mysqlpvc
+```
+
+#### Secret for MySQL Credentials  
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysqlsecret
+type: kubernetes.io/basic-auth
+stringData:
+  username: root
+  password: root
+```
+
+This setup ensures MySQL data persists even if the pod is recreated. Let me know if you need further simplifications! 🚀

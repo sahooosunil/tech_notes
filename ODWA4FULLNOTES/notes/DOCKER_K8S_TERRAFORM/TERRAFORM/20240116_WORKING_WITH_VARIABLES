@@ -1,0 +1,363 @@
+There are 2 types of variables are there in Terraform.
+1. input variables
+2. output variables
+
+#1. input variables
+--------------------
+variables are the placeholders in which we can store the data or values, that can be referred in terraform configuration files instead of using literals so that the terraform files becomes easy to read and maintainable.
+  
+There are 3 parts in working with variables
+1. declaring variables
+2. refering the variables within the terraform files
+3. passing/supplying values for these variables while execution
+
+
+1. declare variables
+We can declare variables within the terraform configuration file by using variable block. but it is recommended to declare variables in a separate terraform file usually named as "variables.tf", so that we can quickly identify what are all the variables used aspart of this terraform configuration.
+
+variable "variableName" {
+  type = dataType
+  description = ""
+  default =""
+}
+
+type = indicates dataType of data we can hold within the variable, usually validate by the terraform during execution
+DataTypes:
+1. number
+2. string
+3. map
+4. object
+5. list
+6. set
+7. bool
+
+2. referring variables in the terraform configuration file 
+
+variable "instanceType" {
+  type = "string"
+  description = "instance shape"
+  default = "t2.micro"
+}
+
+
+resource "aws_instance" "java_server" {
+  instanceType = var.instanceType #var.variableName to refer a variable  
+}
+
+3. How to supply the values for these variables while applying the terraform configuration?
+If we have not assigned any default values for the variables while declaring them, then terraform CLI prompts for the values for these variables during execution/apply interactively. incase if we have configured the default values and supplied the values during executions, the default values will be overriden.
+  
+There are 4 ways we can pass/supply the values while applying the terraform configuration
+1. using -var switch at the terminal
+2. using *.tfvars file
+3. *.auto.tfvars
+4. environment variables
+
+1. using -var switch at the terminal while applying the terraform file using Terraform CLI
+syntax:-
+terraform apply -var varName=value -var varName=value
+if there are more number of variables, it makes difficult to construct the terraform apply command in passing the variable values.
+
+2. using *.tfvars
+instead of passing the values for these variables through terminal, we can define the values in *.tfvars file and pass it as an input during apply
+tfvars stands for terraform variables, and is used as an standard practice in supplying the values
+
+The recommended naming convention in writing this file is inputs.tfvars. by looking at the extension we can easily distinguish that these files holds the values for the variables
+
+variables.tf
+-------------
+variable "instanceType" {
+  type = "string"
+  description = "ec2 java server shape"
+}
+
+main.tf
+-------
+resource "aws_instance" "javaserverec2" {
+  instance_type = var.instanceType
+  ami = "ami-383949"
+  key_name=aws_key_pair.terraformkp.key_name
+}
+
+inputs.tfvars
+-------------
+instanceType="t2.micro"
+  
+while appplying the terraform configuration we need to pass the tfvars file as below:
+terraform apply -vars-file=inputs.tfvars
+
+3. using *.auto.tfvars
+instead of manually passing the *.tfvars filename as an input while applying the terraform configuration we can create these files by following an naming convention as *.auto.tfvars and place it within the project directory.  So when we apply the terraform file, it looks for the extension of "*.auto.tfvars"   and if found will be pick the values for the variables and used for provisioning automatically.
+  
+inputs.auto.tfvars
+------------------
+instanceType="t2.micro"
+  
+terraform apply 
+then the instanceType variable value will be pickedup automatically from above inputs.auto.tfvars
+
+incase if we supply the values using commandline either using
+1. terraform apply -var instanceType=t2.nano
+or
+inputs.tfvars
+instanceType="t2.nano" and terraform apply -vars-file=inputs.tfvars
+
+then auto variables will be ignored
+
+4. environment variables
+instead of declaring the variable values in files, we can set them through environment variables as well. 
+usually the credentials being used in provisioning the resources like 
+
+during the provisioning of rds service we need to supply database password, instead of writing the database password in *.tfvars or *.auto.tfvars, 
+we can pass it as an input using environment variables, so that those will not appear any place within our code.
+
+We need to following standard naming convention defined by terraform in supplying the values for these variables using environment variables as below
+
+variable.tf
+-----------
+variable "instanceType" {}
+
+then we need to set the environment variable as TF_VAR_variableName=value
+windows: set TF_VAR_instanceType=t2.micro
+(or)
+linux: export TF_VAR_instanceType=t2.micro
+
+
+The precedence in taking the values supplied is:
+1. *.auto.tfvars
+2. -var-file=*.tfvars
+3. -var var-value switch
+4. environment variables
+
+2. working with output variables
+--------------------------------
+output variables are similar to functions/methods in programming language, upon invoking the method with inputs/parameters after competing the method/function execution it produces the output, that can be captured in another variable so that we can pass that data as an input to another function/method.
+  
+similarly while working with terraform we can pass inputs for the resource declarations through input variables and capture the state of the resource that is generated upon provisioning the resource into an output variable, so that these output variables can be reffered as inputs in other resource declarations or can be printed as output on the console after provisioning.
+  
+For eg.. before provisioning an ec2 instance we dont have the private/public ip address associated for that instance, 
+upon completing the provisioning of the resource, the cloud provider binds/assigns/generates an ip address and attach to that instance. 
+this data can be queried or accessed back within our terraform configuration by using output variables.
+  
+For eg.. we need rds instance endpoint upon provisioning it, so that it can be passed as an input for ec2 instance for deploying the application.
+  
+  
+We can declare output variables in terraform configuration file itself which is "main.tf" , 
+but it is not recommended to declare output variables in the terraform main.tf file, 
+instead recommended to separate in another file and the standard convention people following in writing output variables is outputs.tf file.
+  
+we need to delare output variables using output variable block declaration as below:
+output.tf
+
+output "variableName" {
+  value = "expression pointing to one of the attributes of the resource that should be captured and stores in this variable"
+  description = "information about this variable"
+  sensitive = "true/false"
+}
+
+for eg.. to capture the ip address of an ec2 instance in the output variables we can declare as below
+
+output "ipaddress" {
+  value = ${aws_instance.javaserverec2.public_ip}
+  description ="public_ip"
+}
+
+Note: In the Terraform provider resource documentation, for each resource under Attribute Reference section we can see the list of attributes that can be referred in capture the data as output variables.
+  
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

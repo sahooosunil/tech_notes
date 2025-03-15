@@ -1,0 +1,142 @@
+1. loop over simple list of values
+2. loop through hashes
+
+3. loop through register variables 
+------------------------------------
+products.txt
+airpods2
+iphone15
+macpro3
+beats studio headphones
+bose 5.1
+    
+within the above given file, we wanted to search for a product and print it if found?
+
+findproduct-playbook.yml
+-------------------------
+---
+- name: loop through registered variable
+  hosts: all
+  vars:
+    product: macpro3
+  tasks:
+    - name: copy products
+      copy:
+        src: products.txt
+        dest: /tmp
+    - name: show products
+      shell: cat /tmp/products.txt
+      register: productsList
+    - name: print matching product
+      debug:
+        msg: "{{item}}"    
+      loop: "{{productsList.stdout_lines}}"        
+      when: "{{item in product}}"      
+...
+--------------------------------------------------------------------------------------------------------------------------------------
+4. loop until a condition has been met
+we wanted to loop thru an task until the condition has been met.
+For eg.. we have 2 shellscript programs
+program1.sh
+-----------
+sleep 10s
+echo "running.." > /tmp/program1.log
+
+program2.sh
+-----------
+cat /tmp/program1.log
+
+we want to write an playbook, that runs the program2.sh shell program upon the program1.sh finished execution and generates the log file.
+          
+showlog-playbook.yml
+--------------------
+- name: loop through until condition
+  hosts: all
+  tasks:
+    - name: wait until program1 finished
+      find:
+        paths: /tmp/
+        patterns: program1.log
+        recurse: false
+        use_regex: true
+      register: logstatus
+      until: logstatus.matched | float == 1
+      delay: 1
+      retries: 10
+    - name: run program2
+      shell: "bash ~/program2.sh"
+      register: logoutput
+    - name: show log
+      debug:
+        msg: "{{logoutput.stdout}}"
+--------------------------------------------------------------------------------------------------------------------------------------
+5. loop through dictionaries
+
+printtasks-playbook.yml
+- name: loop thru dictionaries
+  hosts: all
+  vars:
+    tasks:
+      task1: in_progress
+      task2: ready_for_qa
+      task3: completed
+  tasks:
+    - name: loop thru tasks and print
+      debug:
+        msg: "task: {{item.key}}, status: {{item.value}}"
+      loop: "{{tasks | dict2items}}"
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+    

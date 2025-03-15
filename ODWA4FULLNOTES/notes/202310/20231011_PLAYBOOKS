@@ -1,0 +1,153 @@
+#1. Host Ranges
+----------------
+If we have lot of managed nodes within the cluster with a specific naming convention or ip address range, rather than declaring each of the hosts in the InventoryFile we can use host ranges as below.
+
+1.1 INI File	
+~/hosts
+192.168.10.[10:30:1] = startsFrom = 10, endsWith=30, incrementBy=1
+
+not only the ip addresses we can even declare hostnames as well using the range patterns as below
+~/hosts
+[javaservers]
+javaserver[1:10:1] = which means all the javaservers starting from hostname javaserver1 to javaserver10 will be added to the inventoryList.
+	
+1.2 YAML File
+~/hosts.yml
+all:
+  hosts:
+    192.168.10.[10:30:1]:
+
+#2. Inventory Variables
+-----------------------
+While writing the playbooks for performing software configuration management, instead of hardcoding the values with which the playbook needs to be executed, we can define variables and can supply values for those variables during the playbook execution through the help of inventoryFile variables
+
+There are 3 levels at which we define variables in an InventoryFile
+1. Global
+These variables acts as an input to all the modules of a playbook for any of hosts/groups on which we are applying the playbook.
+[all:vars]
+var1=value1
+var2=value2
+	
+	
+2. Host-level
+These are variables defined at a specific host and would be passed as an input while running the playbook on that specific host-only
+~/hosts
+192.168.10.11 var1=value1 var2=value2
+
+3. Group-level
+These are the common variables for a group of hosts, instead of declaring for each host we can declare these variables by making all the similar hosts into one group.
+[javaservers]
+192.168.10.11
+192.168.11.11
+192.168.11.12
+	
+[javaserver:vars]	
+var1=value1
+var2=value2
+
+There are 2 types of variables are there in Ansible
+1. ansible pre-defined variables
+2. user-defined variables
+
+1. ansible pre-defined variables
+These are the pre-defined variables defined by ansible itself, by using these variables we can customize/change the way ansible connects or executes the playbooks on the managed nodes of the cluster. All the ansible predefined variables starts with ansible_
+
+1. ansible_host
+2. ansible_port
+3. ansible_user
+4. ansible_password
+5. ansible_become
+6. ansible_become_user
+7. ansible_shell_type
+8. ansible_ssh_private_key_file
+9. ansible_become_password
+
+
+
+#3. ansible host alias
+host aliases are the friendly names we can attach while declaring the hosts in the inventory file, so that the ansible control server generates the logs outof executing an playbook/module on the managed nodes based on alias names we assigned
+
+~/hosts
+javaserver1 ansible_host=192.168.10.11
+--------------------------------------------------------------------------------------------------------------------------------------	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

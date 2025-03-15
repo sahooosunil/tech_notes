@@ -1,0 +1,247 @@
+private subnet = resources within the private subnet can communicate with any other resources of any subnets within the vpc. They dont have external network access
+
+The internal resources like database servers, caching clusters (redis cluser) etc that should not be exposed to external world are placed aspart of the private subnet. Because these resources holds sensitive and confidential data that is internal to the application/organization to whom they belong to.
+  
+
+public subnet = resources within the public subnet can not only communicate with other resources across the subnets of the vpc, these can communicate with external resources of the public network as well.
+  
+The resources like ec2 compute instances, load balancers etc that holds software applications that should be accessible to the endusers are placed aspart of public subnet
+
+
+hydrid subnet
+--------------
+In a Hybrid subnet, only outbound network traffic towards the external or public network is allowed, but an inbound network traffic from external/public network towards the subnet resources is not allowed. In addition the resources within the Hybrid can communicate with all the other resources across the subnets of the same vpc.
+  
+How to create an Hybrid subnet?
+1. create an vpc network
+vpc name: payrollvpc
+cidr: 10.1.0.0/16
+  
+2. create minimum 2 subnets [1 as public subnet and 2nd as hybrid subnet]
+2.1 
+  subnet name: payrollpubsn1
+  cidr: 10.1.1.0/24
+  vpc: payrollvpc
+  availability zone: ap-south-1a
+2.2
+  subnet name: payrollhybsn2
+  cidr: 10.1.2.0/24
+  vpc: payrollvpc
+  availability zone: ap-south-1b
+  
+after creating the above 2 subnets both are private subnet only . 
+
+3. Make one of the subnet as public subnet, to do this we need to provision internet gateway and define route table with route rules routing the public subnet traffic through the internet gateway as described below
+3.1 create internet gateway
+internet gateway name: payrolligw            
+            
+3.2 attach to the vpc network    
+  vpcname: payrollvpc
+  
+3.3 create a route table by associating the subnet and add route rule as below
+route table: payrolligwrt
+vpc name: payrollvpc
+subnet associate: payrollpubsn1
+route rule:
+cidr          target
+10.1.0.0/16   local
+0.0.0.0/0     payrolligw
+
+Now the payrollpubsn1 subnet became public subnet.
+  
+4. Let us setup 2 subnet as hybrid subnet. To do this we need to provision Nat gateway on one of the public subnet on our vpc and add route rule routing the public network traffic through the NAT gateway
+
+4.1 create nat gateway
+  nat gateway name: payrollntgw
+      subnet name: payrollpubsn1
+      allocate elastic ip
+  then create
+4.2 create a route table by associating hybsubnet and add route rule
+route table: payrollnatgwrt
+vpc name: payrollvpc
+subnet association: payrollhybsn2
+route rules:
+cidr           target
+10.1.0.0/0     local
+0.0.0.0/0      payrollntgw
+
+with this payrollhybsn2 become hybrid subnet allowing subnet resources to communite with external network, but external network to subnet resources are not allowed.
+  
+How to test the Hybrid subnet?
+1. create an ec2 instance on the hybrid subnet with below configurations
+  1.1 ec2 instance name: payrollappec2
+      shape: t2.micro
+      ami: ubuntu
+      keypair: hrec2kp.pem
+      vpc: payrollvpc
+      subnet: payrollhybsn2
+      allocate public ip: false
+      security groups: default
+      launch instance
+2. create another ec2 instance on public subnet that acts as an jumpbox:
+  2.1 ec2 instance name: payrolljumpbox
+      shape: t2.micro
+      ami: ubuntu
+      keypair: hrec2kp.pem
+      vpc: payrollvpc
+      subnet: payrollpubsn1
+      allocate public ip: true
+      security groups: default
+      launch instance
+      
+      
+How to connect to the hybrid subnet ec2 instance?
+1. copy the ssh keypair on the host computer to the jumpbox using scp command as below
+syntax:- scp -i identityFile sourceFile user@publicip:/location
+
+scp -i ~/.ssh/hrec2kp.pem ~/.ssh/hrec2kp.pem ubuntu@publicip:/home/ubuntu/.ssh/
+  
+2. now ssh into the jumpbox
+ssh -i ~/.ssh/hrec2.pem ubuntu@jumpboxipaddress
+
+3. change keypair permissions
+chmod 600 ~/.ssh/hrec2kp.pem
+
+4. ssh into the hybrid subnet ec2 instance from jumpbox
+ssh -i ~/.ssh/hrec2kp.pem ubuntu@hybridsnec2ip
+
+once we are into payrollappec2 (hybrid subnet) machine, we can test the outbound network traffic to external network by using curl/ping or apt command
+
+ping www.google.com 
+(or)
+curl www.google.com
+(or)
+apt update -y
+
+all the above commands should result a success response 
+
+note: delete ec2 instances, nat gateway, elastic ip address and vpc, otherwise billing will be added bonus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

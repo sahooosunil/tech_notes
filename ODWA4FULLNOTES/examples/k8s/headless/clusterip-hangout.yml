@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hangoutipservice
+spec:
+  type: ClusterIP
+  selector:
+    app: "hangout"
+    version: "1.0"
+  ports:
+    - port: 8088
+      targetPort: 8080

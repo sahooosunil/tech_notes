@@ -1,0 +1,241 @@
+How many types of users are there in linux operating system?
+There are 2 types of users are there in linux operating system
+1. Root user
+2. Normal user
+
+#1. Root user
+during the time of installing the linux operating system, it creates an root user within the system with the password we provided during the install. root user of the linux operating system has unrestricted access to the entire resources of the linux machine. He can perform
+1.1 user management
+1.2 process management
+1.3 device management
+1.4 package management
+1.5 system configurations
+etc
+
+the root user cannot be logged-in into the linux machine directly for safe access of the machine and resources. during the time of installing the linux operating system, ubuntu along with creating the root user with name "root" and home directory as "/root", it additionally creates one more user with the given username/password provided during installation time which is an normal user.
+	
+Linux permits us to login into the machine as normal user and when and ever we want to perform any administrative operation or root user operation on the machine then we need to switch as root user using 
+su -
+upon switching to the root user the terminal shows as root@machine# here "#" indicates we logged-in into the machine as root
+
+#2. Normal user
+The root can add additional users into the machine which are called normal users. The Normal user can only create files/folders within his home directory only. can see or manage the process that are owned by the user only
+
+
+#3. Groups
+In order to grant access to the files/folders created by an user to other users of the linux machine linux has comeup with groups. we can create a group with users and grant permissions to files or folders to the group of users rather than individual so that access management becomes easy.
+---------------------------------------------------------------------------------------------------------------------------------
+What are the attributes of data attached to the users and groups in linux?
+	
+The root user can create additional users or groups in the linux machine. at the time of creating the user linux takes few attributes of data and stores or associates that with the user while creating the user and stores it.
+	
+while creating an user:
+Each user of the linux operating, it associates few attributes of data as below.
+	1. username = each user in the linux operating system is identified with a username and the username is unique among all the users of the linux machine
+	2. uid = for each user while creating linux creates/auto-generates an unique id and associates with user
+	3. password = to be used for authenticating and access the machine
+	
+group:
+while creating the group also linux will associate few attributes of data to the group
+	1. groupname = each group we created should have an unique name to identify it
+	2. gid = group id for each group while creating linux will auto-generate the id and associates it
+	
+where does the users and groups that are created on the linux operating system are stored?
+The users we have created on the linux operating system are stored within /etc/passwd and all the groups that are created within the linux machine are stored in /etc/group file
+
+Let us understand more information about Root user:
+There can be only one root user for the entire linux system, so that the total control of the system/resources lies within one place i.e.. root
+1. The root user is created during the installation of the operating system with the password we supplied
+2. The root user will have his own home directory location "/root" unlike other linux users having their default home location as "/home/username"
+3. always the root user has the username as "root" only
+4. the root user of the linux operating system is associated with uid as always "0" only. Whichever the user within the linux machine having the uid = 0 is considered by the linux as root
+
+
+Note: always linux operating system identifies an user with id only, the username is not being considered
+-----------------------------------------------------------------------------------------------------------------------------------
+How to create or add users into the linux operating system?
+The root user only can add new or other users into the linux machine, while creating/adding an user into the linux operating system, the below activities will takes place automatically 
+1. The linux operating system generates an uid automatically and by incrementing the last userid + 1 from /etc/passwd and associates to the user while creating
+2. every user in the linux operating system must and should be associated with a group, so when we add an user into the linux operating system, the linux internally/automatically creates an group for the user with groupName as "username". while creating the group the linux generates gid for the group automatically by increating the last generated gid +1 from /etc/group file. and the user will be associated to that group
+3. for every user that we created, the linux will creates an default home directory under /home/$USER 
+4. for every user that we created, the linux will associates an default shell for the user (default: /bin/sh (bash))
+	
+only the root user can add other users of the linux operating system, because all the commands related to managing the users are part of /sbin on the linux filesystem.
+	
+what are the linux filesystem directories?
+/bin
+/etc
+/proc
+/usr
+/home/$USER
+/dev
+/sbin
+/tmp
+/root
+/opt
+/media
+/mnt
+/boot
+/lib
+/var
+	
+/etc = configuration files
+the configuration files we have discussed so far are /etc/passwd & /etc/group
+
+/bin = core commands of the linux operating system
+ls, mkdir, pwd, touch, cat, cp, mv, rm, rmdir, nano, head, tail, grep, tr, diff, cmp, vim, vi, find,echo, more, less,wc etc
+
+/sbin = super user commands, that can be only accessed by root user only
+for eg.. user management, package management, device management and network etc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

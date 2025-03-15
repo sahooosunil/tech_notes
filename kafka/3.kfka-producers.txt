@@ -1,0 +1,24 @@
+spring.kafka.producer.acks=all
+spring.kafka.producer.acks=0
+--replication-factor 5
+min.insync.replicas=3
+kafka producer retry in case of retryable error from broker (producer will retry again again ex: in case of network error)
+non retryable error like if the message exceeds size
+spring.kafka.producer.retries=10
+spring.kafka.producer.properties.retry.backoff.ms=1000
+spring.kafka.producer.properties.delivery.timout.ms=120000
+
+idempotent Kafka producer
+--------------------------
+An **idempotent Kafka producer** ensures that messages are not duplicated even if they are retried due to failures. It guarantees **exactly-once** delivery semantics by assigning a unique **sequence number** to each message and tracking it on the Kafka broker.  
+
+### Key Features:  
+1. **Prevents duplicate messages** caused by retries.  
+2. **Uses producer IDs and sequence numbers** to detect and discard duplicates.  
+3. **Ensures order within a partition** (messages are delivered in the exact sequence they were sent).  
+
+To enable it, set:  
+```properties
+enable.idempotence=true
+```  
+This makes `acks=all` and `retries` automatic.
