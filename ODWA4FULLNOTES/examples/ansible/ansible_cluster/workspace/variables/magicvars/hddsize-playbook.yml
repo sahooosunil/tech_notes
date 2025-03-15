@@ -1,8 +1,0 @@
----
-- name: hdd size play
-  hosts: all
-  tasks:
-    - name: print hdd size
-      debug:
-        msg: "{{ansible_devices.sda.size}}"
-...

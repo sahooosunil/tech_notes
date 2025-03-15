@@ -1,9 +1,0 @@
----
-- name: no gather facts
-  hosts: all
-  gather_facts: no
-  tasks:
-    - name: debug
-      debug:
-        msg: verifying gather_facts module
-...

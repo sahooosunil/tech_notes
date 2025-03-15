@@ -1,7 +1,0 @@
----
-- name: cmdplay
-  hosts: all
-  tasks:
-    - name: show message task
-      command: echo "hi"
-...

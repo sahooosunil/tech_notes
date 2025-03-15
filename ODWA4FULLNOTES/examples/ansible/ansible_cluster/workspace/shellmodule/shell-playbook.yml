@@ -1,9 +1,0 @@
----
-- name: shellplay
-  hosts: all
-  tasks:
-    - name: shell to create log file
-      shell: echo $(date) >> app-`date`.log 
-      args:
-        chdir: /tmp
-...

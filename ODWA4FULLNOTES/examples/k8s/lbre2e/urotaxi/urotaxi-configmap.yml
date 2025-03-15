@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: urotaxiconfigmap
-data:
-  dburl: jdbc:mysql://mysqlservice:3306/urotaxidb

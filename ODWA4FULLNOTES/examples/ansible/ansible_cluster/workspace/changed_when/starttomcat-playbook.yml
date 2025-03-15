@@ -1,9 +1,0 @@
----
-- name: start tomcat play
-  hosts: all
-  tasks:
-    - name: start tomcat server
-      shell: "~/apache-tomcat-10.1.15/bin/catalina.sh run 2>&1 | grep java.net.BindException"
-      register: tomcatstatus
-      changed_when: "'Address already in use' not in tomcatstatus.stdout"
-...

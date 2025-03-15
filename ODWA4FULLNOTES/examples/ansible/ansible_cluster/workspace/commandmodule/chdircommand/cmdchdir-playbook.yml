@@ -1,9 +1,0 @@
----
-- name: chdircommandplay
-  hosts: all
-  tasks:
-    - name: execute linux command
-      command: touch file1.txt
-      args:
-        chdir: /tmp
-...

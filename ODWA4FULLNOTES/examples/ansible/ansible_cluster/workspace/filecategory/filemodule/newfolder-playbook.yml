@@ -1,4 +1,0 @@
----
-- name: new directory play
-  hosts: all
-...

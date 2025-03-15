@@ -1,8 +1,0 @@
----
-- name: debugPlay
-  hosts: all
-  tasks:
-    - name: debugTask
-      debug:
-        msg: Welcome to Ansible Playbooks
-...

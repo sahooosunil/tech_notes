@@ -1,9 +1,0 @@
----
-- name: copyplay
-  hosts: all
-  tasks:
-    - name: copyfile
-      copy:
-        src: hosts
-        dest: /tmp
-...
