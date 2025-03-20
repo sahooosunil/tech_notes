@@ -280,7 +280,8 @@ When you import a resource, Terraform doesn't modify the resource but simply cre
 
 ### How does `terraform import` work?
 
-1. **Identify the Resource**: You first need to identify the resource in the external system (e.g., AWS, Azure, GCP) that you want to import. Each resource type will have a unique identifier (like an ID or ARN).
+1. **Identify the Resource**: You first need to identify the resource in the external system (e.g., AWS, Azure, GCP) that you want to import. 
+Each resource type will have a unique identifier (like an ID or ARN).
 
 2. **Run the Import Command**: You run `terraform import` followed by the resource type and ID. For example:
    ```bash

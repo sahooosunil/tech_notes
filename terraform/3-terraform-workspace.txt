@@ -1,6 +1,7 @@
 ### What Are Terraform Workspaces?
 
-Terraform workspaces are an abstraction used to manage multiple instances of your infrastructure configuration from a single directory. Each workspace has its own **state file**, allowing you to isolate environments (e.g., development, staging, production) while reusing the same Terraform configuration.
+Terraform workspaces are an abstraction used to manage multiple instances of your infrastructure configuration from a single directory. 
+Each workspace has its own **state file**, allowing you to isolate environments (e.g., development, staging, production) while reusing the same Terraform configuration.
 
 ---
 

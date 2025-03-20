@@ -1,6 +1,7 @@
 what are deployment strategies in kubernetes explian each with example in a easy to understand manner.
 
-Kubernetes offers several **deployment strategies** to manage how applications are deployed or updated in a cluster. Each strategy has unique characteristics, use cases, and trade-offs. Let’s break them down in a simple and easy-to-understand way with examples.
+Kubernetes offers several **deployment strategies** to manage how applications are deployed or updated in a cluster. 
+Each strategy has unique characteristics, use cases, and trade-offs. Let’s break them down in a simple and easy-to-understand way with examples.
 
 ---
 
@@ -29,6 +30,12 @@ spec:
         - name: my-app
           image: my-app:v2
 ```
+command
+----------
+kubectl set image deployment/my-app my-app=my-app-image:2.0.0
+Check rollout history:
+----------------------
+kubectl rollout history deployment my-app
 
 #### How it works:
 1. Kubernetes **terminates all pods** of the old version (`my-app:v1`).
